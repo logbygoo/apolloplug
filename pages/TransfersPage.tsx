@@ -4,37 +4,37 @@ import { Button } from '../components/ui';
 
 const TransfersPage: React.FC = () => {
   return (
-    <div>
-      <section 
-        className="h-[70vh] w-full bg-cover bg-center flex items-center justify-center text-center px-4"
-        style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://picsum.photos/seed/vip-transfer/1920/1080)`}}
+    <div className="bg-background text-foreground">
+      <header
+        className="h-[50vh] bg-cover bg-center flex items-center justify-center"
+        style={{ backgroundImage: "url('https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Mega-Menu-Vehicles-Model-S.png')"}}
       >
-        <div>
+        <div className="text-center text-white bg-black/40 p-8 rounded-lg">
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
             Profesjonalne Transfery VIP
           </h1>
-          <p className="mt-4 max-w-3xl text-lg text-foreground/80 md:text-xl">
-            Doświadcz najwyższego standardu podróży. Nasi szoferzy, za kierownicą luksusowych, cichych aut elektrycznych, zapewnią Ci komfort, bezpieczeństwo i punktualność.
+          <p className="mt-4 max-w-3xl text-lg md:text-xl text-white/90">
+            Doświadcz najwyższego standardu podróży z EV Tech.
           </p>
         </div>
-      </section>
+      </header>
 
-      <section className="container mx-auto max-w-5xl px-4 md:px-6 py-16 md:py-24">
+      <div className="container mx-auto max-w-6xl px-4 md:px-6 py-16 md:py-24">
         <div className="grid gap-12 md:grid-cols-3 text-center">
           <div>
-            <h3 className="text-xl font-semibold mb-2">Dyskrecja i Profesjonalizm</h3>
+            <h3 className="text-2xl font-semibold mb-2">Dyskrecja i Profesjonalizm</h3>
             <p className="text-muted-foreground">
               Nasi kierowcy to certyfikowani profesjonaliści, którzy dbają o Twoją prywatność i komfort na każdym etapie podróży.
             </p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-2">Luksusowa Flota</h3>
+            <h3 className="text-2xl font-semibold mb-2">Luksusowa Flota</h3>
             <p className="text-muted-foreground">
               Oferujemy wyłącznie najnowsze modele Tesli, gwarantujące cichą, płynną i ekologiczną podróż.
             </p>
           </div>
           <div>
-            <h3 className="text-xl font-semibold mb-2">Pełna Elastyczność</h3>
+            <h3 className="text-2xl font-semibold mb-2">Pełna Elastyczność</h3>
             <p className="text-muted-foreground">
               Transfery lotniskowe, spotkania biznesowe, czy specjalne okazje - dostosujemy usługę do Twoich indywidualnych potrzeb.
             </p>
@@ -48,11 +48,11 @@ const TransfersPage: React.FC = () => {
           </p>
           <div className="mt-6">
             <Link to="/kontakt">
-              <Button size="lg" className="uppercase tracking-wider font-medium">Skontaktuj się</Button>
+              <Button size="lg" variant="primary">Skontaktuj się</Button>
             </Link>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 };

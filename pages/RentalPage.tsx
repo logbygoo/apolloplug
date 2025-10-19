@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Button, Input } from '../components/ui';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Button, Input, Label } from '../components/ui';
 import { CAR_FLEET } from '../constants';
 import type { Car } from '../types';
 
@@ -18,11 +18,15 @@ const RentalPage: React.FC = () => {
     const end = new Date(endDate);
     if (start >= end) return 0;
     const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
     return diffDays * selectedCar.pricePerDay;
   }, [selectedCar, startDate, endDate]);
   
   const today = new Date().toISOString().split('T')[0];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,12 +39,12 @@ const RentalPage: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 md:px-6 py-32 text-center flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-3xl font-bold tracking-tight">Dziękujemy za rezerwację!</h1>
+      <div className="container mx-auto max-w-3xl px-4 md:px-6 py-32 text-center flex flex-col items-center justify-center min-h-[calc(100vh-112px)]">
+        <h1 className="text-4xl font-bold tracking-tight">Dziękujemy za rezerwację!</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Skontaktujemy się z Tobą wkrótce, aby potwierdzić szczegóły wynajmu.
+          Skontaktujemy się z Tobą wkrótce, aby potwierdzić szczegóły wynajmu {selectedCar?.name}.
         </p>
-        <Button onClick={() => setSubmitted(false)} className="mt-6 uppercase tracking-wider font-medium">
+        <Button onClick={() => setSubmitted(false)} className="mt-8" variant="primary">
           Złóż nową rezerwację
         </Button>
       </div>
@@ -48,66 +52,96 @@ const RentalPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 md:px-6 py-24 md:py-32">
-      <div className="grid lg:grid-cols-2 gap-16 items-start">
-        {/* --- Left Column: Car Image --- */}
-        <div className="lg:sticky top-24">
-          {selectedCar && (
-            <img src={selectedCar.imageUrl} alt={selectedCar.name} className="rounded-lg object-cover w-full aspect-[4/3] bg-secondary/40" />
-          )}
-        </div>
-
-        {/* --- Right Column: Form --- */}
-        <div className="flex flex-col">
-          <h1 className="text-4xl font-bold tracking-tight">{selectedCar?.name}</h1>
-          <p className="mt-2 text-xl text-muted-foreground">{selectedCar?.pricePerDay?.toLocaleString('pl-PL')} zł / dzień</p>
-          <p className="mt-4 text-sm text-muted-foreground">{selectedCar?.description}</p>
-          
-          <div className="mt-8">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Model</h3>
-            <div className="grid grid-cols-3 gap-2">
-              {CAR_FLEET.map((car) => (
-                <button
-                  key={car.id}
-                  onClick={() => setSelectedCar(car)}
-                  className={`rounded-md border p-3 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background
-                    ${selectedCar?.id === car.id 
-                      ? 'border-primary bg-primary/10 text-primary' 
-                      : 'border-border/50 hover:border-border'
-                    }`}
-                >
-                  {car.name.replace('Tesla ', '')}
-                </button>
-              ))}
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <div className="sticky top-20 py-8">
+              <img 
+                src={selectedCar?.imageUrl[0]} 
+                alt={selectedCar?.name} 
+                className="rounded-lg object-cover w-full h-auto max-h-[80vh]"
+              />
             </div>
           </div>
-          
-          <div className="mt-8">
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Okres najmu</h3>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <Input aria-label="Data odbioru" type="date" value={startDate} min={today} onChange={(e) => setStartDate(e.target.value)} />
-              <Input aria-label="Data zwrotu" type="date" value={endDate} min={startDate || today} onChange={(e) => setEndDate(e.target.value)} />
-            </div>
-          </div>
-          
-          <form onSubmit={handleSubmit} className="mt-8 flex flex-col flex-grow">
-            <div className="space-y-4">
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Dane kontaktowe</h3>
-              <Input id="name" type="text" placeholder="Imię i nazwisko" value={name} onChange={e => setName(e.target.value)} required />
-              <Input id="email" type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-              <Input id="phone" type="tel" placeholder="Telefon" value={phone} onChange={e => setPhone(e.target.value)} required />
-            </div>
 
-            <div className="border-t border-border/50 pt-6 mt-8 space-y-6">
-                <div className="flex justify-between items-center font-semibold text-lg">
-                    <span>Szacowana cena wynajmu</span>
-                    <span>{totalPrice.toLocaleString('pl-PL')} zł</span>
+          <div className="lg:col-span-1">
+            <div className="py-8">
+              <h1 className="text-4xl font-bold tracking-tight">Wynajem</h1>
+              <p className="mt-2 text-muted-foreground">Doświadcz przyszłości motoryzacji już dziś.</p>
+              
+              <div className="mt-8">
+                <h2 className="text-lg font-semibold uppercase tracking-wider text-muted-foreground">Wybierz model</h2>
+                <div className="mt-4 grid grid-cols-3 gap-2">
+                  {CAR_FLEET.map((car) => (
+                    <button
+                      key={car.id}
+                      onClick={() => setSelectedCar(car)}
+                      className={`rounded-md p-2 text-center transition-all border-2 ${
+                        selectedCar?.id === car.id ? 'border-primary' : 'border-zinc-300 hover:border-zinc-400'
+                      }`}
+                    >
+                      <span className="block text-sm font-semibold">{car.name.replace('Tesla ', '')}</span>
+                      <span className="block text-xs text-muted-foreground">{car.pricePerDay} zł/d</span>
+                    </button>
+                  ))}
                 </div>
-                <Button type="submit" className="w-full uppercase tracking-wider font-medium" size="lg" disabled={totalPrice <= 0}>
-                  Wyślij formularz rezerwacji
-                </Button>
+              </div>
+              
+              <div className="mt-8">
+                <h2 className="text-lg font-semibold uppercase tracking-wider text-muted-foreground">Okres najmu</h2>
+                 <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <Label htmlFor="start-date" className="text-xs">Data odbioru</Label>
+                    <Input id="start-date" type="date" value={startDate} min={today} onChange={(e) => setStartDate(e.target.value)} />
+                  </div>
+                  <div>
+                    <Label htmlFor="end-date" className="text-xs">Data zwrotu</Label>
+                    <Input id="end-date" type="date" value={endDate} min={startDate || today} onChange={(e) => setEndDate(e.target.value)} />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-8">
+                 <h2 className="text-lg font-semibold uppercase tracking-wider text-muted-foreground">Dane kontaktowe</h2>
+                 <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+                  <div>
+                    <Label htmlFor="name" className="text-xs">Imię i nazwisko</Label>
+                    <Input id="name" type="text" placeholder="Jan Kowalski" value={name} onChange={e => setName(e.target.value)} required />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="text-xs">Email</Label>
+                    <Input id="email" type="email" placeholder="jan.kowalski@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone" className="text-xs">Telefon</Label>
+                    <Input id="phone" type="tel" placeholder="123 456 789" value={phone} onChange={e => setPhone(e.target.value)} required />
+                  </div>
+                </form>
+              </div>
+
+              <div className="border-t border-border my-8" />
+              
+              <div className="space-y-2 text-sm">
+                 <div className="flex justify-between">
+                    <span className="text-muted-foreground">Model</span>
+                    <span>{selectedCar?.name}</span>
+                 </div>
+                 <div className="flex justify-between">
+                    <span className="text-muted-foreground">Koszt wynajmu</span>
+                    <span>{totalPrice > 0 ? `${totalPrice} zł` : '...'}</span>
+                 </div>
+                 <div className="flex justify-between font-bold text-lg pt-2">
+                    <span>Szacowana cena</span>
+                    <span>{totalPrice > 0 ? `${totalPrice} zł` : '...'}</span>
+                 </div>
+              </div>
+
+              <Button onClick={handleSubmit} type="submit" className="w-full mt-8" size="lg" disabled={totalPrice <= 0 || !name || !email || !phone}>
+                Wyślij formularz rezerwacji
+              </Button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

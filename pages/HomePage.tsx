@@ -77,7 +77,7 @@ interface CarouselItem {
 }
 
 const CarouselCard: React.FC<{ item: CarouselItem }> = ({ item }) => (
-  <div className="relative w-[calc(100vw-3rem)] md:w-[450px] h-[60vh] flex-shrink-0 snap-start overflow-hidden rounded-md">
+  <div className="relative w-[calc(100vw-3rem)] md:w-[800px] h-[60vh] flex-shrink-0 snap-start overflow-hidden rounded-md">
     <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
     <div className="absolute bottom-0 left-0 right-0 p-8 text-white flex flex-col items-center text-center">
@@ -130,7 +130,7 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
     <section className="py-12 md:py-20 w-full">
       <div 
         ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pl-6 md:pl-12 pr-6 md:pr-12"
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pl-4 md:pl-6 pr-4 md:pr-6"
       >
         {items.map((item, index) => (
              <div ref={el => { itemRefs.current[index] = el; }} key={index}>

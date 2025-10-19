@@ -147,6 +147,46 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
   );
 };
 
+const GoogleMap = () => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current && (window as any).google) {
+      new (window as any).google.maps.Map(ref.current, {
+        center: { lat: 52.2297, lng: 21.0122 }, // Warsaw
+        zoom: 12,
+        disableDefaultUI: true,
+        styles: [
+          { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+          { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+          { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+          {
+            featureType: 'administrative.locality',
+            elementType: 'labels.text.fill',
+            stylers: [{ color: '#d59563' }],
+          },
+          { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#d59563' }] },
+          { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#263c3f' }] },
+          { featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{ color: '#6b9a76' }] },
+          { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#38414e' }] },
+          { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#212a37' }] },
+          { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9ca5b3' }] },
+          { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#746855' }] },
+          { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#1f2835' }] },
+          { featureType: 'road.highway', elementType: 'labels.text.fill', stylers: [{ color: '#f3d19c' }] },
+          { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#2f3948' }] },
+          { featureType: 'transit.station', elementType: 'labels.text.fill', stylers: [{ color: '#d59563' }] },
+          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#17263c' }] },
+          { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#515c6d' }] },
+          { featureType: 'water', elementType: 'labels.text.stroke', stylers: [{ color: '#17263c' }] },
+        ],
+      });
+    }
+  }, []);
+
+  return <div ref={ref} className="w-full h-full" />;
+};
+
 
 const HomePage: React.FC = () => {
 
@@ -218,41 +258,55 @@ const HomePage: React.FC = () => {
       
       <HorizontalCarousel items={vehicleCarouselItems} />
       
-      <section className="py-12 bg-zinc-100">
+      <section className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="text-center md:text-left">
-            <h2 className="text-3xl font-semibold">Poznaj Teslę</h2>
-            <p className="mt-2 text-foreground/70">Umów się na jazdę już dziś.</p>
-            <Button variant="outline" className="mt-4 border-foreground/50 hover:bg-foreground hover:text-background">Umów się na jazdę próbną</Button>
+          <div className="bg-secondary rounded-lg relative overflow-hidden group">
+            <div className="p-8 pb-32">
+              <h2 className="text-3xl font-semibold">Poznaj Teslę</h2>
+              <p className="mt-2 text-foreground/70">Umów się na jazdę już dziś.</p>
+              <Button variant="secondary" className="mt-6 bg-white hover:bg-zinc-200 text-secondary-foreground shadow-sm">Umów się na jazdę próbną</Button>
+            </div>
+            <img 
+              src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-3-20-inch-Performance-Wheel-and-Tire-Package-Desktop.png"
+              alt="Koło Tesli"
+              className="absolute w-[350px] h-auto -right-12 -bottom-16 transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
-           <div className="text-center md:text-left">
-            <h2 className="text-3xl font-semibold">Sklep Tesla</h2>
-            <p className="mt-2 text-foreground/70">Kupuj akcesoria samochodowe i gadżety z logo Tesla.</p>
-            <Button variant="outline" className="mt-4 border-foreground/50 hover:bg-foreground hover:text-background">Kup teraz</Button>
+          <div className="bg-secondary rounded-lg relative overflow-hidden group">
+            <div className="p-8 pb-32">
+              <h2 className="text-3xl font-semibold">Sklep Tesla</h2>
+              <p className="mt-2 text-foreground/70">Kupuj akcesoria samochodowe i gadżety z logo Tesla.</p>
+              <Button variant="secondary" className="mt-6 bg-white hover:bg-zinc-200 text-secondary-foreground shadow-sm">Kup teraz</Button>
+            </div>
+            <img 
+              src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-Y-Roof-Rack-v2-Desktop.png" 
+              alt="Bagażnik dachowy Tesli"
+              className="absolute w-[450px] h-auto -right-16 bottom-0 transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
         </div>
       </section>
 
-      <section className="relative">
-        <img src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/charging-access-hero-desktop.jpg" alt="Mapa ładowarek Tesla" className="w-full h-auto object-cover"/>
-        <div className="absolute inset-0 bg-white/20" />
-        <div className="container mx-auto px-4 py-20 text-center">
-            <h2 className="text-4xl font-semibold">Doładuj samochód</h2>
-            <p className="mt-2">Zobacz dostępną w pobliżu sieć stacji Tesla Supercharger i Destination Charger.</p>
-            <div className="mt-8 flex justify-center items-end gap-12">
-                <div>
-                    <p className="text-4xl font-bold">14,045 <span className="text-red-500 text-3xl">+</span></p>
-                    <p>Supercharger</p>
-                </div>
-                 <div>
-                    <p className="text-4xl font-bold">4,663 <span className="text-gray-500 text-3xl">+</span></p>
-                    <p>Stacje Destination Chargers</p>
-                </div>
+      <section className="relative h-[600px] overflow-hidden">
+        <GoogleMap />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 container mx-auto px-4 flex flex-col justify-center items-center text-center text-white">
+          <h2 className="text-4xl font-semibold">Doładuj samochód</h2>
+          <p className="mt-2 max-w-lg">Zobacz dostępną w pobliżu sieć stacji Tesla Supercharger i Destination Charger.</p>
+          <div className="mt-8 flex justify-center items-end gap-12">
+            <div>
+              <p className="text-4xl font-bold">14,045 <span className="text-red-500 text-3xl">+</span></p>
+              <p>Supercharger</p>
             </div>
-             <div className="mt-8 flex justify-center gap-4">
-               <Button variant="primary" size="lg">Wyświetl sieć</Button>
-               <Button variant="secondary" size="lg">Dowiedz się więcej</Button>
+            <div>
+              <p className="text-4xl font-bold">4,663 <span className="text-gray-400 text-3xl">+</span></p>
+              <p>Stacje Destination Chargers</p>
             </div>
+          </div>
+          <div className="mt-8 flex justify-center gap-4">
+            <Button variant="secondary" size="lg" className="bg-white/90 text-black hover:bg-white">Wyświetl sieć</Button>
+            <Button variant="outline" size="lg" className="border-white/50 text-white hover:bg-white/10">Dowiedz się więcej</Button>
+          </div>
         </div>
       </section>
 

@@ -99,9 +99,9 @@ export const INVESTMENT_PROJECTS: InvestmentProject[] = [
 ];
 
 export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => (
-    <div className="flex items-center text-xl font-semibold tracking-tight" {...props}>
-        <span>apollo</span>
-        <span className="bg-black text-white px-2 py-0.5 rounded-sm ml-px">plug</span>
+    <div className="flex items-center text-xl tracking-tight" {...props}>
+        <span className="font-zen-dots">apollo</span>
+        <span className="bg-black text-white px-2 py-0.5 rounded-sm ml-1 font-zen-dots">plug</span>
     </div>
 );
 

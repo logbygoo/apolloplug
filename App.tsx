@@ -6,7 +6,7 @@ import RentalPage from './pages/RentalPage';
 import InvestPage from './pages/InvestPage';
 import FleetPage from './pages/FleetPage';
 import ContactPage from './pages/ContactPage';
-import { TeslaLogo, MenuIcon, XIcon, HelpCircleIcon, GlobeIcon, UserIcon } from './constants';
+import { ApolloPlugLogo, MenuIcon, XIcon, HeadphoneIcon, FlagIcon, EnvelopeIcon } from './constants';
 
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
@@ -26,7 +26,7 @@ const Header: React.FC = () => {
       <header className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-14 max-w-screen-2xl items-center px-4 md:px-6">
           <NavLink to="/" className="flex items-center mr-6">
-            <TeslaLogo className="h-4 text-black" />
+            <ApolloPlugLogo />
           </NavLink>
           
           <nav className="hidden lg:flex flex-1 justify-center gap-6 text-sm font-medium">
@@ -42,9 +42,9 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="hidden lg:flex items-center gap-4">
-             <a href="#" aria-label="Help"><HelpCircleIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
-             <a href="#" aria-label="Language"><GlobeIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
-             <a href="#" aria-label="Account"><UserIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
+             <a href="#" aria-label="Support"><HeadphoneIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
+             <a href="#" aria-label="Language"><FlagIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
+             <NavLink to="/kontakt" aria-label="Contact"><EnvelopeIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></NavLink>
           </div>
 
           <button

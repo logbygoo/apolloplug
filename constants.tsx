@@ -98,10 +98,11 @@ export const INVESTMENT_PROJECTS: InvestmentProject[] = [
   },
 ];
 
-export const TeslaLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 342 35" fill="currentColor">
-        <path d="M333.2,12.5H318.1v10.5h15.1v3.2H314.8V9.3h18.4V12.5z M292.1,26.2h14.4v-3.2H292.1V26.2z M299.8,9.3v10.5h-7.7V9.3H299.8z M287.1,3.2h21.4v26.3h-3.3V29.4h-14.8v-3.2h14.8V3.2z M253.1,12.5h14.9v3.2h-14.9v7.3h15.9v3.2h-19.2V9.3h18.3v3.2h-15V12.5z M231.4,9.3h3.3v17.2h-3.3V9.3z M207,26.2h14.4v-3.2H207V26.2z M214.7,9.3v10.5h-7.7V9.3H214.7z M202,3.2h21.4v26.3h-3.3V29.4h-14.8v-3.2h14.8V3.2z M172.6,26.5c-6,0-10.9-4.8-10.9-10.8c0-6,4.9-10.8,10.9-10.8c6,0,10.9,4.8,10.9,10.8C183.5,21.7,178.6,26.5,172.6,26.5 M172.6,8.2c-4.4,0-8,3.6-8,8.1c0,4.5,3.6,8.1,8,8.1c4.4,0,8-3.6,8-8.1C180.6,11.8,177,8.2,172.6,8.2 M153.4,26.2h3.3V9.3h-3.3V26.2z M129,26.2h14.4v-3.2H129V26.2z M136.7,9.3v10.5h-7.7V9.3H136.7z M124,3.2h21.4v26.3h-3.3V29.4H127v-3.2h14.8V3.2z M95.4,26.2h14.4v-3.2H95.4V26.2z M103.1,9.3v10.5h-7.7V9.3H103.1z M90.4,3.2h21.4v26.3h-3.3V29.4H93.7v-3.2h14.8V3.2z M65.2,12.5H50.1v10.5h15.1v3.2H46.8V9.3h18.4V12.5z M23.4,26.2h14.4v-3.2H23.4V26.2z M31.1,9.3v10.5h-7.7V9.3H31.1z M18.4,3.2h21.4v26.3h-3.3V29.4H21.7v-3.2h14.8V3.2z M0,35h3.3V0H0V35z"/>
-    </svg>
+export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => (
+    <div className="flex items-center text-xl font-semibold tracking-tight" {...props}>
+        <span>apollo</span>
+        <span className="bg-black text-white px-2 py-0.5 rounded-sm ml-px">plug</span>
+    </div>
 );
 
 export const MenuIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -141,26 +142,23 @@ export const XIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const HelpCircleIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const HeadphoneIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-        <line x1="12" y1="17" x2="12.01" y2="17" />
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
     </svg>
 );
 
-export const GlobeIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const FlagIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+        <line x1="4" y1="22" x2="4" y2="15"/>
     </svg>
 );
 
-export const UserIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const EnvelopeIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
+        <rect width="20" height="16" x="2" y="4" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
     </svg>
 );
 

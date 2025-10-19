@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { CAR_FLEET } from '../constants';
@@ -7,22 +7,28 @@ const HeroSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const heroCars = CAR_FLEET.filter(car => car.details);
 
+  const goToNext = useCallback(() => {
+    setCurrentIndex(prevIndex => {
+        const isLastSlide = prevIndex === heroCars.length - 1;
+        return isLastSlide ? 0 : prevIndex + 1;
+    });
+  }, [heroCars.length]);
+
+  useEffect(() => {
+    const slideInterval = setInterval(goToNext, 5000);
+    return () => clearInterval(slideInterval);
+  }, [goToNext]);
+
   const goToPrevious = () => {
     const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? heroCars.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
 
-  const goToNext = () => {
-    const isLastSlide = currentIndex === heroCars.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  };
-
   const currentCar = heroCars[currentIndex];
   
   return (
-    <section className="relative h-[calc(100vh-56px)] w-full text-foreground">
+    <section className="relative h-[500px] w-full text-foreground">
       <div 
         className="w-full h-full bg-cover bg-center transition-all duration-500"
         style={{ backgroundImage: `url(${currentCar.imageUrl[1]})` }}

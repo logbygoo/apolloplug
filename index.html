@@ -21,11 +21,11 @@
             colors: {
               border: 'hsl(0 0% 90%)',
               input: 'hsl(0 0% 85%)',
-              ring: 'hsl(212 92% 59%)',
+              ring: 'hsl(0 0% 50%)',
               background: 'hsl(0 0% 100%)',
               foreground: 'hsl(0 0% 10%)',
               primary: {
-                DEFAULT: 'hsl(221 83% 53%)', // Tesla Blue
+                DEFAULT: 'hsl(0 0% 10%)', // Black
                 foreground: 'hsl(0 0% 100%)',
               },
               secondary: {
@@ -86,6 +86,13 @@
     background-color: #fff;
     color: #171a20;
     font-family: 'Inter', sans-serif;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 </style>
 </head>

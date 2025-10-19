@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { CAR_FLEET } from '../constants';
@@ -65,44 +65,158 @@ const HeroSlider: React.FC = () => {
   );
 };
 
+// --- New Horizontal Carousel ---
+
+interface CarouselItem {
+  image: string;
+  category: string;
+  title: string;
+  subtitle?: string;
+  primaryBtnText: string;
+  secondaryBtnText: string;
+}
+
+const CarouselCard: React.FC<{ item: CarouselItem }> = ({ item }) => (
+  <div className="relative w-[calc(100vw-3rem)] md:w-[450px] h-[60vh] flex-shrink-0 snap-start overflow-hidden rounded-md">
+    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
+    <div className="absolute bottom-0 left-0 right-0 p-8 text-white flex flex-col items-center text-center">
+      <p className="font-semibold">{item.category}</p>
+      <h3 className="text-3xl font-bold">{item.title}</h3>
+      {item.subtitle && <p className="text-sm mt-1">{item.subtitle}</p>}
+      <div className="mt-6 flex flex-col sm:flex-row gap-4">
+        <Button variant="primary">{item.primaryBtnText}</Button>
+        <Button variant="secondary" className="bg-white/90 text-black hover:bg-white/80">{item.secondaryBtnText}</Button>
+      </div>
+    </div>
+  </div>
+);
+
+const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const index = itemRefs.current.findIndex(el => el === entry.target);
+                        if (index !== -1) {
+                            setActiveIndex(index);
+                        }
+                    }
+                });
+            },
+            {
+                root: scrollContainerRef.current,
+                threshold: 0.5,
+            }
+        );
+
+        itemRefs.current.forEach(item => {
+            if (item) observer.observe(item);
+        });
+
+        return () => {
+            itemRefs.current.forEach(item => {
+                if (item) observer.unobserve(item);
+            });
+        };
+    }, [items]);
+    
+  return (
+    <section className="py-12 md:py-20 w-full">
+      <div 
+        ref={scrollContainerRef}
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pl-6 md:pl-12 pr-6 md:pr-12"
+      >
+        {items.map((item, index) => (
+             <div ref={el => { itemRefs.current[index] = el; }} key={index}>
+                <CarouselCard item={item} />
+            </div>
+        ))}
+      </div>
+      <div className="flex justify-center gap-2 mt-6">
+        {items.map((_, index) => (
+          <div key={index} className={`h-2 w-2 rounded-full transition-colors ${activeIndex === index ? 'bg-foreground' : 'bg-foreground/20'}`} />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+
 const HomePage: React.FC = () => {
+
+  const vehicleCarouselItems: CarouselItem[] = [
+    {
+      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Model-3-Main-Hero-Desktop-LHD-Animation-Glob",
+      category: 'Sportowy sedan',
+      title: 'Model 3',
+      subtitle: 'Już za 194 990 zł',
+      primaryBtnText: 'Zamów teraz',
+      secondaryBtnText: 'Dowiedz się więcej',
+    },
+    {
+      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Homepage-Model-Y-Hero-Desktop",
+      category: 'Średniej wielkości SUV',
+      title: 'Model Y',
+      subtitle: 'Już za 219 990 zł',
+      primaryBtnText: 'Zamów teraz',
+      secondaryBtnText: 'Dowiedz się więcej',
+    },
+    {
+      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Model-X-Main-Hero-Desktop-LHD",
+      category: 'Luksusowy SUV',
+      title: 'Model X',
+      subtitle: 'Niedoścignione osiągi',
+      primaryBtnText: 'Zamów teraz',
+      secondaryBtnText: 'Dowiedz się więcej',
+    },
+    {
+      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Mega-Menu-Vehicles-Model-S.png",
+      category: 'Luksusowy sedan',
+      title: 'Model S',
+      subtitle: 'Przyszłość jest teraz',
+      primaryBtnText: 'Zamów teraz',
+      secondaryBtnText: 'Dowiedz się więcej',
+    },
+  ];
+
+  const energyCarouselItems: CarouselItem[] = [
+      {
+          image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Homepage-Powerwall-Desktop.jpg",
+          category: 'Energia dla domu',
+          title: 'Powerwall',
+          subtitle: 'Zachowaj włączone światła podczas przerw w dostawie prądu',
+          primaryBtnText: 'Dowiedz się więcej',
+          secondaryBtnText: 'Zamów',
+      },
+      {
+          image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Homepage-Megapack-Desktop.jpg",
+          category: 'Rozwiązania dla firm',
+          title: 'Megapack',
+          subtitle: 'Ogromne akumulatory do zasilania sieci energetycznej',
+          primaryBtnText: 'Dowiedz się więcej',
+          secondaryBtnText: 'Zapytaj o ofertę',
+      },
+      {
+          image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/solar-panels-hero-desktop.jpg",
+          category: 'Odnawialne źródła',
+          title: 'Panele słoneczne',
+          subtitle: 'Produkuj czystą energię ze słońca',
+          primaryBtnText: 'Dowiedz się więcej',
+          secondaryBtnText: 'Kalkulacja',
+      }
+  ];
+
   return (
     <div className="bg-background">
       <HeroSlider />
-
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="relative rounded-md overflow-hidden h-[60vh]">
-              <img src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Model-Y-spin-So-White-LHD" alt="Model Y Standard" className="w-full h-full object-cover"/>
-              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 to-transparent text-white">
-                <h2 className="text-4xl font-semibold">Model Y Standard</h2>
-                <div className="mt-4 flex gap-4">
-                   <Button variant="primary">Zamów teraz</Button>
-                   <Button variant="secondary" className="bg-white/90 text-black">Dowiedz się więcej</Button>
-                </div>
-              </div>
-            </div>
-             <div className="relative rounded-md overflow-hidden h-[60vh]">
-              <img src="https://static-assets.tesla.com/configurator/compositor?context=design_studio_2&options=$WY20P,$PPSW,$DV4W,$IPB1&view=FRONT34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&" alt="Model Y" className="w-full h-full object-cover"/>
-              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 to-transparent text-white">
-                <h2 className="text-4xl font-semibold">Model Y</h2>
-                 <div className="mt-4 flex gap-4">
-                   <Button variant="primary">Zamów teraz</Button>
-                   <Button variant="secondary" className="bg-white/90 text-black">Dowiedz się więcej</Button>
-                </div>
-              </div>
-            </div>
-          </div>
-           <div className="flex justify-center gap-2 mt-6">
-                <div className="h-2 w-2 rounded-full bg-foreground" />
-                <div className="h-2 w-2 rounded-full bg-foreground/20" />
-                <div className="h-2 w-2 rounded-full bg-foreground/20" />
-                <div className="h-2 w-2 rounded-full bg-foreground/20" />
-                <div className="h-2 w-2 rounded-full bg-foreground/20" />
-            </div>
-        </div>
-      </section>
+      
+      <HorizontalCarousel items={vehicleCarouselItems} />
       
       <section className="py-12 bg-zinc-100">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -136,38 +250,13 @@ const HomePage: React.FC = () => {
                 </div>
             </div>
              <div className="mt-8 flex justify-center gap-4">
-               <Button variant="dark" size="lg">Wyświetl sieć</Button>
+               <Button variant="primary" size="lg">Wyświetl sieć</Button>
                <Button variant="secondary" size="lg">Dowiedz się więcej</Button>
             </div>
         </div>
       </section>
 
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="relative rounded-md overflow-hidden h-[60vh]">
-              <img src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Homepage-Powerwall-Desktop.jpg" alt="Powerwall" className="w-full h-full object-cover"/>
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                <h2 className="text-4xl font-semibold">Powerwall</h2>
-                <p>Zachowaj włączone światła podczas przerw w dostawie prądu</p>
-                <div className="mt-4">
-                   <Button variant="primary">Dowiedz się więcej</Button>
-                </div>
-              </div>
-            </div>
-             <div className="relative rounded-md overflow-hidden h-[60vh]">
-              <img src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Homepage-Megapack-Desktop.jpg" alt="Megapack" className="w-full h-full object-cover"/>
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                <h2 className="text-4xl font-semibold">Megapack</h2>
-                <p>Ogromne akumulatory do zasilania sieci energetycznej</p>
-                 <div className="mt-4">
-                   <Button variant="primary">Dowiedz się więcej</Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HorizontalCarousel items={energyCarouselItems} />
 
     </div>
   );

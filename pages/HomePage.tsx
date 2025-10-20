@@ -93,54 +93,18 @@ const CarouselCard: React.FC<{ item: CarouselItem }> = ({ item }) => (
 );
 
 const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
-    const [activeIndex, setActiveIndex] = useState(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const index = itemRefs.current.findIndex(el => el === entry.target);
-                        if (index !== -1) {
-                            setActiveIndex(index);
-                        }
-                    }
-                });
-            },
-            {
-                root: scrollContainerRef.current,
-                threshold: 0.5,
-            }
-        );
-
-        itemRefs.current.forEach(item => {
-            if (item) observer.observe(item);
-        });
-
-        return () => {
-            itemRefs.current.forEach(item => {
-                if (item) observer.unobserve(item);
-            });
-        };
-    }, [items]);
     
   return (
     <section className="py-12 md:py-20 w-full">
       <div 
         ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pl-4 md:pl-6 pr-4 md:pr-6"
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pl-[100px] pr-4 md:pr-6"
       >
         {items.map((item, index) => (
-             <div ref={el => { itemRefs.current[index] = el; }} key={index}>
+             <div key={index}>
                 <CarouselCard item={item} />
             </div>
-        ))}
-      </div>
-      <div className="flex justify-center gap-2 mt-6">
-        {items.map((_, index) => (
-          <div key={index} className={`h-2 w-2 rounded-full transition-colors ${activeIndex === index ? 'bg-foreground' : 'bg-foreground/20'}`} />
         ))}
       </div>
     </section>

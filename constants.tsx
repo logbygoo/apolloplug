@@ -179,3 +179,15 @@ export const ChevronDownIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) 
         <path d="m6 9 6 6 6-6" />
     </svg>
 );
+
+export const LightningIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 21q-.825 0-1.413-.588T5 19V9.525q0-.525.225-.975t.6-.7L14.3 2.3q.3-.275.688-.288T15.7 2.3q.4.275.6.7l-1.9 6h6.125q.55 0 .9.338t.35.862l-6.15 10.25q-.3.5-.825.75T13 21H7Z"/>
+    </svg>
+);
+
+export const PlugIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16 7V3h-2v4h-4V3H8v4h-.01C6.89 7 6 7.89 6 9v3.01c0 1.66 1.34 3 3 3h1v3H8v4h8v-4h-2v-3h1c1.66 0 3-1.34 3-3V9c0-1.11-.89-2-2-2h-2z"/>
+    </svg>
+);

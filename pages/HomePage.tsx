@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
-import { CAR_FLEET } from '../constants';
+import { CAR_FLEET, LightningIcon, PlugIcon } from '../constants';
 
 const HeroSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -225,38 +225,53 @@ const HomePage: React.FC = () => {
     },
   ];
 
-  const energyCarouselItems: CarouselItem[] = [
-      {
-          image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Homepage-Powerwall-Desktop.jpg",
-          category: 'Energia dla domu',
-          title: 'Powerwall',
-          subtitle: 'Zachowaj włączone światła podczas przerw w dostawie prądu',
-          primaryBtnText: 'Dowiedz się więcej',
-          secondaryBtnText: 'Zamów',
-      },
-      {
-          image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Homepage-Megapack-Desktop.jpg",
-          category: 'Rozwiązania dla firm',
-          title: 'Megapack',
-          subtitle: 'Ogromne akumulatory do zasilania sieci energetycznej',
-          primaryBtnText: 'Dowiedz się więcej',
-          secondaryBtnText: 'Zapytaj o ofertę',
-      },
-      {
-          image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/solar-panels-hero-desktop.jpg",
-          category: 'Odnawialne źródła',
-          title: 'Panele słoneczne',
-          subtitle: 'Produkuj czystą energię ze słońca',
-          primaryBtnText: 'Dowiedz się więcej',
-          secondaryBtnText: 'Kalkulacja',
-      }
-  ];
-
   return (
     <div className="bg-background">
       <HeroSlider />
       
       <HorizontalCarousel items={vehicleCarouselItems} />
+
+      <section className="h-[50vh] w-full bg-zinc-200">
+        <GoogleMap />
+      </section>
+
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-12">
+            <div className="flex-1 max-w-lg text-center md:text-left">
+              <h2 className="text-4xl font-semibold tracking-tight">Doładuj samochód</h2>
+              <p className="mt-3 text-foreground/70">
+                Zobacz dostępną w pobliżu sieć stacji Tesla Supercharger i Destination Charger.
+              </p>
+              <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <Button variant="primary" size="lg">Wyświetl sieć</Button>
+                <Button variant="secondary" size="lg">Dowiedz się więcej</Button>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-8 sm:gap-12">
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <p className="text-4xl font-bold tracking-tight">14 075</p>
+                  <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white shadow-md">
+                    <LightningIcon className="w-5 h-5"/>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">Supercharger</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <p className="text-4xl font-bold tracking-tight">4717</p>
+                  <div className="w-10 h-10 rounded-full bg-zinc-500 flex items-center justify-center text-white shadow-md">
+                    <PlugIcon className="w-6 h-6"/>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">Stacje Destination Chargers</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       
       <section className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -286,31 +301,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      <section className="relative h-[600px] overflow-hidden">
-        <GoogleMap />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="absolute inset-0 container mx-auto px-4 flex flex-col justify-center items-center text-center text-white">
-          <h2 className="text-4xl font-semibold">Doładuj samochód</h2>
-          <p className="mt-2 max-w-lg">Zobacz dostępną w pobliżu sieć stacji Tesla Supercharger i Destination Charger.</p>
-          <div className="mt-8 flex justify-center items-end gap-12">
-            <div>
-              <p className="text-4xl font-bold">14,045 <span className="text-red-500 text-3xl">+</span></p>
-              <p>Supercharger</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold">4,663 <span className="text-gray-400 text-3xl">+</span></p>
-              <p>Stacje Destination Chargers</p>
-            </div>
-          </div>
-          <div className="mt-8 flex justify-center gap-4">
-            <Button variant="secondary" size="lg" className="bg-white/90 text-black hover:bg-white">Wyświetl sieć</Button>
-            <Button variant="outline" size="lg" className="border-white/50 text-white hover:bg-white/10">Dowiedz się więcej</Button>
-          </div>
-        </div>
-      </section>
-
-      <HorizontalCarousel items={energyCarouselItems} />
 
     </div>
   );

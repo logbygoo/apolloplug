@@ -54,9 +54,15 @@ const RentalPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 md:px-6">
+        <div className="py-16">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Wynajem Pojazdów Elektrycznych</h1>
+            <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+                Wybierz jeden z naszych modeli Tesli i ciesz się niezrównanymi wrażeniami z jazdy. Prosty proces rezerwacji online.
+            </p>
+        </div>
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="sticky top-20 py-8">
+            <div className="sticky top-20 pb-8">
               <img 
                 src={selectedCar?.imageUrl[0]} 
                 alt={selectedCar?.name} 
@@ -66,9 +72,9 @@ const RentalPage: React.FC = () => {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="py-8">
-              <h1 className="text-4xl font-bold tracking-tight">Wynajem</h1>
-              <p className="mt-2 text-muted-foreground">Doświadcz przyszłości motoryzacji już dziś.</p>
+            <div className="pb-8">
+              <h2 className="text-3xl font-bold tracking-tight">Formularz Rezerwacji</h2>
+              <p className="mt-2 text-muted-foreground">Wypełnij poniższe pola, aby dokonać rezerwacji.</p>
               
               <div className="mt-8">
                 <h2 className="text-lg font-semibold uppercase tracking-wider text-muted-foreground">Wybierz model</h2>

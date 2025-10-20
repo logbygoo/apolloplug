@@ -99,7 +99,7 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
     <section className="py-12 md:py-20 w-full">
       <div 
         ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pl-[100px] pr-4 md:pr-6"
+        className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar px-4 md:px-6 scroll-pl-4 md:scroll-pl-6"
       >
         {items.map((item, index) => (
              <div key={index}>

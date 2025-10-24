@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Input, Label } from '../components/ui';
-import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS, BRANDS, CreditCardIcon, ChevronDownIcon } from '../constants';
+import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS, BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon } from '../constants';
 import type { Car } from '../types';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
@@ -20,14 +20,17 @@ const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ t
 const BrandCard: React.FC<{ brand: typeof BRANDS[number], isSelected: boolean, onSelect: () => void }> = ({ brand, isSelected, onSelect }) => (
     <div
         onClick={brand.available ? onSelect : undefined}
-        className={`relative flex flex-col justify-center items-center cursor-pointer rounded-lg border-2 p-4 h-32 transition-all ${
-            isSelected ? 'border-primary shadow-md' : 'border-border'
+        className={`relative flex flex-col justify-center items-center cursor-pointer rounded-lg border p-4 h-32 transition-all ${
+            isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
         } ${
-            brand.available ? 'hover:border-primary/50' : 'opacity-50 cursor-not-allowed'
+            brand.available ? 'hover:border-foreground/50' : 'opacity-50 cursor-not-allowed'
         }`}
     >
+        <div className={`absolute top-3 right-3 h-5 w-5 rounded-sm flex items-center justify-center transition-all ${isSelected ? 'bg-foreground text-background' : 'bg-secondary'}`}>
+            {isSelected && <CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />}
+        </div>
         {!brand.available && (
-            <div className="absolute top-2 right-2 bg-muted text-muted-foreground text-xs font-bold px-2 py-1 rounded">
+            <div className="absolute top-2 left-2 bg-muted text-muted-foreground text-xs font-bold px-2 py-1 rounded">
                 Wkrótce
             </div>
         )}
@@ -41,32 +44,43 @@ const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void;
     return (
         <div
             onClick={isAvailable ? onSelect : undefined}
-            className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                isSelected ? 'border-primary shadow-md' : 'border-border'
+            className={`relative cursor-pointer rounded-lg border p-4 transition-all flex flex-col ${
+                isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
             } ${
-                isAvailable ? 'hover:border-primary/50' : 'opacity-50 cursor-not-allowed'
+                isAvailable ? 'hover:border-foreground/50' : 'opacity-50 cursor-not-allowed'
             }`}
         >
+            <div className={`absolute top-3 right-3 h-5 w-5 rounded-sm flex items-center justify-center transition-all ${isSelected ? 'bg-foreground text-background' : 'bg-secondary'}`}>
+                {isSelected && <CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />}
+            </div>
             {!isAvailable && (
-                <div className="absolute top-2 right-2 bg-muted text-muted-foreground text-xs font-bold px-2 py-1 rounded">
+                <div className="absolute top-2 left-2 bg-muted text-muted-foreground text-xs font-bold px-2 py-1 rounded">
                     Wkrótce
                 </div>
             )}
             <img src={car.imageUrl[0]} alt={car.name} className="w-full h-32 object-contain mb-4" />
-            <h3 className="font-semibold text-center">{car.name}</h3>
-            <p className="text-sm text-muted-foreground text-center">{car.pricePerDay} zł/dzień</p>
+            <div className="mt-auto text-center">
+                <h3 className="font-semibold">{car.name}</h3>
+                <p className="text-sm text-muted-foreground">{car.pricePerDay} zł/dzień</p>
+            </div>
         </div>
     );
 };
 
 const CheckboxOption: React.FC<{ option: typeof ADDITIONAL_OPTIONS[number], isChecked: boolean, onToggle: () => void }> = ({ option, isChecked, onToggle }) => (
-    <label className="flex items-center justify-between p-4 border border-border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:bg-secondary">
-        <div>
-            <p className="font-medium">{option.name}</p>
-        </div>
+    <label htmlFor={option.id} className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all ${isChecked ? 'border-foreground bg-secondary/50' : 'border-border bg-card'}`}>
+        <input id={option.id} type="checkbox" checked={isChecked} onChange={onToggle} className="absolute w-0 h-0 opacity-0"/>
         <div className="flex items-center gap-4">
+             <div className={`h-5 w-5 rounded-sm flex items-center justify-center transition-all flex-shrink-0 ${isChecked ? 'bg-foreground text-background' : 'bg-secondary'}`}>
+                {isChecked && <CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />}
+            </div>
+            <div>
+                <p className="font-medium">{option.name}</p>
+                <p className="text-sm text-muted-foreground">{option.description}</p>
+            </div>
+        </div>
+        <div className="text-right">
             <span className="text-sm font-semibold">{option.price} zł {option.type === 'per_day' && '/ dzień'}</span>
-            <input type="checkbox" checked={isChecked} onChange={onToggle} className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"/>
         </div>
     </label>
 );

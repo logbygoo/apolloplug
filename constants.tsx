@@ -127,11 +127,11 @@ export const RENTAL_LOCATIONS = [
 ];
 
 export const ADDITIONAL_OPTIONS = [
-    { id: 'tires', name: 'Ubezpieczenie opon', price: 9, type: 'per_day' },
-    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: 99, type: 'per_day' },
-    { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time' },
-    { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time' },
-    { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: 290, type: 'one_time' },
+    { id: 'tires', name: 'Ubezpieczenie opon', price: 9, type: 'per_day', description: 'Pokrycie kosztów uszkodzenia opon.' },
+    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: 99, type: 'per_day', description: 'Obniżenie odpowiedzialności finansowej.' },
+    { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time', description: 'Bezpieczeństwo dla najmłodszych pasażerów.' },
+    { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time', description: 'Wygodna dostawa pojazdu pod wskazany adres.' },
+    { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: 290, type: 'one_time', description: 'Zwróć auto bez konieczności ładowania.' },
 ] as const;
 
 
@@ -261,6 +261,23 @@ export const CreditCardIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) =
         <rect x="2" y="5" width="20" height="14" rx="2" />
         <line x1="2" y1="10" x2="22" y2="10" />
     </svg>
+);
+
+export const CheckIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
 );
 
 

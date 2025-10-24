@@ -71,6 +71,70 @@ export const CAR_FLEET: Car[] = [
   },
 ];
 
+export const RENTAL_CARS: Car[] = [
+  {
+    id: 'tesla-3-highland',
+    name: 'Model 3 Highland',
+    description: 'Udoskonalona wersja najpopularniejszego sedana elektrycznego.',
+    imageUrl: [
+      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-model-3-long-range-all-wheel-drive-pearl-white.png',
+    ],
+    pricePerDay: 320,
+    specs: { range: '629 km', seating: '5', acceleration: '4.4s' },
+    available: true,
+  },
+  {
+    id: 'tesla-y-jupiter',
+    name: 'Model Y Jupiter',
+    description: 'Wszechstronny SUV, teraz w nowej odsłonie z ulepszonym zasięgiem.',
+    imageUrl: [
+      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-model-y-long-range-pearl-white.png',
+    ],
+    pricePerDay: 370,
+    specs: { range: '533 km', seating: '5', acceleration: '5.0s' },
+    available: true,
+  },
+  {
+    id: 'tesla-x',
+    name: 'Model X',
+    description: 'Luksusowy i futurystyczny SUV z drzwiami Falcon Wing.',
+    imageUrl: [
+      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-model-x-plaid-stealth-grey.png',
+    ],
+    pricePerDay: 450,
+    specs: { range: '576 km', seating: '7', acceleration: '2.6s' },
+    available: false,
+  },
+  {
+    id: 'tesla-cybertruck',
+    name: 'Cybertruck',
+    description: 'Bardziej wytrzymały, niż inne ciężarówki. Bardziej użyteczny.',
+    imageUrl: [
+      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-cybertruck-awd-white.png',
+    ],
+    pricePerDay: 600,
+    specs: { range: '547 km', seating: '6', acceleration: '2.7s' },
+    available: false,
+  }
+];
+
+export const RENTAL_LOCATIONS = [
+  "Warszawa, Lotnisko Chopina (WAW)",
+  "Warszawa, Centrum",
+  "Kraków, Lotnisko Balice (KRK)",
+  "Gdańsk, Lotnisko im. Lecha Wałęsy (GDN)",
+  "Wrocław, Lotnisko im. Mikołaja Kopernika (WRO)",
+];
+
+export const ADDITIONAL_OPTIONS = [
+    { id: 'tires', name: 'Ubezpieczenie opon', price: 9, type: 'per_day' },
+    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: 99, type: 'per_day' },
+    { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time' },
+    { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time' },
+    { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: 290, type: 'one_time' },
+] as const;
+
+
 export const INVESTMENT_PROJECTS: InvestmentProject[] = [
   {
     id: 'proj-1',
@@ -191,3 +255,40 @@ export const PlugIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
         <path d="M16 7V3h-2v4h-4V3H8v4h-.01C6.89 7 6 7.89 6 9v3.01c0 1.66 1.34 3 3 3h1v3H8v4h8v-4h-2v-3h1c1.66 0 3-1.34 3-3V9c0-1.11-.89-2-2-2h-2z"/>
     </svg>
 );
+
+export const CreditCardIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <line x1="2" y1="10" x2="22" y2="10" />
+    </svg>
+);
+
+
+// Brand Logos
+export const TeslaLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg {...props} viewBox="0 0 400 400" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M294.6,96.3h-189c-12,0-12,18,0,18H160v158.4c0,9,7.8,16.2,17.4,16.2s17.4-7.2,17.4-16.2V114.3h54.6c12,0,12-18,0-18Z"/>
+  </svg>
+);
+
+export const MercedesLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M12 2V12M12 12L20.5 18M12 12L3.5 18" />
+    </svg>
+);
+
+export const BYDLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg {...props} viewBox="0 0 120 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <text x="5" y="32" fontFamily="Verdana, Geneva, sans-serif" fontSize="30" fontWeight="bold" letterSpacing="-1">
+            BYD
+        </text>
+    </svg>
+);
+
+
+export const BRANDS = [
+  { id: 'tesla', name: 'Tesla', LogoComponent: TeslaLogo, available: true },
+  { id: 'mercedes', name: 'Mercedes', LogoComponent: MercedesLogo, available: false },
+  { id: 'byd', name: 'BYD', LogoComponent: BYDLogo, available: false },
+] as const;

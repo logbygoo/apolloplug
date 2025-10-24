@@ -16,7 +16,7 @@ const ContactPage: React.FC = () => {
     ({ className, ...props }, ref) => {
         return (
             <textarea
-                className={`flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+                className={`block min-h-[140px] w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border-2 border-transparent focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 pt-4 ${className}`}
                 ref={ref}
                 {...props}
             />
@@ -59,18 +59,24 @@ const ContactPage: React.FC = () => {
                   <Button onClick={() => setSubmitted(false)} variant="secondary" className="mt-6">Napisz kolejną</Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Imię i nazwisko</Label>
-                    <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required />
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="relative">
+                    <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required placeholder=" " className="peer" />
+                    <Label htmlFor="name" className="absolute text-muted-foreground duration-300 transform -translate-y-3 scale-75 top-4 left-3 z-10 origin-[0] peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3">
+                      Imię i nazwisko
+                    </Label>
                   </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                  <div className="relative">
+                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder=" " className="peer" />
+                    <Label htmlFor="email" className="absolute text-muted-foreground duration-300 transform -translate-y-3 scale-75 top-4 left-3 z-10 origin-[0] peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3">
+                      Email
+                    </Label>
                   </div>
-                  <div>
-                    <Label htmlFor="message">Wiadomość</Label>
-                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required />
+                  <div className="relative">
+                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required placeholder=" " className="peer" />
+                     <Label htmlFor="message" className="absolute text-muted-foreground duration-300 transform -translate-y-3 scale-75 top-4 left-3 z-10 origin-[0] peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3">
+                      Wiadomość
+                    </Label>
                   </div>
                   <Button type="submit" className="w-full" size="lg">Wyślij</Button>
                 </form>

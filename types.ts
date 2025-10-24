@@ -16,6 +16,7 @@ export interface Car {
     secondaryBtnText?: string;
     secondaryBtnLink?: string;
   }
+  available?: boolean;
 }
 
 export interface InvestmentProject {

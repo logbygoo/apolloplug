@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Input, Label } from '../components/ui';
-import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS, BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon } from '../constants';
+import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS, BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, ApplePayIcon, GooglePayIcon, VisaIcon, MastercardIcon } from '../constants';
 import type { Car } from '../types';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
@@ -85,6 +85,24 @@ const CheckboxOption: React.FC<{ option: typeof ADDITIONAL_OPTIONS[number], isCh
     </label>
 );
 
+const AgreementCheckbox: React.FC<{
+  id: string;
+  label: string;
+  isChecked: boolean;
+  onToggle: () => void;
+}> = ({ id, label, isChecked, onToggle }) => (
+    <div className="flex items-start">
+        <label htmlFor={id} className="flex items-start cursor-pointer group">
+            <input id={id} type="checkbox" checked={isChecked} onChange={onToggle} className="absolute w-0 h-0 opacity-0" />
+            <div className={`relative mt-0.5 mr-3 h-5 w-5 rounded-sm flex-shrink-0 flex items-center justify-center transition-all ${isChecked ? 'bg-foreground' : 'bg-secondary'}`}>
+                {isChecked && <CheckIcon className="w-3.5 h-3.5 text-background" strokeWidth={3} />}
+            </div>
+            <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{label}</span>
+        </label>
+    </div>
+);
+
+
 const today = new Date().toISOString().split('T')[0];
 const firstAvailableCar = RENTAL_CARS.find(c => c.available) || RENTAL_CARS[0];
 
@@ -110,6 +128,11 @@ const RentalPage: React.FC = () => {
         email: '',
         phone: '',
         options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, false]))
+    });
+    const [agreements, setAgreements] = useState({
+        terms: false,
+        marketing: false,
+        commercial: false,
     });
 
     const summary = useMemo(() => {
@@ -153,13 +176,17 @@ const RentalPage: React.FC = () => {
             options: { ...prev.options, [optionId]: !prev.options[optionId] }
         }));
     };
+    
+    const handleAgreementToggle = (key: keyof typeof agreements) => {
+        setAgreements(prev => ({ ...prev, [key]: !prev[key] }));
+    };
 
     useEffect(() => { window.scrollTo(0, 0); }, [step, submitted]);
 
     const canProceed = useMemo(() => {
         const { pickupDate, returnDate, fullName, pesel, licenseNumber, address, postalCode, city, email, phone } = formData;
-        return summary.totalPrice > 0 && pickupDate && returnDate && fullName && pesel && licenseNumber && address && postalCode && city && email && phone;
-    }, [formData, summary.totalPrice]);
+        return summary.totalPrice > 0 && pickupDate && returnDate && fullName && pesel && licenseNumber && address && postalCode && city && email && phone && agreements.terms;
+    }, [formData, summary.totalPrice, agreements.terms]);
 
     if (submitted) {
         return (
@@ -179,7 +206,7 @@ const RentalPage: React.FC = () => {
         <div className="min-h-screen bg-background">
             <div className="container mx-auto px-4 md:px-6 py-16">
                 {step === 'details' && (
-                    <form onSubmit={(e) => { e.preventDefault(); setStep('payment'); }}>
+                    <form onSubmit={(e) => { e.preventDefault(); if(canProceed) setStep('payment'); }}>
                         <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
                             <div className="lg:col-span-2">
                                 <FormSection title="Wybierz Markę">
@@ -226,20 +253,52 @@ const RentalPage: React.FC = () => {
                                         {ADDITIONAL_OPTIONS.map(opt => <CheckboxOption key={opt.id} option={opt} isChecked={formData.options[opt.id]} onToggle={() => handleOptionToggle(opt.id)} />)}
                                     </div>
                                 </FormSection>
+                                <FormSection title="Regulamin i szkic umowy">
+                                    <div className="space-y-4">
+                                        <AgreementCheckbox
+                                            id="terms"
+                                            label="Akceptuję regulamin oraz politykę prywatności apolloplug.com"
+                                            isChecked={agreements.terms}
+                                            onToggle={() => handleAgreementToggle('terms')}
+                                        />
+                                        <AgreementCheckbox
+                                            id="marketing"
+                                            label="Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu"
+                                            isChecked={agreements.marketing}
+                                            onToggle={() => handleAgreementToggle('marketing')}
+                                        />
+                                        <AgreementCheckbox
+                                            id="commercial"
+                                            label="Wyrażam zgodę na otrzymywanie informacji handlowych drogą elektroniczną i SMS."
+                                            isChecked={agreements.commercial}
+                                            onToggle={() => handleAgreementToggle('commercial')}
+                                        />
+                                    </div>
+                                </FormSection>
                             </div>
 
                             <div className="lg:col-span-1">
-                                <div className="sticky top-24 space-y-6 bg-secondary p-6 rounded-lg">
-                                    <h2 className="text-3xl font-bold">Podsumowanie</h2>
-                                    <div className="space-y-2 border-t border-border pt-4">
-                                        <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
-                                        <div className="flex justify-between"><span className="text-muted-foreground">Cena najmu</span><span className="font-medium">{summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
-                                        <div className="flex justify-between"><span className="text-muted-foreground">Opcje dodatkowe</span><span className="font-medium">{summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}</span></div>
-                                        <div className="flex justify-between text-lg font-semibold border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
-                                        <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
-                                        <div className="flex justify-between text-xl font-bold text-primary pt-2"><span >Do zapłaty (z kaucją)</span><span>{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                <div className="sticky top-24">
+                                    <div className="space-y-6 bg-secondary p-6 rounded-lg">
+                                        <h2 className="text-3xl font-bold">Podsumowanie</h2>
+                                        <div className="space-y-2 border-t border-border pt-4">
+                                            <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
+                                            <div className="flex justify-between"><span className="text-muted-foreground">Cena najmu</span><span className="font-medium">{summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                            <div className="flex justify-between"><span className="text-muted-foreground">Opcje dodatkowe</span><span className="font-medium">{summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}</span></div>
+                                            <div className="flex justify-between text-lg font-semibold border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
+                                            <div className="flex justify-between text-xl font-bold text-primary pt-2"><span >Do zapłaty (z kaucją)</span><span>{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                        </div>
+                                        <Button type="submit" size="lg" className="w-full" disabled={!canProceed}>Przejdź do płatności</Button>
                                     </div>
-                                    <Button type="submit" size="lg" className="w-full" disabled={!canProceed}>Przejdź do płatności</Button>
+                                    <div className="mt-4">
+                                        <div className="flex justify-center items-center gap-4 text-muted-foreground">
+                                            <ApplePayIcon className="h-6" />
+                                            <GooglePayIcon className="h-6" />
+                                            <VisaIcon className="h-6" />
+                                            <MastercardIcon className="h-6" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

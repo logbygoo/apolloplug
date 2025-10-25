@@ -77,7 +77,7 @@ export const RENTAL_CARS: Car[] = [
     name: 'Model 3 Highland',
     description: 'Udoskonalona wersja najpopularniejszego sedana elektrycznego.',
     imageUrl: [
-      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-model-3-long-range-all-wheel-drive-pearl-white.png',
+      '/images/tesla-3-low-600x400.jpg',
     ],
     pricePerDay: 320,
     specs: { range: '629 km', seating: '5', acceleration: '4.4s' },
@@ -127,6 +127,7 @@ export const RENTAL_LOCATIONS = [
 ];
 
 export const ADDITIONAL_OPTIONS = [
+    { id: 'insurance', name: 'Ubezpieczenie OC AC NNW', price: 0, type: 'one_time', description: 'Zabezpiecza kierowcę przed kosztami szkód spowodowanymi przez innych uczestników ruchu.' },
     { id: 'tires', name: 'Ubezpieczenie opon', price: 9, type: 'per_day', description: 'Pokrycie kosztów uszkodzenia opon.' },
     { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: 99, type: 'per_day', description: 'Obniżenie odpowiedzialności finansowej.' },
     { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time', description: 'Bezpieczeństwo dla najmłodszych pasażerów.' },
@@ -252,7 +253,7 @@ export const LightningIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) =>
 
 export const PlugIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M16 7V3h-2v4h-4V3H8v4h-.01C6.89 7 6 7.89 6 9v3.01c0 1.66 1.34 3 3 3h1v3H8v4h8v-4h-2v-3h1c1.66 0 3-1.34 3-3V9c0-1.11-.89-2-2-2h-2z"/>
+        <path d="M16 7V3h-2v4h-4V3H8v4h-.01C6.89 7 6 7.89 6 9v3.01c0 1.66 1.34 3 3 3h1v3H8v4h8v-4h-2v-3h1c1.66 0 3-1.34 3-3V9c0 -1.11-.89-2-2-2h-2z"/>
     </svg>
 );
 

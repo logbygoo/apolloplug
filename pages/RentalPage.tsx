@@ -67,23 +67,28 @@ const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void;
     );
 };
 
-const CheckboxOption: React.FC<{ option: typeof ADDITIONAL_OPTIONS[number], isChecked: boolean, onToggle: () => void }> = ({ option, isChecked, onToggle }) => (
-    <label htmlFor={option.id} className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all ${isChecked ? 'border-foreground bg-secondary/50' : 'border-border bg-card'}`}>
-        <input id={option.id} type="checkbox" checked={isChecked} onChange={onToggle} className="absolute w-0 h-0 opacity-0"/>
-        <div className="flex items-center gap-4">
-             <div className={`h-5 w-5 rounded-sm flex items-center justify-center transition-all flex-shrink-0 ${isChecked ? 'bg-foreground text-background' : 'bg-secondary'}`}>
-                {isChecked && <CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />}
+const CheckboxOption: React.FC<{ option: typeof ADDITIONAL_OPTIONS[number], isChecked: boolean, onToggle: () => void }> = ({ option, isChecked, onToggle }) => {
+    const isFree = option.price === 0;
+    return (
+        <label htmlFor={option.id} className={`flex items-center justify-between p-4 border rounded-lg transition-all ${isChecked ? 'border-foreground bg-secondary/50' : 'border-border bg-card'} ${isFree ? 'cursor-default' : 'cursor-pointer'}`}>
+            <input id={option.id} type="checkbox" checked={isChecked} onChange={onToggle} className="absolute w-0 h-0 opacity-0" disabled={isFree}/>
+            <div className="flex items-center gap-4">
+                 <div className={`h-5 w-5 rounded-sm flex items-center justify-center transition-all flex-shrink-0 ${isChecked ? 'bg-foreground text-background' : 'bg-secondary'}`}>
+                    {isChecked && <CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />}
+                </div>
+                <div>
+                    <p className="font-medium">{option.name}</p>
+                    <p className="text-sm text-muted-foreground">{option.description}</p>
+                </div>
             </div>
-            <div>
-                <p className="font-medium">{option.name}</p>
-                <p className="text-sm text-muted-foreground">{option.description}</p>
+            <div className="text-right">
+                <span className="text-sm font-semibold">
+                    {isFree ? 'Wliczone w cenę' : `${option.price} zł ${option.type === 'per_day' ? '/ dzień' : ''}`}
+                </span>
             </div>
-        </div>
-        <div className="text-right">
-            <span className="text-sm font-semibold">{option.price} zł {option.type === 'per_day' && '/ dzień'}</span>
-        </div>
-    </label>
-);
+        </label>
+    );
+};
 
 const AgreementCheckbox: React.FC<{
   id: string;
@@ -127,7 +132,7 @@ const RentalPage: React.FC = () => {
         city: '',
         email: '',
         phone: '',
-        options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, false]))
+        options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, o.price === 0]))
     });
     const [agreements, setAgreements] = useState({
         terms: false,

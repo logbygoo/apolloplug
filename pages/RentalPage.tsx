@@ -108,7 +108,14 @@ const AgreementCheckbox: React.FC<{
 );
 
 
-const today = new Date().toISOString().split('T')[0];
+const todayDate = new Date();
+const tomorrowDate = new Date(todayDate);
+tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+const formatDate = (date: Date) => date.toISOString().split('T')[0];
+const today = formatDate(todayDate);
+const tomorrow = formatDate(tomorrowDate);
+
 const firstAvailableCar = RENTAL_CARS.find(c => c.available) || RENTAL_CARS[0];
 
 // FIX: Define a strict type for the form data to prevent incorrect type inference on the `brand` property.
@@ -140,10 +147,10 @@ const RentalPage: React.FC = () => {
     const [formData, setFormData] = useState<FormData>({
         brand: BRANDS[0],
         model: firstAvailableCar,
-        pickupDate: '',
+        pickupDate: today,
         pickupTime: '10:00',
         pickupLocation: RENTAL_LOCATIONS[0],
-        returnDate: '',
+        returnDate: tomorrow,
         returnTime: '10:00',
         returnLocation: RENTAL_LOCATIONS[0],
         fullName: '',

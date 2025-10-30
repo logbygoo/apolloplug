@@ -34,8 +34,8 @@ const BrandCard: React.FC<{ brand: typeof BRANDS[number], isSelected: boolean, o
                 Wkrótce
             </div>
         )}
-        <brand.LogoComponent className="h-12 w-auto" />
-        <h3 className="font-semibold text-center mt-2">{brand.name}</h3>
+        <img src={brand.logoUrl} alt={`${brand.name} logo`} className="h-12 w-auto object-contain" />
+        {/* <h3 className="font-semibold text-center mt-2">{brand.name}</h3> */}
     </div>
 );
 
@@ -111,10 +111,33 @@ const AgreementCheckbox: React.FC<{
 const today = new Date().toISOString().split('T')[0];
 const firstAvailableCar = RENTAL_CARS.find(c => c.available) || RENTAL_CARS[0];
 
+// FIX: Define a strict type for the form data to prevent incorrect type inference on the `brand` property.
+interface FormData {
+    brand: typeof BRANDS[number];
+    model: Car;
+    pickupDate: string;
+    pickupTime: string;
+    pickupLocation: string;
+    returnDate: string;
+    returnTime: string;
+    returnLocation: string;
+    fullName: string;
+    nip: string;
+    pesel: string;
+    licenseNumber: string;
+    address: string;
+    postalCode: string;
+    city: string;
+    email: string;
+    phone: string;
+    options: Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>;
+}
+
 const RentalPage: React.FC = () => {
     const [step, setStep] = useState<'details' | 'payment'>('details');
     const [submitted, setSubmitted] = useState(false);
-    const [formData, setFormData] = useState({
+    // FIX: Apply the FormData interface to the useState hook and add a type assertion for the `options` property.
+    const [formData, setFormData] = useState<FormData>({
         brand: BRANDS[0],
         model: firstAvailableCar,
         pickupDate: '',
@@ -132,7 +155,7 @@ const RentalPage: React.FC = () => {
         city: '',
         email: '',
         phone: '',
-        options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, o.price === 0]))
+        options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, o.price === 0])) as Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>
     });
     const [agreements, setAgreements] = useState({
         terms: false,

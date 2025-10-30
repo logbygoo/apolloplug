@@ -77,7 +77,7 @@ export const RENTAL_CARS: Car[] = [
     name: 'Model 3 Highland',
     description: 'Udoskonalona wersja najpopularniejszego sedana elektrycznego.',
     imageUrl: [
-      '/images/tesla-3-low-600x400.jpg',
+      'https://img.apolloplug.com/img/tesla-3-low-600x400.jpg',
     ],
     pricePerDay: 320,
     specs: { range: '629 km', seating: '5', acceleration: '4.4s' },
@@ -88,7 +88,7 @@ export const RENTAL_CARS: Car[] = [
     name: 'Model Y Jupiter',
     description: 'Wszechstronny SUV, teraz w nowej odsłonie z ulepszonym zasięgiem.',
     imageUrl: [
-      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-model-y-long-range-pearl-white.png',
+      'https://img.apolloplug.com/img/tesla-y-low-600x400.jpg',
     ],
     pricePerDay: 370,
     specs: { range: '533 km', seating: '5', acceleration: '5.0s' },
@@ -99,7 +99,7 @@ export const RENTAL_CARS: Car[] = [
     name: 'Model X',
     description: 'Luksusowy i futurystyczny SUV z drzwiami Falcon Wing.',
     imageUrl: [
-      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-model-x-plaid-stealth-grey.png',
+      'https://img.apolloplug.com/img/tesla-x-low-600x400.jpg',
     ],
     pricePerDay: 450,
     specs: { range: '576 km', seating: '7', acceleration: '2.6s' },
@@ -110,7 +110,7 @@ export const RENTAL_CARS: Car[] = [
     name: 'Cybertruck',
     description: 'Bardziej wytrzymały, niż inne ciężarówki. Bardziej użyteczny.',
     imageUrl: [
-      'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/compare-cybertruck-awd-white.png',
+      'https://img.apolloplug.com/img/tesla-cybertruck-low-600x400.jpg',
     ],
     pricePerDay: 600,
     specs: { range: '547 km', seating: '6', acceleration: '2.7s' },
@@ -121,9 +121,6 @@ export const RENTAL_CARS: Car[] = [
 export const RENTAL_LOCATIONS = [
   "Warszawa, Lotnisko Chopina (WAW)",
   "Warszawa, Centrum",
-  "Kraków, Lotnisko Balice (KRK)",
-  "Gdańsk, Lotnisko im. Lecha Wałęsy (GDN)",
-  "Wrocław, Lotnisko im. Mikołaja Kopernika (WRO)",
 ];
 
 export const ADDITIONAL_OPTIONS = [
@@ -289,33 +286,10 @@ export const InfoIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-
-// Brand Logos
-export const TeslaLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg {...props} viewBox="0 0 400 400" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M294.6,96.3h-189c-12,0-12,18,0,18H160v158.4c0,9,7.8,16.2,17.4,16.2s17.4-7.2,17.4-16.2V114.3h54.6c12,0,12-18,0-18Z"/>
-  </svg>
-);
-
-export const MercedesLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 2V12M12 12L20.5 18M12 12L3.5 18" />
-    </svg>
-);
-
-export const BYDLogo: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg {...props} viewBox="0 0 120 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <text x="5" y="32" fontFamily="Verdana, Geneva, sans-serif" fontSize="30" fontWeight="bold" letterSpacing="-1">
-            BYD
-        </text>
-    </svg>
-);
-
 export const BRANDS = [
-  { id: 'tesla', name: 'Tesla', LogoComponent: TeslaLogo, available: true },
-  { id: 'mercedes', name: 'Mercedes', LogoComponent: MercedesLogo, available: false },
-  { id: 'byd', name: 'BYD', LogoComponent: BYDLogo, available: false },
+  { id: 'tesla', name: 'Tesla', logoUrl: 'https://img.apolloplug.com/img/logo-tesla-black.png', available: true },
+  { id: 'mercedes', name: 'Mercedes', logoUrl: 'https://img.apolloplug.com/img/logo-mercedes-black.png', available: false },
+  { id: 'byd', name: 'BYD', logoUrl: 'https://img.apolloplug.com/img/logo-byd-black.png', available: false },
 ] as const;
 
 // Payment Icons

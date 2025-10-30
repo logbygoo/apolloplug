@@ -7,6 +7,8 @@ import InvestPage from './pages/InvestPage';
 import FleetPage from './pages/FleetPage';
 import ContactPage from './pages/ContactPage';
 import { ApolloPlugLogo, MenuIcon, XIcon, HeadphoneIcon, FlagIcon, EnvelopeIcon } from './constants';
+import { CONFIG } from './config';
+import UnderConstructionPage from './pages/UnderConstructionPage';
 
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
@@ -110,6 +112,19 @@ const Footer: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem('isEvTechAuthenticated') === 'true';
+  });
+
+  const handleAuthentication = () => {
+    sessionStorage.setItem('isEvTechAuthenticated', 'true');
+    setIsAuthenticated(true);
+  };
+
+  if (CONFIG.siteStatus === 'OFF' && !isAuthenticated) {
+    return <UnderConstructionPage onAuthenticated={handleAuthentication} />;
+  }
+
   return (
     <HashRouter>
       <div className="flex min-h-screen flex-col bg-background text-foreground font-sans">

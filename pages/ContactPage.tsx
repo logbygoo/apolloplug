@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input, Label } from '../components/ui';
+import { InfoIcon } from '../constants';
 
 const ContactPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -16,7 +17,7 @@ const ContactPage: React.FC = () => {
     ({ className, ...props }, ref) => {
         return (
             <textarea
-                className={`block min-h-[140px] w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border-2 border-transparent focus-visible:outline-none focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 pt-4 ${className}`}
+                className={`block min-h-[140px] w-full rounded-md bg-secondary p-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
                 ref={ref}
                 {...props}
             />
@@ -60,23 +61,24 @@ const ContactPage: React.FC = () => {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="relative">
-                    <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required placeholder=" " className="peer" />
-                    <Label htmlFor="name" className="absolute text-muted-foreground duration-300 transform -translate-y-3 scale-75 top-4 left-3 z-10 origin-[0] peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3">
+                  <div>
+                    <Label htmlFor="name" className="flex items-center">
                       Imię i nazwisko
                     </Label>
+                    <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1" />
                   </div>
-                  <div className="relative">
-                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder=" " className="peer" />
-                    <Label htmlFor="email" className="absolute text-muted-foreground duration-300 transform -translate-y-3 scale-75 top-4 left-3 z-10 origin-[0] peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3">
-                      Email
+                   <div>
+                    <Label htmlFor="email" className="flex items-center">
+                      E-mail
+                      <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground" />
                     </Label>
+                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1" />
                   </div>
-                  <div className="relative">
-                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required placeholder=" " className="peer" />
-                     <Label htmlFor="message" className="absolute text-muted-foreground duration-300 transform -translate-y-3 scale-75 top-4 left-3 z-10 origin-[0] peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3">
+                  <div>
+                     <Label htmlFor="message" className="flex items-center">
                       Wiadomość
                     </Label>
+                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required className="mt-1" />
                   </div>
                   <Button type="submit" className="w-full" size="lg">Wyślij</Button>
                 </form>

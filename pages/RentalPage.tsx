@@ -67,6 +67,30 @@ const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void;
     );
 };
 
+const PriceTable: React.FC<{ car: Car }> = ({ car }) => {
+    if (!car.priceTiers || car.priceTiers.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-2">Cennik dla {car.name}</h3>
+            <div className="overflow-hidden border border-border rounded-lg">
+                <table className="min-w-full">
+                    <tbody className="bg-background divide-y divide-border">
+                        {car.priceTiers.map((tier, index) => (
+                            <tr key={index} className="odd:bg-white even:bg-secondary/50">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{tier.days}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-foreground">{tier.pricePerDay} zł</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
 const CheckboxOption: React.FC<{ option: typeof ADDITIONAL_OPTIONS[number], isChecked: boolean, onToggle: () => void }> = ({ option, isChecked, onToggle }) => {
     const isFree = option.price === 0;
     return (
@@ -184,7 +208,17 @@ const RentalPage: React.FC = () => {
 
         const diffTime = end.getTime() - start.getTime();
         const rentalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
-        const rentalPrice = rentalDays * model.pricePerDay;
+
+        const tier = model.priceTiers?.find(t => {
+            const range = t.days.match(/\d+/g);
+            if (!range) return false;
+            const min = parseInt(range[0]);
+            const max = range.length > 1 ? parseInt(range[1]) : Infinity;
+            return rentalDays >= min && rentalDays <= max;
+        }) || { pricePerDay: model.pricePerDay };
+
+        const rentalPrice = rentalDays * tier.pricePerDay;
+
 
         let optionsPrice = 0;
         ADDITIONAL_OPTIONS.forEach(opt => {
@@ -257,6 +291,7 @@ const RentalPage: React.FC = () => {
                                             <ModelCard key={car.id} car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car }))} />
                                         ))}
                                     </div>
+                                    <PriceTable car={formData.model} />
                                 </FormSection>
                                 <FormSection title="Okres najmu">
                                     <div className="grid sm:grid-cols-3 gap-4 items-start">

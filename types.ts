@@ -17,6 +17,10 @@ export interface Car {
     secondaryBtnLink?: string;
   }
   available?: boolean;
+  priceTiers?: {
+    days: string;
+    pricePerDay: number;
+  }[];
 }
 
 export interface InvestmentProject {

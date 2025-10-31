@@ -82,6 +82,12 @@ export const RENTAL_CARS: Car[] = [
     pricePerDay: 320,
     specs: { range: '629 km', seating: '5', acceleration: '4.4s' },
     available: true,
+    priceTiers: [
+        { days: '1-3 dni', pricePerDay: 320 },
+        { days: '4-7 dni', pricePerDay: 300 },
+        { days: '8-14 dni', pricePerDay: 280 },
+        { days: '15+ dni', pricePerDay: 250 },
+    ],
   },
   {
     id: 'tesla-y-jupiter',
@@ -93,6 +99,12 @@ export const RENTAL_CARS: Car[] = [
     pricePerDay: 370,
     specs: { range: '533 km', seating: '5', acceleration: '5.0s' },
     available: true,
+    priceTiers: [
+        { days: '1-3 dni', pricePerDay: 370 },
+        { days: '4-7 dni', pricePerDay: 350 },
+        { days: '8-14 dni', pricePerDay: 320 },
+        { days: '15+ dni', pricePerDay: 290 },
+    ],
   },
   {
     id: 'tesla-x',
@@ -104,6 +116,12 @@ export const RENTAL_CARS: Car[] = [
     pricePerDay: 450,
     specs: { range: '576 km', seating: '7', acceleration: '2.6s' },
     available: false,
+    priceTiers: [
+        { days: '1-3 dni', pricePerDay: 450 },
+        { days: '4-7 dni', pricePerDay: 420 },
+        { days: '8-14 dni', pricePerDay: 400 },
+        { days: '15+ dni', pricePerDay: 380 },
+    ],
   },
   {
     id: 'tesla-cybertruck',
@@ -115,6 +133,12 @@ export const RENTAL_CARS: Car[] = [
     pricePerDay: 600,
     specs: { range: '547 km', seating: '6', acceleration: '2.7s' },
     available: false,
+    priceTiers: [
+        { days: '1-3 dni', pricePerDay: 600 },
+        { days: '4-7 dni', pricePerDay: 550 },
+        { days: '8-14 dni', pricePerDay: 520 },
+        { days: '15+ dni', pricePerDay: 500 },
+    ],
   }
 ];
 

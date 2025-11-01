@@ -20,8 +20,10 @@ export interface Car {
   priceTiers?: {
     days: string;
     pricePerDay: number;
+    kmLimitPerDay: number;
   }[];
   deposit?: number;
+  costPerKmOverLimit: number;
 }
 
 export interface InvestmentProject {

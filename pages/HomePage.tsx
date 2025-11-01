@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
-import { CAR_FLEET, LightningIcon, PlugIcon } from '../constants';
+import { CAR_FLEET } from '../configs/fleetConfig';
+import { LightningIcon, PlugIcon } from '../constants';
 
 const HeroSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

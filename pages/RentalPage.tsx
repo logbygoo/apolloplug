@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Input, Label } from '../components/ui';
-import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS, BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, ApplePayIcon, GooglePayIcon, VisaIcon, MastercardIcon, InfoIcon } from '../constants';
+import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
+import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, ApplePayIcon, GooglePayIcon, VisaIcon, MastercardIcon, InfoIcon } from '../constants';
 import type { Car } from '../types';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
@@ -9,6 +10,13 @@ const timeOptions = Array.from({ length: 25 }, (_, i) => {
     if (hour > 20) return null;
     return `${String(hour).padStart(2, '0')}:${minute}`;
 }).filter(Boolean) as string[];
+
+const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
+  if (typeof price === 'number') {
+    return price;
+  }
+  return price[carId] ?? 0;
+};
 
 const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <section className="pt-8 first:pt-0">
@@ -61,7 +69,11 @@ const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void;
             <img src={car.imageUrl[0]} alt={car.name} className="w-full h-32 object-contain mb-4" />
             <div className="mt-auto text-center">
                 <h3 className="font-semibold">{car.name}</h3>
-                <p className="text-sm text-muted-foreground">{car.pricePerDay} zł/dzień</p>
+                {isAvailable ? (
+                    <p className="text-sm text-muted-foreground">{car.pricePerDay} zł/dzień</p>
+                ) : (
+                    <p className="text-sm text-muted-foreground">&nbsp;</p>
+                )}
             </div>
         </div>
     );
@@ -91,8 +103,10 @@ const PriceTable: React.FC<{ car: Car }> = ({ car }) => {
     );
 };
 
-const CheckboxOption: React.FC<{ option: typeof ADDITIONAL_OPTIONS[number], isChecked: boolean, onToggle: () => void }> = ({ option, isChecked, onToggle }) => {
-    const isFree = option.price === 0;
+const CheckboxOption: React.FC<{ car: Car; option: typeof ADDITIONAL_OPTIONS[number], isChecked: boolean, onToggle: () => void }> = ({ car, option, isChecked, onToggle }) => {
+    const price = getPriceForCar(option.price, car.id);
+    const isFree = price === 0;
+
     return (
         <label htmlFor={option.id} className={`flex items-center justify-between p-4 border rounded-lg transition-all ${isChecked ? 'border-foreground bg-secondary/50' : 'border-border bg-card'} ${isFree ? 'cursor-default' : 'cursor-pointer'}`}>
             <input id={option.id} type="checkbox" checked={isChecked} onChange={onToggle} className="absolute w-0 h-0 opacity-0" disabled={isFree}/>
@@ -107,7 +121,7 @@ const CheckboxOption: React.FC<{ option: typeof ADDITIONAL_OPTIONS[number], isCh
             </div>
             <div className="text-right">
                 <span className="text-sm font-semibold">
-                    {isFree ? 'Wliczone w cenę' : `${option.price} zł ${option.type === 'per_day' ? '/ dzień' : ''}`}
+                    {isFree ? 'Wliczone w cenę' : `${price} zł ${option.type === 'per_day' ? '/ dzień' : ''}`}
                 </span>
             </div>
         </label>
@@ -186,7 +200,7 @@ const RentalPage: React.FC = () => {
         city: '',
         email: '',
         phone: '',
-        options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, o.price === 0])) as Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>
+        options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, getPriceForCar(o.price, firstAvailableCar.id) === 0])) as Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>
     });
     const [agreements, setAgreements] = useState({
         terms: false,
@@ -212,8 +226,18 @@ const RentalPage: React.FC = () => {
         const tier = model.priceTiers?.find(t => {
             const range = t.days.match(/\d+/g);
             if (!range) return false;
+            
             const min = parseInt(range[0]);
-            const max = range.length > 1 ? parseInt(range[1]) : Infinity;
+            let max;
+
+            if (range.length > 1) {
+                max = parseInt(range[1]);
+            } else if (t.days.includes('+') || t.days.includes('-')) {
+                max = Infinity;
+            } else {
+                max = min;
+            }
+
             return rentalDays >= min && rentalDays <= max;
         }) || { pricePerDay: model.pricePerDay };
 
@@ -223,12 +247,13 @@ const RentalPage: React.FC = () => {
         let optionsPrice = 0;
         ADDITIONAL_OPTIONS.forEach(opt => {
             if (options[opt.id]) {
-                optionsPrice += opt.type === 'per_day' ? opt.price * rentalDays : opt.price;
+                const price = getPriceForCar(opt.price, model.id);
+                optionsPrice += opt.type === 'per_day' ? price * rentalDays : price;
             }
         });
         
         const totalPrice = rentalPrice + optionsPrice;
-        const deposit = 5000;
+        const deposit = model.deposit || 5000;
         const totalWithDeposit = totalPrice + deposit;
 
         return { rentalDays, rentalPrice, optionsPrice, totalPrice, deposit, totalWithDeposit };
@@ -320,7 +345,7 @@ const RentalPage: React.FC = () => {
                                 </FormSection>
                                 <FormSection title="Opcje dodatkowe">
                                     <div className="space-y-3">
-                                        {ADDITIONAL_OPTIONS.map(opt => <CheckboxOption key={opt.id} option={opt} isChecked={formData.options[opt.id]} onToggle={() => handleOptionToggle(opt.id)} />)}
+                                        {ADDITIONAL_OPTIONS.map(opt => <CheckboxOption key={opt.id} option={opt} car={formData.model} isChecked={formData.options[opt.id]} onToggle={() => handleOptionToggle(opt.id)} />)}
                                     </div>
                                 </FormSection>
                                 <FormSection title="Regulamin i szkic umowy">
@@ -355,9 +380,9 @@ const RentalPage: React.FC = () => {
                                             <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
                                             <div className="flex justify-between"><span className="text-muted-foreground">Cena najmu</span><span className="font-medium">{summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                             <div className="flex justify-between"><span className="text-muted-foreground">Opcje dodatkowe</span><span className="font-medium">{summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}</span></div>
-                                            <div className="flex justify-between text-lg font-semibold border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                            <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                             <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
-                                            <div className="flex justify-between text-xl font-bold text-primary pt-2"><span >Do zapłaty (z kaucją)</span><span>{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                            <div className="flex justify-between text-sm pt-2"><span className="text-muted-foreground">Do zapłaty (z kaucją)</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                         </div>
                                         <Button type="submit" size="lg" className="w-full" disabled={!canProceed}>Przejdź do płatności</Button>
                                     </div>

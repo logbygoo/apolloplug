@@ -1,10 +1,10 @@
 export interface Car {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   imageUrl: string[];
   pricePerDay: number;
-  specs: {
+  specs?: {
     range: string;
     seating: string;
     acceleration: string;
@@ -21,6 +21,7 @@ export interface Car {
     days: string;
     pricePerDay: number;
   }[];
+  deposit?: number;
 }
 
 export interface InvestmentProject {

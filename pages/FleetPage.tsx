@@ -1,5 +1,5 @@
 import React from 'react';
-import { CAR_FLEET } from '../constants';
+import { CAR_FLEET } from '../configs/fleetConfig';
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui';
 import { Link } from 'react-router-dom';
 
@@ -28,15 +28,15 @@ const FleetPage: React.FC = () => {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
-                        <p className="text-2xl font-semibold">{car.specs.range}</p>
+                        <p className="text-2xl font-semibold">{car.specs?.range}</p>
                         <p className="text-xs text-muted-foreground">Zasięg (WLTP)</p>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold">{car.specs.seating}</p>
+                        <p className="text-2xl font-semibold">{car.specs?.seating}</p>
                         <p className="text-xs text-muted-foreground">Miejsca</p>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold">{car.specs.acceleration}</p>
+                        <p className="text-2xl font-semibold">{car.specs?.acceleration}</p>
                         <p className="text-xs text-muted-foreground">0-100 km/h</p>
                     </div>
                     <div>

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Input, Label } from '../components/ui';
 import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
-import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon } from '../constants';
+import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon } from '../constants';
 import type { Car } from '../types';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
@@ -148,6 +148,20 @@ const AgreementCheckbox: React.FC<{
     </div>
 );
 
+const DocumentTile: React.FC<{ title: string; href: string }> = ({ title, href }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-4 p-4 border border-border rounded-lg bg-card hover:bg-secondary transition-colors group"
+  >
+    <FileTextIcon className="w-8 h-8 text-muted-foreground flex-shrink-0" />
+    <div>
+      <p className="font-medium text-foreground">{title}</p>
+      <p className="text-sm text-muted-foreground">Otwórz dokument PDF</p>
+    </div>
+  </a>
+);
 
 const todayDate = new Date();
 const tomorrowDate = new Date(todayDate);
@@ -355,25 +369,32 @@ const RentalPage: React.FC = () => {
                                     </div>
                                 </FormSection>
                                 <FormSection title="Regulamin i szkic umowy">
-                                    <div className="space-y-4">
-                                        <AgreementCheckbox
-                                            id="terms"
-                                            label="Akceptuję regulamin oraz politykę prywatności apolloplug.com"
-                                            isChecked={agreements.terms}
-                                            onToggle={() => handleAgreementToggle('terms')}
-                                        />
-                                        <AgreementCheckbox
-                                            id="marketing"
-                                            label="Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu"
-                                            isChecked={agreements.marketing}
-                                            onToggle={() => handleAgreementToggle('marketing')}
-                                        />
-                                        <AgreementCheckbox
-                                            id="commercial"
-                                            label="Wyrażam zgodę na otrzymywanie informacji handlowych drogą elektroniczną i SMS."
-                                            isChecked={agreements.commercial}
-                                            onToggle={() => handleAgreementToggle('commercial')}
-                                        />
+                                    <div>
+                                        <div className="space-y-4">
+                                            <AgreementCheckbox
+                                                id="terms"
+                                                label="Akceptuję regulamin oraz politykę prywatności apolloplug.com"
+                                                isChecked={agreements.terms}
+                                                onToggle={() => handleAgreementToggle('terms')}
+                                            />
+                                            <AgreementCheckbox
+                                                id="marketing"
+                                                label="Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu"
+                                                isChecked={agreements.marketing}
+                                                onToggle={() => handleAgreementToggle('marketing')}
+                                            />
+                                            <AgreementCheckbox
+                                                id="commercial"
+                                                label="Wyrażam zgodę na otrzymywanie informacji handlowych drogą elektroniczną i SMS."
+                                                isChecked={agreements.commercial}
+                                                onToggle={() => handleAgreementToggle('commercial')}
+                                            />
+                                        </div>
+                                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                            <DocumentTile title="Umowa wynajmu" href="#" />
+                                            <DocumentTile title="Protokół Odbioru/Zwrotu" href="#" />
+                                            <DocumentTile title="Regulamin Wypożyczalni" href="#" />
+                                        </div>
                                     </div>
                                 </FormSection>
                             </div>

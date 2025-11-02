@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Button, Input, Label } from '../components/ui';
 import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
-import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, ApplePayIcon, GooglePayIcon, VisaIcon, MastercardIcon, InfoIcon } from '../constants';
+import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon } from '../constants';
 import type { Car } from '../types';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
@@ -395,11 +395,13 @@ const RentalPage: React.FC = () => {
                                         <Button type="submit" size="lg" className="w-full" disabled={!canProceed}>Przejdź do płatności</Button>
                                     </div>
                                     <div className="mt-4">
-                                        <div className="flex justify-center items-center gap-4 text-muted-foreground">
-                                            <ApplePayIcon className="h-6" />
-                                            <GooglePayIcon className="h-6" />
-                                            <VisaIcon className="h-6" />
-                                            <MastercardIcon className="h-6" />
+                                        <div className="flex justify-center items-center gap-4">
+                                            <img src="https://img.apolloplug.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
+                                            <img src="https://img.apolloplug.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
+                                            <img src="https://img.apolloplug.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
+                                            <img src="https://img.apolloplug.com/img/pay-visa.svg" alt="Visa" className="h-6" />
+                                            <img src="https://img.apolloplug.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
+                                            <img src="https://img.apolloplug.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
                                         </div>
                                     </div>
                                 </div>

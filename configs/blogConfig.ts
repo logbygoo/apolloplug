@@ -1,39 +1,70 @@
 import type { Article } from '../types';
 
 export const ARTICLES: Article[] = [
-  {
-    slug: 'jak-dbac-o-baterie',
-    title: 'Jak dbać o baterię w samochodzie elektrycznym?',
-    publishDate: '2024-07-28',
-    thumbnailUrl: 'https://img.apolloplug.com/img/blog-battery-care.jpg',
-    excerpt: 'Kluczowe aspekty, takie jak optymalne poziomy ładowania, wpływ temperatury i najlepsze praktyki dotyczące szybkiego ładowania.',
-    content: `
-      <p>Baterie w samochodach elektrycznych to serce pojazdu, a ich właściwa pielęgnacja jest kluczowa dla zachowania zasięgu i długowieczności. Oto kilka praktycznych wskazówek, jak dbać o baterię w swoim EV.</p>
-      <h2>1. Unikaj skrajnych stanów naładowania</h2>
-      <p>Baterie litowo-jonowe, stosowane w pojazdach elektrycznych, najlepiej czują się w zakresie od 20% do 80% naładowania. Regularne ładowanie do 100% lub rozładowywanie do 0% może przyspieszyć degradację ogniw. Większość nowoczesnych samochodów pozwala na ustawienie limitu ładowania do 80% lub 90%, co warto wykorzystać w codziennej eksploatacji. Pełne ładowanie rezerwuj tylko na długie trasy.</p>
-      <h2>2. Ogranicz częste korzystanie z szybkich ładowarek (DC)</h2>
-      <p>Szybkie ładowarki prądu stałego (DC) są niezwykle wygodne w podróży, ale generują dużo ciepła, co jest jednym z głównych wrogów baterii. Wysoka temperatura przyspiesza procesy chemiczne prowadzące do zużycia ogniw. W miarę możliwości, na co dzień korzystaj z wolniejszego ładowania prądem zmiennym (AC), np. z domowego wallboxa. Szybkie ładowanie zostaw na sytuacje, gdy jest to absolutnie konieczne.</p>
-      <h2>3. Zwracaj uwagę na temperaturę otoczenia</h2>
-      <p>Ekstremalne temperatury, zarówno wysokie, jak i niskie, negatywnie wpływają na kondycję i wydajność baterii. Latem staraj się parkować w cieniu lub w garażu, aby uniknąć przegrzewania. Zimą, jeśli to możliwe, również trzymaj auto w garażu, ponieważ niskie temperatury zmniejszają dostępny zasięg i mogą spowolnić ładowanie. Systemy zarządzania temperaturą baterii (BMS) w nowoczesnych EV pomagają, ale unikanie skrajnych warunków zawsze jest dobrym pomysłem.</p>
-      <h2>4. Unikaj agresywnej jazdy</h2>
-      <p>Gwałtowne przyspieszanie i hamowanie powoduje szybkie rozładowywanie i ładowanie (przez rekuperację) baterii dużymi prądami, co również generuje nadmierne ciepło. Płynna, przewidywalna jazda nie tylko zwiększa zasięg, ale także przyczynia się do dłuższego życia baterii.</p>
-      <p>Stosując się do tych prostych zasad, możesz znacznie wydłużyć żywotność baterii w swoim samochodzie elektrycznym i cieszyć się jego pełnymi możliwościami przez wiele lat.</p>
-    `,
-  },
-  {
-    slug: 'planowanie-dlugiej-trasy-ev',
-    title: 'Jak zaplanować długą trasę samochodem elektrycznym?',
-    publishDate: '2024-07-25',
-    thumbnailUrl: 'https://img.apolloplug.com/img/blog-road-trip.jpg',
-    excerpt: 'Praktyczne porady dotyczące planowania postojów na ładowanie, korzystania z aplikacji i optymalizacji zasięgu w podróży.',
-    content: `
-      <p>Podróżowanie samochodem elektrycznym na długich dystansach jest dziś łatwiejsze niż kiedykolwiek, ale wymaga odrobiny planowania. Oto jak się do tego przygotować.</p>
-      <h2>1. Używaj dedykowanych aplikacji</h2>
-      <p>Aplikacje takie jak A Better Routeplanner (ABRP), PlugShare czy system nawigacji wbudowany w Twój samochód są niezbędne. Pozwalają one nie tylko znaleźć stacje ładowania na trasie, ale także uwzględniają takie czynniki jak topografia terenu, temperatura czy styl jazdy, aby precyzyjnie oszacować zużycie energii i zaplanować postoje.</p>
-      <h2>2. Nie celuj w 100% naładowania w trasie</h2>
-      <p>Podczas długiej podróży ładowanie baterii powyżej 80% na szybkich ładowarkach DC staje się znacznie wolniejsze. Zamiast czekać na pełne naładowanie, często bardziej efektywne jest zrobienie dwóch krótszych postojów i ładowanie do 60-80%. Pozwoli to szybciej wrócić na trasę.</p>
-      <h2>3. Miej plan B</h2>
-      <p>Zawsze warto mieć w zanadrzu alternatywną stację ładowania. Czasem wybrana przez nas ładowarka może być zajęta lub niesprawna. Aplikacje takie jak PlugShare pokazują w czasie rzeczywistym status wielu stacji, co jest niezwykle pomocne.</p>
-    `,
-  },
+{
+  slug: 'jak-wybrac-wypozyczalnie-aut-elektrycznych',
+  title: 'Na co zwracać uwagę wybierając wypożyczalnię aut elektrycznych?',
+  publishDate: '2025-02-15',
+  thumbnailUrl: 'https://img.apolloplug.com/blog/wypozyczalnia-aut-elektrycznych-miniatura.jpg',
+  excerpt: 'Dowiedz się, jak bezpiecznie i świadomie wynająć auto elektryczne. Sprawdź, co powinno znaleźć się w umowie, jakie są ukryte opłaty i na co zwrócić uwagę przy wyborze wypożyczalni.',
+  content: `
+    <p>Wynajem samochodu elektrycznego to coraz popularniejsza opcja - zarówno wśród osób prywatnych, jak i firm. EV kusi ciszą, niższymi kosztami eksploatacji i możliwością wjazdu do stref czystego transportu. Ale zanim podpiszesz umowę, warto wiedzieć, na co zwrócić uwagę, aby uniknąć nieprzyjemnych niespodzianek.</p>
+
+    <img src="https://img.apolloplug.com/blog/wypozyczalnia-aut-elektrycznych-biuro.jpg" alt="Punkt odbioru samochodów elektrycznych w wypożyczalni" style="width:100%; border-radius:16px; margin:20px 0;">
+
+    <h2>1. Przejrzysta umowa i brak ukrytych opłat</h2>
+    <p>Dobra wypożyczalnia aut elektrycznych jasno komunikuje wszystkie warunki. Zwróć uwagę, czy umowa zawiera:</p>
+    <ul>
+      <li>informacje o wysokości kaucji i sposobie jej zwrotu,</li>
+      <li>limit kilometrów dziennych i koszt za ich przekroczenie,</li>
+      <li>zasady dotyczące ładowania i zwrotu pojazdu (czy musi być naładowany?),</li>
+      <li>informacje o ubezpieczeniu - OC, AC, Assistance oraz udział własny w szkodzie.</li>
+    </ul>
+    <p>Jeśli w umowie pojawia się wiele przypisów drobnym drukiem lub brak przejrzystych zapisów, lepiej poszukać innej wypożyczalni.</p>
+
+    <h2>2. Stan techniczny i wiek floty</h2>
+    <p>Nowoczesne EV mają zaawansowane systemy zarządzania energią, a regularny serwis jest kluczowy dla ich sprawności. Przed podpisaniem umowy zapytaj o:</p>
+    <ul>
+      <li>średni wiek samochodów we flocie,</li>
+      <li>częstotliwość przeglądów technicznych,</li>
+      <li>aktualizacje oprogramowania pokładowego.</li>
+    </ul>
+    <img src="https://img.apolloplug.com/blog/przeglad-floty-ev.jpg" alt="Przegląd floty samochodów elektrycznych w wypożyczalni" style="width:100%; border-radius:16px; margin:20px 0;">
+    <p>Wypożyczalnie oferujące nowe modele (np. Tesla Model 3, Hyundai Ioniq 6, Kia EV6) zazwyczaj dbają o wyższy standard obsługi i bezpieczeństwo klientów.</p>
+
+    <h2>3. Ładowanie i sieć partnerów</h2>
+    <p>To częsty punkt zapalny. Nie każda wypożyczalnia ma własne karty ładowania lub zniżki u operatorów. Warto upewnić się, czy:</p>
+    <ul>
+      <li>w zestawie znajduje się karta do ładowania w sieciach (np. GreenWay, Orlen Charge, EV+, Shell Recharge),</li>
+      <li>aplikacja wypożyczalni pokazuje lokalizacje stacji ładowania,</li>
+      <li>możesz ładować auto na publicznych stacjach bez dodatkowych formalności.</li>
+    </ul>
+    <p>Najlepiej, gdy firma zapewnia dostęp do kilku sieci - wtedy nie ryzykujesz braku ładowarki na trasie.</p>
+
+    <h2>4. Obsługa klienta i pomoc na drodze</h2>
+    <p>Samochody elektryczne rzadko się psują, ale dobrze mieć pewność, że w razie problemu nie zostaniesz sam. Zwróć uwagę, czy wypożyczalnia:</p>
+    <ul>
+      <li>oferuje całodobową infolinię,</li>
+      <li>zapewnia auto zastępcze w razie awarii,</li>
+      <li>ma procedury pomocy przy rozładowanej baterii.</li>
+    </ul>
+    <p>Niektóre firmy umożliwiają również zdalną diagnostykę pojazdu przez aplikację - to ogromne ułatwienie w dłuższych podróżach.</p>
+
+    <h2>5. Opinie klientów i lokalizacja</h2>
+    <p>Zanim dokonasz rezerwacji, zajrzyj do opinii w Google i na portalach branżowych. Klienci często opisują rzeczy, których nie widać na stronie - np. trudności ze zwrotem kaucji lub problemy z ładowaniem.</p>
+    <img src="https://img.apolloplug.com/blog/klient-wypozyczalnia-ev.jpg" alt="Zadowolony klient po wynajmie auta elektrycznego" style="width:100%; border-radius:16px; margin:20px 0;">
+    <p>Jeśli wypożyczalnia działa w dużym mieście (Warszawa, Kraków, Gdańsk), sprawdź też, czy ma punkty odbioru przy dworcach i lotniskach - to często oszczędność czasu i pieniędzy.</p>
+
+    <h2>6. Bonus: co warto mieć ze sobą</h2>
+    <ul>
+      <li>kabel do ładowania typu 2, jeśli nie jest w zestawie,</li>
+      <li>aplikacje operatorów ładowarek (GreenWay, PlugShare, Tesla Supercharger),</li>
+      <li>plan trasy z zaznaczonymi stacjami DC.</li>
+    </ul>
+
+    <p>Świadomy wybór wypożyczalni to nie tylko niższe koszty, ale też większy komfort podróży. Warto poświęcić chwilę na sprawdzenie szczegółów - dzięki temu Twój pierwszy (lub kolejny) wynajem auta elektrycznego będzie czystą przyjemnością.</p>
+
+    <img src="https://img.apolloplug.com/blog/podroz-ev-wynajem.jpg" alt="Podróż samochodem elektrycznym z wypożyczalni" style="width:100%; border-radius:16px; margin-top:20px;">
+  `,
+},
 ];

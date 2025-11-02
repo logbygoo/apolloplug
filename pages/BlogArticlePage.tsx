@@ -22,7 +22,7 @@ const BlogArticlePage: React.FC = () => {
                 breadcrumbs={breadcrumbs} 
             />
              <div className="container mx-auto max-w-3xl px-4 md:px-6 pb-16 md:pb-24">
-                <div className="mb-8 text-center text-muted-foreground">
+                <div className="mb-8 text-muted-foreground">
                     Opublikowano: {new Date(article.publishDate).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })}
                 </div>
                 <article 

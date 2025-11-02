@@ -52,7 +52,7 @@ const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void;
     return (
         <div
             onClick={isAvailable ? onSelect : undefined}
-            className={`relative cursor-pointer rounded-lg border p-4 transition-all flex flex-col ${
+            className={`relative cursor-pointer rounded-lg border p-4 transition-all flex flex-col h-full ${
                 isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
             } ${
                 isAvailable ? 'hover:border-foreground/50' : 'opacity-50 cursor-not-allowed'
@@ -342,49 +342,55 @@ const RentalPage: React.FC = () => {
                                     </FormSection>
                                     <FormSection title="Wybierz Model">
                                         <div>
-                                            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-4 px-4 md:-mx-6 md:px-6 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:p-0 sm:m-0">
                                                 {RENTAL_CARS.map(car => (
-                                                    <ModelCard key={car.id} car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car }))} />
+                                                    <div key={car.id} className="w-3/5 flex-shrink-0 sm:w-auto">
+                                                        <ModelCard car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car }))} />
+                                                    </div>
                                                 ))}
                                             </div>
                                             {formData.model.specs && (
-                                                <div className="mt-5 flex flex-wrap items-center gap-2">
-                                                    {formData.model.specs.version && (
-                                                        <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                            <span className="text-muted-foreground">Wersja:</span>
-                                                            <span className="font-semibold text-foreground">{formData.model.specs.version}</span>
-                                                        </div>
-                                                    )}
-                                                    {formData.model.specs.color && (
-                                                        <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                            <span className="text-muted-foreground">Kolor:</span>
-                                                            <span className="font-semibold text-foreground">{formData.model.specs.color}</span>
-                                                        </div>
-                                                    )}
-                                                    {formData.model.specs.interiorColor && (
-                                                        <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                            <span className="text-muted-foreground">Wnętrze:</span>
-                                                            <span className="font-semibold text-foreground">{formData.model.specs.interiorColor}</span>
-                                                        </div>
-                                                    )}
-                                                    {formData.model.specs.range && (
-                                                        <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                            <span className="text-muted-foreground">Zasięg:</span>
-                                                            <span className="font-semibold text-foreground">{formData.model.specs.range}</span>
-                                                        </div>
-                                                    )}
-                                                    {formData.model.specs.acceleration && (
-                                                        <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                            <span className="text-muted-foreground">Do 100km/h:</span>
-                                                            <span className="font-semibold text-foreground">{formData.model.specs.acceleration}</span>
-                                                        </div>
-                                                    )}
-                                                    {formData.model.specs.drive && (
-                                                        <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                            <span className="text-muted-foreground">Napęd:</span>
-                                                            <span className="font-semibold text-foreground">{formData.model.specs.drive}</span>
-                                                        </div>
-                                                    )}
+                                                <div className="mt-5 space-y-2">
+                                                    <div className="flex flex-wrap items-center gap-2">
+                                                        {formData.model.specs.version && (
+                                                            <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
+                                                                <span className="text-muted-foreground">Wersja:</span>
+                                                                <span className="font-semibold text-foreground">{formData.model.specs.version}</span>
+                                                            </div>
+                                                        )}
+                                                        {formData.model.specs.color && (
+                                                            <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
+                                                                <span className="text-muted-foreground">Kolor:</span>
+                                                                <span className="font-semibold text-foreground">{formData.model.specs.color}</span>
+                                                            </div>
+                                                        )}
+                                                        {formData.model.specs.interiorColor && (
+                                                            <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
+                                                                <span className="text-muted-foreground">Wnętrze:</span>
+                                                                <span className="font-semibold text-foreground">{formData.model.specs.interiorColor}</span>
+                                                            </div>
+                                                        )}
+                                                        {formData.model.specs.range && (
+                                                            <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
+                                                                <span className="text-muted-foreground">Zasięg:</span>
+                                                                <span className="font-semibold text-foreground">{formData.model.specs.range}</span>
+                                                            </div>
+                                                        )}
+                                                        {formData.model.specs.acceleration && (
+                                                            <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
+                                                                <span className="text-muted-foreground">Do 100km/h:</span>
+                                                                <span className="font-semibold text-foreground">{formData.model.specs.acceleration}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                     <div className="flex flex-wrap items-center gap-2">
+                                                        {formData.model.specs.drive && (
+                                                            <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
+                                                                <span className="text-muted-foreground">Napęd:</span>
+                                                                <span className="font-semibold text-foreground">{formData.model.specs.drive}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             )}
                                             <PriceTable car={formData.model} />

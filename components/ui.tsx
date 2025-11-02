@@ -130,7 +130,7 @@ export const PageHeader: React.FC<{
   breadcrumbs: PageHeaderBreadcrumb[];
 }> = ({ title, subtitle, breadcrumbs }) => {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-8">
+    <div className="container mx-auto px-4 md:px-6 py-14">
       <nav aria-label="breadcrumb" className="mb-4">
         <ol className="flex items-center gap-2 text-sm">
           <li>

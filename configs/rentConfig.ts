@@ -18,6 +18,15 @@ export const RENTAL_CARS: Car[] = [
         { days: '8-30 dni', pricePerDay: 460, kmLimitPerDay: 110 },
         { days: '31+ dni', pricePerDay: 390, kmLimitPerDay: 90 },
     ],
+    specs: {
+      version: 'Longrange',
+      range: '660 km',
+      seating: '5 osób',
+      acceleration: '4.4s',
+      color: 'Biel',
+      interiorColor: 'Biel',
+      drive: '4x4',
+    },
   },
   {
     id: 'tesla-y-jupiter',
@@ -36,6 +45,15 @@ export const RENTAL_CARS: Car[] = [
         { days: '8-30 dni', pricePerDay: 490, kmLimitPerDay: 180 },
         { days: '31+ dni', pricePerDay: 430, kmLimitPerDay: 150 },
     ],
+    specs: {
+      version: 'Longrange',
+      range: '600 km',
+      seating: '5 osób',
+      acceleration: '4.8s',
+      color: 'Biel',
+      interiorColor: 'Biel',
+      drive: '4x4',
+    },
   },
   {
     id: 'tesla-x',
@@ -53,6 +71,15 @@ export const RENTAL_CARS: Car[] = [
         { days: '8-14 dni', pricePerDay: 400, kmLimitPerDay: 160 },
         { days: '15+ dni', pricePerDay: 380, kmLimitPerDay: 150 },
     ],
+    specs: {
+      version: 'Longrange',
+      range: '576 km',
+      seating: '7 osób',
+      acceleration: '2.6s',
+      color: 'Pearl White',
+      interiorColor: 'Białe',
+      drive: '4x4',
+    },
   },
   {
     id: 'tesla-cybertruck',
@@ -70,6 +97,15 @@ export const RENTAL_CARS: Car[] = [
         { days: '8-14 dni', pricePerDay: 520, kmLimitPerDay: 160 },
         { days: '15+ dni', pricePerDay: 500, kmLimitPerDay: 150 },
     ],
+    specs: {
+      version: 'Longrange',
+      range: '547 km',
+      seating: '6 osób',
+      acceleration: '2.7s',
+      color: 'Stal nierdzewna',
+      interiorColor: 'Czarne',
+      drive: '4x4',
+    },
   }
 ];
 

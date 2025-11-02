@@ -8,6 +8,10 @@ export interface Car {
     range: string;
     seating: string;
     acceleration: string;
+    color?: string;
+    interiorColor?: string;
+    drive?: string;
+    version?: string;
   };
   details?: {
     subtitle?: string;

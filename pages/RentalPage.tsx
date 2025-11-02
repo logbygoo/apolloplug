@@ -350,7 +350,7 @@ const RentalPage: React.FC = () => {
                                                 ))}
                                             </div>
                                             {formData.model.specs && (
-                                                <div className="mt-5 space-y-2">
+                                                <div className="mt-3 space-y-2">
                                                     <div className="flex flex-wrap items-center gap-2">
                                                         {formData.model.specs.version && (
                                                             <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">

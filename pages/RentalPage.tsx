@@ -321,7 +321,7 @@ const RentalPage: React.FC = () => {
             {step === 'details' && (
                 <div className="w-full bg-secondary">
                     <div className="container mx-auto px-4 md:px-6 py-12 md:py-16">
-                        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Wynajmij Teslę</h1>
+                        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Wynajem Auta EV</h1>
                         <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
                             Wypełnij formularz poniżej, aby zarezerwować swój wymarzony samochód elektryczny.
                         </p>

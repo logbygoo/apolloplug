@@ -14,7 +14,7 @@ const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
   { path: '/wynajem', name: 'Wynajem' },
   { path: '/transfery', name: 'Transfery' },
-  { path: '/inwestuj', name: 'Inwestuj' },
+  { path: '/inwestuj', name: 'Inwestycje' },
 ];
 
 const Header: React.FC = () => {
@@ -90,10 +90,10 @@ const Header: React.FC = () => {
 
 const Footer: React.FC = () => {
     const footerLinks = [
-        { path: '/', name: `EV Tech © ${new Date().getFullYear()}` },
+        { path: '/', name: `Apollo Plug © ${new Date().getFullYear()}` },
         { path: '#', name: 'Prywatność i przepisy prawne' },
         { path: '/kontakt', name: 'Kontakt' },
-        { path: '#', name: 'Nowości' },
+        { path: '/blog', name: 'Blog' },
         { path: '#', name: 'Lokalizacje' },
     ];
   return (

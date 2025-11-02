@@ -1,25 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../components/ui';
+import { Button, PageHeader } from '../components/ui';
 
 const TransfersPage: React.FC = () => {
+  const breadcrumbs = [{ name: 'Transfery' }];
   return (
     <div className="bg-background text-foreground">
-      <header
-        className="h-[50vh] bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: "url('https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Mega-Menu-Vehicles-Model-S.png')"}}
-      >
-        <div className="text-center text-white bg-black/40 p-8 rounded-lg">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-            Profesjonalne Transfery VIP
-          </h1>
-          <p className="mt-4 max-w-3xl text-lg md:text-xl text-white/90">
-            Doświadcz najwyższego standardu podróży z EV Tech.
-          </p>
-        </div>
-      </header>
-
-      <div className="container mx-auto max-w-6xl px-4 md:px-6 py-16 md:py-24">
+      <PageHeader
+        title="Profesjonalne Transfery VIP"
+        subtitle="Doświadcz najwyższego standardu podróży z EV Tech."
+        breadcrumbs={breadcrumbs}
+      />
+      <div className="container mx-auto max-w-6xl px-4 md:px-6 pb-16 md:pb-24">
         <div className="grid gap-12 md:grid-cols-3 text-center">
           <div>
             <h3 className="text-2xl font-semibold mb-2">Dyskrecja i Profesjonalizm</h3>

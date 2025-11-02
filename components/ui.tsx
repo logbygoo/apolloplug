@@ -1,4 +1,6 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { HomeIcon } from '../constants';
 
 // Button Component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -115,3 +117,45 @@ export const Label = React.forwardRef<
   />
 ));
 Label.displayName = 'Label';
+
+// PageHeader Component
+interface PageHeaderBreadcrumb {
+  name: string;
+  path?: string;
+}
+
+export const PageHeader: React.FC<{
+  title: string;
+  subtitle?: string;
+  breadcrumbs: PageHeaderBreadcrumb[];
+}> = ({ title, subtitle, breadcrumbs }) => {
+  return (
+    <div className="container mx-auto px-4 md:px-6 py-8">
+      <nav aria-label="breadcrumb" className="mb-4">
+        <ol className="flex items-center gap-2 text-sm">
+          <li>
+            <NavLink to="/" className="text-muted-foreground hover:text-foreground" aria-label="Strona główna">
+              <HomeIcon className="h-5 w-5" />
+            </NavLink>
+          </li>
+          {breadcrumbs.map((crumb, index) => (
+            <li key={index} className="flex items-center gap-2">
+              <span className="text-muted-foreground/50">/</span>
+              {crumb.path ? (
+                <NavLink to={crumb.path} className="text-muted-foreground hover:text-foreground">
+                  {crumb.name}
+                </NavLink>
+              ) : (
+                <span className="font-medium text-foreground">{crumb.name}</span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{title}</h1>
+      {subtitle && (
+        <p className="mt-4 max-w-3xl text-lg text-muted-foreground">{subtitle}</p>
+      )}
+    </div>
+  );
+};

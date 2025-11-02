@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui';
+import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription, PageHeader } from '../components/ui';
 import { INVESTMENT_PROJECTS } from '../constants';
 
 const ProgressBar: React.FC<{ value: number }> = ({ value }) => (
@@ -9,16 +9,15 @@ const ProgressBar: React.FC<{ value: number }> = ({ value }) => (
 );
 
 const InvestPage: React.FC = () => {
+  const breadcrumbs = [{ name: 'Inwestycje' }];
   return (
     <div className="bg-background">
-      <div className="container mx-auto max-w-6xl px-4 md:px-6 py-16 md:py-24">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Zainwestuj w elektromobilność</h1>
-          <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-            Dołącz do grona inwestorów i czerp zyski z rosnącego rynku pojazdów elektrycznych. Finansuj zakup aut do naszej floty i zarabiaj na ich wynajmie.
-          </p>
-        </div>
-
+      <PageHeader
+        title="Zainwestuj w elektromobilność"
+        subtitle="Dołącz do grona inwestorów i czerp zyski z rosnącego rynku pojazdów elektrycznych. Finansuj zakup aut do naszej floty i zarabiaj na ich wynajmie."
+        breadcrumbs={breadcrumbs}
+      />
+      <div className="container mx-auto max-w-6xl px-4 md:px-6 pb-16 md:pb-24">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {INVESTMENT_PROJECTS.map((project) => (
             <Card key={project.id} className="flex flex-col hover:shadow-lg transition-shadow">

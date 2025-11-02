@@ -1,19 +1,18 @@
 import React from 'react';
 import { CAR_FLEET } from '../configs/fleetConfig';
-import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui';
+import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription, PageHeader } from '../components/ui';
 import { Link } from 'react-router-dom';
 
 const FleetPage: React.FC = () => {
+  const breadcrumbs = [{ name: 'Pojazdy' }];
   return (
     <div className="bg-background">
-      <div className="container mx-auto max-w-6xl px-4 md:px-6 py-16 md:py-24">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Nasza Flota</h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Wybierz jeden z naszych w pełni elektrycznych pojazdów i poczuj przyszłość motoryzacji.
-          </p>
-        </div>
-
+      <PageHeader 
+        title="Nasza Flota"
+        subtitle="Wybierz jeden z naszych w pełni elektrycznych pojazdów i poczuj przyszłość motoryzacji."
+        breadcrumbs={breadcrumbs}
+      />
+      <div className="container mx-auto max-w-6xl px-4 md:px-6 pb-16 md:pb-24">
         <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-1">
           {CAR_FLEET.map((car) => (
             <Card key={car.id} className="flex flex-col md:flex-row items-center overflow-hidden">
@@ -46,8 +45,8 @@ const FleetPage: React.FC = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="flex gap-4">
-                  <Link to="/wynajem" className="w-full">
-                    <Button className="w-full" variant="primary">Wynajmij</Button>
+                  <Link to={`/flota/${car.id}`} className="w-full">
+                    <Button className="w-full" variant="primary">Zobacz szczegóły</Button>
                   </Link>
                   <Link to="/kontakt" className="w-full">
                     <Button className="w-full" variant="secondary">Jazda próbna</Button>

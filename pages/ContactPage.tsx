@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input, Label } from '../components/ui';
+import { Button, Input, Label, PageHeader } from '../components/ui';
 import { InfoIcon } from '../constants';
 
 const ContactPage: React.FC = () => {
@@ -26,16 +26,16 @@ const ContactPage: React.FC = () => {
   )
   Textarea.displayName = "Textarea"
 
+  const breadcrumbs = [{ name: 'Kontakt' }];
+
   return (
     <div className="bg-background">
-      <div className="container mx-auto max-w-4xl px-4 md:px-6 py-16 md:py-24">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">Kontakt</h1>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-            Masz pytania? Chcesz nawiązać współpracę? Jesteśmy do Twojej dyspozycji.
-          </p>
-        </div>
-
+      <PageHeader 
+        title="Kontakt"
+        subtitle="Masz pytania? Chcesz nawiązać współpracę? Jesteśmy do Twojej dyspozycji."
+        breadcrumbs={breadcrumbs}
+      />
+      <div className="container mx-auto max-w-4xl px-4 md:px-6 pb-16 md:pb-24">
         <div className="grid md:grid-cols-2 gap-16 items-start">
           <div className="space-y-8">
             <div>

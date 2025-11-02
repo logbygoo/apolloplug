@@ -5,7 +5,10 @@ import TransfersPage from './pages/TransfersPage';
 import RentalPage from './pages/RentalPage';
 import InvestPage from './pages/InvestPage';
 import FleetPage from './pages/FleetPage';
+import CarDetailPage from './pages/CarDetailPage';
 import ContactPage from './pages/ContactPage';
+import BlogPage from './pages/BlogPage';
+import BlogArticlePage from './pages/BlogArticlePage';
 import { ApolloPlugLogo, MenuIcon, XIcon, HeadphoneIcon, FlagIcon, EnvelopeIcon } from './constants';
 import { CONFIG } from './config';
 import UnderConstructionPage from './pages/UnderConstructionPage';
@@ -136,7 +139,10 @@ const App: React.FC = () => {
             <Route path="/wynajem" element={<RentalPage />} />
             <Route path="/inwestuj" element={<InvestPage />} />
             <Route path="/flota" element={<FleetPage />} />
+            <Route path="/flota/:carId" element={<CarDetailPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:articleSlug" element={<BlogArticlePage />} />
           </Routes>
         </main>
         <Footer />

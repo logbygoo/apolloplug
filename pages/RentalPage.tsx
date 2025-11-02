@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Input, Label } from '../components/ui';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
 import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon, HomeIcon, PlayIcon } from '../constants';
 import type { Car } from '../types';
@@ -172,8 +172,6 @@ const formatDate = (date: Date) => date.toISOString().split('T')[0];
 const today = formatDate(todayDate);
 const tomorrow = formatDate(tomorrowDate);
 
-const firstAvailableCar = RENTAL_CARS.find(c => c.available) || RENTAL_CARS[0];
-
 // FIX: Define a strict type for the form data to prevent incorrect type inference on the `brand` property.
 interface FormData {
     brand: typeof BRANDS[number];
@@ -197,11 +195,15 @@ interface FormData {
 }
 
 const RentalPage: React.FC = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const modelIdFromUrl = searchParams.get('model');
+    const firstAvailableCar = RENTAL_CARS.find(c => c.id === modelIdFromUrl && c.available) || RENTAL_CARS.find(c => c.available) || RENTAL_CARS[0];
+
     const [step, setStep] = useState<'details' | 'payment'>('details');
     const [submitted, setSubmitted] = useState(false);
     // FIX: Apply the FormData interface to the useState hook and add a type assertion for the `options` property.
     const [formData, setFormData] = useState<FormData>({
-        brand: BRANDS[0],
+        brand: BRANDS.find(b => firstAvailableCar.id.includes(b.id)) || BRANDS[0],
         model: firstAvailableCar,
         pickupDate: today,
         pickupTime: '10:00',
@@ -225,6 +227,10 @@ const RentalPage: React.FC = () => {
         marketing: false,
         commercial: false,
     });
+
+    useEffect(() => {
+        setSearchParams({ model: formData.model.id }, { replace: true });
+    }, [formData.model, setSearchParams]);
 
     const summary = useMemo(() => {
         const { pickupDate, returnDate, options, model } = formData;
@@ -302,6 +308,15 @@ const RentalPage: React.FC = () => {
         const { pickupDate, returnDate, fullName, pesel, licenseNumber, address, postalCode, city, email, phone } = formData;
         return summary.totalPrice > 0 && pickupDate && returnDate && fullName && pesel && licenseNumber && address && postalCode && city && email && phone && agreements.terms;
     }, [formData, summary.totalPrice, agreements.terms]);
+    
+    const breadcrumbs = useMemo(() => {
+        // FIX: Explicitly set the type of 'crumbs' to allow for items without a 'path' property, correcting a type inference error.
+        const crumbs: { name: string; path?: string; }[] = [{ name: 'Wynajem', path: '/wynajem' }];
+        if (formData.model) {
+            crumbs.push({ name: formData.model.name });
+        }
+        return crumbs;
+    }, [formData.model]);
 
     if (submitted) {
         return (
@@ -319,26 +334,15 @@ const RentalPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="container mx-auto px-4 md:px-6 py-12 md:py-16">
+            <PageHeader
+                title="Wynajem Auta EV"
+                subtitle="Zarezerwuj swój wymarzony samochód elektryczny w kilku prostych krokach."
+                breadcrumbs={breadcrumbs}
+            />
+            <div className="container mx-auto px-4 md:px-6 pb-12 md:pb-16">
                 {step === 'details' && (
                     <>
-                        <div className="mb-5">
-                            <div className="flex items-center gap-2 text-sm">
-                                <Link to="/" className="text-muted-foreground hover:text-foreground" aria-label="Strona główna">
-                                    <HomeIcon className="h-5 w-5" />
-                                </Link>
-                                <span className="text-muted-foreground/50">/</span>
-                                <span className="font-medium text-foreground">Wynajem</span>
-                            </div>
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Wynajem Auta EV</h1>
-                        <div className="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                             <p className="max-w-3xl text-lg text-muted-foreground">
-                                Zarezerwuj swój wymarzony samochód elektryczny w kilku prostych krokach.
-                            </p>
-                        </div>
-
-                        <form onSubmit={(e) => { e.preventDefault(); if(canProceed) setStep('payment'); }} className="mt-12">
+                        <form onSubmit={(e) => { e.preventDefault(); if(canProceed) setStep('payment'); }}>
                             <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
                                 <div className="lg:col-span-2">
                                     <FormSection title="Wybierz Markę">
@@ -353,7 +357,7 @@ const RentalPage: React.FC = () => {
                                             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x snap-mandatory px-4 sm:px-0 scroll-pl-4 sm:scroll-pl-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:snap-none">
                                                 {RENTAL_CARS.map(car => (
                                                     <div key={car.id} className="w-4/5 flex-shrink-0 snap-start sm:w-auto">
-                                                        <ModelCard car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car }))} />
+                                                        <ModelCard car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car, brand: BRANDS.find(b => car.id.includes(b.id)) || p.brand }))} />
                                                     </div>
                                                 ))}
                                             </div>

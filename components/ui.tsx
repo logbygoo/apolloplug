@@ -131,25 +131,31 @@ export const PageHeader: React.FC<{
 }> = ({ title, subtitle, breadcrumbs }) => {
   return (
     <div className="container mx-auto px-4 md:px-6 py-14">
-      <nav aria-label="breadcrumb" className="mb-4">
+      <nav aria-label="breadcrumb" className="mb-4 overflow-hidden">
         <ol className="flex items-center gap-2 text-sm">
-          <li>
+          <li className="flex-shrink-0">
             <NavLink to="/" className="text-muted-foreground hover:text-foreground" aria-label="Strona główna">
               <HomeIcon className="h-5 w-5" />
             </NavLink>
           </li>
-          {breadcrumbs.map((crumb, index) => (
-            <li key={index} className="flex items-center gap-2">
-              <span className="text-muted-foreground/50">/</span>
-              {crumb.path ? (
-                <NavLink to={crumb.path} className="text-muted-foreground hover:text-foreground">
-                  {crumb.name}
-                </NavLink>
-              ) : (
-                <span className="font-medium text-foreground">{crumb.name}</span>
-              )}
-            </li>
-          ))}
+          {breadcrumbs.map((crumb, index) => {
+            const isLast = index === breadcrumbs.length - 1;
+            return (
+              <li
+                key={index}
+                className={`flex items-center gap-2 ${isLast ? 'min-w-0' : 'flex-shrink-0'}`}
+              >
+                <span className="text-muted-foreground/50">/</span>
+                {crumb.path ? (
+                  <NavLink to={crumb.path} className="text-muted-foreground hover:text-foreground whitespace-nowrap">
+                    {crumb.name}
+                  </NavLink>
+                ) : (
+                  <span className="font-medium text-foreground truncate">{crumb.name}</span>
+                )}
+              </li>
+            );
+          })}
         </ol>
       </nav>
       <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{title}</h1>

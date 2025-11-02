@@ -38,3 +38,12 @@ export interface InvestmentProject {
   goal: number;
   investorCount: number;
 }
+
+export interface Article {
+  slug: string;
+  title: string;
+  publishDate: string;
+  thumbnailUrl: string;
+  excerpt: string;
+  content: string;
+}

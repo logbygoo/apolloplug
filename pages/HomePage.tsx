@@ -113,43 +113,18 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
 };
 
 const GoogleMap = () => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (ref.current && (window as any).google) {
-      new (window as any).google.maps.Map(ref.current, {
-        center: { lat: 52.2297, lng: 21.0122 }, // Warsaw
-        zoom: 12,
-        disableDefaultUI: true,
-        styles: [
-          { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
-          { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
-          { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
-          {
-            featureType: 'administrative.locality',
-            elementType: 'labels.text.fill',
-            stylers: [{ color: '#d59563' }],
-          },
-          { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#d59563' }] },
-          { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#263c3f' }] },
-          { featureType: 'poi.park', elementType: 'labels.text.fill', stylers: [{ color: '#6b9a76' }] },
-          { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#38414e' }] },
-          { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#212a37' }] },
-          { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9ca5b3' }] },
-          { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#746855' }] },
-          { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#1f2835' }] },
-          { featureType: 'road.highway', elementType: 'labels.text.fill', stylers: [{ color: '#f3d19c' }] },
-          { featureType: 'transit', elementType: 'geometry', stylers: [{ color: '#2f3948' }] },
-          { featureType: 'transit.station', elementType: 'labels.text.fill', stylers: [{ color: '#d59563' }] },
-          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#17263c' }] },
-          { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#515c6d' }] },
-          { featureType: 'water', elementType: 'labels.text.stroke', stylers: [{ color: '#17263c' }] },
-        ],
-      });
-    }
-  }, []);
-
-  return <div ref={ref} className="w-full h-full" />;
+  return (
+    <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('https://i.imgur.com/7Yf2b0s.png')" }}>
+      <div className="w-full h-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
+        <div className="text-center text-white p-6 bg-black/60 rounded-lg shadow-xl">
+          <h3 className="text-xl font-bold">Mapa jest tymczasowo niedostępna</h3>
+          <p className="mt-2 text-sm">
+            Wystąpił problem z wczytaniem mapy.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 

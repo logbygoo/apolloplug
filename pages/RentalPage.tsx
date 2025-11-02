@@ -318,117 +318,127 @@ const RentalPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="container mx-auto px-4 md:px-6 py-16">
+            {step === 'details' && (
+                <div className="w-full bg-secondary">
+                    <div className="container mx-auto px-4 md:px-6 py-12 md:py-16">
+                        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">Wynajmij Teslę</h1>
+                        <p className="mt-4 max-w-3xl text-lg text-muted-foreground">
+                            Wypełnij formularz poniżej, aby zarezerwować swój wymarzony samochód elektryczny.
+                        </p>
+                    </div>
+                </div>
+            )}
+            <div className="container mx-auto px-4 md:px-6 py-12 md:py-16">
                 {step === 'details' && (
-                    <form onSubmit={(e) => { e.preventDefault(); if(canProceed) setStep('payment'); }}>
-                        <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
-                            <div className="lg:col-span-2">
-                                <FormSection title="Wybierz Markę">
-                                    <div className="grid grid-cols-3 gap-4">
-                                        {BRANDS.map(brand => (
-                                            <BrandCard key={brand.id} brand={brand} isSelected={formData.brand.id === brand.id} onSelect={() => setFormData(p => ({ ...p, brand }))} />
-                                        ))}
-                                    </div>
-                                </FormSection>
-                                <FormSection title="Wybierz Model">
-                                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                        {RENTAL_CARS.map(car => (
-                                            <ModelCard key={car.id} car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car }))} />
-                                        ))}
-                                    </div>
-                                    <PriceTable car={formData.model} />
-                                </FormSection>
-                                <FormSection title="Okres najmu">
-                                    <div className="grid sm:grid-cols-3 gap-4 items-start">
-                                        <div><Label htmlFor="pickupDate">Odbiór</Label><Input id="pickupDate" type="date" value={formData.pickupDate} min={today} onChange={handleInputChange} required className="h-12 p-[10px] max-w-full mt-1"/></div>
-                                        <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={formData.pickupTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                        <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                    </div>
-                                    <div className="grid sm:grid-cols-3 gap-4 items-start">
-                                        <div><Label htmlFor="returnDate">Zwrot</Label><Input id="returnDate" type="date" value={formData.returnDate} min={formData.pickupDate || today} onChange={handleInputChange} required className="h-12 p-[10px] max-w-full mt-1"/></div>
-                                        <div><Label htmlFor="returnTime">Godzina</Label><div className="relative mt-1"><select id="returnTime" value={formData.returnTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                        <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                    </div>
-                                </FormSection>
-                                <FormSection title="Dane kierowcy">
-                                    <div className="grid sm:grid-cols-2 gap-6">
-                                        <div><Label htmlFor="fullName" className="flex items-center">Imię i Nazwisko</Label><Input id="fullName" value={formData.fullName} onChange={handleInputChange} required className="mt-1" /></div>
-                                        <div><Label htmlFor="nip" className="flex items-center">NIP do faktury (opcjonalnie)</Label><Input id="nip" value={formData.nip} onChange={handleInputChange} className="mt-1" /></div>
-                                        <div><Label htmlFor="pesel" className="flex items-center">PESEL</Label><Input id="pesel" value={formData.pesel} onChange={handleInputChange} required className="mt-1" /></div>
-                                        <div><Label htmlFor="licenseNumber" className="flex items-center">Numer prawa jazdy</Label><Input id="licenseNumber" value={formData.licenseNumber} onChange={handleInputChange} required className="mt-1" /></div>
-                                        <div className="sm:col-span-2"><Label htmlFor="address" className="flex items-center">Adres zamieszkania</Label><Input id="address" value={formData.address} onChange={handleInputChange} required className="mt-1" /></div>
-                                        <div><Label htmlFor="postalCode" className="flex items-center">Kod pocztowy</Label><Input id="postalCode" value={formData.postalCode} onChange={handleInputChange} required className="mt-1" /></div>
-                                        <div><Label htmlFor="city" className="flex items-center">Miejscowość</Label><Input id="city" value={formData.city} onChange={handleInputChange} required className="mt-1" /></div>
-                                        <div><Label htmlFor="email" className="flex items-center">E-mail<InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground" /></Label><Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="mt-1" /></div>
-                                        <div><Label htmlFor="phone" className="flex items-center">Telefon</Label><Input id="phone" type="tel" value={formData.phone} onChange={handleInputChange} required className="mt-1" /></div>
-                                    </div>
-                                </FormSection>
-                                <FormSection title="Opcje dodatkowe">
-                                    <div className="space-y-3">
-                                        {ADDITIONAL_OPTIONS.map(opt => <CheckboxOption key={opt.id} option={opt} car={formData.model} isChecked={formData.options[opt.id]} onToggle={() => handleOptionToggle(opt.id)} />)}
-                                    </div>
-                                </FormSection>
-                                <FormSection title="Regulamin i szkic umowy">
-                                    <div>
-                                        <div className="space-y-4">
-                                            <AgreementCheckbox
-                                                id="terms"
-                                                label="Akceptuję regulamin oraz politykę prywatności apolloplug.com"
-                                                isChecked={agreements.terms}
-                                                onToggle={() => handleAgreementToggle('terms')}
-                                            />
-                                            <AgreementCheckbox
-                                                id="marketing"
-                                                label="Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu"
-                                                isChecked={agreements.marketing}
-                                                onToggle={() => handleAgreementToggle('marketing')}
-                                            />
-                                            <AgreementCheckbox
-                                                id="commercial"
-                                                label="Wyrażam zgodę na otrzymywanie informacji handlowych drogą elektroniczną i SMS."
-                                                isChecked={agreements.commercial}
-                                                onToggle={() => handleAgreementToggle('commercial')}
-                                            />
+                        <form onSubmit={(e) => { e.preventDefault(); if(canProceed) setStep('payment'); }}>
+                            <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
+                                <div className="lg:col-span-2">
+                                    <FormSection title="Wybierz Markę">
+                                        <div className="grid grid-cols-3 gap-4">
+                                            {BRANDS.map(brand => (
+                                                <BrandCard key={brand.id} brand={brand} isSelected={formData.brand.id === brand.id} onSelect={() => setFormData(p => ({ ...p, brand }))} />
+                                            ))}
                                         </div>
-                                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                            <DocumentTile title="Umowa wynajmu" href="#" />
-                                            <DocumentTile title="Protokół Odbioru/Zwrotu" href="#" />
-                                            <DocumentTile title="Regulamin Wypożyczalni" href="#" />
+                                    </FormSection>
+                                    <FormSection title="Wybierz Model">
+                                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                            {RENTAL_CARS.map(car => (
+                                                <ModelCard key={car.id} car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car }))} />
+                                            ))}
                                         </div>
-                                    </div>
-                                </FormSection>
-                            </div>
+                                        <PriceTable car={formData.model} />
+                                    </FormSection>
+                                    <FormSection title="Okres najmu">
+                                        <div className="grid sm:grid-cols-3 gap-4 items-start">
+                                            <div><Label htmlFor="pickupDate">Odbiór</Label><Input id="pickupDate" type="date" value={formData.pickupDate} min={today} onChange={handleInputChange} required className="h-12 p-[10px] max-w-full mt-1"/></div>
+                                            <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={formData.pickupTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                        </div>
+                                        <div className="grid sm:grid-cols-3 gap-4 items-start">
+                                            <div><Label htmlFor="returnDate">Zwrot</Label><Input id="returnDate" type="date" value={formData.returnDate} min={formData.pickupDate || today} onChange={handleInputChange} required className="h-12 p-[10px] max-w-full mt-1"/></div>
+                                            <div><Label htmlFor="returnTime">Godzina</Label><div className="relative mt-1"><select id="returnTime" value={formData.returnTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                        </div>
+                                    </FormSection>
+                                    <FormSection title="Dane kierowcy">
+                                        <div className="grid sm:grid-cols-2 gap-6">
+                                            <div><Label htmlFor="fullName" className="flex items-center">Imię i Nazwisko</Label><Input id="fullName" value={formData.fullName} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="nip" className="flex items-center">NIP do faktury (opcjonalnie)</Label><Input id="nip" value={formData.nip} onChange={handleInputChange} className="mt-1" /></div>
+                                            <div><Label htmlFor="pesel" className="flex items-center">PESEL</Label><Input id="pesel" value={formData.pesel} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="licenseNumber" className="flex items-center">Numer prawa jazdy</Label><Input id="licenseNumber" value={formData.licenseNumber} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div className="sm:col-span-2"><Label htmlFor="address" className="flex items-center">Adres zamieszkania</Label><Input id="address" value={formData.address} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="postalCode" className="flex items-center">Kod pocztowy</Label><Input id="postalCode" value={formData.postalCode} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="city" className="flex items-center">Miejscowość</Label><Input id="city" value={formData.city} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="email" className="flex items-center">E-mail<InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground" /></Label><Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="phone" className="flex items-center">Telefon</Label><Input id="phone" type="tel" value={formData.phone} onChange={handleInputChange} required className="mt-1" /></div>
+                                        </div>
+                                    </FormSection>
+                                    <FormSection title="Opcje dodatkowe">
+                                        <div className="space-y-3">
+                                            {ADDITIONAL_OPTIONS.map(opt => <CheckboxOption key={opt.id} option={opt} car={formData.model} isChecked={formData.options[opt.id]} onToggle={() => handleOptionToggle(opt.id)} />)}
+                                        </div>
+                                    </FormSection>
+                                    <FormSection title="Regulamin i szkic umowy">
+                                        <div>
+                                            <div className="space-y-4">
+                                                <AgreementCheckbox
+                                                    id="terms"
+                                                    label="Akceptuję regulamin oraz politykę prywatności apolloplug.com"
+                                                    isChecked={agreements.terms}
+                                                    onToggle={() => handleAgreementToggle('terms')}
+                                                />
+                                                <AgreementCheckbox
+                                                    id="marketing"
+                                                    label="Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu"
+                                                    isChecked={agreements.marketing}
+                                                    onToggle={() => handleAgreementToggle('marketing')}
+                                                />
+                                                <AgreementCheckbox
+                                                    id="commercial"
+                                                    label="Wyrażam zgodę na otrzymywanie informacji handlowych drogą elektroniczną i SMS."
+                                                    isChecked={agreements.commercial}
+                                                    onToggle={() => handleAgreementToggle('commercial')}
+                                                />
+                                            </div>
+                                            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                <DocumentTile title="Umowa wynajmu" href="#" />
+                                                <DocumentTile title="Protokół Odbioru/Zwrotu" href="#" />
+                                                <DocumentTile title="Regulamin Wypożyczalni" href="#" />
+                                            </div>
+                                        </div>
+                                    </FormSection>
+                                </div>
 
-                            <div className="lg:col-span-1">
-                                <div className="sticky top-24">
-                                    <div className="space-y-6 bg-secondary p-6 rounded-lg">
-                                        <h2 className="text-3xl font-bold">Podsumowanie</h2>
-                                        <div className="space-y-2 border-t border-border pt-4">
-                                            <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
-                                            <div className="flex justify-between"><span className="text-muted-foreground">Cena najmu</span><span className="font-medium">{summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
-                                            <div className="flex justify-between"><span className="text-muted-foreground">Limit kilometrów</span><span className="font-medium">{summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '-'}</span></div>
-                                            <div className="flex justify-between"><span className="text-muted-foreground">Koszt poza limitem</span><span className="font-medium">{summary.costPerKmOverLimit > 0 ? `${summary.costPerKmOverLimit.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} zł/km` : '-'}</span></div>
-                                            <div className="flex justify-between"><span className="text-muted-foreground">Opcje dodatkowe</span><span className="font-medium">{summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}</span></div>
-                                            <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
-                                            <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
-                                            <div className="flex justify-between text-sm pt-2"><span className="text-muted-foreground">Do zapłaty (z kaucją)</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                <div className="lg:col-span-1">
+                                    <div className="sticky top-24">
+                                        <div className="space-y-6 bg-secondary p-6 rounded-lg">
+                                            <h2 className="text-3xl font-bold">Podsumowanie</h2>
+                                            <div className="space-y-2 border-t border-border pt-4">
+                                                <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
+                                                <div className="flex justify-between"><span className="text-muted-foreground">Cena najmu</span><span className="font-medium">{summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                                <div className="flex justify-between"><span className="text-muted-foreground">Limit kilometrów</span><span className="font-medium">{summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '-'}</span></div>
+                                                <div className="flex justify-between"><span className="text-muted-foreground">Koszt poza limitem</span><span className="font-medium">{summary.costPerKmOverLimit > 0 ? `${summary.costPerKmOverLimit.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} zł/km` : '-'}</span></div>
+                                                <div className="flex justify-between"><span className="text-muted-foreground">Opcje dodatkowe</span><span className="font-medium">{summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}</span></div>
+                                                <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                                <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
+                                                <div className="flex justify-between text-sm pt-2"><span className="text-muted-foreground">Do zapłaty (z kaucją)</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                            </div>
+                                            <Button type="submit" size="lg" className="w-full" disabled={!canProceed}>Przejdź do płatności</Button>
                                         </div>
-                                        <Button type="submit" size="lg" className="w-full" disabled={!canProceed}>Przejdź do płatności</Button>
-                                    </div>
-                                    <div className="mt-4">
-                                        <div className="flex justify-center items-center gap-4">
-                                            <img src="https://img.apolloplug.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
-                                            <img src="https://img.apolloplug.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
-                                            <img src="https://img.apolloplug.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
-                                            <img src="https://img.apolloplug.com/img/pay-visa.svg" alt="Visa" className="h-6" />
-                                            <img src="https://img.apolloplug.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
-                                            <img src="https://img.apolloplug.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
+                                        <div className="mt-4">
+                                            <div className="flex justify-center items-center gap-4">
+                                                <img src="https://img.apolloplug.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
+                                                <img src="https://img.apolloplug.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
+                                                <img src="https://img.apolloplug.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
+                                                <img src="https://img.apolloplug.com/img/pay-visa.svg" alt="Visa" className="h-6" />
+                                                <img src="https://img.apolloplug.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
+                                                <img src="https://img.apolloplug.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
                 )}
                 {step === 'payment' && (
                     <div className="max-w-md mx-auto">

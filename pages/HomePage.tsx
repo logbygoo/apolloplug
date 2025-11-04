@@ -1,24 +1,24 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
-import { CAR_FLEET } from '../configs/fleetConfig';
+import { HERO_CARS } from '../configs/homeConfig';
 import { LightningIcon, PlugIcon } from '../constants';
 
 const HeroSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const heroCars = CAR_FLEET.filter(car => car.details);
+  const [isHovered, setIsHovered] = useState(false);
+  const heroCars = HERO_CARS;
 
   const goToNext = useCallback(() => {
-    setCurrentIndex(prevIndex => {
-        const isLastSlide = prevIndex === heroCars.length - 1;
-        return isLastSlide ? 0 : prevIndex + 1;
-    });
+    setCurrentIndex(prevIndex => (prevIndex === heroCars.length - 1 ? 0 : prevIndex + 1));
   }, [heroCars.length]);
 
   useEffect(() => {
-    const slideInterval = setInterval(goToNext, 5000);
+    if (isHovered) return;
+
+    const slideInterval = setInterval(goToNext, 10000); // Set to 10 seconds
     return () => clearInterval(slideInterval);
-  }, [goToNext]);
+  }, [currentIndex, isHovered, goToNext]); // Reset timer on slide change or hover change
 
   const goToPrevious = () => {
     const isFirstSlide = currentIndex === 0;
@@ -26,40 +26,64 @@ const HeroSlider: React.FC = () => {
     setCurrentIndex(newIndex);
   };
 
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index);
+  };
+
   const currentCar = heroCars[currentIndex];
   
   return (
-    <section className="relative h-[500px] w-full text-foreground">
+    <section 
+      className="relative h-[500px] w-full text-foreground"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="absolute top-0 left-0 w-full h-1 bg-foreground/20 z-10">
+        <div 
+          key={currentIndex}
+          className="h-full bg-foreground"
+          style={{
+            animation: 'progressBarFill 10s linear forwards',
+            animationPlayState: isHovered ? 'paused' : 'running'
+          }}
+        />
+      </div>
+      
       <div 
         className="w-full h-full bg-cover bg-center transition-all duration-500"
-        style={{ backgroundImage: `url(${currentCar.imageUrl[1]})` }}
+        style={{ backgroundImage: `url(${currentCar.imageUrl})` }}
       >
         <div className="container mx-auto h-full flex flex-col justify-between items-center text-center px-4 py-16">
           <div className="animate-fade-in-up">
-            <h1 className="text-4xl md:text-5xl font-semibold">{currentCar.details?.subtitle?.includes("Model") ? "Poznaj " + currentCar.name : currentCar.name}</h1>
-            {currentCar.details?.subtitle && <p className="mt-2 text-lg">{currentCar.details.subtitle}</p>}
+            <h1 className="text-4xl md:text-5xl font-semibold">{currentCar.subtitle?.includes("Model") ? "Poznaj " + currentCar.name : currentCar.name}</h1>
+            {currentCar.subtitle && <p className="mt-2 text-lg">{currentCar.subtitle}</p>}
           </div>
           <div className="flex flex-col items-center gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to={currentCar.details?.primaryBtnLink || '#'}>
-                <Button size="lg" variant="primary" className="w-64">{currentCar.details?.primaryBtnText}</Button>
+              <Link to={currentCar.primaryBtnLink || '#'}>
+                <Button size="lg" variant="primary" className="w-64">{currentCar.primaryBtnText}</Button>
               </Link>
-              <Link to={currentCar.details?.secondaryBtnLink || '#'}>
-                <Button size="lg" variant="secondary" className="w-64">{currentCar.details?.secondaryBtnText}</Button>
+              <Link to={currentCar.secondaryBtnLink || '#'}>
+                <Button size="lg" variant="secondary" className="w-64">{currentCar.secondaryBtnText}</Button>
               </Link>
             </div>
              <div className="flex gap-2">
               {heroCars.map((_, index) => (
-                <div key={index} className={`h-1.5 w-6 rounded-full ${currentIndex === index ? 'bg-foreground' : 'bg-foreground/20'}`} />
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`h-1.5 w-6 rounded-full transition-colors ${currentIndex === index ? 'bg-foreground' : 'bg-foreground/20 hover:bg-foreground/40'}`}
+                  aria-label={`Przejdź do slajdu ${index + 1}`}
+                />
               ))}
             </div>
           </div>
         </div>
       </div>
-      <button onClick={goToPrevious} className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white">
+      <button onClick={goToPrevious} className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
       </button>
-      <button onClick={goToNext} className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white">
+      <button onClick={goToNext} className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
     </section>

@@ -17,13 +17,6 @@ export const CAR_FLEET: Car[] = [
       seating: '5 osób',
       acceleration: '3.3s 0-100 km/h',
     },
-     details: {
-      subtitle: 'Dostępne od 0,99% oprocentowania',
-      primaryBtnText: 'Zamów teraz',
-      primaryBtnLink: '/wynajem',
-      secondaryBtnText: 'Jazda Próbna',
-      secondaryBtnLink: '/kontakt',
-    }
   },
   {
     id: 'tesla-y',
@@ -41,13 +34,6 @@ export const CAR_FLEET: Car[] = [
       seating: '5 osób',
       acceleration: '3.7s 0-100 km/h',
     },
-    details: {
-      subtitle: 'Wynajem od 350 zł/dzień',
-      primaryBtnText: 'Wynajmij teraz',
-      primaryBtnLink: '/wynajem',
-      secondaryBtnText: 'Zobacz flotę',
-      secondaryBtnLink: '/flota',
-    }
   },
   {
     id: 'tesla-x',
@@ -65,12 +51,5 @@ export const CAR_FLEET: Car[] = [
       seating: '7 osób',
       acceleration: '2.6s 0-100 km/h',
     },
-     details: {
-      subtitle: 'Najwyższy poziom luksusu i technologii',
-      primaryBtnText: 'Wynajmij teraz',
-      primaryBtnLink: '/wynajem',
-      secondaryBtnText: 'Zobacz flotę',
-      secondaryBtnLink: '/flota',
-    }
   },
 ];

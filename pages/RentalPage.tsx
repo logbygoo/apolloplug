@@ -134,7 +134,7 @@ const CheckboxOption: React.FC<{ car: Car; option: typeof ADDITIONAL_OPTIONS[num
 
 const AgreementCheckbox: React.FC<{
   id: string;
-  label: string;
+  label: React.ReactNode;
   isChecked: boolean;
   onToggle: () => void;
 }> = ({ id, label, isChecked, onToggle }) => (
@@ -193,6 +193,17 @@ interface FormData {
     phone: string;
     options: Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>;
 }
+
+const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }> = ({ content, children }) => {
+  return (
+    <div className="relative flex items-center group">
+      {children}
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-max max-w-[240px] p-2 bg-foreground text-background text-xs text-center rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+        {content}
+      </div>
+    </div>
+  );
+};
 
 const RentalPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -426,13 +437,45 @@ const RentalPage: React.FC = () => {
                                         <div className="grid sm:grid-cols-2 gap-6">
                                             <div><Label htmlFor="fullName" className="flex items-center">Imię i Nazwisko</Label><Input id="fullName" value={formData.fullName} onChange={handleInputChange} required className="mt-1" /></div>
                                             <div><Label htmlFor="nip" className="flex items-center">NIP do faktury (opcjonalnie)</Label><Input id="nip" value={formData.nip} onChange={handleInputChange} className="mt-1" /></div>
-                                            <div><Label htmlFor="pesel" className="flex items-center">PESEL</Label><Input id="pesel" value={formData.pesel} onChange={handleInputChange} required className="mt-1" /></div>
-                                            <div><Label htmlFor="licenseNumber" className="flex items-center">Numer prawa jazdy</Label><Input id="licenseNumber" value={formData.licenseNumber} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div>
+                                                <Label htmlFor="pesel" className="flex items-center">
+                                                    PESEL
+                                                    <Tooltip content="Wymagany do umowy najmu. Podaj 11-cyfrowy numer identyfikacyjny.">
+                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                    </Tooltip>
+                                                </Label>
+                                                <Input id="pesel" value={formData.pesel} onChange={handleInputChange} required className="mt-1" />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="licenseNumber" className="flex items-center">
+                                                    Numer prawa jazdy
+                                                    <Tooltip content="Wpisz serię i numer prawa jazdy, np. 123456/12/XYZ. Format jak w dokumencie.">
+                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                    </Tooltip>
+                                                </Label>
+                                                <Input id="licenseNumber" value={formData.licenseNumber} onChange={handleInputChange} required className="mt-1" />
+                                            </div>
                                             <div className="sm:col-span-2"><Label htmlFor="address" className="flex items-center">Adres zamieszkania</Label><Input id="address" value={formData.address} onChange={handleInputChange} required className="mt-1" /></div>
                                             <div><Label htmlFor="postalCode" className="flex items-center">Kod pocztowy</Label><Input id="postalCode" value={formData.postalCode} onChange={handleInputChange} required className="mt-1" /></div>
                                             <div><Label htmlFor="city" className="flex items-center">Miejscowość</Label><Input id="city" value={formData.city} onChange={handleInputChange} required className="mt-1" /></div>
-                                            <div><Label htmlFor="email" className="flex items-center">E-mail<InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground" /></Label><Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="mt-1" /></div>
-                                            <div><Label htmlFor="phone" className="flex items-center">Telefon</Label><Input id="phone" type="tel" value={formData.phone} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div>
+                                                <Label htmlFor="email" className="flex items-center">
+                                                    E-mail
+                                                    <Tooltip content="Podaj prawidłowy adres e-mail, np. jan.kowalski@email.com. Wyślemy na niego potwierdzenie rezerwacji.">
+                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                    </Tooltip>
+                                                </Label>
+                                                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="mt-1" />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="phone" className="flex items-center">
+                                                    Telefon
+                                                    <Tooltip content="Podaj numer telefonu w formacie międzynarodowym, np. +48123456789. Potrzebny do kontaktu w sprawie rezerwacji.">
+                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                    </Tooltip>
+                                                </Label>
+                                                <Input id="phone" type="tel" value={formData.phone} onChange={handleInputChange} required className="mt-1" />
+                                            </div>
                                         </div>
                                     </FormSection>
                                     <FormSection title="Opcje dodatkowe">
@@ -445,7 +488,7 @@ const RentalPage: React.FC = () => {
                                             <div className="space-y-4">
                                                 <AgreementCheckbox
                                                     id="terms"
-                                                    label="Akceptuję regulamin oraz politykę prywatności apolloplug.com"
+                                                    label={<>Akceptuję{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">regulamin</Link>{' '}oraz{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">politykę prywatności</Link>{' '}apolloplug.com</>}
                                                     isChecked={agreements.terms}
                                                     onToggle={() => handleAgreementToggle('terms')}
                                                 />

@@ -13,13 +13,6 @@ export interface Car {
     drive?: string;
     version?: string;
   };
-  details?: {
-    subtitle?: string;
-    primaryBtnText?: string;
-    primaryBtnLink?: string;
-    secondaryBtnText?: string;
-    secondaryBtnLink?: string;
-  }
   available?: boolean;
   priceTiers?: {
     days: string;
@@ -30,8 +23,19 @@ export interface Car {
   costPerKmOverLimit: number;
 }
 
-export interface InvestmentProject {
+export interface HeroCar {
   id: string;
+  name: string;
+  imageUrl: string;
+  subtitle?: string;
+  primaryBtnText?: string;
+  primaryBtnLink?: string;
+  secondaryBtnText?: string;
+  secondaryBtnLink?: string;
+}
+
+export interface InvestmentProject {
+  id:string;
   carName: string;
   imageUrl: string;
   amountRaised: number;

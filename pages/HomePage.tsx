@@ -61,18 +61,22 @@ const HeroSlider: React.FC = () => {
           </div>
           <div className="flex flex-col items-center gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to={currentCar.primaryBtnLink || '#'}>
-                <Button size="lg" variant="primary" className="w-64">{currentCar.primaryBtnText}</Button>
-              </Link>
-              <Link to={currentCar.secondaryBtnLink || '#'}>
-                <Button 
-                  size="lg" 
-                  variant="secondary" 
-                  className={`w-64 ${isDarkTheme ? 'bg-white/20 !text-white border border-white/50 hover:bg-white/30' : ''}`}
-                >
-                  {currentCar.secondaryBtnText}
-                </Button>
-              </Link>
+              {currentCar.primaryBtnText && currentCar.primaryBtnLink && (
+                <Link to={currentCar.primaryBtnLink}>
+                  <Button size="lg" variant="primary" className="w-64">{currentCar.primaryBtnText}</Button>
+                </Link>
+              )}
+              {currentCar.secondaryBtnText && currentCar.secondaryBtnLink && (
+                <Link to={currentCar.secondaryBtnLink}>
+                  <Button 
+                    size="lg" 
+                    variant="secondary" 
+                    className={`w-64 ${isDarkTheme ? 'bg-white/20 !text-white border border-white/50 hover:bg-white/30' : ''}`}
+                  >
+                    {currentCar.secondaryBtnText}
+                  </Button>
+                </Link>
+              )}
             </div>
              <div className="flex gap-2">
               {heroCars.map((_, index) => (

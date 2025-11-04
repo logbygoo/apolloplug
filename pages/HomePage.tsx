@@ -31,17 +31,18 @@ const HeroSlider: React.FC = () => {
   };
 
   const currentCar = heroCars[currentIndex];
+  const isDarkTheme = currentCar.theme === 'dark';
   
   return (
     <section 
-      className="relative h-[500px] w-full text-foreground"
+      className={`relative h-[500px] w-full ${isDarkTheme ? 'text-white' : 'text-foreground'}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="absolute top-0 left-0 w-full h-1 bg-foreground/20 z-10">
+      <div className={`absolute top-0 left-0 w-full h-1 ${isDarkTheme ? 'bg-white/20' : 'bg-black/20'} z-10`}>
         <div 
           key={currentIndex}
-          className="h-full bg-foreground"
+          className={`h-full ${isDarkTheme ? 'bg-white' : 'bg-foreground'}`}
           style={{
             animation: 'progressBarFill 10s linear forwards',
             animationPlayState: isHovered ? 'paused' : 'running'
@@ -64,7 +65,13 @@ const HeroSlider: React.FC = () => {
                 <Button size="lg" variant="primary" className="w-64">{currentCar.primaryBtnText}</Button>
               </Link>
               <Link to={currentCar.secondaryBtnLink || '#'}>
-                <Button size="lg" variant="secondary" className="w-64">{currentCar.secondaryBtnText}</Button>
+                <Button 
+                  size="lg" 
+                  variant="secondary" 
+                  className={`w-64 ${isDarkTheme ? 'bg-white/20 !text-white border border-white/50 hover:bg-white/30' : ''}`}
+                >
+                  {currentCar.secondaryBtnText}
+                </Button>
               </Link>
             </div>
              <div className="flex gap-2">
@@ -72,7 +79,11 @@ const HeroSlider: React.FC = () => {
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`h-1.5 w-6 rounded-full transition-colors ${currentIndex === index ? 'bg-foreground' : 'bg-foreground/20 hover:bg-foreground/40'}`}
+                  className={`h-1.5 w-6 rounded-full transition-colors ${
+                    currentIndex === index
+                      ? (isDarkTheme ? 'bg-white' : 'bg-foreground')
+                      : (isDarkTheme ? 'bg-white/20 hover:bg-white/40' : 'bg-foreground/20 hover:bg-foreground/40')
+                  }`}
                   aria-label={`Przejdź do slajdu ${index + 1}`}
                 />
               ))}

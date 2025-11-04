@@ -4,12 +4,13 @@ export const HERO_CARS: HeroCar[] = [
   {
     id: 'tesla-3',
     name: 'A co gdyby',
-    imageUrl: 'https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Model-3-Main-Hero-Desktop-LHD',
+    imageUrl: 'https://img.apolloplug.com/cybertruck/tesla-cybertruck-01.jpg',
     subtitle: 'Ładować się poniżej 0,9 PLN/kWh?',
     primaryBtnText: 'Projekt Napędzany Słońcem',
     primaryBtnLink: '/wynajem',
     secondaryBtnText: 'Jazda Próbna',
     secondaryBtnLink: '/kontakt',
+    theme: 'dark',
   },
   {
     id: 'tesla-y',
@@ -20,6 +21,7 @@ export const HERO_CARS: HeroCar[] = [
     primaryBtnLink: '/wynajem',
     secondaryBtnText: 'Zobacz flotę',
     secondaryBtnLink: '/flota',
+    theme: 'light',
   },
   {
     id: 'tesla-x',
@@ -30,5 +32,6 @@ export const HERO_CARS: HeroCar[] = [
     primaryBtnLink: '/wynajem',
     secondaryBtnText: 'Zobacz flotę',
     secondaryBtnLink: '/flota',
+    theme: 'dark',
   }
 ];

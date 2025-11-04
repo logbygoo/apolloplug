@@ -32,6 +32,7 @@ export interface HeroCar {
   primaryBtnLink?: string;
   secondaryBtnText?: string;
   secondaryBtnLink?: string;
+  theme?: 'dark' | 'light';
 }
 
 export interface InvestmentProject {

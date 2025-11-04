@@ -2,7 +2,7 @@ import type { HeroCar } from '../types';
 
 export const HERO_CARS: HeroCar[] = [
   {
-    id: 'tesla-3',
+    id: '1',
     name: 'A co gdyby',
     imageUrl: 'https://img.apolloplug.com/cybertruck/tesla-cybertruck-01.jpg',
     subtitle: 'Ładować się poniżej 0,9 PLN/kWh?',
@@ -13,9 +13,9 @@ export const HERO_CARS: HeroCar[] = [
     theme: 'dark',
   },
   {
-    id: 'tesla-y',
-    name: 'Model Y',
-    imageUrl: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/8e2df1b9-a4bf-4eb9-beec-2cf5cc77fca0/bvlatuR/std/2880x2400/Desktop-ModelY?20230329',
+    id: '2',
+    name: 'Wypożyczaj',
+    imageUrl: 'https://img.apolloplug.com/tesla-y/tesla-y-02.jpg',
     subtitle: 'Wynajem od 350 zł/dzień',
     primaryBtnText: 'Wynajmij teraz',
     primaryBtnLink: '/wynajem',
@@ -24,14 +24,14 @@ export const HERO_CARS: HeroCar[] = [
     theme: 'light',
   },
   {
-    id: 'tesla-x',
-    name: 'Model X',
-    imageUrl: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/ddc135ed-1638-4ba5-b52a-9584358824f7/bvlatuR/std/4096x2304/Model-X-Main-Hero-Desktop-LHD-Animation-Glob',
-    subtitle: 'Najwyższy poziom luksusu i technologii',
-    primaryBtnText: 'Wynajmij teraz',
+    id: '3',
+    name: 'Podróżuj wygodnie',
+    imageUrl: 'https://img.apolloplug.com/tesla-y/tesla-y-01.jpg',
+    subtitle: 'Z profesjonalnym kierowcą',
+    primaryBtnText: 'Zamów przejazd',
     primaryBtnLink: '/wynajem',
     secondaryBtnText: 'Zobacz flotę',
     secondaryBtnLink: '/flota',
-    theme: 'dark',
+    theme: 'light',
   }
 ];

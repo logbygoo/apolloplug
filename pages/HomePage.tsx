@@ -10,6 +10,14 @@ const HeroSlider: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const heroCars = HERO_CARS;
 
+  useEffect(() => {
+    // Preload images for smoother transitions
+    heroCars.forEach(car => {
+      const img = new Image();
+      img.src = car.imageUrl;
+    });
+  }, []);
+
   const goToNext = useCallback(() => {
     setCurrentIndex(prevIndex => (prevIndex === heroCars.length - 1 ? 0 : prevIndex + 1));
   }, [heroCars.length]);
@@ -51,51 +59,64 @@ const HeroSlider: React.FC = () => {
         />
       </div>
       
-      <div 
-        className="w-full h-full bg-cover bg-center transition-all duration-500"
-        style={{ backgroundImage: `url(${currentCar.imageUrl})` }}
-      >
-        <div className="container mx-auto h-full flex flex-col justify-between items-center text-center px-4 py-16">
-          <div className="animate-fade-in-up">
-            <h1 className="text-4xl md:text-5xl font-semibold">{currentCar.subtitle?.includes("Model") ? "Poznaj " + currentCar.name : currentCar.name}</h1>
-            {currentCar.subtitle && <p className="mt-2 text-lg">{currentCar.subtitle}</p>}
+      <div className="absolute inset-0 w-full h-full">
+        {heroCars.map((car, index) => (
+            <div
+                key={car.id}
+                className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
+                    currentIndex === index ? 'opacity-100' : 'opacity-0'
+                }`}
+                style={{ backgroundImage: `url(${car.imageUrl})` }}
+                role="img"
+                aria-label={car.name}
+                aria-hidden={currentIndex !== index}
+            />
+        ))}
+      </div>
+
+      <div className="absolute inset-0 bg-black/25" />
+
+      <div className="relative container mx-auto h-full flex flex-col justify-between items-center text-center px-4 py-16">
+        <div className="animate-fade-in-up">
+          <h1 className="text-4xl md:text-5xl font-semibold text-shadow-md">{currentCar.subtitle?.includes("Model") ? "Poznaj " + currentCar.name : currentCar.name}</h1>
+          {currentCar.subtitle && <p className="mt-2 text-lg text-shadow">{currentCar.subtitle}</p>}
+        </div>
+        <div className="flex flex-col items-center gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+          <div className="flex flex-col sm:flex-row gap-4">
+            {currentCar.primaryBtnText && currentCar.primaryBtnLink && (
+              <Link to={currentCar.primaryBtnLink}>
+                <Button size="lg" variant="primary" className="w-64">{currentCar.primaryBtnText}</Button>
+              </Link>
+            )}
+            {currentCar.secondaryBtnText && currentCar.secondaryBtnLink && (
+              <Link to={currentCar.secondaryBtnLink}>
+                <Button 
+                  size="lg" 
+                  variant="secondary" 
+                  className={`w-64 ${isDarkTheme ? 'bg-white/20 !text-white border border-white/50 hover:bg-white/30' : ''}`}
+                >
+                  {currentCar.secondaryBtnText}
+                </Button>
+              </Link>
+            )}
           </div>
-          <div className="flex flex-col items-center gap-6 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-            <div className="flex flex-col sm:flex-row gap-4">
-              {currentCar.primaryBtnText && currentCar.primaryBtnLink && (
-                <Link to={currentCar.primaryBtnLink}>
-                  <Button size="lg" variant="primary" className="w-64">{currentCar.primaryBtnText}</Button>
-                </Link>
-              )}
-              {currentCar.secondaryBtnText && currentCar.secondaryBtnLink && (
-                <Link to={currentCar.secondaryBtnLink}>
-                  <Button 
-                    size="lg" 
-                    variant="secondary" 
-                    className={`w-64 ${isDarkTheme ? 'bg-white/20 !text-white border border-white/50 hover:bg-white/30' : ''}`}
-                  >
-                    {currentCar.secondaryBtnText}
-                  </Button>
-                </Link>
-              )}
-            </div>
-             <div className="flex gap-2">
-              {heroCars.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`h-1.5 w-6 rounded-full transition-colors ${
-                    currentIndex === index
-                      ? (isDarkTheme ? 'bg-white' : 'bg-foreground')
-                      : (isDarkTheme ? 'bg-white/20 hover:bg-white/40' : 'bg-foreground/20 hover:bg-foreground/40')
-                  }`}
-                  aria-label={`Przejdź do slajdu ${index + 1}`}
-                />
-              ))}
-            </div>
+           <div className="flex gap-2">
+            {heroCars.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`h-1.5 w-6 rounded-full transition-colors ${
+                  currentIndex === index
+                    ? (isDarkTheme ? 'bg-white' : 'bg-foreground')
+                    : (isDarkTheme ? 'bg-white/20 hover:bg-white/40' : 'bg-foreground/20 hover:bg-foreground/40')
+                }`}
+                aria-label={`Przejdź do slajdu ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>
+
       <button onClick={goToPrevious} className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
       </button>

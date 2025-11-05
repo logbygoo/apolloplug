@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
 import { LightningIcon, PlugIcon } from '../constants';
+import Seo from '../components/Seo';
 
 const HeroSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -206,6 +207,10 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="bg-background">
+      <Seo 
+        title="ApolloPlug - Wynajem i transfery autami Tesla"
+        description="Doświadcz przyszłości motoryzacji. Wynajmuj Tesle, korzystaj z transferów VIP i inwestuj w elektromobilność. ApolloPlug - Twoje centrum EV."
+      />
       <HeroSlider />
       
       <HorizontalCarousel items={vehicleCarouselItems} />

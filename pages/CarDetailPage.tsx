@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { PageHeader, Button } from '../components/ui';
+import Seo from '../components/Seo';
 
 const CarDetailPage: React.FC = () => {
     const { carId } = useParams<{ carId: string }>();
@@ -18,6 +19,10 @@ const CarDetailPage: React.FC = () => {
 
     return (
         <div className="bg-background">
+            <Seo
+                title={`${car.name} - Dane techniczne i wynajem`}
+                description={`Wynajmij Teslę ${car.name}. Sprawdź specyfikację, osiągi, zasięg i cennik. Zarezerwuj online w ApolloPlug.`}
+            />
             <PageHeader title={car.name} subtitle={car.description} breadcrumbs={breadcrumbs} />
             <div className="container mx-auto px-4 md:px-6 pb-16 md:pb-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">

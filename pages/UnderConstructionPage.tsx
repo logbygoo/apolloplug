@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Input, Label } from '../components/ui';
 import { ApolloPlugLogo } from '../constants';
 import { CONFIG } from '../config';
@@ -10,6 +10,10 @@ interface UnderConstructionPageProps {
 const UnderConstructionPage: React.FC<UnderConstructionPageProps> = ({ onAuthenticated }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    document.title = 'ApolloPlug.com | Wkrótce Otwarcie';
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

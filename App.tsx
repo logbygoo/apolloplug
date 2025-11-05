@@ -12,6 +12,7 @@ import BlogArticlePage from './pages/BlogArticlePage';
 import { ApolloPlugLogo, MenuIcon, XIcon, HeadphoneIcon, FlagIcon, EnvelopeIcon } from './constants';
 import { CONFIG } from './config';
 import UnderConstructionPage from './pages/UnderConstructionPage';
+import ScrollToTop from './components/ScrollToTop';
 
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
@@ -130,6 +131,7 @@ const App: React.FC = () => {
 
   return (
     <HashRouter>
+      <ScrollToTop />
       <div className="flex min-h-screen flex-col bg-background text-foreground font-sans">
         <Header />
         <main className="flex-grow pt-14">

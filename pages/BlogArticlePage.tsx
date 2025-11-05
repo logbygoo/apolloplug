@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { PageHeader } from '../components/ui';
 import { ARTICLES } from '../configs/blogConfig';
+import Seo from '../components/Seo';
 
 const BlogArticlePage: React.FC = () => {
     const { articleSlug } = useParams<{ articleSlug: string }>();
@@ -17,6 +18,10 @@ const BlogArticlePage: React.FC = () => {
     ];
     return (
         <div className="bg-background">
+            <Seo
+                title={article.title}
+                description={article.excerpt}
+            />
             <PageHeader 
                 title={article.title} 
                 breadcrumbs={breadcrumbs} 

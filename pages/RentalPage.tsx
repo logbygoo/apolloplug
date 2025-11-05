@@ -4,6 +4,7 @@ import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
 import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon, HomeIcon, PlayIcon } from '../constants';
 import type { Car } from '../types';
+import Seo from '../components/Seo';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
@@ -345,6 +346,10 @@ const RentalPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-background">
+            <Seo
+                title="Wynajem Samochodów Elektrycznych Tesla"
+                description="Zarezerwuj Teslę Model 3, Y, lub X. Oferujemy elastyczny wynajem krótkoterminowy i długoterminowy. Sprawdź cennik i dostępność online."
+            />
             <PageHeader
                 title="Wynajem Auta EV"
                 subtitle="Zarezerwuj swój wymarzony samochód elektryczny w kilku prostych krokach."

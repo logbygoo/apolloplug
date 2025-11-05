@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { InfoIcon } from '../constants';
+import Seo from '../components/Seo';
 
 const ContactPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -30,6 +31,10 @@ const ContactPage: React.FC = () => {
 
   return (
     <div className="bg-background">
+      <Seo
+        title="Kontakt"
+        description="Skontaktuj się z nami w sprawie wynajmu Tesli, transferów VIP lub inwestycji. Jesteśmy dostępni telefonicznie, mailowo oraz w naszym biurze w Warszawie."
+      />
       <PageHeader 
         title="Kontakt"
         subtitle="Masz pytania? Chcesz nawiązać współpracę? Jesteśmy do Twojej dyspozycji."

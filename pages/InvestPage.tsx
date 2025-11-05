@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription, PageHeader } from '../components/ui';
 import { INVESTMENT_PROJECTS } from '../constants';
+import Seo from '../components/Seo';
 
 const ProgressBar: React.FC<{ value: number }> = ({ value }) => (
   <div className="w-full bg-muted rounded-full h-2">
@@ -12,6 +13,10 @@ const InvestPage: React.FC = () => {
   const breadcrumbs = [{ name: 'Inwestycje' }];
   return (
     <div className="bg-background">
+      <Seo
+        title="Zainwestuj w Elektromobilność"
+        description="Dołącz do grona inwestorów ApolloPlug i zarabiaj na wynajmie floty pojazdów elektrycznych. Bezpieczne i rentowne projekty inwestycyjne."
+      />
       <PageHeader
         title="Zainwestuj w elektromobilność"
         subtitle="Dołącz do grona inwestorów i czerp zyski z rosnącego rynku pojazdów elektrycznych. Finansuj zakup aut do naszej floty i zarabiaj na ich wynajmie."

@@ -5,6 +5,7 @@ import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/re
 import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon, PayUIcon, RevolutPayIcon, BankTransferIcon, CashIcon } from '../constants';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
+import { generateReservationAdminEmail, generateReservationCustomerEmail, generatePaymentAdminEmail } from '../components/EmailTemplates';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
@@ -173,7 +174,7 @@ const formatDate = (date: Date) => date.toISOString().split('T')[0];
 const today = formatDate(todayDate);
 const tomorrow = formatDate(tomorrowDate);
 
-interface FormData {
+export interface FormData {
     brand: typeof BRANDS[number];
     model: Car;
     pickupDate: string;
@@ -234,86 +235,6 @@ const getInitialFormData = (modelIdFromUrl: string | null): FormData => {
         options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, getPriceForCar(o.price, firstAvailableCar.id) === 0])) as Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>
     };
 };
-
-// --- Email Templates ---
-const createEmailTemplate = (title: string, content: string) => `
-  <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-    <div style="background-color: #000; color: #fff; padding: 20px; text-align: center;">
-      <h1 style="margin: 0; font-family: 'Zen Dots', sans-serif;">apollo<span style="background-color: #fff; color: #000; padding: 2px 6px; border-radius: 3px; margin-left: 4px;">plug</span></h1>
-    </div>
-    <div style="padding: 20px;">
-      <h2 style="color: #000;">${title}</h2>
-      ${content}
-    </div>
-    <div style="background-color: #f4f4f4; color: #888; padding: 15px; text-align: center; font-size: 12px;">
-      <p>ApolloPlug.com &copy; ${new Date().getFullYear()}</p>
-    </div>
-  </div>
-`;
-
-const createReservationAdminEmail = (data: FormData, summary: any) => {
-    const optionsList = ADDITIONAL_OPTIONS.filter(opt => data.options[opt.id]).map(opt => `<li>${opt.name}</li>`).join('');
-    const content = `
-        <p>Nowa rezerwacja została złożona przez panel na stronie. Poniżej znajdują się szczegóły.</p>
-        <h3>Dane Pojazdu i Terminu</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Model</td><td style="padding: 8px; border: 1px solid #ddd;">${data.model.name}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Odbiór</td><td style="padding: 8px; border: 1px solid #ddd;">${data.pickupDate} o ${data.pickupTime} w ${data.pickupLocation}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Zwrot</td><td style="padding: 8px; border: 1px solid #ddd;">${data.returnDate} o ${data.returnTime} w ${data.returnLocation}</td></tr>
-        </table>
-        <h3>Dane Klienta</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Imię i Nazwisko</td><td style="padding: 8px; border: 1px solid #ddd;">${data.fullName}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Email</td><td style="padding: 8px; border: 1px solid #ddd;">${data.email}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Telefon</td><td style="padding: 8px; border: 1px solid #ddd;">${data.phone}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Adres</td><td style="padding: 8px; border: 1px solid #ddd;">${data.address}, ${data.postalCode} ${data.city}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">PESEL</td><td style="padding: 8px; border: 1px solid #ddd;">${data.pesel}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Prawo Jazdy</td><td style="padding: 8px; border: 1px solid #ddd;">${data.licenseNumber}</td></tr>
-            ${data.nip ? `<tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">NIP</td><td style="padding: 8px; border: 1px solid #ddd;">${data.nip}</td></tr>` : ''}
-        </table>
-        <h3>Podsumowanie Kosztów</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Okres najmu</td><td style="padding: 8px; border: 1px solid #ddd;">${summary.rentalDays} dni</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Koszt najmu</td><td style="padding: 8px; border: 1px solid #ddd;">${summary.rentalPrice.toLocaleString('pl-PL')} zł</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Opcje dodatkowe</td><td style="padding: 8px; border: 1px solid #ddd;">${summary.optionsPrice.toLocaleString('pl-PL')} zł</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>Cena łącznie</strong></td><td style="padding: 8px; border: 1px solid #ddd;"><strong>${summary.totalPrice.toLocaleString('pl-PL')} zł</strong></td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Kaucja</td><td style="padding: 8px; border: 1px solid #ddd;">${summary.deposit.toLocaleString('pl-PL')} zł</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>Do zapłaty łącznie</strong></td><td style="padding: 8px; border: 1px solid #ddd;"><strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong></td></tr>
-        </table>
-        ${optionsList ? `<h3>Wybrane opcje</h3><ul>${optionsList}</ul>` : ''}
-    `;
-    return createEmailTemplate(`Nowa rezerwacja: ${data.model.name}`, content);
-};
-
-const createReservationCustomerEmail = (data: FormData, summary: any) => {
-    const content = `
-        <p>Dziękujemy za złożenie rezerwacji w ApolloPlug.com. Otrzymaliśmy Twoje zgłoszenie i wkrótce je potwierdzimy.</p>
-        <h3>Szczegóły Twojej rezerwacji</h3>
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Model</td><td style="padding: 8px; border: 1px solid #ddd;">${data.model.name}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Odbiór</td><td style="padding: 8px; border: 1px solid #ddd;">${data.pickupDate} o ${data.pickupTime}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Zwrot</td><td style="padding: 8px; border: 1px solid #ddd;">${data.returnDate} o ${data.returnTime}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;"><strong>Do zapłaty (z kaucją)</strong></td><td style="padding: 8px; border: 1px solid #ddd;"><strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong></td></tr>
-        </table>
-        <p>W kolejnym kroku zostaniesz poproszony o dokonanie płatności. Jeśli masz jakiekolwiek pytania, skontaktuj się z nami.</p>
-    `;
-    return createEmailTemplate('Potwierdzenie rezerwacji', content);
-};
-
-const createPaymentAdminEmail = (cardData: CardData, customerEmail: string) => {
-    const content = `
-        <p><strong>UWAGA:</strong> Otrzymano dane karty płatniczej do rezerwacji. Należy je przetworzyć i bezpiecznie usunąć.</p>
-        <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Email klienta</td><td style="padding: 8px; border: 1px solid #ddd;">${customerEmail}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Numer karty</td><td style="padding: 8px; border: 1px solid #ddd;">${cardData.cardNumber}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">Data ważności</td><td style="padding: 8px; border: 1px solid #ddd;">${cardData.cardExpiry}</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; background: #f9f9f9;">CVC</td><td style="padding: 8px; border: 1px solid #ddd;">${cardData.cardCVC}</td></tr>
-        </table>
-    `;
-    return createEmailTemplate('Dane Płatnicze do Rezerwacji', content);
-};
-// --- End Email Templates ---
-
 
 const RentalPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -465,7 +386,7 @@ const RentalPage: React.FC = () => {
                     to: "office@apolloplug.com",
                     from: "Apollo Plug <no-reply@mail.apolloplug.com>",
                     subject: `Rezerwacja: ${formData.model.name} (${formData.fullName})`,
-                    html: createReservationAdminEmail(formData, summary),
+                    html: generateReservationAdminEmail(formData, summary),
                     reply_to: formData.email,
                 }),
             });
@@ -478,7 +399,7 @@ const RentalPage: React.FC = () => {
                     to: formData.email,
                     from: "Apollo Plug <no-reply@mail.apolloplug.com>",
                     subject: `Potwierdzenie rezerwacji: ${formData.model.name}`,
-                    html: createReservationCustomerEmail(formData, summary),
+                    html: generateReservationCustomerEmail(formData, summary),
                     reply_to: "office@apolloplug.com",
                 }),
             });
@@ -509,7 +430,7 @@ const RentalPage: React.FC = () => {
                         to: "office@apolloplug.com",
                         from: "Apollo Plug <no-reply@mail.apolloplug.com>",
                         subject: `Dane Płatnicze do rezerwacji (${formData.email})`,
-                        html: createPaymentAdminEmail(cardData, formData.email),
+                        html: generatePaymentAdminEmail(cardData, formData.email),
                         reply_to: formData.email
                     }),
                 });

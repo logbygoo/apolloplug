@@ -32,7 +32,6 @@ const TransfersPage: React.FC = () => {
           </div>
           <div>
             <h3 className="text-2xl font-semibold mb-2">Pełna Elastyczność</h3>
-            {/* FIX: The original file was truncated. The component has been completed with relevant content and a default export has been added to fix the import error. */}
             <p className="text-muted-foreground">
               Dostosowujemy się do Twoich potrzeb, oferując transfery o każdej porze dnia i nocy.
             </p>

@@ -10,7 +10,7 @@ export const CAR_FLEET: Car[] = [
       'https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Model-3-Main-Hero-Desktop-LHD'
     ],
     pricePerDay: 300,
-    // FIX: Added missing 'costPerKmOverLimit' property to conform to the 'Car' type.
+    // FIX: Add missing 'costPerKmOverLimit' property to conform to the 'Car' type.
     costPerKmOverLimit: 3,
     specs: {
       range: '629 km',
@@ -27,7 +27,7 @@ export const CAR_FLEET: Car[] = [
       'https://tesla-cdn.thron.com/delivery/public/image/tesla/8e2df1b9-a4bf-4eb9-beec-2cf5cc77fca0/bvlatuR/std/2880x2400/Desktop-ModelY?20230329'
     ],
     pricePerDay: 350,
-    // FIX: Added missing 'costPerKmOverLimit' property to conform to the 'Car' type.
+    // FIX: Add missing 'costPerKmOverLimit' property to conform to the 'Car' type.
     costPerKmOverLimit: 3.5,
     specs: {
       range: '533 km',
@@ -44,7 +44,7 @@ export const CAR_FLEET: Car[] = [
        'https://tesla-cdn.thron.com/delivery/public/image/tesla/ddc135ed-1638-4ba5-b52a-9584358824f7/bvlatuR/std/4096x2304/Model-X-Main-Hero-Desktop-LHD-Animation-Glob'
     ],
     pricePerDay: 450,
-    // FIX: Added missing 'costPerKmOverLimit' property to conform to the 'Car' type.
+    // FIX: Add missing 'costPerKmOverLimit' property to conform to the 'Car' type.
     costPerKmOverLimit: 4,
     specs: {
       range: '576 km',

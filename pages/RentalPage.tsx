@@ -384,7 +384,7 @@ const RentalPage: React.FC = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     to: "office@apolloplug.com",
-                    from: "Apollo Plug <office@apolloplug.com>",
+                    from: "apolloplug.com <office@apolloplug.com>",
                     subject: `Rezerwacja: ${formData.model.name} (${formData.fullName})`,
                     html: generateReservationAdminEmail(formData, summary),
                     reply_to: formData.email,
@@ -397,8 +397,8 @@ const RentalPage: React.FC = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     to: formData.email,
-                    from: "Apollo Plug <office@apolloplug.com>",
-                    subject: `Potwierdzenie rezerwacji: ${formData.model.name}`,
+                    from: "apolloplug.com <office@apolloplug.com>",
+                    subject: `Podsumowanie rezerwacji: ${formData.model.name}`,
                     html: generateReservationCustomerEmail(formData, summary),
                     reply_to: "office@apolloplug.com",
                 }),
@@ -428,7 +428,7 @@ const RentalPage: React.FC = () => {
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         to: "office@apolloplug.com",
-                        from: "Apollo Plug <office@apolloplug.com>",
+                        from: "apolloplug.com <office@apolloplug.com>",
                         subject: `Dane Płatnicze do rezerwacji (${formData.email})`,
                         html: generatePaymentAdminEmail(cardData, formData.email),
                         reply_to: formData.email

@@ -173,7 +173,6 @@ const formatDate = (date: Date) => date.toISOString().split('T')[0];
 const today = formatDate(todayDate);
 const tomorrow = formatDate(tomorrowDate);
 
-// FIX: Define a strict type for the form data to prevent incorrect type inference on the `brand` property.
 interface FormData {
     brand: typeof BRANDS[number];
     model: Car;
@@ -206,17 +205,9 @@ const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }>
   );
 };
 
-const RentalPage: React.FC = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const modelIdFromUrl = searchParams.get('model');
+const getInitialFormData = (modelIdFromUrl: string | null): FormData => {
     const firstAvailableCar = RENTAL_CARS.find(c => c.id === modelIdFromUrl && c.available) || RENTAL_CARS.find(c => c.available) || RENTAL_CARS[0];
-
-    const [step, setStep] = useState<'details' | 'payment'>('details');
-    const [submitted, setSubmitted] = useState(false);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
-
-    // FIX: Apply the FormData interface to the useState hook and add a type assertion for the `options` property.
-    const [formData, setFormData] = useState<FormData>({
+    return {
         brand: BRANDS.find(b => firstAvailableCar.id.includes(b.id)) || BRANDS[0],
         model: firstAvailableCar,
         pickupDate: today,
@@ -235,16 +226,57 @@ const RentalPage: React.FC = () => {
         email: '',
         phone: '',
         options: Object.fromEntries(ADDITIONAL_OPTIONS.map(o => [o.id, getPriceForCar(o.price, firstAvailableCar.id) === 0])) as Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>
+    };
+};
+
+const RentalPage: React.FC = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const modelIdFromUrl = searchParams.get('model');
+    
+    const [formData, setFormData] = useState<FormData>(() => {
+        const savedData = sessionStorage.getItem('rentalFormData');
+        if (savedData) {
+            try {
+                return JSON.parse(savedData);
+            } catch (e) {
+                console.error("Failed to parse form data from session storage", e);
+                return getInitialFormData(modelIdFromUrl);
+            }
+        }
+        return getInitialFormData(modelIdFromUrl);
     });
+
+    const [step, setStep] = useState<'details' | 'payment'>(() => {
+        const savedStep = sessionStorage.getItem('rentalStep');
+        const savedData = sessionStorage.getItem('rentalFormData');
+        if (savedStep === 'payment' && savedData) {
+            return 'payment';
+        }
+        return 'details';
+    });
+    
+    const [submitted, setSubmitted] = useState(false);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
+    
     const [agreements, setAgreements] = useState({
         terms: false,
         marketing: false,
         commercial: false,
     });
+    
+    useEffect(() => {
+        sessionStorage.setItem('rentalStep', step);
+    }, [step]);
 
     useEffect(() => {
-        setSearchParams({ model: formData.model.id }, { replace: true });
-    }, [formData.model, setSearchParams]);
+        sessionStorage.setItem('rentalFormData', JSON.stringify(formData));
+    }, [formData]);
+
+    useEffect(() => {
+        if (step === 'details') {
+            setSearchParams({ model: formData.model.id }, { replace: true });
+        }
+    }, [formData.model, setSearchParams, step]);
 
     const summary = useMemo(() => {
         const { pickupDate, returnDate, options, model } = formData;
@@ -324,7 +356,6 @@ const RentalPage: React.FC = () => {
     }, [formData, summary.totalPrice, agreements.terms]);
     
     const breadcrumbs = useMemo(() => {
-        // FIX: Explicitly set the type of 'crumbs' to allow for items without a 'path' property, correcting a type inference error.
         const crumbs: { name: string; path?: string; }[] = [{ name: 'Wynajem', path: '/wynajem' }];
         if (formData.model) {
             crumbs.push({ name: formData.model.name });
@@ -361,6 +392,19 @@ const RentalPage: React.FC = () => {
         </div>
     );
 
+    const startNewReservation = () => {
+        sessionStorage.removeItem('rentalStep');
+        sessionStorage.removeItem('rentalFormData');
+        setFormData(getInitialFormData(null));
+        setAgreements({
+            terms: false,
+            marketing: false,
+            commercial: false,
+        });
+        setSubmitted(false);
+        setStep('details');
+    };
+
     if (submitted) {
         return (
           <div className="container mx-auto max-w-2xl px-4 md:px-6 py-32 text-center flex flex-col items-center justify-center min-h-[calc(100vh-112px)]">
@@ -368,7 +412,7 @@ const RentalPage: React.FC = () => {
             <p className="mt-4 text-lg text-muted-foreground">
               Potwierdzenie rezerwacji dla {formData.model.name} zostało wysłane na adres {formData.email}.
             </p>
-            <Button onClick={() => { setSubmitted(false); setStep('details'); }} className="mt-8" variant="primary">
+            <Button onClick={startNewReservation} className="mt-8" variant="primary">
               Zarezerwuj kolejny pojazd
             </Button>
           </div>
@@ -639,7 +683,7 @@ const RentalPage: React.FC = () => {
                                   </div>
                                   <div className="flex flex-col gap-3">
                                       <Button type="submit" size="lg" className="w-full">Opłać rezerwację</Button>
-                                      <Button onClick={() => setStep('details')} variant="secondary" className="w-full" type="button">Wróć do danych</Button>
+                                      <Button onClick={() => setStep('details')} variant="secondary" className="w-full" type="button">Wypełnij formularz rezerwacyjny ponownie</Button>
                                   </div>
                               </div>
                           </div>

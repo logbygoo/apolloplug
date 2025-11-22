@@ -8,10 +8,38 @@ const ContactPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch("https://mail.apolloplug.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          subject: "Nowe zapytanie ze strony",
+          message: `<p><b>Od:</b> ${name} (${email})</p><p><b>Wiadomość:</b></p><p>${message.replace(/\n/g, "<br>")}</p>`,
+          customerMessage: `<p>Cześć ${name},</p><p>dziękujemy za wysłanie wiadomości. Skontaktujemy się z Tobą jak najszybciej.</p><p><b>Twoja wiadomość:</b></p><p>${message.replace(/\n/g, "<br>")}</p>`,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Błąd podczas wysyłania wiadomości.");
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError("Nie udało się wysłać wiadomości. Spróbuj ponownie później.");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
@@ -85,7 +113,10 @@ const ContactPage: React.FC = () => {
                     </Label>
                     <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required className="mt-1" />
                   </div>
-                  <Button type="submit" className="w-full" size="lg">Wyślij</Button>
+                  {error && <p className="text-sm text-destructive">{error}</p>}
+                  <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                    {isLoading ? 'Wysyłanie...' : 'Wyślij'}
+                  </Button>
                 </form>
               )}
           </div>

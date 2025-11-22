@@ -25,7 +25,7 @@ const ContactPage: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           to: "office@apolloplug.com",
-          from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+          from: "Apollo Plug <office@apolloplug.com>",
           subject: `Nowe zapytanie ze strony: ${name}`,
           html: adminHtml,
           reply_to: email,

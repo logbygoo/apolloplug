@@ -98,7 +98,8 @@ const generateDetailsTable = (rows: [string, string][]) => {
 };
 
 export const generateReservationAdminEmail = (data: FormData, summary: any) => {
-    const detailsContent = generateDetailsTable([
+    // FIX: Refactored to imperatively build the details array to avoid TypeScript type inference issues with conditional spreading.
+    const detailsRows: [string, string][] = [
         ['Model pojazdu', data.model.name],
         ['Odbiór', `${formatDate(data.pickupDate)} o ${data.pickupTime} w ${data.pickupLocation}`],
         ['Zwrot', `${formatDate(data.returnDate)} o ${data.returnTime} w ${data.returnLocation}`],
@@ -108,8 +109,13 @@ export const generateReservationAdminEmail = (data: FormData, summary: any) => {
         ['Adres', `${data.address}, ${data.postalCode} ${data.city}`],
         ['PESEL', data.pesel],
         ['Prawo jazdy', data.licenseNumber],
-        ...(data.nip ? [['NIP', data.nip]] : []),
-    ]);
+    ];
+
+    if (data.nip) {
+        detailsRows.push(['NIP', data.nip]);
+    }
+
+    const detailsContent = generateDetailsTable(detailsRows);
 
     const paymentContent = generateDetailsTable([
         ['Okres najmu', `${summary.rentalDays} dni`],

@@ -407,6 +407,30 @@ const RentalPage: React.FC = () => {
                 console.warn("Failed to send customer confirmation email, but admin was notified.");
             }
             
+            // Send SMS notifications (fire and forget)
+            const pickupDateFormatted = new Date(formData.pickupDate).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const adminSmsMessage = `${formData.model.name} - ${summary.rentalDays} doby od ${pickupDateFormatted} ${formData.pickupTime} - ${summary.totalPrice} zł - ${formData.fullName}`;
+            fetch("https://apollosms.spam01.workers.dev/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    to: "720100600",
+                    message: adminSmsMessage,
+                    from: "4628",
+                }),
+            }).catch(err => console.warn("Failed to send admin SMS", err));
+
+            const customerSmsMessage = `Potwierdzamy otrzymanie rezerwacji. Szczegóły przesłane mailowo na ${formData.email} Dokończ rezerwację finalizując płatność.`;
+            fetch("https://apollosms.spam01.workers.dev/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    to: formData.phone,
+                    message: customerSmsMessage,
+                    from: "4628",
+                }),
+            }).catch(err => console.warn("Failed to send customer SMS", err));
+
             setStep('payment');
         } catch (error) {
             console.error("Failed to send reservation email:", error);

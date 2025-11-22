@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
-import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon, HomeIcon, PlayIcon } from '../constants';
+import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon, PayUIcon, RevolutPayIcon, BankTransferIcon, CashIcon } from '../constants';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 
@@ -213,6 +213,8 @@ const RentalPage: React.FC = () => {
 
     const [step, setStep] = useState<'details' | 'payment'>('details');
     const [submitted, setSubmitted] = useState(false);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
+
     // FIX: Apply the FormData interface to the useState hook and add a type assertion for the `options` property.
     const [formData, setFormData] = useState<FormData>({
         brand: BRANDS.find(b => firstAvailableCar.id.includes(b.id)) || BRANDS[0],
@@ -329,6 +331,35 @@ const RentalPage: React.FC = () => {
         }
         return crumbs;
     }, [formData.model]);
+
+    const paymentMethods = [
+      { id: 'card', name: 'Karta płatnicza', icon: CreditCardIcon },
+      { id: 'payu', name: 'PayU', icon: PayUIcon },
+      { id: 'revolut', name: 'RevolutPay', icon: RevolutPayIcon },
+      { id: 'transfer', name: 'Przelew', icon: BankTransferIcon },
+      { id: 'cash', name: 'Płatność przy odbiorze', icon: CashIcon },
+    ];
+    
+    const PaymentMethodOption: React.FC<{
+        method: { id: string; name: string; icon: React.FC<any> };
+        isSelected: boolean;
+        onSelect: () => void;
+    }> = ({ method, isSelected, onSelect }) => (
+        <div
+            onClick={onSelect}
+            className={`flex items-center gap-4 p-4 border rounded-lg cursor-pointer transition-all ${
+            isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card hover:bg-secondary/25'
+            }`}
+        >
+            <method.icon className="w-8 h-8 text-foreground" />
+            <span className="font-medium">{method.name}</span>
+            <div className="ml-auto">
+              <div className={`h-6 w-6 rounded-full flex items-center justify-center border-2 transition-all ${isSelected ? 'border-foreground bg-foreground' : 'border-border'}`}>
+                  {isSelected && <CheckIcon className="w-3.5 h-3.5 text-background" strokeWidth={4} />}
+              </div>
+            </div>
+        </div>
+    );
 
     if (submitted) {
         return (
@@ -552,13 +583,26 @@ const RentalPage: React.FC = () => {
                     </>
                 )}
                 {step === 'payment' && (
-                    <div className="max-w-md mx-auto">
-                        <div className="bg-secondary p-8 rounded-lg shadow-sm">
-                            <div className="text-center">
-                                <h1 className="text-3xl font-bold">Płatność</h1>
-                                <p className="text-muted-foreground mt-2">Sfinalizuj rezerwację, wprowadzając dane karty.</p>
-                            </div>
-                            <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }} className="mt-8 space-y-6">
+                  <form onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}>
+                    <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
+                      <div className="lg:col-span-2">
+                        <FormSection title="Metoda płatności">
+                          <div className="space-y-4">
+                            {paymentMethods.map(method => (
+                              <PaymentMethodOption
+                                key={method.id}
+                                method={method}
+                                isSelected={selectedPaymentMethod === method.id}
+                                onSelect={() => setSelectedPaymentMethod(method.id)}
+                              />
+                            ))}
+                          </div>
+                        </FormSection>
+
+                        {selectedPaymentMethod === 'card' && (
+                          <div className="pt-8 animate-fade-in-up" style={{ animation: 'fadeInUp 0.5s ease-out forwards' }}>
+                             <h2 className="text-2xl font-bold tracking-tight">Dane karty płatniczej</h2>
+                             <div className="mt-6 grid gap-6">
                                 <div>
                                     <Label htmlFor="cardName" className="flex items-center">Imię i nazwisko na karcie</Label>
                                     <Input id="cardName" required className="mt-1"/>
@@ -578,18 +622,31 @@ const RentalPage: React.FC = () => {
                                         <Input id="cardCVC" required className="mt-1"/>
                                     </div>
                                 </div>
-                                <div className="!mt-8 border-t border-border pt-6 space-y-2">
-                                    <div className="flex justify-between text-sm"><p>Transakcja #1 (Najem)</p><p className="font-medium">{summary.totalPrice.toLocaleString('pl-PL')} zł</p></div>
-                                    <div className="flex justify-between text-sm"><p>Transakcja #2 (Kaucja)</p><p className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</p></div>
-                                    <div className="flex justify-between font-bold text-lg pt-2"><p>Łącznie dziś</p><p>{summary.totalWithDeposit.toLocaleString('pl-PL')} zł</p></div>
-                                </div>
-                                <div className="!mt-8 flex flex-col sm:flex-row-reverse gap-3">
-                                    <Button type="submit" size="lg" className="w-full">Zapłać i rezerwuj</Button>
-                                    <Button onClick={() => setStep('details')} variant="secondary" className="w-full">Wróć</Button>
-                                </div>
-                            </form>
-                        </div>
+                             </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="lg:col-span-1">
+                          <div className="sticky top-24">
+                              <div className="space-y-6 bg-secondary p-6 rounded-lg">
+                                  <h2 className="text-3xl font-bold">Podsumowanie</h2>
+                                  <div className="space-y-2 border-t border-border pt-4">
+                                      <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
+                                      <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
+                                      <div className="flex justify-between font-bold pt-2 mt-2"><span className="text-muted-foreground">Do zapłaty łącznie</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                  </div>
+                                  <div className="flex flex-col gap-3">
+                                      <Button type="submit" size="lg" className="w-full">Opłać rezerwację</Button>
+                                      <Button onClick={() => setStep('details')} variant="secondary" className="w-full" type="button">Wróć do danych</Button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
                     </div>
+                  </form>
                 )}
             </div>
         </div>

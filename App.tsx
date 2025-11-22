@@ -9,6 +9,8 @@ import CarDetailPage from './pages/CarDetailPage';
 import ContactPage from './pages/ContactPage';
 import BlogPage from './pages/BlogPage';
 import BlogArticlePage from './pages/BlogArticlePage';
+import PurchasePage from './pages/PurchasePage';
+import InsurancePage from './pages/InsurancePage';
 import { ApolloPlugLogo } from './constants';
 import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './components/HeroIcons';
 import { CONFIG } from './config';
@@ -19,6 +21,8 @@ const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
   { path: '/wynajem', name: 'Wynajem' },
   { path: '/transfery', name: 'Transfery' },
+  { path: '/zakup', name: 'Zakup' },
+  { path: '/ubezpieczenia', name: 'Ubezpieczenia' },
   { path: '/inwestuj', name: 'Inwestycje' },
 ];
 
@@ -146,6 +150,8 @@ const App: React.FC = () => {
             <Route path="/kontakt" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:articleSlug" element={<BlogArticlePage />} />
+            <Route path="/zakup" element={<PurchasePage />} />
+            <Route path="/ubezpieczenia" element={<InsurancePage />} />
           </Routes>
         </main>
         <Footer />

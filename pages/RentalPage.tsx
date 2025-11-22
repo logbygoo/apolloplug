@@ -631,44 +631,72 @@ const RentalPage: React.FC = () => {
                     <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
                       <div className="lg:col-span-2">
                         <FormSection title="Metoda płatności">
-                          <div className="space-y-4">
-                            {paymentMethods.map(method => (
-                              <PaymentMethodOption
-                                key={method.id}
-                                method={method}
-                                isSelected={selectedPaymentMethod === method.id}
-                                onSelect={() => setSelectedPaymentMethod(method.id)}
-                              />
-                            ))}
-                          </div>
+                           <div className="space-y-3">
+                                {paymentMethods.map(method => (
+                                <div key={method.id}>
+                                    <PaymentMethodOption
+                                    method={method}
+                                    isSelected={selectedPaymentMethod === method.id}
+                                    onSelect={() => setSelectedPaymentMethod(method.id)}
+                                    />
+                                    <div
+                                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                                        selectedPaymentMethod === method.id ? 'max-h-[500px] pt-4' : 'max-h-0'
+                                    }`}
+                                    >
+                                        <div className="p-6 bg-secondary/30 rounded-lg border border-border/50">
+                                            {method.id === 'card' ? (
+                                            <div>
+                                                <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
+                                                <div className="grid gap-4">
+                                                    <div>
+                                                        <Label htmlFor="cardName">Imię i nazwisko na karcie</Label>
+                                                        <Input id="cardName" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                    </div>
+                                                    <div className="relative">
+                                                        <Label htmlFor="cardNumber">Numer karty</Label>
+                                                        <Input id="cardNumber" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                        <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
+                                                            <Input id="cardExpiry" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                        </div>
+                                                        <div>
+                                                            <Label htmlFor="cardCVC">Kod CVC</Label>
+                                                            <Input id="cardCVC" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            ) : method.id === 'payu' ? (
+                                            <div>
+                                                <h3 className="text-lg font-semibold mb-2">Płatność PayU</h3>
+                                                <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany na stronę operatora płatności PayU, aby bezpiecznie dokończyć transakcję.</p>
+                                            </div>
+                                            ) : method.id === 'revolut' ? (
+                                            <div>
+                                                <h3 className="text-lg font-semibold mb-2">Płatność RevolutPay</h3>
+                                                <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany do aplikacji Revolut lub na stronę RevolutPay w celu autoryzacji płatności.</p>
+                                            </div>
+                                            ) : method.id === 'transfer' ? (
+                                            <div>
+                                                <h3 className="text-lg font-semibold mb-2">Przelew bankowy</h3>
+                                                <p className="text-muted-foreground">Wszystkie niezbędne dane do wykonania przelewu tradycyjnego otrzymasz w wiadomości e-mail z potwierdzeniem rezerwacji.</p>
+                                            </div>
+                                            ) : method.id === 'cash' ? (
+                                            <div>
+                                                <h3 className="text-lg font-semibold mb-2">Płatność przy odbiorze</h3>
+                                                <p className="text-muted-foreground">Zapłacisz za rezerwację gotówką lub kartą bezpośrednio w naszym punkcie podczas odbioru pojazdu.</p>
+                                            </div>
+                                            ) : null}
+                                        </div>
+                                    </div>
+                                </div>
+                                ))}
+                            </div>
                         </FormSection>
-
-                        {selectedPaymentMethod === 'card' && (
-                          <div className="pt-8 animate-fade-in-up" style={{ animation: 'fadeInUp 0.5s ease-out forwards' }}>
-                             <h2 className="text-2xl font-bold tracking-tight">Dane karty płatniczej</h2>
-                             <div className="mt-6 grid gap-6">
-                                <div>
-                                    <Label htmlFor="cardName" className="flex items-center">Imię i nazwisko na karcie</Label>
-                                    <Input id="cardName" required className="mt-1"/>
-                                </div>
-                                <div className="relative">
-                                    <Label htmlFor="cardNumber" className="flex items-center">Numer karty</Label>
-                                    <Input id="cardNumber" required className="mt-1"/>
-                                    <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground"/>
-                                </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <Label htmlFor="cardExpiry" className="flex items-center">Data ważności (MM/RR)</Label>
-                                        <Input id="cardExpiry" required className="mt-1"/>
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="cardCVC" className="flex items-center">Kod CVC</Label>
-                                        <Input id="cardCVC" required className="mt-1"/>
-                                    </div>
-                                </div>
-                             </div>
-                          </div>
-                        )}
                       </div>
                       
                       <div className="lg:col-span-1">

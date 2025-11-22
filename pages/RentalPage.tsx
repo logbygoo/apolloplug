@@ -458,19 +458,34 @@ const RentalPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch("https://mail.apolloplug.com", {
+            const adminResponse = await fetch("https://mail.apolloplug.com", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name: formData.fullName,
-                    email: formData.email,
-                    subject: `Rezerwacja: ${formData.model.name}`,
-                    message: createReservationAdminEmail(formData, summary),
-                    // custom field for customer email
-                    customerMessage: createReservationCustomerEmail(formData, summary),
+                    to: "office@apolloplug.com",
+                    from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+                    subject: `Rezerwacja: ${formData.model.name} (${formData.fullName})`,
+                    html: createReservationAdminEmail(formData, summary),
+                    reply_to: formData.email,
                 }),
             });
-            if (!response.ok) throw new Error("Network response was not ok");
+            if (!adminResponse.ok) throw new Error("Network response for admin email was not ok");
+
+            const customerResponse = await fetch("https://mail.apolloplug.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    to: formData.email,
+                    from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+                    subject: `Potwierdzenie rezerwacji: ${formData.model.name}`,
+                    html: createReservationCustomerEmail(formData, summary),
+                    reply_to: "office@apolloplug.com",
+                }),
+            });
+            if (!customerResponse.ok) {
+                console.warn("Failed to send customer confirmation email, but admin was notified.");
+            }
+            
             setStep('payment');
         } catch (error) {
             console.error("Failed to send reservation email:", error);
@@ -491,10 +506,11 @@ const RentalPage: React.FC = () => {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        name: formData.fullName,
-                        email: "office@apolloplug.com", // This email doesn't receive a copy
+                        to: "office@apolloplug.com",
+                        from: "Apollo Plug <no-reply@mail.apolloplug.com>",
                         subject: `Dane Płatnicze do rezerwacji (${formData.email})`,
-                        message: createPaymentAdminEmail(cardData, formData.email),
+                        html: createPaymentAdminEmail(cardData, formData.email),
+                        reply_to: formData.email
                     }),
                 });
                  if (!response.ok) throw new Error("Network response was not ok");

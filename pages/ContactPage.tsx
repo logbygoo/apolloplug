@@ -3,6 +3,23 @@ import { Button, Input, Label, PageHeader } from '../components/ui';
 import { InfoIcon } from '../constants';
 import Seo from '../components/Seo';
 
+// --- Email Template ---
+const createEmailTemplate = (title: string, content: string) => `
+  <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+    <div style="background-color: #000; color: #fff; padding: 20px; text-align: center;">
+      <h1 style="margin: 0; font-family: 'Zen Dots', sans-serif;">apollo<span style="background-color: #fff; color: #000; padding: 2px 6px; border-radius: 3px; margin-left: 4px;">plug</span></h1>
+    </div>
+    <div style="padding: 20px;">
+      <h2 style="color: #000;">${title}</h2>
+      ${content}
+    </div>
+    <div style="background-color: #f4f4f4; color: #888; padding: 15px; text-align: center; font-size: 12px;">
+      <p>ApolloPlug.com &copy; ${new Date().getFullYear()}</p>
+    </div>
+  </div>
+`;
+// --- End Email Template ---
+
 const ContactPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -17,20 +34,46 @@ const ContactPage: React.FC = () => {
     setError('');
 
     try {
-      const response = await fetch("https://mail.apolloplug.com", {
+      // 1. Send email to admin
+      const adminHtml = createEmailTemplate(
+        `Nowe zapytanie od: ${name}`,
+        `<p><b>Od:</b> ${name} (${email})</p><p><b>Wiadomość:</b></p><p>${message.replace(/\n/g, "<br>")}</p>`
+      );
+      const adminResponse = await fetch("https://mail.apolloplug.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name,
-          email: email,
-          subject: "Nowe zapytanie ze strony",
-          message: `<p><b>Od:</b> ${name} (${email})</p><p><b>Wiadomość:</b></p><p>${message.replace(/\n/g, "<br>")}</p>`,
-          customerMessage: `<p>Cześć ${name},</p><p>dziękujemy za wysłanie wiadomości. Skontaktujemy się z Tobą jak najszybciej.</p><p><b>Twoja wiadomość:</b></p><p>${message.replace(/\n/g, "<br>")}</p>`,
+          to: "office@apolloplug.com",
+          from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+          subject: `Nowe zapytanie ze strony: ${name}`,
+          html: adminHtml,
+          reply_to: email,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Błąd podczas wysyłania wiadomości.");
+      if (!adminResponse.ok) {
+        throw new Error("Błąd podczas wysyłania wiadomości do administratora.");
+      }
+
+      // 2. Send confirmation email to customer
+      const customerHtml = createEmailTemplate(
+        `Cześć ${name}, dziękujemy za kontakt!`,
+        `<p>Otrzymaliśmy Twoją wiadomość i skontaktujemy się z Tobą jak najszybciej.</p><p><b>Twoja wiadomość:</b></p><blockquote style="border-left: 2px solid #ddd; padding-left: 10px; margin-left: 5px; color: #555;">${message.replace(/\n/g, "<br>")}</blockquote>`
+      );
+      const customerResponse = await fetch("https://mail.apolloplug.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: email,
+          from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+          subject: "Potwierdzenie otrzymania wiadomości | ApolloPlug.com",
+          html: customerHtml,
+          reply_to: "office@apolloplug.com",
+        }),
+      });
+      
+      if (!customerResponse.ok) {
+        console.warn("Nie udało się wysłać e-maila z potwierdzeniem do klienta.");
       }
 
       setSubmitted(true);
@@ -77,7 +120,7 @@ const ContactPage: React.FC = () => {
             </div>
             <div>
               <h3 className="text-lg font-semibold text-muted-foreground tracking-wider uppercase">Email</h3>
-              <p className="text-foreground mt-1">kontakt@evtech.pl</p>
+              <p className="text-foreground mt-1">office@apolloplug.com</p>
             </div>
             <div>
               <h3 className="text-lg font-semibold text-muted-foreground tracking-wider uppercase">Telefon</h3>

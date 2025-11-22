@@ -372,8 +372,8 @@ const RentalPage: React.FC = () => {
 
     const canProceed = useMemo(() => {
         const { pickupDate, returnDate, fullName, pesel, licenseNumber, address, postalCode, city, email, phone } = formData;
-        return summary.totalPrice > 0 && pickupDate && returnDate && fullName && pesel && licenseNumber && address && postalCode && city && email && phone && agreements.terms;
-    }, [formData, summary.totalPrice, agreements.terms]);
+        return summary.totalPrice > 0 && pickupDate && returnDate && fullName && pesel && licenseNumber && address && postalCode && city && email && phone && agreements.terms && agreements.marketing;
+    }, [formData, summary.totalPrice, agreements.terms, agreements.marketing]);
     
     const handleProceedToPayment = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -388,7 +388,7 @@ const RentalPage: React.FC = () => {
                     to: "office@apolloplug.com",
                     from: "apolloplug.com <office@apolloplug.com>",
                     subject: `Rezerwacja: ${formData.model.name} (${formData.fullName})`,
-                    html: generateReservationAdminEmail(formData, summary),
+                    html: generateReservationAdminEmail(formData, summary, agreements),
                     reply_to: formData.email,
                 }),
             });
@@ -663,13 +663,13 @@ const RentalPage: React.FC = () => {
                                             <div className="space-y-4">
                                                 <AgreementCheckbox
                                                     id="terms"
-                                                    label={<>Akceptuję{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">regulamin</Link>{' '}oraz{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">politykę prywatności</Link>{' '}apolloplug.com</>}
+                                                    label={<>Akceptuję{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">regulamin</Link>{' '}oraz{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">politykę prywatności</Link>{' '}apolloplug.com <span className="text-destructive">*</span></>}
                                                     isChecked={agreements.terms}
                                                     onToggle={() => handleAgreementToggle('terms')}
                                                 />
                                                 <AgreementCheckbox
                                                     id="marketing"
-                                                    label="Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu"
+                                                    label={<>Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu <span className="text-destructive">*</span></>}
                                                     isChecked={agreements.marketing}
                                                     onToggle={() => handleAgreementToggle('marketing')}
                                                 />

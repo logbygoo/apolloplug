@@ -97,7 +97,11 @@ const generateDetailsTable = (rows: [string, string][]) => {
     </table>`;
 };
 
-export const generateReservationAdminEmail = (data: FormData, summary: any) => {
+export const generateReservationAdminEmail = (
+    data: FormData, 
+    summary: any,
+    agreements: { terms: boolean; marketing: boolean; commercial: boolean }
+) => {
     // FIX: Refactored to imperatively build the details array to avoid TypeScript type inference issues with conditional spreading.
     const detailsRows: [string, string][] = [
         ['Model pojazdu', data.model.name],
@@ -128,12 +132,20 @@ export const generateReservationAdminEmail = (data: FormData, summary: any) => {
 
     const optionsList = ADDITIONAL_OPTIONS.filter(opt => data.options[opt.id]).map(opt => `<li>${opt.name}</li>`).join('');
 
+    const agreementsContent = generateDetailsTable([
+        ['Regulamin i polityka prywatności', agreements.terms ? '&#9989; Tak' : '&#10060; Nie'],
+        ['Zapoznanie ze wzorem umowy', agreements.marketing ? '&#9989; Tak' : '&#10060; Nie'],
+        ['Zgody handlowe (email/SMS)', agreements.commercial ? '&#9989; Tak' : '&#10060; Nie'],
+    ]);
+
     const fullContent = `
         <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 12px 0; color: #111827;">Szczegóły rezerwacji</h3>
         ${detailsContent}
         <h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Podsumowanie kosztów</h3>
         ${paymentContent}
         ${optionsList ? `<h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Wybrane opcje</h3><ul style="padding-left: 20px; margin:0; color: #4b5563;">${optionsList}</ul>` : ''}
+        <h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Zgody</h3>
+        ${agreementsContent}
     `;
 
     return createFinancialLayout(

@@ -371,27 +371,6 @@ const RentalPage: React.FC = () => {
       { id: 'cash', name: 'Płatność przy odbiorze', icon: CashIcon },
     ];
     
-    const PaymentMethodOption: React.FC<{
-        method: { id: string; name: string; icon: React.FC<any> };
-        isSelected: boolean;
-        onSelect: () => void;
-    }> = ({ method, isSelected, onSelect }) => (
-        <div
-            onClick={onSelect}
-            className={`flex items-center gap-4 p-4 border rounded-lg cursor-pointer transition-all ${
-            isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card hover:bg-secondary/25'
-            }`}
-        >
-            <method.icon className="w-8 h-8 text-foreground" />
-            <span className="font-medium">{method.name}</span>
-            <div className="ml-auto">
-              <div className={`h-6 w-6 rounded-full flex items-center justify-center border-2 transition-all ${isSelected ? 'border-foreground bg-foreground' : 'border-border'}`}>
-                  {isSelected && <CheckIcon className="w-3.5 h-3.5 text-background" strokeWidth={4} />}
-              </div>
-            </div>
-        </div>
-    );
-
     const startNewReservation = () => {
         sessionStorage.removeItem('rentalStep');
         sessionStorage.removeItem('rentalFormData');
@@ -632,69 +611,81 @@ const RentalPage: React.FC = () => {
                       <div className="lg:col-span-2">
                         <FormSection title="Metoda płatności">
                            <div className="space-y-3">
-                                {paymentMethods.map(method => (
-                                <div key={method.id}>
-                                    <PaymentMethodOption
-                                    method={method}
-                                    isSelected={selectedPaymentMethod === method.id}
-                                    onSelect={() => setSelectedPaymentMethod(method.id)}
-                                    />
-                                    <div
-                                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                                        selectedPaymentMethod === method.id ? 'max-h-[500px] pt-4' : 'max-h-0'
-                                    }`}
-                                    >
-                                        <div className="p-6 bg-secondary/30 rounded-lg border border-border/50">
-                                            {method.id === 'card' ? (
-                                            <div>
-                                                <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
-                                                <div className="grid gap-4">
-                                                    <div>
-                                                        <Label htmlFor="cardName">Imię i nazwisko na karcie</Label>
-                                                        <Input id="cardName" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
-                                                    </div>
-                                                    <div className="relative">
-                                                        <Label htmlFor="cardNumber">Numer karty</Label>
-                                                        <Input id="cardNumber" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
-                                                        <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
-                                                    </div>
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        <div>
-                                                            <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
-                                                            <Input id="cardExpiry" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
-                                                        </div>
-                                                        <div>
-                                                            <Label htmlFor="cardCVC">Kod CVC</Label>
-                                                            <Input id="cardCVC" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
-                                                        </div>
+                                {paymentMethods.map(method => {
+                                    const isSelected = selectedPaymentMethod === method.id;
+                                    return (
+                                        <div key={method.id} className={`border rounded-lg transition-colors duration-300 ${isSelected ? 'border-sky-300' : 'border-border'}`}>
+                                            <div
+                                                onClick={() => setSelectedPaymentMethod(method.id)}
+                                                className={`flex items-center gap-4 p-4 cursor-pointer transition-colors ${
+                                                    isSelected ? 'bg-secondary/50 rounded-t-lg' : 'bg-card hover:bg-secondary/25 rounded-lg'
+                                                }`}
+                                            >
+                                                <method.icon className="w-8 h-8 text-foreground" />
+                                                <span className="font-medium">{method.name}</span>
+                                                <div className="ml-auto">
+                                                    <div className={`h-6 w-6 rounded-full flex items-center justify-center border-2 transition-all ${isSelected ? 'border-foreground bg-foreground' : 'border-border'}`}>
+                                                        {isSelected && <CheckIcon className="w-3.5 h-3.5 text-background" strokeWidth={4} />}
                                                     </div>
                                                 </div>
                                             </div>
-                                            ) : method.id === 'payu' ? (
-                                            <div>
-                                                <h3 className="text-lg font-semibold mb-2">Płatność PayU</h3>
-                                                <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany na stronę operatora płatności PayU, aby bezpiecznie dokończyć transakcję.</p>
+                                            <div
+                                                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                                                    isSelected ? 'max-h-[500px]' : 'max-h-0'
+                                                }`}
+                                            >
+                                                <div className="p-6 bg-sky-50 border-t border-sky-300">
+                                                    {method.id === 'card' ? (
+                                                    <div>
+                                                        <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
+                                                        <div className="grid gap-4">
+                                                            <div>
+                                                                <Label htmlFor="cardName">Imię i nazwisko na karcie</Label>
+                                                                <Input id="cardName" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                            </div>
+                                                            <div className="relative">
+                                                                <Label htmlFor="cardNumber">Numer karty</Label>
+                                                                <Input id="cardNumber" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                                <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
+                                                            </div>
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <div>
+                                                                    <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
+                                                                    <Input id="cardExpiry" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                                </div>
+                                                                <div>
+                                                                    <Label htmlFor="cardCVC">Kod CVC</Label>
+                                                                    <Input id="cardCVC" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    ) : method.id === 'payu' ? (
+                                                    <div>
+                                                        <h3 className="text-lg font-semibold mb-2">Płatność PayU</h3>
+                                                        <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany na stronę operatora płatności PayU, aby bezpiecznie dokończyć transakcję.</p>
+                                                    </div>
+                                                    ) : method.id === 'revolut' ? (
+                                                    <div>
+                                                        <h3 className="text-lg font-semibold mb-2">Płatność RevolutPay</h3>
+                                                        <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany do aplikacji Revolut lub na stronę RevolutPay w celu autoryzacji płatności.</p>
+                                                    </div>
+                                                    ) : method.id === 'transfer' ? (
+                                                    <div>
+                                                        <h3 className="text-lg font-semibold mb-2">Przelew bankowy</h3>
+                                                        <p className="text-muted-foreground">Wszystkie niezbędne dane do wykonania przelewu tradycyjnego otrzymasz w wiadomości e-mail z potwierdzeniem rezerwacji.</p>
+                                                    </div>
+                                                    ) : method.id === 'cash' ? (
+                                                    <div>
+                                                        <h3 className="text-lg font-semibold mb-2">Płatność przy odbiorze</h3>
+                                                        <p className="text-muted-foreground">Zapłacisz za rezerwację gotówką lub kartą bezpośrednio w naszym punkcie podczas odbioru pojazdu.</p>
+                                                    </div>
+                                                    ) : null}
+                                                </div>
                                             </div>
-                                            ) : method.id === 'revolut' ? (
-                                            <div>
-                                                <h3 className="text-lg font-semibold mb-2">Płatność RevolutPay</h3>
-                                                <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany do aplikacji Revolut lub na stronę RevolutPay w celu autoryzacji płatności.</p>
-                                            </div>
-                                            ) : method.id === 'transfer' ? (
-                                            <div>
-                                                <h3 className="text-lg font-semibold mb-2">Przelew bankowy</h3>
-                                                <p className="text-muted-foreground">Wszystkie niezbędne dane do wykonania przelewu tradycyjnego otrzymasz w wiadomości e-mail z potwierdzeniem rezerwacji.</p>
-                                            </div>
-                                            ) : method.id === 'cash' ? (
-                                            <div>
-                                                <h3 className="text-lg font-semibold mb-2">Płatność przy odbiorze</h3>
-                                                <p className="text-muted-foreground">Zapłacisz za rezerwację gotówką lub kartą bezpośrednio w naszym punkcie podczas odbioru pojazdu.</p>
-                                            </div>
-                                            ) : null}
                                         </div>
-                                    </div>
-                                </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </FormSection>
                       </div>

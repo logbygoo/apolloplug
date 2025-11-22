@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
-import { LightningIcon, PlugIcon } from '../constants';
+import { BoltIcon, PowerIcon } from '../components/HeroIcons';
 import Seo from '../components/Seo';
 
 const HeroSlider: React.FC = () => {
@@ -259,7 +259,7 @@ const HomePage: React.FC = () => {
                 <div className="flex items-center justify-center gap-3">
                   <p className="text-4xl font-bold tracking-tight">14 075</p>
                   <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white shadow-md">
-                    <LightningIcon className="w-5 h-5"/>
+                    <BoltIcon className="w-5 h-5"/>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mt-2">Supercharger</p>
@@ -268,7 +268,7 @@ const HomePage: React.FC = () => {
                 <div className="flex items-center justify-center gap-3">
                   <p className="text-4xl font-bold tracking-tight">4717</p>
                   <div className="w-10 h-10 rounded-full bg-zinc-500 flex items-center justify-center text-white shadow-md">
-                    <PlugIcon className="w-6 h-6"/>
+                    <PowerIcon className="w-6 h-6"/>
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground mt-2">Stacje Destination Chargers</p>

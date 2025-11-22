@@ -9,7 +9,8 @@ import CarDetailPage from './pages/CarDetailPage';
 import ContactPage from './pages/ContactPage';
 import BlogPage from './pages/BlogPage';
 import BlogArticlePage from './pages/BlogArticlePage';
-import { ApolloPlugLogo, MenuIcon, XIcon, HeadphoneIcon, FlagIcon, EnvelopeIcon } from './constants';
+import { ApolloPlugLogo } from './constants';
+import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './components/HeroIcons';
 import { CONFIG } from './config';
 import UnderConstructionPage from './pages/UnderConstructionPage';
 import ScrollToTop from './components/ScrollToTop';
@@ -48,7 +49,7 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="hidden lg:flex items-center gap-4">
-             <a href="#" aria-label="Support"><HeadphoneIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
+             <a href="#" aria-label="Support"><PhoneIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
              <a href="#" aria-label="Language"><FlagIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
              <NavLink to="/kontakt" aria-label="Contact"><EnvelopeIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></NavLink>
           </div>
@@ -58,7 +59,7 @@ const Header: React.FC = () => {
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
-            <MenuIcon className="h-6 w-6" />
+            <Bars3Icon className="h-6 w-6" />
           </button>
         </div>
       </header>
@@ -71,7 +72,7 @@ const Header: React.FC = () => {
       >
         <div className="flex justify-end p-4">
           <button onClick={() => setIsOpen(false)} aria-label="Close menu">
-            <XIcon className="h-6 w-6" />
+            <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
         <nav className="flex flex-col items-start gap-2 p-4">

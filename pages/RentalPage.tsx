@@ -2,7 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
-import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon, PayUIcon, RevolutPayIcon, BankTransferIcon, CashIcon } from '../constants';
+import { BRANDS, PayUIcon, RevolutPayIcon } from '../constants';
+import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon } from '../components/HeroIcons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { generateReservationAdminEmail, generateReservationCustomerEmail, generatePaymentAdminEmail } from '../configs/notifications/emailTemplates';
@@ -159,7 +160,7 @@ const DocumentTile: React.FC<{ title: string; href: string }> = ({ title, href }
     rel="noopener noreferrer"
     className="flex items-center gap-4 p-4 border border-border rounded-lg bg-card hover:bg-secondary transition-colors group"
   >
-    <FileTextIcon className="w-8 h-8 text-muted-foreground flex-shrink-0" />
+    <DocumentTextIcon className="w-8 h-8 text-muted-foreground flex-shrink-0" />
     <div>
       <p className="font-medium text-foreground">{title}</p>
       <p className="text-sm text-muted-foreground">Otwórz dokument PDF</p>
@@ -482,8 +483,8 @@ const RentalPage: React.FC = () => {
       { id: 'card', name: 'Karta płatnicza', icon: CreditCardIcon },
       { id: 'payu', name: 'PayU', icon: PayUIcon },
       { id: 'revolut', name: 'RevolutPay', icon: RevolutPayIcon },
-      { id: 'transfer', name: 'Przelew', icon: BankTransferIcon },
-      { id: 'cash', name: 'Płatność przy odbiorze', icon: CashIcon },
+      { id: 'transfer', name: 'Przelew', icon: BuildingLibraryIcon },
+      { id: 'cash', name: 'Płatność przy odbiorze', icon: BanknotesIcon },
     ];
     
     const startNewReservation = () => {
@@ -615,7 +616,7 @@ const RentalPage: React.FC = () => {
                                                 <Label htmlFor="pesel" className="flex items-center">
                                                     PESEL
                                                     <Tooltip content="Wymagany do umowy najmu. Podaj 11-cyfrowy numer identyfikacyjny.">
-                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                        <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
                                                 <Input id="pesel" value={formData.pesel} onChange={handleInputChange} required className="mt-1" />
@@ -624,7 +625,7 @@ const RentalPage: React.FC = () => {
                                                 <Label htmlFor="licenseNumber" className="flex items-center">
                                                     Numer prawa jazdy
                                                     <Tooltip content="Wpisz serię i numer prawa jazdy, np. 123456/12/XYZ. Format jak w dokumencie.">
-                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                        <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
                                                 <Input id="licenseNumber" value={formData.licenseNumber} onChange={handleInputChange} required className="mt-1" />
@@ -636,7 +637,7 @@ const RentalPage: React.FC = () => {
                                                 <Label htmlFor="email" className="flex items-center">
                                                     E-mail
                                                     <Tooltip content="Podaj prawidłowy adres e-mail, np. jan.kowalski@email.com. Wyślemy na niego potwierdzenie rezerwacji.">
-                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                        <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
                                                 <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="mt-1" />
@@ -645,7 +646,7 @@ const RentalPage: React.FC = () => {
                                                 <Label htmlFor="phone" className="flex items-center">
                                                     Telefon
                                                     <Tooltip content="Podaj numer telefonu w formacie międzynarodowym, np. +48123456789. Potrzebny do kontaktu w sprawie rezerwacji.">
-                                                        <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
+                                                        <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
                                                 <Input id="phone" type="tel" value={formData.phone} onChange={handleInputChange} required className="mt-1" />

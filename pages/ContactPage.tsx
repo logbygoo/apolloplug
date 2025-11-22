@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input, Label, PageHeader } from '../components/ui';
-import { InfoIcon } from '../constants';
+import { InformationCircleIcon } from '../components/HeroIcons';
 import Seo from '../components/Seo';
 import { generateContactAdminEmail, generateContactCustomerEmail } from '../configs/notifications/emailTemplates';
 
@@ -124,7 +124,7 @@ const ContactPage: React.FC = () => {
                    <div>
                     <Label htmlFor="email" className="flex items-center">
                       E-mail
-                      <InfoIcon className="w-4 h-4 ml-1.5 text-muted-foreground" />
+                      <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground" />
                     </Label>
                     <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1" />
                   </div>

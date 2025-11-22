@@ -5,7 +5,8 @@ import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/re
 import { BRANDS, CreditCardIcon, ChevronDownIcon, CheckIcon, InfoIcon, FileTextIcon, PayUIcon, RevolutPayIcon, BankTransferIcon, CashIcon } from '../constants';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
-import { generateReservationAdminEmail, generateReservationCustomerEmail, generatePaymentAdminEmail } from '../components/EmailTemplates';
+import { generateReservationAdminEmail, generateReservationCustomerEmail, generatePaymentAdminEmail } from '../configs/notifications/emailTemplates';
+import { getReservationAdminSms, getReservationCustomerSms } from '../configs/notifications/smsTemplates';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
@@ -408,25 +409,22 @@ const RentalPage: React.FC = () => {
             }
             
             // Send SMS notifications (fire and forget)
-            const pickupDateFormatted = new Date(formData.pickupDate).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            const adminSmsMessage = `${formData.model.name} - ${summary.rentalDays} doby od ${pickupDateFormatted} ${formData.pickupTime} - ${summary.totalPrice} zł - ${formData.fullName}`;
             fetch("https://apollosms.spam01.workers.dev/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     to: "720100600",
-                    message: adminSmsMessage,
+                    message: getReservationAdminSms(formData, summary),
                     from: "4628",
                 }),
             }).catch(err => console.warn("Failed to send admin SMS", err));
 
-            const customerSmsMessage = `Potwierdzamy otrzymanie rezerwacji. Szczegóły przesłane mailowo na ${formData.email} Dokończ rezerwację finalizując płatność.`;
             fetch("https://apollosms.spam01.workers.dev/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     to: formData.phone,
-                    message: customerSmsMessage,
+                    message: getReservationCustomerSms(formData),
                     from: "4628",
                 }),
             }).catch(err => console.warn("Failed to send customer SMS", err));

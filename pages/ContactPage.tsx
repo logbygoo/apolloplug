@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { InfoIcon } from '../constants';
 import Seo from '../components/Seo';
-import { generateContactAdminEmail, generateContactCustomerEmail } from '../components/EmailTemplates';
+import { generateContactAdminEmail, generateContactCustomerEmail } from '../configs/notifications/emailTemplates';
 
 const ContactPage: React.FC = () => {
   const [name, setName] = useState('');

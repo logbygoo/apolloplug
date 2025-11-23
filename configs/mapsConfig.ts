@@ -15,4 +15,4 @@
  * 
  * WAŻNE: Zabezpiecz swój klucz API, ograniczając go do domeny, na której będzie działać aplikacja.
  */
-export const MAPS_API_KEY = process.env.MAPS_API_KEY || '';
+export const MAPS_API_KEY = process.env.MAPS_API_KEY || 'AIzaSyCmyC0lgp41cv08Vju7cNkY75aU-K2EE7Q';

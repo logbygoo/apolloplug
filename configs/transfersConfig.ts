@@ -1,7 +1,7 @@
 // Konfiguracja cennika dla usług transferu
 
 export const TRANSFERS_CONFIG = {
-  baseFare: 70, // Opłata startowa w PLN
+  baseFare: 100, // Opłata startowa w PLN
   pricePerKm: {
     'tesla-3-highland': 9.50,
     'tesla-y-jupiter': 11.00,

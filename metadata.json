@@ -1,5 +1,7 @@
 {
   "name": "EV Tech",
   "description": "A modern web application for EV Tech, a company specializing in solar-powered electric vehicle charging, VIP transfers, rentals, and investment opportunities.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "geolocation"
+  ]
 }

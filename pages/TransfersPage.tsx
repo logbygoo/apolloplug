@@ -40,6 +40,21 @@ const timeOptions = Array.from({ length: 48 }, (_, i) => {
     return `${String(hour).padStart(2, '0')}:${minute}`;
 });
 
+const getInitialPickupTime = () => {
+    const earliestPickupDate = new Date();
+    earliestPickupDate.setMinutes(earliestPickupDate.getMinutes() + 60);
+
+    const earliestHour = earliestPickupDate.getHours();
+    const earliestMinute = earliestPickupDate.getMinutes();
+
+    return timeOptions.find(time => {
+        const [h, m] = time.split(':').map(Number);
+        if (h > earliestHour) return true;
+        if (h === earliestHour && m >= earliestMinute) return true;
+        return false;
+    }) || timeOptions[0];
+};
+
 const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void; }> = ({ car, isSelected, onSelect }) => {
     const isAvailable = car.available !== false;
     return (
@@ -78,26 +93,73 @@ const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: string; 
 );
 
 const TransfersPage: React.FC = () => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService | null>(null);
-  const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
+  // FIX: Replaced google.maps.Map with any to resolve TypeScript error.
+  const [map, setMap] = useState<any | null>(null);
+  // FIX: Replaced google.maps.DirectionsService with any to resolve TypeScript error.
+  const [directionsService, setDirectionsService] = useState<any | null>(null);
+  // FIX: Replaced google.maps.DirectionsRenderer with any to resolve TypeScript error.
+  const [directionsRenderer, setDirectionsRenderer] = useState<any | null>(null);
   
   const mapRef = useRef<HTMLDivElement>(null);
   const pickupInputRef = useRef<HTMLInputElement>(null);
   const destinationInputRef = useRef<HTMLInputElement>(null);
 
   const [pickupDate, setPickupDate] = useState(today);
-  const [pickupTime, setPickupTime] = useState('12:00');
-  const [pickupAddress, setPickupAddress] = useState<google.maps.places.PlaceResult | null>(null);
-  const [destinationAddress, setDestinationAddress] = useState<google.maps.places.PlaceResult | null>(null);
+  const [pickupTime, setPickupTime] = useState(getInitialPickupTime);
+  // FIX: Replaced google.maps.places.PlaceResult with any to resolve TypeScript error.
+  const [pickupAddress, setPickupAddress] = useState<any | null>(null);
+  // FIX: Replaced google.maps.places.PlaceResult with any to resolve TypeScript error.
+  const [destinationAddress, setDestinationAddress] = useState<any | null>(null);
   const [routeStats, setRouteStats] = useState<{ distance: string; duration: string; price: number } | null>(null);
+  const [transferType, setTransferType] = useState<'self' | 'someone' | 'package'>('self');
 
   const [selectedCar, setSelectedCar] = useState<Car | null>(RENTAL_CARS.find(c => c.available) || null);
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
-  const [mapMarkers, setMapMarkers] = useState<{ pickup: google.maps.Marker | null, destination: google.maps.Marker | null }>({ pickup: null, destination: null });
+  // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
+  const [mapMarkers, setMapMarkers] = useState<{ pickup: any | null, destination: any | null }>({ pickup: null, destination: null });
+
+  const availableTimeOptions = useMemo(() => {
+    if (pickupDate !== today) {
+        return timeOptions;
+    }
+
+    const earliestPickupDate = new Date();
+    earliestPickupDate.setMinutes(earliestPickupDate.getMinutes() + 60);
+
+    if (earliestPickupDate.toISOString().split('T')[0] !== today) {
+        return [];
+    }
+
+    const earliestHour = earliestPickupDate.getHours();
+    const earliestMinute = earliestPickupDate.getMinutes();
+
+    return timeOptions.filter(time => {
+        const [h, m] = time.split(':').map(Number);
+        if (h > earliestHour) return true;
+        if (h === earliestHour && m >= earliestMinute) return true;
+        return false;
+    });
+  }, [pickupDate]);
+
+  useEffect(() => {
+    // On mount, check if the initial time caused a date roll-over
+    const earliestPickupDate = new Date();
+    earliestPickupDate.setMinutes(earliestPickupDate.getMinutes() + 60);
+    const earliestDateString = earliestPickupDate.toISOString().split('T')[0];
+
+    if (pickupDate < earliestDateString) {
+      setPickupDate(earliestDateString);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!availableTimeOptions.includes(pickupTime)) {
+        setPickupTime(availableTimeOptions[0] || '');
+    }
+  }, [availableTimeOptions, pickupTime]);
 
   useEffect(() => {
     loadGoogleMapsScript(() => {
@@ -132,7 +194,8 @@ const TransfersPage: React.FC = () => {
   useEffect(() => {
     if (!map || !pickupInputRef.current || !destinationInputRef.current) return;
 
-    const setupAutocomplete = (inputRef: React.RefObject<HTMLInputElement>, setAddress: (place: google.maps.places.PlaceResult | null) => void) => {
+    // FIX: Replaced google.maps.places.PlaceResult with any to resolve TypeScript error.
+    const setupAutocomplete = (inputRef: React.RefObject<HTMLInputElement>, setAddress: (place: any | null) => void) => {
         const autocomplete = new google.maps.places.Autocomplete(inputRef.current!);
         autocomplete.bindTo('bounds', map);
         autocomplete.setFields(['name', 'geometry', 'formatted_address']);
@@ -163,7 +226,7 @@ const TransfersPage: React.FC = () => {
         destination: destinationAddress.geometry.location,
         travelMode: google.maps.TravelMode.DRIVING,
       },
-      (result, status) => {
+      (result: any, status: any) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
           directionsRenderer.setDirections(result);
           const route = result.routes[0].legs[0];
@@ -192,7 +255,8 @@ const TransfersPage: React.FC = () => {
         mapMarkers.pickup?.setMap(null);
         mapMarkers.destination?.setMap(null);
         
-        const newMarkers: { pickup: google.maps.Marker | null, destination: google.maps.Marker | null } = { pickup: null, destination: null };
+        // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
+        const newMarkers: { pickup: any | null, destination: any | null } = { pickup: null, destination: null };
 
         if(pickupAddress?.geometry?.location){
             newMarkers.pickup = new google.maps.Marker({
@@ -240,7 +304,7 @@ const TransfersPage: React.FC = () => {
         description="Zamów profesjonalny i dyskretny transfer VIP naszą luksusową flotą Tesli. Idealne na lotnisko, spotkania biznesowe i specjalne okazje."
       />
       
-      <div ref={mapRef} className="w-full h-[50vh] bg-secondary relative">
+      <div ref={mapRef} className="w-full h-[40vh] bg-secondary relative">
           {MAPS_API_KEY === 'TUTAJ_WSTAW_SWOJ_KLUCZ_API' && (
               <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 z-10">
                 <div>
@@ -256,12 +320,70 @@ const TransfersPage: React.FC = () => {
             <div className="lg:col-span-2">
                 <form className="space-y-10">
                     <section>
-                        <h2 className="text-2xl font-bold tracking-tight mb-6">1. Trasa i termin</h2>
-                        <div className="grid sm:grid-cols-2 gap-6">
-                            <div><Label htmlFor="pickupDate">Data przejazdu</Label><Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required className="mt-1"/></div>
-                            <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={pickupTime} onChange={e => setPickupTime(e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                            <div className="sm:col-span-2"><Label htmlFor="pickupAddress">Adres odbioru</Label><Input id="pickupAddress" ref={pickupInputRef} placeholder="Wpisz adres początkowy" required className="mt-1" /></div>
-                            <div className="sm:col-span-2"><Label htmlFor="destinationAddress">Adres docelowy</Label><Input id="destinationAddress" ref={destinationInputRef} placeholder="Wpisz adres docelowy" required className="mt-1"/></div>
+                        <div className="flex gap-2 mb-8">
+                            <Button
+                                type="button"
+                                variant={transferType === 'self' ? 'primary' : 'secondary'}
+                                onClick={() => setTransferType('self')}
+                                className="rounded-full"
+                            >
+                                Dla siebie
+                            </Button>
+                            <Button
+                                type="button"
+                                variant={transferType === 'someone' ? 'primary' : 'secondary'}
+                                onClick={() => setTransferType('someone')}
+                                className="rounded-full"
+                            >
+                                Dla kogoś
+                            </Button>
+                            <Button
+                                type="button"
+                                variant={transferType === 'package' ? 'primary' : 'secondary'}
+                                onClick={() => setTransferType('package')}
+                                className="rounded-full"
+                            >
+                                Paczka
+                            </Button>
+                        </div>
+                        <div className="space-y-6">
+                            <div>
+                                <Label htmlFor="pickupDate">Kiedy</Label>
+                                <div className="grid sm:grid-cols-2 gap-4 mt-1">
+                                    <Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required />
+                                    <div className="relative">
+                                        <select id="pickupTime" value={pickupTime} onChange={e => setPickupTime(e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none" required>
+                                            {availableTimeOptions.length > 0 ? (
+                                                availableTimeOptions.map(t => <option key={t} value={t}>{t}</option>)
+                                            ) : (
+                                                <option disabled>Brak dostępnych godzin</option>
+                                            )}
+                                        </select>
+                                        <ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid sm:grid-cols-2 gap-4">
+                                <div>
+                                    <Label htmlFor="pickupAddress">Skąd</Label>
+                                    <div className="relative mt-1">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                            <div className="w-2.5 h-2.5 bg-muted-foreground rounded-full" />
+                                        </div>
+                                        <Input id="pickupAddress" ref={pickupInputRef} placeholder="Wpisz adres początkowy" required className="pl-10" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <Label htmlFor="destinationAddress">Dokąd</Label>
+                                    <div className="relative mt-1">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+                                            <div className="w-2.5 h-2.5 bg-foreground" />
+                                        </div>
+                                        <Input id="destinationAddress" ref={destinationInputRef} placeholder="Wpisz adres docelowy" required className="pl-10"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </section>
                     
@@ -317,7 +439,7 @@ const TransfersPage: React.FC = () => {
             </div>
 
             <div className="lg:col-span-1">
-                <div className="sticky top-8">
+                <div className="sticky top-24">
                     <div className="space-y-6 bg-secondary p-6 rounded-lg">
                         <h2 className="text-3xl font-bold">Podsumowanie</h2>
                         <div className="space-y-3 border-t border-border pt-4 text-sm">

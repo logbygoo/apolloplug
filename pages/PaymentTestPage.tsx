@@ -72,9 +72,10 @@ const PaymentTestPage: React.FC = () => {
                     <CardHeader className="flex flex-row items-start gap-4">
                         <InformationCircleIcon className="w-8 h-8 text-yellow-600 mt-1" />
                         <div>
-                            <CardTitle className="text-yellow-800">Ważne Ostrzeżenie Bezpieczeństwa</CardTitle>
+                            <CardTitle className="text-yellow-800">Ważna informacja o architekturze</CardTitle>
                             <CardDescription className="text-yellow-700">
-                                Ta strona demonstracyjna wykonuje bezpośrednie wywołania do API Viva.com używając tajnych danych uwierzytelniających (API Key). Jest to zrobione wyłącznie w celu pokazowym. W środowisku produkcyjnym, klucz API musi być przechowywany i używany na bezpiecznym serwerze backendowym, aby uniknąć ryzyka kradzieży.
+                                API Viva.com do tworzenia płatności jest zabezpieczone i blokuje bezpośrednie zapytania z przeglądarki (błąd CORS). Jest to standardowa praktyka bezpieczeństwa. W prawdziwej aplikacji, wywołanie API musi odbywać się na Twoim serwerze (backend).
+                                <br/><strong>Ta strona symuluje wywołanie backendu, generując testowy kod płatności, aby umożliwić pełne przetestowanie interfejsu użytkownika.</strong>
                             </CardDescription>
                         </div>
                     </CardHeader>

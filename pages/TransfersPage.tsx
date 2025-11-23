@@ -467,10 +467,10 @@ const TransfersPage: React.FC = () => {
                             <section>
                                 <div className="flex flex-wrap items-center gap-4 mb-8">
                                     <span className='font-medium text-sm text-muted-foreground'>Wybierz rodzaj podróży</span>
-                                    <Button type="button" variant={formData.transferType === 'self' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'self')} className="rounded-full px-5 py-2.5">Dla siebie</Button>
-                                    <Button type="button" variant={formData.transferType === 'someone' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'someone')} className="rounded-full px-5 py-2.5">Dla kogoś</Button>
-                                    <Button type="button" variant={formData.transferType === 'package' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'package')} className="rounded-full px-5 py-2.5">Paczka</Button>
-                                    <Button type="button" variant={formData.transferType === 'hourly' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'hourly')} className="rounded-full px-5 py-2.5">Kierowca na godziny</Button>
+                                    <Button type="button" size="lg" variant={formData.transferType === 'self' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'self')} className="rounded-full">Dla siebie</Button>
+                                    <Button type="button" size="lg" variant={formData.transferType === 'someone' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'someone')} className="rounded-full">Dla kogoś</Button>
+                                    <Button type="button" size="lg" variant={formData.transferType === 'package' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'package')} className="rounded-full">Paczka</Button>
+                                    <Button type="button" size="lg" variant={formData.transferType === 'hourly' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'hourly')} className="rounded-full">Kierowca na godziny</Button>
                                 </div>
                                 <div className="space-y-6">
                                     <div>
@@ -509,23 +509,38 @@ const TransfersPage: React.FC = () => {
                     {step === 'payment' && (
                         <section>
                             <h2 className="text-2xl font-bold tracking-tight mb-6">Metoda płatności</h2>
-                            <div className="border rounded-lg bg-secondary/50 border-foreground p-6">
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
-                                    <div className="grid gap-4">
-                                        <div className="relative">
-                                            <Label htmlFor="cardNumber">Numer karty</Label>
-                                            <Input id="cardNumber" required className="mt-1 bg-white" />
-                                            <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
-                                                <Input id="cardExpiry" required className="mt-1 bg-white" />
+                            <div className="space-y-3">
+                                <div className="border rounded-lg transition-colors duration-300 border-sky-300">
+                                    <div className="flex items-center gap-4 p-4 cursor-default transition-colors bg-secondary/50 rounded-t-lg">
+                                        <CreditCardIcon className="w-8 h-8 text-foreground" />
+                                        <span className="font-medium">Karta płatnicza</span>
+                                        <div className="ml-auto">
+                                            <div className="h-6 w-6 rounded-full flex items-center justify-center border-2 transition-all border-foreground bg-foreground">
+                                                <CheckIcon className="w-3.5 h-3.5 text-background" strokeWidth={4} />
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <div className="p-6 bg-sky-50 border-t border-sky-300">
                                             <div>
-                                                <Label htmlFor="cardCVC">Kod CVC</Label>
-                                                <Input id="cardCVC" required className="mt-1 bg-white" />
+                                                <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
+                                                <div className="grid gap-4">
+                                                    <div className="relative">
+                                                        <Label htmlFor="cardNumber">Numer karty</Label>
+                                                        <Input id="cardNumber" required className="mt-1 bg-white" />
+                                                        <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
+                                                            <Input id="cardExpiry" required className="mt-1 bg-white" />
+                                                        </div>
+                                                        <div>
+                                                            <Label htmlFor="cardCVC">Kod CVC</Label>
+                                                            <Input id="cardCVC" required className="mt-1 bg-white" />
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

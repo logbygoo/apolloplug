@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Input, Label, PageHeader } from '../components/ui';
 import Seo from '../components/Seo';
 import { createVivaPaymentOrder } from '../api/vivaApi';
-import { CreditCardIcon, InformationCircleIcon } from '../components/HeroIcons';
-import { VIVA_SMART_CHECKOUT_CLIENT_ID } from '../configs/vivaConfig';
+import { CreditCardIcon } from '../components/HeroIcons';
+import { VIVA_SMART_CHECKOUT_CLIENT_ID, VIVA_SMART_CHECKOUT_URL } from '../configs/vivaConfig';
 
 const LoadingSpinner: React.FC = () => (
     <div className="flex justify-center items-center">
@@ -51,7 +51,7 @@ const PaymentTestPage: React.FC = () => {
         setPaymentStatus(`Sukces! Płatność (${method}) na kwotę 1,00 PLN została przetworzona pomyślnie. Order Code: ${orderCode}`);
     };
 
-    const smartCheckoutUrl = `https://demo.vivapayments.com/web/checkout?ref=${orderCode}&clientid=${VIVA_SMART_CHECKOUT_CLIENT_ID}`;
+    const smartCheckoutUrl = `${VIVA_SMART_CHECKOUT_URL}?ref=${orderCode}&clientid=${VIVA_SMART_CHECKOUT_CLIENT_ID}`;
     
     const breadcrumbs = [{ name: 'Payment Test' }];
 
@@ -68,19 +68,6 @@ const PaymentTestPage: React.FC = () => {
             />
 
             <div className="container mx-auto max-w-4xl px-4 md:px-6 pb-16 md:pb-24">
-                 <Card className="mb-8 bg-yellow-50 border-yellow-300">
-                    <CardHeader className="flex flex-row items-start gap-4">
-                        <InformationCircleIcon className="w-8 h-8 text-yellow-600 mt-1" />
-                        <div>
-                            <CardTitle className="text-yellow-800">Ważna informacja o architekturze</CardTitle>
-                            <CardDescription className="text-yellow-700">
-                                API Viva.com do tworzenia płatności jest zabezpieczone i blokuje bezpośrednie zapytania z przeglądarki (błąd CORS). Jest to standardowa praktyka bezpieczeństwa. W prawdziwej aplikacji, wywołanie API musi odbywać się na Twoim serwerze (backend).
-                                <br/><strong>Ta strona symuluje wywołanie backendu, generując testowy kod płatności, aby umożliwić pełne przetestowanie interfejsu użytkownika.</strong>
-                            </CardDescription>
-                        </div>
-                    </CardHeader>
-                </Card>
-
                 {error && (
                      <Card className="mb-8 bg-red-50 border-red-300">
                         <CardHeader>
@@ -123,6 +110,11 @@ const PaymentTestPage: React.FC = () => {
                                     <span>Płatność cykliczna (zapisz metodę płatności dla subskrypcji)</span>
                                 </label>
                             </CardContent>
+                             <CardFooter>
+                                <Button onClick={fetchOrderCode} disabled={isSubmitting || loading}>
+                                    {loading ? 'Generowanie...' : 'Wygeneruj nowy kod płatności'}
+                                </Button>
+                            </CardFooter>
                         </Card>
                         
                         <Card>

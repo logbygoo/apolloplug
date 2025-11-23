@@ -8,6 +8,7 @@ interface Summary {
 
 interface TransferSummary {
     rawPrice: number;
+    distance: string; // For hourly, this will be the package label
 }
 
 export const getReservationAdminSms = (formData: FormData, summary: Summary): string => {

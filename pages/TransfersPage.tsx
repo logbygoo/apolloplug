@@ -46,10 +46,10 @@ interface HourlyPackage {
 }
 
 const hourlyPackages: HourlyPackage[] = [
-  { id: '1h', label: '1h', price: 290 },
-  { id: '3h', label: '3h', price: 790 },
-  { id: '6h', label: '6h', price: 1490 },
-  { id: '10h', label: '10h', price: 2390 },
+  { id: '1h', label: '1h - 290zl', price: 290 },
+  { id: '3h', label: '3h - 790 zł', price: 790 },
+  { id: '6h', label: '6h - 1490 zł', price: 1490 },
+  { id: '10h', label: '10h - 2390 zł', price: 2390 },
 ];
 
 export interface TransferFormData {
@@ -521,14 +521,15 @@ const TransfersPage: React.FC = () => {
                             <div className="flex justify-between"><span className="text-muted-foreground">Termin</span><span className="font-medium text-right">{summary.date}</span></div>
                             <div className="flex justify-between"><span className="text-muted-foreground">Odbiór</span><span className="font-medium text-right max-w-[60%] truncate">{summary.pickup}</span></div>
                             <div className="flex justify-between"><span className="text-muted-foreground">Cel</span><span className="font-medium text-right max-w-[60%] truncate">{summary.destination}</span></div>
-                            <div className="flex justify-between"><span className="text-muted-foreground">Dystans</span><span className="font-medium text-right">{summary.distance}</span></div>
+                            <div className="flex justify-between"><span className="text-muted-foreground">Dystans/Pakiet</span><span className="font-medium text-right">{summary.distance}</span></div>
                             {formData.transferType !== 'hourly' && <div className="flex justify-between"><span className="text-muted-foreground">Czas</span><span className="font-medium text-right">{summary.duration}</span></div>}
                         </div>
                         <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-4 mt-2">
                             <span>Do zapłaty</span><span>{summary.price}</span>
                         </div>
                         <Button size="lg" className="w-full" onClick={handleNextStep} disabled={isLoading || summary.rawPrice <= 0}>{getButtonText()}</Button>
-                         {step !== 'details' && <Button onClick={() => setStep('details')} variant="secondary" className="w-full" type="button" disabled={isLoading}>Wróć do szczegółów</Button>}
+                        {step === 'customer' && <Button onClick={() => setStep('details')} variant="secondary" className="w-full" type="button" disabled={isLoading}>Wróć do szczegółów</Button>}
+                        {step === 'payment' && <Button onClick={() => setStep('customer')} variant="secondary" className="w-full" type="button" disabled={isLoading}>Wróć do danych</Button>}
                     </div>
                 </div>
             </div>

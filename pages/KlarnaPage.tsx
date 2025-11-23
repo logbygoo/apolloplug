@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const KLARNA_UID = 'klarna_live_client_VFY3TFIjPy92Tkk5bClnUyhXUjYyNThMQXdJOVBZJDMsYTQwYjg1NWQtODIxNi00ODUxLTlhOWYtYzA3YWNmMDI1MGUzLDEsWm9HWWZibjFqMGNYdmVkVTFTbjJPcmhEMTQ2NG95cW8zL1ZueGRSek5lYz0';
 // The user did not provide a password/secret. A placeholder is used.
 // The payment flow WILL NOT WORK without the correct password.
-const KLARNA_PASSWORD = 'ztkL61A2dO7S3v47W5U957oq9tC1oX';
+const KLARNA_PASSWORD = 'snxV482110OggsdsW6puFgNGGQmyoJ';
 
 // Klarna needs to be loaded from a script tag.
 // We declare it here to satisfy TypeScript.

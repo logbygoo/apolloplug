@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { PageHeader, Input, Label, Button } from '../components/ui';
+import { Input, Label, Button } from '../components/ui';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { TRANSFERS_CONFIG } from '../configs/transfersConfig';
@@ -8,12 +8,13 @@ import { CreditCardIcon, BuildingLibraryIcon, BanknotesIcon, CheckIcon, ChevronD
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 
-// FIX: Declare the global 'google' object to fix TypeScript errors.
+// Declare the global 'google' object to fix TypeScript errors.
 declare const google: any;
 
 // Helper to load Google Maps script
 const loadGoogleMapsScript = (callback: () => void) => {
-  if (window.google && window.google.maps) {
+  // FIX: Use 'google' directly instead of 'window.google' to align with the global declaration and resolve all google-related TypeScript errors.
+  if (typeof google !== 'undefined' && google.maps) {
     callback();
     return;
   }
@@ -77,8 +78,6 @@ const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: string; 
 );
 
 const TransfersPage: React.FC = () => {
-  const breadcrumbs = [{ name: 'Transfery' }];
-  
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService | null>(null);
   const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
@@ -240,28 +239,21 @@ const TransfersPage: React.FC = () => {
         title="Transfery VIP Tesla"
         description="Zamów profesjonalny i dyskretny transfer VIP naszą luksusową flotą Tesli. Idealne na lotnisko, spotkania biznesowe i specjalne okazje."
       />
-      <PageHeader
-        title="Zamawianie Przejazdu"
-        subtitle="Szybko i wygodnie zamów transfer luksusowym autem elektrycznym."
-        breadcrumbs={breadcrumbs}
-      />
       
-      <div className="container mx-auto px-4 md:px-6 pb-16 md:pb-24">
+      <div ref={mapRef} className="w-full h-[50vh] bg-secondary relative">
+          {MAPS_API_KEY === 'TUTAJ_WSTAW_SWOJ_KLUCZ_API' && (
+              <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 z-10">
+                <div>
+                    <h3 className="text-xl font-bold">Mapa jest nieaktywna</h3>
+                    <p className="mt-2 text-sm">Wprowadź klucz API Google Maps w pliku <code className="bg-white/20 px-1 rounded">configs/mapsConfig.ts</code>, aby ją włączyć.</p>
+                </div>
+            </div>
+          )}
+      </div>
+
+      <div className="container mx-auto px-4 md:px-6 py-12">
         <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
             <div className="lg:col-span-2">
-                <section>
-                    <div ref={mapRef} className="w-full h-64 md:h-80 bg-secondary rounded-lg mb-8 relative">
-                         {MAPS_API_KEY === 'TUTAJ_WSTAW_SWOJ_KLUCZ_API' && (
-                             <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 rounded-lg z-10">
-                                <div>
-                                    <h3 className="text-xl font-bold">Mapa jest nieaktywna</h3>
-                                    <p className="mt-2 text-sm">Wprowadź klucz API Google Maps w pliku <code className="bg-white/20 px-1 rounded">configs/mapsConfig.ts</code>, aby ją włączyć.</p>
-                                </div>
-                            </div>
-                         )}
-                    </div>
-                </section>
-
                 <form className="space-y-10">
                     <section>
                         <h2 className="text-2xl font-bold tracking-tight mb-6">1. Trasa i termin</h2>
@@ -325,7 +317,7 @@ const TransfersPage: React.FC = () => {
             </div>
 
             <div className="lg:col-span-1">
-                <div className="sticky top-24">
+                <div className="sticky top-8">
                     <div className="space-y-6 bg-secondary p-6 rounded-lg">
                         <h2 className="text-3xl font-bold">Podsumowanie</h2>
                         <div className="space-y-3 border-t border-border pt-4 text-sm">

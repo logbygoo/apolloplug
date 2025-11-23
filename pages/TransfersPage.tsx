@@ -4,7 +4,7 @@ import { RENTAL_CARS } from '../configs/rentConfig';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { TRANSFERS_CONFIG } from '../configs/transfersConfig';
 import { PayUIcon, RevolutPayIcon } from '../constants';
-import { CreditCardIcon, BuildingLibraryIcon, BanknotesIcon, CheckIcon, ChevronDownIcon, ClockIcon, MapPinIcon, ArrowRightIcon, CurrencyDollarIcon } from '../components/HeroIcons';
+import { CreditCardIcon, BuildingLibraryIcon, BanknotesIcon, CheckIcon, ChevronDownIcon, ClockIcon, MapPinIcon, ArrowRightIcon, CurrencyDollarIcon, CalendarDaysIcon } from '../components/HeroIcons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 
@@ -258,11 +258,29 @@ const TransfersPage: React.FC = () => {
         // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
         const newMarkers: { pickup: any | null, destination: any | null } = { pickup: null, destination: null };
 
+        const pickupIcon = {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillColor: '#6b7280', // muted-foreground
+            fillOpacity: 1,
+            strokeWeight: 0,
+        };
+
+        const destinationIcon = {
+            path: 'M-4 -4 H 4 V 4 H -4 Z', // Square
+            scale: 2,
+            fillColor: '#111827', // foreground
+            fillOpacity: 1,
+            strokeWeight: 0,
+            anchor: new google.maps.Point(0, 0),
+        };
+
         if(pickupAddress?.geometry?.location){
             newMarkers.pickup = new google.maps.Marker({
                 position: pickupAddress.geometry.location,
                 map: map,
                 title: "Odbiór",
+                icon: pickupIcon,
             });
         }
         if(destinationAddress?.geometry?.location){
@@ -270,6 +288,7 @@ const TransfersPage: React.FC = () => {
                 position: destinationAddress.geometry.location,
                 map: map,
                 title: "Cel",
+                icon: destinationIcon,
             });
         }
         setMapMarkers(newMarkers);
@@ -350,7 +369,12 @@ const TransfersPage: React.FC = () => {
                             <div>
                                 <Label htmlFor="pickupDate">Kiedy</Label>
                                 <div className="grid sm:grid-cols-2 gap-4 mt-1">
-                                    <Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required />
+                                    <div className="relative">
+                                        <Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required className="pr-10" />
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                            <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                                        </div>
+                                    </div>
                                     <div className="relative">
                                         <select id="pickupTime" value={pickupTime} onChange={e => setPickupTime(e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none" required>
                                             {availableTimeOptions.length > 0 ? (

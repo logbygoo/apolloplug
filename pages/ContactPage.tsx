@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Input, Label, PageHeader, Textarea } from '../components/ui';
+import { Button, Input, Label, PageHeader } from '../components/ui';
 import { InformationCircleIcon } from '../components/HeroIcons';
 import Seo from '../components/Seo';
 import { generateContactAdminEmail, generateContactCustomerEmail } from '../configs/notifications/emailTemplates';
@@ -63,6 +63,19 @@ const ContactPage: React.FC = () => {
     }
   };
   
+  const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
+    ({ className, ...props }, ref) => {
+        return (
+            <textarea
+                className={`block min-h-[140px] w-full rounded-md bg-secondary p-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+                ref={ref}
+                {...props}
+            />
+        )
+    }
+  )
+  Textarea.displayName = "Textarea"
+
   const breadcrumbs = [{ name: 'Kontakt' }];
 
   return (
@@ -119,7 +132,7 @@ const ContactPage: React.FC = () => {
                      <Label htmlFor="message" className="flex items-center">
                       Wiadomość
                     </Label>
-                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required className="mt-1 min-h-[140px]" />
+                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required className="mt-1" />
                   </div>
                   {error && <p className="text-sm text-destructive">{error}</p>}
                   <Button type="submit" className="w-full" size="lg" disabled={isLoading}>

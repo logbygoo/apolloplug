@@ -118,20 +118,6 @@ export const Label = React.forwardRef<
 ));
 Label.displayName = 'Label';
 
-// Textarea Component
-export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
-    ({ className, ...props }, ref) => {
-        return (
-            <textarea
-                className={`block w-full rounded-md bg-secondary p-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
-                ref={ref}
-                {...props}
-            />
-        )
-    }
-);
-Textarea.displayName = "Textarea";
-
 // PageHeader Component
 interface PageHeaderBreadcrumb {
   name: string;

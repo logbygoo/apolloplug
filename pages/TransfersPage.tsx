@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { PageHeader, Input, Label, Button, Textarea } from '../components/ui';
+import { PageHeader, Input, Label, Button } from '../components/ui';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { TRANSFERS_CONFIG } from '../configs/transfersConfig';
@@ -11,35 +11,26 @@ import Seo from '../components/Seo';
 // FIX: Declare the global 'google' object to fix TypeScript errors.
 declare const google: any;
 
-// Helper to load Google Maps script with error handling
-const loadGoogleMapsScript = (onSuccess: () => void, onError: () => void) => {
-  // If script is already loaded
-  // FIX: Use the globally declared 'google' object and check for its existence safely to resolve TypeScript error.
-  if (typeof google !== 'undefined' && google.maps) {
-    onSuccess();
+// Helper to load Google Maps script
+const loadGoogleMapsScript = (callback: () => void) => {
+  if (window.google && window.google.maps) {
+    callback();
     return;
   }
-
   const existingScript = document.getElementById('googleMapsScript');
-
-  if (existingScript) {
-    // If script tag exists but window.google is not ready, add listeners
-    existingScript.addEventListener('load', onSuccess);
-    existingScript.addEventListener('error', onError);
-    return;
+  if (!existingScript) {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,directions`;
+    script.id = 'googleMapsScript';
+    document.body.appendChild(script);
+    script.onload = () => {
+      callback();
+    };
+  } else {
+     // If script is already loading, add the callback to the onload event
+     existingScript.addEventListener('load', callback);
   }
-
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,directions`;
-  script.id = 'googleMapsScript';
-  script.async = true;
-  script.defer = true;
-  document.head.appendChild(script);
-  
-  script.onload = onSuccess;
-  script.onerror = onError;
 };
-
 
 const today = new Date().toISOString().split('T')[0];
 const timeOptions = Array.from({ length: 48 }, (_, i) => {
@@ -88,10 +79,9 @@ const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: string; 
 const TransfersPage: React.FC = () => {
   const breadcrumbs = [{ name: 'Transfery' }];
   
-  const [map, setMap] = useState<any | null>(null);
-  const [directionsService, setDirectionsService] = useState<any | null>(null);
-  const [directionsRenderer, setDirectionsRenderer] = useState<any | null>(null);
-  const [mapStatus, setMapStatus] = useState<'loading' | 'ready' | 'error' | 'no_key'>('loading');
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService | null>(null);
+  const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
   
   const mapRef = useRef<HTMLDivElement>(null);
   const pickupInputRef = useRef<HTMLInputElement>(null);
@@ -99,65 +89,51 @@ const TransfersPage: React.FC = () => {
 
   const [pickupDate, setPickupDate] = useState(today);
   const [pickupTime, setPickupTime] = useState('12:00');
-  const [pickupAddress, setPickupAddress] = useState<any | null>(null);
-  const [destinationAddress, setDestinationAddress] = useState<any | null>(null);
+  const [pickupAddress, setPickupAddress] = useState<google.maps.places.PlaceResult | null>(null);
+  const [destinationAddress, setDestinationAddress] = useState<google.maps.places.PlaceResult | null>(null);
   const [routeStats, setRouteStats] = useState<{ distance: string; duration: string; price: number } | null>(null);
 
   const [selectedCar, setSelectedCar] = useState<Car | null>(RENTAL_CARS.find(c => c.available) || null);
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
-  const [driverMessage, setDriverMessage] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
-  const [mapMarkers, setMapMarkers] = useState<{ pickup: any | null, destination: any | null }>({ pickup: null, destination: null });
+  const [mapMarkers, setMapMarkers] = useState<{ pickup: google.maps.Marker | null, destination: google.maps.Marker | null }>({ pickup: null, destination: null });
 
   useEffect(() => {
-    if(!MAPS_API_KEY) {
-        console.warn("Klucz API Google Maps (MAPS_API_KEY) nie jest skonfigurowany w zmiennych środowiskowych.");
-        setMapStatus('no_key');
-        return;
-    }
-    
-    loadGoogleMapsScript(
-      () => { // onSuccess
-        if (!mapRef.current) return;
-        
-        const mapInstance = new google.maps.Map(mapRef.current, {
-          center: { lat: 52.2297, lng: 21.0122 }, // Warsaw
-          zoom: 12,
-          disableDefaultUI: true,
-          styles: [{ stylers: [{ saturation: -100 }] }],
-        });
-        
-        setMap(mapInstance);
-        setDirectionsService(new google.maps.DirectionsService());
-        setDirectionsRenderer(new google.maps.DirectionsRenderer({ map: mapInstance, suppressMarkers: true }));
-        setMapStatus('ready');
+    loadGoogleMapsScript(() => {
+      if (!mapRef.current) return;
+      
+      const mapInstance = new google.maps.Map(mapRef.current, {
+        center: { lat: 52.2297, lng: 21.0122 }, // Warsaw
+        zoom: 12,
+        disableDefaultUI: true,
+        styles: [{ stylers: [{ saturation: -100 }] }],
+      });
+      
+      setMap(mapInstance);
+      setDirectionsService(new google.maps.DirectionsService());
+      setDirectionsRenderer(new google.maps.DirectionsRenderer({ map: mapInstance, suppressMarkers: true }));
 
-        // Try to get user location
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              mapInstance.setCenter({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              });
-            },
-            () => { console.log("Błąd geolokalizacji lub odmowa dostępu."); }
-          );
-        }
-      },
-      () => { // onError
-        console.error("Błąd podczas ładowania skryptu Google Maps. Sprawdź konsolę przeglądarki, aby zobaczyć szczegóły. Możliwe przyczyny: nieprawidłowy klucz API, brak włączonych API w Google Cloud, ograniczenia domeny (HTTP referer).");
-        setMapStatus('error');
+      // Try to get user location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            mapInstance.setCenter({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          () => { console.log("Błąd geolokalizacji lub odmowa dostępu."); }
+        );
       }
-    );
+    });
   }, []);
 
   useEffect(() => {
     if (!map || !pickupInputRef.current || !destinationInputRef.current) return;
 
-    const setupAutocomplete = (inputRef: React.RefObject<HTMLInputElement>, setAddress: (place: any | null) => void) => {
+    const setupAutocomplete = (inputRef: React.RefObject<HTMLInputElement>, setAddress: (place: google.maps.places.PlaceResult | null) => void) => {
         const autocomplete = new google.maps.places.Autocomplete(inputRef.current!);
         autocomplete.bindTo('bounds', map);
         autocomplete.setFields(['name', 'geometry', 'formatted_address']);
@@ -188,7 +164,7 @@ const TransfersPage: React.FC = () => {
         destination: destinationAddress.geometry.location,
         travelMode: google.maps.TravelMode.DRIVING,
       },
-      (result: any, status: any) => {
+      (result, status) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
           directionsRenderer.setDirections(result);
           const route = result.routes[0].legs[0];
@@ -213,10 +189,11 @@ const TransfersPage: React.FC = () => {
 
   useEffect(() => {
     if (map) {
+        // Clear previous markers
         mapMarkers.pickup?.setMap(null);
         mapMarkers.destination?.setMap(null);
         
-        const newMarkers: { pickup: any | null, destination: any | null } = { pickup: null, destination: null };
+        const newMarkers: { pickup: google.maps.Marker | null, destination: google.maps.Marker | null } = { pickup: null, destination: null };
 
         if(pickupAddress?.geometry?.location){
             newMarkers.pickup = new google.maps.Marker({
@@ -257,37 +234,6 @@ const TransfersPage: React.FC = () => {
       { id: 'cash', name: 'Płatność przy odbiorze', icon: BanknotesIcon },
   ];
 
-  const MapOverlay: React.FC = () => {
-    if (mapStatus === 'ready') return null;
-
-    let title = '';
-    let message = '';
-
-    switch (mapStatus) {
-        case 'loading':
-            title = 'Ładowanie mapy...';
-            message = 'Proszę czekać.';
-            break;
-        case 'no_key':
-            title = 'Mapa jest nieaktywna';
-            message = 'Klucz API Google Maps nie został skonfigurowany. Upewnij się, że zmienna środowiskowa MAPS_API_KEY jest poprawnie ustawiona i dostępna dla Twojej aplikacji.';
-            break;
-        case 'error':
-            title = 'Błąd ładowania mapy';
-            message = 'Wystąpił problem. Sprawdź konsolę przeglądarki, aby zobaczyć szczegóły. Upewnij się, że klucz API jest prawidłowy, fakturowanie jest włączone i domena jest autoryzowana.';
-            break;
-    }
-
-    return (
-        <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 rounded-lg z-10">
-            <div>
-                <h3 className="text-xl font-bold">{title}</h3>
-                <p className="mt-2 text-sm max-w-md mx-auto">{message}</p>
-            </div>
-        </div>
-    );
-  };
-
   return (
     <div className="bg-background text-foreground">
       <Seo
@@ -295,7 +241,7 @@ const TransfersPage: React.FC = () => {
         description="Zamów profesjonalny i dyskretny transfer VIP naszą luksusową flotą Tesli. Idealne na lotnisko, spotkania biznesowe i specjalne okazje."
       />
       <PageHeader
-        title="Zamów przejazd"
+        title="Zamawianie Przejazdu"
         subtitle="Szybko i wygodnie zamów transfer luksusowym autem elektrycznym."
         breadcrumbs={breadcrumbs}
       />
@@ -305,7 +251,14 @@ const TransfersPage: React.FC = () => {
             <div className="lg:col-span-2">
                 <section>
                     <div ref={mapRef} className="w-full h-64 md:h-80 bg-secondary rounded-lg mb-8 relative">
-                        <MapOverlay />
+                         {MAPS_API_KEY === 'TUTAJ_WSTAW_SWOJ_KLUCZ_API' && (
+                             <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 rounded-lg z-10">
+                                <div>
+                                    <h3 className="text-xl font-bold">Mapa jest nieaktywna</h3>
+                                    <p className="mt-2 text-sm">Wprowadź klucz API Google Maps w pliku <code className="bg-white/20 px-1 rounded">configs/mapsConfig.ts</code>, aby ją włączyć.</p>
+                                </div>
+                            </div>
+                         )}
                     </div>
                 </section>
 
@@ -313,7 +266,7 @@ const TransfersPage: React.FC = () => {
                     <section>
                         <h2 className="text-2xl font-bold tracking-tight mb-6">1. Trasa i termin</h2>
                         <div className="grid sm:grid-cols-2 gap-6">
-                            <div><Label htmlFor="pickupDate">Data przejazdu</Label><Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required className="mt-1 p-[10px]"/></div>
+                            <div><Label htmlFor="pickupDate">Data przejazdu</Label><Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required className="mt-1"/></div>
                             <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={pickupTime} onChange={e => setPickupTime(e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                             <div className="sm:col-span-2"><Label htmlFor="pickupAddress">Adres odbioru</Label><Input id="pickupAddress" ref={pickupInputRef} placeholder="Wpisz adres początkowy" required className="mt-1" /></div>
                             <div className="sm:col-span-2"><Label htmlFor="destinationAddress">Adres docelowy</Label><Input id="destinationAddress" ref={destinationInputRef} placeholder="Wpisz adres docelowy" required className="mt-1"/></div>
@@ -343,9 +296,7 @@ const TransfersPage: React.FC = () => {
                         <div className="grid sm:grid-cols-2 gap-6">
                            <div><Label htmlFor="customerName">Imię i nazwisko</Label><Input id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required className="mt-1"/></div>
                            <div><Label htmlFor="customerPhone">Telefon</Label><Input id="customerPhone" type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} required className="mt-1"/></div>
-                           {/* FIX: Corrected typo from 'setEmail' to 'setCustomerEmail'. */}
                            <div className="sm:col-span-2"><Label htmlFor="customerEmail">E-mail</Label><Input id="customerEmail" type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} required className="mt-1"/></div>
-                           <div className="sm:col-span-2"><Label htmlFor="driverMessage">Wiadomość dla kierowcy (nieobowiązkowe)</Label><Textarea id="driverMessage" rows={3} value={driverMessage} onChange={e => setDriverMessage(e.target.value)} className="mt-1"/></div>
                         </div>
                     </section>
 

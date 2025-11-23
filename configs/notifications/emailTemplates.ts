@@ -1,4 +1,5 @@
 import type { FormData } from '../../pages/RentalPage';
+import type { TransferFormData } from '../../pages/TransfersPage';
 import { ADDITIONAL_OPTIONS } from '../rentConfig';
 
 const createFinancialLayout = (title: string, mainAmount: string, content: string, buttonUrl: string = '#', buttonText: string = 'Zarządzaj rezerwacją') => `
@@ -82,7 +83,6 @@ const createSimpleLayout = (title: string, content: string) => `
   </div>
 `;
 
-// FIX: Corrected typo from toLocaleDateDateString to toLocaleDateString.
 const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const generateDetailsTable = (rows: [string, string][]) => {
@@ -102,7 +102,6 @@ export const generateReservationAdminEmail = (
     summary: any,
     agreements: { terms: boolean; marketing: boolean; commercial: boolean }
 ) => {
-    // FIX: Refactored to imperatively build the details array to avoid TypeScript type inference issues with conditional spreading.
     const detailsRows: [string, string][] = [
         ['Model pojazdu', data.model.name],
         ['Odbiór', `${formatDate(data.pickupDate)} o ${data.pickupTime} w ${data.pickupLocation}`],
@@ -222,4 +221,67 @@ export const generateContactCustomerEmail = (name: string, message: string) => {
         </div>
     `;
     return createSimpleLayout(`Cześć ${name}, dziękujemy za kontakt!`, content);
+};
+
+// --- NEW TRANSFER TEMPLATES ---
+
+export const generateTransferAdminEmail = (data: TransferFormData, summary: any) => {
+    const detailsRows: [string, string][] = [
+        ['Klient', data.customerName],
+        ['Email', `<a href="mailto:${data.customerEmail}" style="color: #111827; text-decoration: none;">${data.customerEmail}</a>`],
+        ['Telefon', data.customerPhone],
+        ['Pojazd', data.selectedCar?.name || 'N/A'],
+        ['Typ przejazdu', data.transferType === 'hourly' ? `Kierowca na godziny (${data.selectedPackage?.label})` : 'Standardowy'],
+        ['Termin', `${formatDate(data.pickupDate)} o ${data.pickupTime}`],
+        ['Adres odbioru', data.pickupAddress?.formatted_address || 'N/A'],
+    ];
+
+    if (data.transferType !== 'hourly') {
+        detailsRows.push(['Adres docelowy', data.destinationAddress?.formatted_address || 'N/A']);
+    }
+
+    if (data.driverMessage) {
+        detailsRows.push(['Wiadomość od klienta', data.driverMessage]);
+    }
+
+    const fullContent = `
+        <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 12px 0; color: #111827;">Szczegóły zamówienia</h3>
+        ${generateDetailsTable(detailsRows)}
+    `;
+
+    return createFinancialLayout(
+        `Nowe zamówienie transferu`,
+        summary.price,
+        fullContent,
+        '#',
+        'Zobacz w panelu'
+    );
+};
+
+export const generateTransferCustomerEmail = (data: TransferFormData, summary: any) => {
+    const detailsRows: [string, string][] = [
+        ['Pojazd', data.selectedCar?.name || 'N/A'],
+        ['Kierowca', 'Przydzielony'],
+        ['Termin', `${formatDate(data.pickupDate)} o ${data.pickupTime}`],
+        ['Adres odbioru', data.pickupAddress?.formatted_address || 'N/A'],
+    ];
+
+    if (data.transferType === 'hourly') {
+        detailsRows.push(['Pakiet', `Kierowca na godziny (${data.selectedPackage?.label})`]);
+    } else {
+        detailsRows.push(['Adres docelowy', data.destinationAddress?.formatted_address || 'N/A']);
+    }
+
+    const fullContent = `
+      <p style="font-size: 16px; color: #4b5563; margin: 0 0 24px 0; text-align: center;">Dziękujemy za zamówienie transferu. Otrzymaliśmy Twoje zgłoszenie i wkrótce potwierdzimy szczegóły.</p>
+      ${generateDetailsTable(detailsRows)}
+    `;
+
+    return createFinancialLayout(
+        `Potwierdzenie zamówienia`,
+        summary.price,
+        fullContent,
+        '#',
+        'Zarządzaj zamówieniem'
+    );
 };

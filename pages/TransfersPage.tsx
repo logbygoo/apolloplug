@@ -295,6 +295,10 @@ const TransfersPage: React.FC = () => {
         origin: pickupAddress.geometry.location,
         destination: destinationAddress.geometry.location,
         travelMode: google.maps.TravelMode.DRIVING,
+        drivingOptions: {
+          departureTime: new Date(),
+          trafficModel: google.maps.TrafficModel.BEST_GUESS,
+        },
       },
       (result: any, status: any) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
@@ -304,10 +308,11 @@ const TransfersPage: React.FC = () => {
             const distanceKm = route.distance.value / 1000;
             const pricePerKm = TRANSFERS_CONFIG.pricePerKm[selectedCar.id] || 3.0;
             const price = TRANSFERS_CONFIG.baseFare + distanceKm * pricePerKm;
+            const durationText = route.duration_in_traffic ? route.duration_in_traffic.text : route.duration.text;
 
             setRouteStats({
               distance: route.distance.text,
-              duration: route.duration.text,
+              duration: durationText,
               price: price,
             });
           }

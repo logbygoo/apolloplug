@@ -12,4 +12,4 @@
  * WAŻNE: Zabezpiecz swój klucz API, ograniczając go do domeny, na której będzie działać aplikacja.
  */
 // FIX: Explicitly type MAPS_API_KEY as a string to allow comparison with a placeholder string without TypeScript errors.
-export const MAPS_API_KEY: string = 'TUTAJ_WSTAW_SWOJ_KLUCZ_API';
+export const MAPS_API_KEY: string = 'AIzaSyCmyC0lgp41cv08Vju7cNkY75aU-K2EE7Q';

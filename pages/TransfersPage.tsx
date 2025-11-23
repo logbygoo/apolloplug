@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { PageHeader, Input, Label, Button } from '../components/ui';
+import { PageHeader, Input, Label, Button, Textarea } from '../components/ui';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { TRANSFERS_CONFIG } from '../configs/transfersConfig';
@@ -13,7 +13,8 @@ declare const google: any;
 
 // Helper to load Google Maps script
 const loadGoogleMapsScript = (callback: () => void) => {
-  if (window.google && window.google.maps) {
+  // FIX: Check for the global 'google' object directly to align with the global declaration.
+  if (google && google.maps) {
     callback();
     return;
   }
@@ -79,9 +80,11 @@ const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: string; 
 const TransfersPage: React.FC = () => {
   const breadcrumbs = [{ name: 'Transfery' }];
   
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService | null>(null);
-  const [directionsRenderer, setDirectionsRenderer] = useState<google.maps.DirectionsRenderer | null>(null);
+  // FIX: Use 'any' for Google Maps types as 'declare const google: any;'
+  // does not provide type definitions, causing 'namespace not found' errors.
+  const [map, setMap] = useState<any | null>(null);
+  const [directionsService, setDirectionsService] = useState<any | null>(null);
+  const [directionsRenderer, setDirectionsRenderer] = useState<any | null>(null);
   
   const mapRef = useRef<HTMLDivElement>(null);
   const pickupInputRef = useRef<HTMLInputElement>(null);
@@ -89,18 +92,22 @@ const TransfersPage: React.FC = () => {
 
   const [pickupDate, setPickupDate] = useState(today);
   const [pickupTime, setPickupTime] = useState('12:00');
-  const [pickupAddress, setPickupAddress] = useState<google.maps.places.PlaceResult | null>(null);
-  const [destinationAddress, setDestinationAddress] = useState<google.maps.places.PlaceResult | null>(null);
+  // FIX: Use 'any' for Google Maps types.
+  const [pickupAddress, setPickupAddress] = useState<any | null>(null);
+  const [destinationAddress, setDestinationAddress] = useState<any | null>(null);
   const [routeStats, setRouteStats] = useState<{ distance: string; duration: string; price: number } | null>(null);
 
   const [selectedCar, setSelectedCar] = useState<Car | null>(RENTAL_CARS.find(c => c.available) || null);
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
+  const [driverMessage, setDriverMessage] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
-  const [mapMarkers, setMapMarkers] = useState<{ pickup: google.maps.Marker | null, destination: google.maps.Marker | null }>({ pickup: null, destination: null });
+  // FIX: Use 'any' for Google Maps types.
+  const [mapMarkers, setMapMarkers] = useState<{ pickup: any | null, destination: any | null }>({ pickup: null, destination: null });
 
   useEffect(() => {
+    if(!MAPS_API_KEY) return;
     loadGoogleMapsScript(() => {
       if (!mapRef.current) return;
       
@@ -133,7 +140,8 @@ const TransfersPage: React.FC = () => {
   useEffect(() => {
     if (!map || !pickupInputRef.current || !destinationInputRef.current) return;
 
-    const setupAutocomplete = (inputRef: React.RefObject<HTMLInputElement>, setAddress: (place: google.maps.places.PlaceResult | null) => void) => {
+    // FIX: Use 'any' for Google Maps types.
+    const setupAutocomplete = (inputRef: React.RefObject<HTMLInputElement>, setAddress: (place: any | null) => void) => {
         const autocomplete = new google.maps.places.Autocomplete(inputRef.current!);
         autocomplete.bindTo('bounds', map);
         autocomplete.setFields(['name', 'geometry', 'formatted_address']);
@@ -164,7 +172,7 @@ const TransfersPage: React.FC = () => {
         destination: destinationAddress.geometry.location,
         travelMode: google.maps.TravelMode.DRIVING,
       },
-      (result, status) => {
+      (result: any, status: any) => {
         if (status === google.maps.DirectionsStatus.OK && result) {
           directionsRenderer.setDirections(result);
           const route = result.routes[0].legs[0];
@@ -193,7 +201,8 @@ const TransfersPage: React.FC = () => {
         mapMarkers.pickup?.setMap(null);
         mapMarkers.destination?.setMap(null);
         
-        const newMarkers: { pickup: google.maps.Marker | null, destination: google.maps.Marker | null } = { pickup: null, destination: null };
+        // FIX: Use 'any' for Google Maps types.
+        const newMarkers: { pickup: any | null, destination: any | null } = { pickup: null, destination: null };
 
         if(pickupAddress?.geometry?.location){
             newMarkers.pickup = new google.maps.Marker({
@@ -241,7 +250,7 @@ const TransfersPage: React.FC = () => {
         description="Zamów profesjonalny i dyskretny transfer VIP naszą luksusową flotą Tesli. Idealne na lotnisko, spotkania biznesowe i specjalne okazje."
       />
       <PageHeader
-        title="Zamawianie Przejazdu"
+        title="Zamów przejazd"
         subtitle="Szybko i wygodnie zamów transfer luksusowym autem elektrycznym."
         breadcrumbs={breadcrumbs}
       />
@@ -251,11 +260,11 @@ const TransfersPage: React.FC = () => {
             <div className="lg:col-span-2">
                 <section>
                     <div ref={mapRef} className="w-full h-64 md:h-80 bg-secondary rounded-lg mb-8 relative">
-                         {MAPS_API_KEY === 'TUTAJ_WSTAW_SWOJ_KLUCZ_API' && (
+                         {!MAPS_API_KEY && (
                              <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 rounded-lg z-10">
                                 <div>
                                     <h3 className="text-xl font-bold">Mapa jest nieaktywna</h3>
-                                    <p className="mt-2 text-sm">Wprowadź klucz API Google Maps w pliku <code className="bg-white/20 px-1 rounded">configs/mapsConfig.ts</code>, aby ją włączyć.</p>
+                                    <p className="mt-2 text-sm">Klucz API Google Maps nie został skonfigurowany. Skonfiguruj zmienną środowiskową <code className="bg-white/20 px-1 rounded">MAPS_API_KEY</code>, aby ją włączyć.</p>
                                 </div>
                             </div>
                          )}
@@ -266,7 +275,7 @@ const TransfersPage: React.FC = () => {
                     <section>
                         <h2 className="text-2xl font-bold tracking-tight mb-6">1. Trasa i termin</h2>
                         <div className="grid sm:grid-cols-2 gap-6">
-                            <div><Label htmlFor="pickupDate">Data przejazdu</Label><Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required className="mt-1"/></div>
+                            <div><Label htmlFor="pickupDate">Data przejazdu</Label><Input id="pickupDate" type="date" value={pickupDate} onChange={e => setPickupDate(e.target.value)} min={today} required className="mt-1 p-[10px]"/></div>
                             <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={pickupTime} onChange={e => setPickupTime(e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                             <div className="sm:col-span-2"><Label htmlFor="pickupAddress">Adres odbioru</Label><Input id="pickupAddress" ref={pickupInputRef} placeholder="Wpisz adres początkowy" required className="mt-1" /></div>
                             <div className="sm:col-span-2"><Label htmlFor="destinationAddress">Adres docelowy</Label><Input id="destinationAddress" ref={destinationInputRef} placeholder="Wpisz adres docelowy" required className="mt-1"/></div>
@@ -297,6 +306,7 @@ const TransfersPage: React.FC = () => {
                            <div><Label htmlFor="customerName">Imię i nazwisko</Label><Input id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required className="mt-1"/></div>
                            <div><Label htmlFor="customerPhone">Telefon</Label><Input id="customerPhone" type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} required className="mt-1"/></div>
                            <div className="sm:col-span-2"><Label htmlFor="customerEmail">E-mail</Label><Input id="customerEmail" type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} required className="mt-1"/></div>
+                           <div className="sm:col-span-2"><Label htmlFor="driverMessage">Wiadomość dla kierowcy (nieobowiązkowe)</Label><Textarea id="driverMessage" rows={3} value={driverMessage} onChange={e => setDriverMessage(e.target.value)} className="mt-1"/></div>
                         </div>
                     </section>
 

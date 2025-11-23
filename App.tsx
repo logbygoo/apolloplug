@@ -16,7 +16,6 @@ import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './compo
 import { CONFIG } from './config';
 import UnderConstructionPage from './pages/UnderConstructionPage';
 import ScrollToTop from './components/ScrollToTop';
-import PaymentTestPage from './pages/PaymentTestPage';
 
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
@@ -25,7 +24,6 @@ const mainNavLinks = [
   { path: '/zakup', name: 'Zakup' },
   { path: '/ubezpieczenia', name: 'Ubezpieczenia' },
   { path: '/inwestuj', name: 'Inwestycje' },
-  { path: '/payment-test', name: 'Payment Test' },
 ];
 
 const Header: React.FC = () => {
@@ -154,7 +152,6 @@ const App: React.FC = () => {
             <Route path="/blog/:articleSlug" element={<BlogArticlePage />} />
             <Route path="/zakup" element={<PurchasePage />} />
             <Route path="/ubezpieczenia" element={<InsurancePage />} />
-            <Route path="/payment-test" element={<PaymentTestPage />} />
           </Routes>
         </main>
         <Footer />

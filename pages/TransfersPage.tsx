@@ -11,27 +11,35 @@ import Seo from '../components/Seo';
 // FIX: Declare the global 'google' object to fix TypeScript errors.
 declare const google: any;
 
-// Helper to load Google Maps script
-const loadGoogleMapsScript = (callback: () => void) => {
-  // FIX: Check for the global 'google' object directly to align with the global declaration.
-  if (google && google.maps) {
-    callback();
+// Helper to load Google Maps script with error handling
+const loadGoogleMapsScript = (onSuccess: () => void, onError: () => void) => {
+  // If script is already loaded
+  // FIX: Use the globally declared 'google' object and check for its existence safely to resolve TypeScript error.
+  if (typeof google !== 'undefined' && google.maps) {
+    onSuccess();
     return;
   }
+
   const existingScript = document.getElementById('googleMapsScript');
-  if (!existingScript) {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,directions`;
-    script.id = 'googleMapsScript';
-    document.body.appendChild(script);
-    script.onload = () => {
-      callback();
-    };
-  } else {
-     // If script is already loading, add the callback to the onload event
-     existingScript.addEventListener('load', callback);
+
+  if (existingScript) {
+    // If script tag exists but window.google is not ready, add listeners
+    existingScript.addEventListener('load', onSuccess);
+    existingScript.addEventListener('error', onError);
+    return;
   }
+
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,directions`;
+  script.id = 'googleMapsScript';
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+  
+  script.onload = onSuccess;
+  script.onerror = onError;
 };
+
 
 const today = new Date().toISOString().split('T')[0];
 const timeOptions = Array.from({ length: 48 }, (_, i) => {
@@ -80,11 +88,10 @@ const StatCard: React.FC<{ icon: React.ReactNode; title: string; value: string; 
 const TransfersPage: React.FC = () => {
   const breadcrumbs = [{ name: 'Transfery' }];
   
-  // FIX: Use 'any' for Google Maps types as 'declare const google: any;'
-  // does not provide type definitions, causing 'namespace not found' errors.
   const [map, setMap] = useState<any | null>(null);
   const [directionsService, setDirectionsService] = useState<any | null>(null);
   const [directionsRenderer, setDirectionsRenderer] = useState<any | null>(null);
+  const [mapStatus, setMapStatus] = useState<'loading' | 'ready' | 'error' | 'no_key'>('loading');
   
   const mapRef = useRef<HTMLDivElement>(null);
   const pickupInputRef = useRef<HTMLInputElement>(null);
@@ -92,7 +99,6 @@ const TransfersPage: React.FC = () => {
 
   const [pickupDate, setPickupDate] = useState(today);
   const [pickupTime, setPickupTime] = useState('12:00');
-  // FIX: Use 'any' for Google Maps types.
   const [pickupAddress, setPickupAddress] = useState<any | null>(null);
   const [destinationAddress, setDestinationAddress] = useState<any | null>(null);
   const [routeStats, setRouteStats] = useState<{ distance: string; duration: string; price: number } | null>(null);
@@ -103,44 +109,54 @@ const TransfersPage: React.FC = () => {
   const [customerEmail, setCustomerEmail] = useState('');
   const [driverMessage, setDriverMessage] = useState('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
-  // FIX: Use 'any' for Google Maps types.
   const [mapMarkers, setMapMarkers] = useState<{ pickup: any | null, destination: any | null }>({ pickup: null, destination: null });
 
   useEffect(() => {
-    if(!MAPS_API_KEY) return;
-    loadGoogleMapsScript(() => {
-      if (!mapRef.current) return;
-      
-      const mapInstance = new google.maps.Map(mapRef.current, {
-        center: { lat: 52.2297, lng: 21.0122 }, // Warsaw
-        zoom: 12,
-        disableDefaultUI: true,
-        styles: [{ stylers: [{ saturation: -100 }] }],
-      });
-      
-      setMap(mapInstance);
-      setDirectionsService(new google.maps.DirectionsService());
-      setDirectionsRenderer(new google.maps.DirectionsRenderer({ map: mapInstance, suppressMarkers: true }));
+    if(!MAPS_API_KEY) {
+        console.warn("Klucz API Google Maps (MAPS_API_KEY) nie jest skonfigurowany w zmiennych środowiskowych.");
+        setMapStatus('no_key');
+        return;
+    }
+    
+    loadGoogleMapsScript(
+      () => { // onSuccess
+        if (!mapRef.current) return;
+        
+        const mapInstance = new google.maps.Map(mapRef.current, {
+          center: { lat: 52.2297, lng: 21.0122 }, // Warsaw
+          zoom: 12,
+          disableDefaultUI: true,
+          styles: [{ stylers: [{ saturation: -100 }] }],
+        });
+        
+        setMap(mapInstance);
+        setDirectionsService(new google.maps.DirectionsService());
+        setDirectionsRenderer(new google.maps.DirectionsRenderer({ map: mapInstance, suppressMarkers: true }));
+        setMapStatus('ready');
 
-      // Try to get user location
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            mapInstance.setCenter({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-          },
-          () => { console.log("Błąd geolokalizacji lub odmowa dostępu."); }
-        );
+        // Try to get user location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              mapInstance.setCenter({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              });
+            },
+            () => { console.log("Błąd geolokalizacji lub odmowa dostępu."); }
+          );
+        }
+      },
+      () => { // onError
+        console.error("Błąd podczas ładowania skryptu Google Maps. Sprawdź konsolę przeglądarki, aby zobaczyć szczegóły. Możliwe przyczyny: nieprawidłowy klucz API, brak włączonych API w Google Cloud, ograniczenia domeny (HTTP referer).");
+        setMapStatus('error');
       }
-    });
+    );
   }, []);
 
   useEffect(() => {
     if (!map || !pickupInputRef.current || !destinationInputRef.current) return;
 
-    // FIX: Use 'any' for Google Maps types.
     const setupAutocomplete = (inputRef: React.RefObject<HTMLInputElement>, setAddress: (place: any | null) => void) => {
         const autocomplete = new google.maps.places.Autocomplete(inputRef.current!);
         autocomplete.bindTo('bounds', map);
@@ -197,11 +213,9 @@ const TransfersPage: React.FC = () => {
 
   useEffect(() => {
     if (map) {
-        // Clear previous markers
         mapMarkers.pickup?.setMap(null);
         mapMarkers.destination?.setMap(null);
         
-        // FIX: Use 'any' for Google Maps types.
         const newMarkers: { pickup: any | null, destination: any | null } = { pickup: null, destination: null };
 
         if(pickupAddress?.geometry?.location){
@@ -243,6 +257,37 @@ const TransfersPage: React.FC = () => {
       { id: 'cash', name: 'Płatność przy odbiorze', icon: BanknotesIcon },
   ];
 
+  const MapOverlay: React.FC = () => {
+    if (mapStatus === 'ready') return null;
+
+    let title = '';
+    let message = '';
+
+    switch (mapStatus) {
+        case 'loading':
+            title = 'Ładowanie mapy...';
+            message = 'Proszę czekać.';
+            break;
+        case 'no_key':
+            title = 'Mapa jest nieaktywna';
+            message = 'Klucz API Google Maps nie został skonfigurowany. Upewnij się, że zmienna środowiskowa MAPS_API_KEY jest poprawnie ustawiona i dostępna dla Twojej aplikacji.';
+            break;
+        case 'error':
+            title = 'Błąd ładowania mapy';
+            message = 'Wystąpił problem. Sprawdź konsolę przeglądarki, aby zobaczyć szczegóły. Upewnij się, że klucz API jest prawidłowy, fakturowanie jest włączone i domena jest autoryzowana.';
+            break;
+    }
+
+    return (
+        <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 rounded-lg z-10">
+            <div>
+                <h3 className="text-xl font-bold">{title}</h3>
+                <p className="mt-2 text-sm max-w-md mx-auto">{message}</p>
+            </div>
+        </div>
+    );
+  };
+
   return (
     <div className="bg-background text-foreground">
       <Seo
@@ -260,14 +305,7 @@ const TransfersPage: React.FC = () => {
             <div className="lg:col-span-2">
                 <section>
                     <div ref={mapRef} className="w-full h-64 md:h-80 bg-secondary rounded-lg mb-8 relative">
-                         {!MAPS_API_KEY && (
-                             <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 rounded-lg z-10">
-                                <div>
-                                    <h3 className="text-xl font-bold">Mapa jest nieaktywna</h3>
-                                    <p className="mt-2 text-sm">Klucz API Google Maps nie został skonfigurowany. Skonfiguruj zmienną środowiskową <code className="bg-white/20 px-1 rounded">MAPS_API_KEY</code>, aby ją włączyć.</p>
-                                </div>
-                            </div>
-                         )}
+                        <MapOverlay />
                     </div>
                 </section>
 
@@ -305,6 +343,7 @@ const TransfersPage: React.FC = () => {
                         <div className="grid sm:grid-cols-2 gap-6">
                            <div><Label htmlFor="customerName">Imię i nazwisko</Label><Input id="customerName" value={customerName} onChange={e => setCustomerName(e.target.value)} required className="mt-1"/></div>
                            <div><Label htmlFor="customerPhone">Telefon</Label><Input id="customerPhone" type="tel" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} required className="mt-1"/></div>
+                           {/* FIX: Corrected typo from 'setEmail' to 'setCustomerEmail'. */}
                            <div className="sm:col-span-2"><Label htmlFor="customerEmail">E-mail</Label><Input id="customerEmail" type="email" value={customerEmail} onChange={e => setCustomerEmail(e.target.value)} required className="mt-1"/></div>
                            <div className="sm:col-span-2"><Label htmlFor="driverMessage">Wiadomość dla kierowcy (nieobowiązkowe)</Label><Textarea id="driverMessage" rows={3} value={driverMessage} onChange={e => setDriverMessage(e.target.value)} className="mt-1"/></div>
                         </div>

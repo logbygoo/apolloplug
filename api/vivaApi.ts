@@ -1,19 +1,24 @@
-// This file simulates a backend API that interacts with Viva.com
-// In a real application, these functions would be on your server,
-// and you would call them from the frontend via fetch().
+// This file now makes a REAL call to the Viva.com API.
+// In a production app, this logic MUST be on a secure backend server.
+import { VIVA_MERCHANT_ID, VIVA_API_KEY } from '../configs/vivaConfig';
 
 interface VivaPaymentOrderResponse {
   orderCode: string;
+  error?: string;
 }
 
+// Base64 encoding function for the browser
+// FIX: Removed Node.js-specific `Buffer` logic. In a browser environment, `window.btoa` is always available.
+const toBase64 = (str: string) => window.btoa(str);
+
+const VIVA_DEMO_API_URL = 'https://demo-api.vivapayments.com/checkout/v2/orders';
+
 /**
- * Simulates creating a payment order on the backend.
+ * Creates a real payment order by calling the Viva.com API.
  *
- * IMPORTANT: In a real-world scenario:
- * 1. This function would reside on your secure server (e.g., a Node.js/Express backend).
- * 2. It would use your Viva.com Merchant ID and API Key to make a POST request
- *    to the Viva.com API endpoint for creating payment orders.
- * 3. Never expose your API Key on the frontend.
+ * IMPORTANT: This implementation is for DEMONSTRATION purposes only.
+ * Exposing the API Key in the frontend is a major security risk.
+ * In a production environment, this function MUST be moved to a secure backend server.
  *
  * @param amount The amount in the smallest currency unit (e.g., 100 for 1.00 PLN).
  * @param isPreAuth Whether to create a pre-authorization order.
@@ -25,27 +30,49 @@ export const createVivaPaymentOrder = async (
   isPreAuth: boolean,
   createRecurring: boolean
 ): Promise<VivaPaymentOrderResponse> => {
-  console.log("Simulating backend call to Viva.com to create a payment order...");
-  console.log("Amount:", amount);
-  console.log("Is Pre-authorization:", isPreAuth);
-  console.log("Create Recurring Token:", createRecurring);
+  console.log("Attempting to create a REAL payment order with Viva.com...");
 
-  // Simulate network latency
-  await new Promise(resolve => setTimeout(resolve, 500));
+  const credentials = `${VIVA_MERCHANT_ID}:${VIVA_API_KEY}`;
+  const encodedCredentials = toBase64(credentials);
 
-  // In a real backend, you would make a POST request to:
-  // `https://api.vivapayments.com/checkout/v2/orders` (for production)
-  // or `https://demo-api.vivapayments.com/checkout/v2/orders` (for demo)
-  // with an Authorization header `Bearer <your_encoded_api_key>`
-  // and a JSON body containing details like amount, customer info, etc.
-
-  // For this simulation, we'll return a mock order code.
-  // The code is a random string to show it changes when parameters change.
-  const mockOrderCode = `MOCK_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
-
-  console.log("Simulation successful. Mock Order Code:", mockOrderCode);
-
-  return {
-    orderCode: mockOrderCode,
+  const requestBody = {
+    amount: amount,
+    customerTrns: "Testowa płatność ze strony ApolloPlug.com",
+    customer: {
+        email: "test@apolloplug.com",
+        fullname: "Jan Kowalski",
+        countryCode: "PL"
+    },
+    paymentTimeout: 1800,
+    preauth: isPreAuth,
+    allowRecurring: createRecurring,
+    sourceCode: 'Default' // Your source code from Viva Wallet
   };
+
+  try {
+    const response = await fetch(VIVA_DEMO_API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${encodedCredentials}`
+        },
+        body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Viva API Error:", errorData);
+        throw new Error(`HTTP error! status: ${response.status} - ${errorData.error || 'Unknown error'}`);
+    }
+
+    const data: { orderCode: string } = await response.json();
+    console.log("Successfully created Viva.com order. Order Code:", data.orderCode);
+    return { orderCode: data.orderCode };
+  } catch (error) {
+    console.error("Failed to create Viva payment order:", error);
+    if (error instanceof Error) {
+        return { orderCode: '', error: error.message };
+    }
+    return { orderCode: '', error: 'An unknown error occurred' };
+  }
 };

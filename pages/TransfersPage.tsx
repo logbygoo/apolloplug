@@ -213,9 +213,6 @@ const TransfersPage: React.FC = () => {
         disableDefaultUI: true,
         styles: [{ stylers: [{ saturation: -100 }] }],
       });
-
-      const trafficLayer = new google.maps.TrafficLayer();
-      trafficLayer.setMap(mapInstance);
       
       setMap(mapInstance);
       setDirectionsService(new google.maps.DirectionsService());

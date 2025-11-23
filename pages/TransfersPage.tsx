@@ -507,7 +507,31 @@ const TransfersPage: React.FC = () => {
                         <section><h2 className="text-2xl font-bold tracking-tight mb-6">Dane zamawiającego</h2><div className="grid sm:grid-cols-2 gap-6"><div><Label htmlFor="customerName">Imię i nazwisko</Label><Input id="customerName" value={formData.customerName} onChange={e => setFormValue('customerName', e.target.value)} required className="mt-1"/></div><div><Label htmlFor="customerPhone">Telefon</Label><Input id="customerPhone" type="tel" value={formData.customerPhone} onChange={e => setFormValue('customerPhone', e.target.value)} required className="mt-1"/></div><div className="sm:col-span-2"><Label htmlFor="customerEmail">E-mail</Label><Input id="customerEmail" type="email" value={formData.customerEmail} onChange={e => setFormValue('customerEmail', e.target.value)} required className="mt-1"/></div><div className="sm:col-span-2"><Label htmlFor="driverMessage">Wiadomość dla kierowcy</Label><Textarea id="driverMessage" value={formData.driverMessage} onChange={e => setFormValue('driverMessage', e.target.value)} className="mt-1" placeholder="Np. kod do bramy, piętro, numer mieszkania..." /></div><div className="sm:col-span-2 space-y-3"><AgreementCheckbox id="terms" label={<>Akceptuję regulamin świadczenia usług.*</>} isChecked={agreements.terms} onToggle={() => setAgreements(p => ({...p, terms: !p.terms}))} /><AgreementCheckbox id="marketing" label="Wyrażam zgodę na otrzymywanie informacji handlowych." isChecked={agreements.marketing} onToggle={() => setAgreements(p => ({...p, marketing: !p.marketing}))} /></div></div></section>
                     )}
                     {step === 'payment' && (
-                        <section><h2 className="text-2xl font-bold tracking-tight mb-6">Metoda płatności</h2><div className="border rounded-lg bg-secondary/50 border-foreground p-6"><div><h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3><div className="grid gap-4"><div className="relative"><Label htmlFor="cardNumber">Numer karty</Label><Input id="cardNumber" required className="mt-1 bg-white" /><CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" /></div><div className="grid grid-cols-2 gap-4"><div><Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label><Input id="cardExpiry" required className="mt-1 bg-white" /></div><div><Label htmlFor="cardCVC">Kod CVC</Label><Input id="cardCVC" required className="mt-1 bg-white" /></div></div></div></div></section>
+                        <section>
+                            <h2 className="text-2xl font-bold tracking-tight mb-6">Metoda płatności</h2>
+                            <div className="border rounded-lg bg-secondary/50 border-foreground p-6">
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
+                                    <div className="grid gap-4">
+                                        <div className="relative">
+                                            <Label htmlFor="cardNumber">Numer karty</Label>
+                                            <Input id="cardNumber" required className="mt-1 bg-white" />
+                                            <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
+                                                <Input id="cardExpiry" required className="mt-1 bg-white" />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="cardCVC">Kod CVC</Label>
+                                                <Input id="cardCVC" required className="mt-1 bg-white" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     )}
                 </form>
             </div>

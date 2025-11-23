@@ -11,6 +11,8 @@ import BlogPage from './pages/BlogPage';
 import BlogArticlePage from './pages/BlogArticlePage';
 import PurchasePage from './pages/PurchasePage';
 import InsurancePage from './pages/InsurancePage';
+import KlarnaPage from './pages/KlarnaPage';
+import KlarnaSuccessPage from './pages/KlarnaSuccessPage';
 import { ApolloPlugLogo } from './constants';
 import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './components/HeroIcons';
 import { CONFIG } from './config';
@@ -100,6 +102,7 @@ const Header: React.FC = () => {
 const Footer: React.FC = () => {
     const footerLinks = [
         { path: '/', name: `Apollo Plug © ${new Date().getFullYear()}` },
+        { path: '/klarna', name: 'Płatność Klarna' },
         { path: '#', name: 'Prywatność i przepisy prawne' },
         { path: '/kontakt', name: 'Kontakt' },
         { path: '/blog', name: 'Blog' },
@@ -152,6 +155,8 @@ const App: React.FC = () => {
             <Route path="/blog/:articleSlug" element={<BlogArticlePage />} />
             <Route path="/zakup" element={<PurchasePage />} />
             <Route path="/ubezpieczenia" element={<InsurancePage />} />
+            <Route path="/klarna" element={<KlarnaPage />} />
+            <Route path="/klarna-success" element={<KlarnaSuccessPage />} />
           </Routes>
         </main>
         <Footer />

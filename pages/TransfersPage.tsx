@@ -120,7 +120,7 @@ const TransfersPage: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
   // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
   const [mapMarkers, setMapMarkers] = useState<{ pickup: any | null, destination: any | null }>({ pickup: null, destination: null });
-  // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
+  // FIX: Changed PulsingDotOverlay type to any because the class is now defined inside useEffect.
   const [userLocationMarker, setUserLocationMarker] = useState<any | null>(null);
 
   const availableTimeOptions = useMemo(() => {
@@ -166,6 +166,46 @@ const TransfersPage: React.FC = () => {
   useEffect(() => {
     loadGoogleMapsScript(() => {
       if (!mapRef.current) return;
+
+      // FIX: Moved PulsingDotOverlay class definition here to ensure google.maps is loaded
+      // and changed LatLng type to any to match other fixes in this file.
+      class PulsingDotOverlay extends google.maps.OverlayView {
+          private position: any;
+          private div: HTMLDivElement | null;
+      
+          constructor(position: any) {
+              super();
+              this.position = position;
+              this.div = null;
+          }
+      
+          onAdd() {
+              this.div = document.createElement('div');
+              this.div.className = 'pulsing-dot';
+              this.div.style.position = 'absolute';
+              
+              const panes = this.getPanes();
+              panes.overlayMouseTarget.appendChild(this.div);
+          }
+      
+          draw() {
+              const overlayProjection = this.getProjection();
+              if (!overlayProjection || !this.div) return;
+      
+              const sw = overlayProjection.fromLatLngToDivPixel(this.position);
+              
+              // Center the dot on the coordinate
+              this.div.style.left = (sw.x - 9) + 'px'; // width is 18px, so offset by half
+              this.div.style.top = (sw.y - 9) + 'px'; // height is 18px, so offset by half
+          }
+      
+          onRemove() {
+              if (this.div) {
+                  (this.div.parentNode as HTMLElement).removeChild(this.div);
+                  this.div = null;
+              }
+          }
+      }
       
       const mapInstance = new google.maps.Map(mapRef.current, {
         center: { lat: 52.2297, lng: 21.0122 }, // Warsaw
@@ -189,18 +229,11 @@ const TransfersPage: React.FC = () => {
             mapInstance.setZoom(15);
 
             if (userLocationMarker) {
-                userLocationMarker.map = null;
+                userLocationMarker.setMap(null);
             }
-            const dotElement = document.createElement('div');
-            dotElement.className = 'pulsing-dot';
             
-            // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
-            const marker: any = new google.maps.marker.AdvancedMarkerElement({
-                map: mapInstance,
-                position: userLocation,
-                content: dotElement,
-                title: 'Twoja lokalizacja'
-            });
+            const marker = new PulsingDotOverlay(new google.maps.LatLng(userLocation));
+            marker.setMap(mapInstance);
             setUserLocationMarker(marker);
 
             const geocoder = new google.maps.Geocoder();

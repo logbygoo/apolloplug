@@ -185,7 +185,7 @@ const loadGoogleMapsScript = (callback: () => void) => {
   const existingScript = document.getElementById('googleMapsScript');
   if (!existingScript) {
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=marker`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=marker,places,directions`;
     script.id = 'googleMapsScript';
     document.body.appendChild(script);
     script.onload = () => {

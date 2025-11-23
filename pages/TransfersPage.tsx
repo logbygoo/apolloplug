@@ -446,6 +446,13 @@ const TransfersPage: React.FC = () => {
       );
     }
 
+    const pillButtonClasses = (isActive: boolean) =>
+      `inline-flex items-center justify-center whitespace-nowrap rounded-full text-base font-medium h-11 px-8 transition-colors disabled:pointer-events-none disabled:opacity-50 ${
+        isActive
+          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+          : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+      }`;
+
 
   return (
     <div className="bg-background text-foreground">
@@ -467,10 +474,10 @@ const TransfersPage: React.FC = () => {
                             <section>
                                 <div className="flex flex-wrap items-center gap-4 mb-8">
                                     <span className='font-medium text-sm text-muted-foreground'>Wybierz rodzaj podróży</span>
-                                    <Button type="button" size="lg" variant={formData.transferType === 'self' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'self')} className="rounded-full">Dla siebie</Button>
-                                    <Button type="button" size="lg" variant={formData.transferType === 'someone' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'someone')} className="rounded-full">Dla kogoś</Button>
-                                    <Button type="button" size="lg" variant={formData.transferType === 'package' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'package')} className="rounded-full">Paczka</Button>
-                                    <Button type="button" size="lg" variant={formData.transferType === 'hourly' ? 'primary' : 'secondary'} onClick={() => setFormValue('transferType', 'hourly')} className="rounded-full">Kierowca na godziny</Button>
+                                    <button type="button" onClick={() => setFormValue('transferType', 'self')} className={pillButtonClasses(formData.transferType === 'self')}>Dla siebie</button>
+                                    <button type="button" onClick={() => setFormValue('transferType', 'someone')} className={pillButtonClasses(formData.transferType === 'someone')}>Dla kogoś</button>
+                                    <button type="button" onClick={() => setFormValue('transferType', 'package')} className={pillButtonClasses(formData.transferType === 'package')}>Paczka</button>
+                                    <button type="button" onClick={() => setFormValue('transferType', 'hourly')} className={pillButtonClasses(formData.transferType === 'hourly')}>Kierowca na godziny</button>
                                 </div>
                                 <div className="space-y-6">
                                     <div>

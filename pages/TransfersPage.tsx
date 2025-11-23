@@ -14,14 +14,14 @@ declare const google: any;
 // Helper to load Google Maps script
 const loadGoogleMapsScript = (callback: () => void) => {
   // FIX: Use 'google' directly instead of 'window.google' to align with the global declaration and resolve all google-related TypeScript errors.
-  if (typeof google !== 'undefined' && google.maps) {
+  if (typeof google !== 'undefined' && google.maps && google.maps.marker) {
     callback();
     return;
   }
   const existingScript = document.getElementById('googleMapsScript');
   if (!existingScript) {
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,directions`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,directions,marker`;
     script.id = 'googleMapsScript';
     document.body.appendChild(script);
     script.onload = () => {
@@ -120,6 +120,8 @@ const TransfersPage: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
   // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
   const [mapMarkers, setMapMarkers] = useState<{ pickup: any | null, destination: any | null }>({ pickup: null, destination: null });
+  // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
+  const [userLocationMarker, setUserLocationMarker] = useState<any | null>(null);
 
   const availableTimeOptions = useMemo(() => {
     if (pickupDate !== today) {
@@ -176,20 +178,55 @@ const TransfersPage: React.FC = () => {
       setDirectionsService(new google.maps.DirectionsService());
       setDirectionsRenderer(new google.maps.DirectionsRenderer({ map: mapInstance, suppressMarkers: true }));
 
-      // Try to get user location
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            mapInstance.setCenter({
+            const userLocation = {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
+            };
+            mapInstance.setCenter(userLocation);
+            mapInstance.setZoom(15);
+
+            if (userLocationMarker) {
+                userLocationMarker.map = null;
+            }
+            const dotElement = document.createElement('div');
+            dotElement.className = 'pulsing-dot';
+            
+            // FIX: Replaced google.maps.Marker with any to resolve TypeScript error.
+            const marker: any = new google.maps.marker.AdvancedMarkerElement({
+                map: mapInstance,
+                position: userLocation,
+                content: dotElement,
+                title: 'Twoja lokalizacja'
+            });
+            setUserLocationMarker(marker);
+
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: userLocation }, (results: any, status: any) => {
+                if (status === 'OK' && results && results[0]) {
+                    if (pickupInputRef.current) {
+                        // FIX: Changed pickupInputref to pickupInputRef to fix typo.
+                        pickupInputRef.current.value = results[0].formatted_address;
+                    }
+                    const placeResult = {
+                        name: results[0].address_components[0]?.short_name || 'Twoja lokalizacja',
+                        formatted_address: results[0].formatted_address,
+                        geometry: { location: results[0].geometry.location }
+                    };
+                    setPickupAddress(placeResult);
+                } else {
+                    console.warn(`Geocode was not successful for the following reason: ${status}`);
+                }
             });
           },
-          () => { console.log("Błąd geolokalizacji lub odmowa dostępu."); }
+          () => { console.log("Błąd geolokalizacji lub odmowa dostępu."); },
+          { enableHighAccuracy: true }
         );
       }
     });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!map || !pickupInputRef.current || !destinationInputRef.current) return;

@@ -11,23 +11,47 @@ interface TransferSummary {
     distance: string; // For hourly, this will be the package label
 }
 
-export const getReservationAdminSms = (formData: FormData, summary: Summary): string => {
+interface SmsPayload {
+  to: string;
+  message: string;
+  from: string;
+}
+
+export const createReservationAdminSmsPayload = (formData: FormData, summary: Summary): SmsPayload => {
     const pickupDateFormatted = new Date(formData.pickupDate).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    return `${formData.model.name} - ${summary.rentalDays} doby od ${pickupDateFormatted} ${formData.pickupTime} - ${summary.totalPrice} zł - ${formData.fullName}`;
+    const message = `${formData.model.name} - ${summary.rentalDays} doby od ${pickupDateFormatted} ${formData.pickupTime} - ${summary.totalPrice} zł - ${formData.fullName}`;
+    return {
+        to: "720100600",
+        message,
+        from: "4628"
+    };
 };
 
-export const getReservationCustomerSms = (formData: FormData): string => {
-    return `Potwierdzamy otrzymanie rezerwacji. Szczegóły przesłane mailowo na ${formData.email} Dokończ rezerwację finalizując płatność.`;
+export const createReservationCustomerSmsPayload = (formData: FormData): SmsPayload => {
+    const message = `Potwierdzamy otrzymanie rezerwacji. Szczegóły przesłane mailowo na ${formData.email} Dokończ rezerwację finalizując płatność.`;
+    return {
+        to: formData.phone,
+        message,
+        from: "4628"
+    };
 };
 
-// --- NEW TRANSFER TEMPLATES ---
-
-export const getTransferAdminSms = (formData: TransferFormData, summary: TransferSummary): string => {
+export const createTransferAdminSmsPayload = (formData: TransferFormData, summary: TransferSummary): SmsPayload => {
     const pickupDateFormatted = new Date(formData.pickupDate).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit' });
     const serviceType = formData.transferType === 'hourly' ? `Godziny (${formData.selectedPackage?.label})` : 'Trasa';
-    return `Transfer ${pickupDateFormatted} ${formData.pickupTime} - ${formData.selectedCar?.name} - ${serviceType} - ${summary.rawPrice} zł - ${formData.customerName}`;
+    const message = `Transfer ${pickupDateFormatted} ${formData.pickupTime} - ${formData.selectedCar?.name} - ${serviceType} - ${summary.rawPrice} zł - ${formData.customerName}`;
+    return {
+        to: "720100600",
+        message,
+        from: "4628"
+    };
 };
 
-export const getTransferCustomerSms = (formData: TransferFormData): string => {
-    return `Dziekujemy za zamowienie transferu. Szczegoly znajdziesz w mailu wyslanym na ${formData.customerEmail}. Pozdrawiamy, ApolloPlug.com`;
+export const createTransferCustomerSmsPayload = (formData: TransferFormData): SmsPayload => {
+    const message = `Dziekujemy za zamowienie transferu. Szczegoly znajdziesz w mailu wyslanym na ${formData.customerEmail}. Pozdrawiamy, ApolloPlug.com`;
+    return {
+        to: formData.customerPhone,
+        message,
+        from: "4628"
+    };
 };

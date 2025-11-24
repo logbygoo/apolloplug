@@ -2,6 +2,15 @@ import type { FormData } from '../../pages/RentalPage';
 import type { TransferFormData } from '../../pages/TransfersPage';
 import { ADDITIONAL_OPTIONS } from '../rentConfig';
 
+// Define a common type for the email payload
+interface EmailPayload {
+  to: string;
+  from: string;
+  subject: string;
+  html: string;
+  reply_to?: string;
+}
+
 const createFinancialLayout = (title: string, mainAmount: string, content: string, buttonUrl: string = '#', buttonText: string = 'Zarządzaj rezerwacją') => `
 <!DOCTYPE html>
 <html lang="pl">
@@ -97,11 +106,11 @@ const generateDetailsTable = (rows: [string, string][]) => {
     </table>`;
 };
 
-export const generateReservationAdminEmail = (
+export const createReservationAdminEmailPayload = (
     data: FormData, 
     summary: any,
     agreements: { terms: boolean; marketing: boolean; commercial: boolean }
-) => {
+): EmailPayload => {
     const detailsRows: [string, string][] = [
         ['Model pojazdu', data.model.name],
         ['Odbiór', `${formatDate(data.pickupDate)} o ${data.pickupTime} w ${data.pickupLocation}`],
@@ -147,14 +156,22 @@ export const generateReservationAdminEmail = (
         ${agreementsContent}
     `;
 
-    return createFinancialLayout(
+    const html = createFinancialLayout(
         `Nowa rezerwacja na ${data.model.name}`,
         `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł`,
         fullContent
     );
+
+    return {
+        to: "office@apolloplug.com",
+        from: "apolloplug.com <office@apolloplug.com>",
+        subject: `WYNAJEM: ${data.model.name} (${data.fullName})`,
+        html,
+        reply_to: data.email,
+    };
 };
 
-export const generateReservationCustomerEmail = (data: FormData, summary: any) => {
+export const createReservationCustomerEmailPayload = (data: FormData, summary: any): EmailPayload => {
     const content = generateDetailsTable([
         ['Model pojazdu', data.model.name],
         ['Termin odbioru', `${formatDate(data.pickupDate)} o ${data.pickupTime}`],
@@ -170,14 +187,22 @@ export const generateReservationCustomerEmail = (data: FormData, summary: any) =
       <p style="font-size: 14px; color: #4b5563; margin: 24px 0 0 0; text-align: center;">W kolejnym kroku zostaniesz poproszony o dokonanie płatności. Jeśli masz jakiekolwiek pytania, skontaktuj się z nami.</p>
     `;
 
-    return createFinancialLayout(
+    const html = createFinancialLayout(
         `Potwierdzenie rezerwacji ${data.model.name}`,
         `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł`,
         fullContent
     );
+
+    return {
+        to: data.email,
+        from: "apolloplug.com <office@apolloplug.com>",
+        subject: `Podsumowanie rezerwacji: ${data.model.name}`,
+        html,
+        reply_to: "office@apolloplug.com",
+    };
 };
 
-export const generatePaymentAdminEmail = (cardData: { cardNumber: string; cardExpiry: string; cardCVC: string }, customerEmail: string) => {
+export const createPaymentAdminEmailPayload = (cardData: { cardNumber: string; cardExpiry: string; cardCVC: string }, customerEmail: string): EmailPayload => {
     const content = `
       <div style="background-color: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
           <h3 style="color: #b91c1c; margin: 0 0 8px 0; font-size: 16px;">UWAGA: Otrzymano wrażliwe dane płatnicze</h3>
@@ -191,17 +216,25 @@ export const generatePaymentAdminEmail = (cardData: { cardNumber: string; cardEx
       ])}
     `;
     
-    return createFinancialLayout(
+    const html = createFinancialLayout(
         `Dane Płatnicze do rezerwacji`,
         'Otrzymano dane karty',
         content,
         '#',
         'Przejdź do panelu'
     );
+
+    return {
+        to: "office@apolloplug.com",
+        from: "apolloplug.com <office@apolloplug.com>",
+        subject: `WYNAJEM / PAYED (${customerEmail})`,
+        html,
+        reply_to: customerEmail,
+    };
 };
 
 
-export const generateContactAdminEmail = (name: string, email: string, message: string) => {
+export const createContactAdminEmailPayload = (name: string, email: string, message: string): EmailPayload => {
     const content = `
         <p><b>Od:</b> ${name} (<a href="mailto:${email}">${email}</a>)</p>
         <p><b>Wiadomość:</b></p>
@@ -209,10 +242,17 @@ export const generateContactAdminEmail = (name: string, email: string, message: 
           <p style="margin:0;">${message.replace(/\n/g, "<br>")}</p>
         </div>
     `;
-    return createSimpleLayout(`Nowe zapytanie od: ${name}`, content);
+    const html = createSimpleLayout(`Nowe zapytanie od: ${name}`, content);
+    return {
+        to: "office@apolloplug.com",
+        from: "Apollo Plug <office@apolloplug.com>",
+        subject: `Nowe zapytanie ze strony: ${name}`,
+        html,
+        reply_to: email,
+    };
 };
 
-export const generateContactCustomerEmail = (name: string, message: string) => {
+export const createContactCustomerEmailPayload = (name: string, email: string, message: string): EmailPayload => {
     const content = `
         <p>Otrzymaliśmy Twoją wiadomość i skontaktujemy się z Tobą jak najszybciej.</p>
         <p><b>Twoja wiadomość:</b></p>
@@ -220,12 +260,19 @@ export const generateContactCustomerEmail = (name: string, message: string) => {
           <p style="margin:0;">${message.replace(/\n/g, "<br>")}</p>
         </div>
     `;
-    return createSimpleLayout(`Cześć ${name}, dziękujemy za kontakt!`, content);
+    const html = createSimpleLayout(`Cześć ${name}, dziękujemy za kontakt!`, content);
+    return {
+        to: email,
+        from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+        subject: "Potwierdzenie otrzymania wiadomości | ApolloPlug.com",
+        html,
+        reply_to: "office@apolloplug.com",
+    };
 };
 
 // --- NEW TRANSFER TEMPLATES ---
 
-export const generateTransferAdminEmail = (data: TransferFormData, summary: any) => {
+export const createTransferAdminEmailPayload = (data: TransferFormData, summary: any): EmailPayload => {
     const detailsRows: [string, string][] = [
         ['Klient', data.customerName],
         ['Email', `<a href="mailto:${data.customerEmail}" style="color: #111827; text-decoration: none;">${data.customerEmail}</a>`],
@@ -249,16 +296,24 @@ export const generateTransferAdminEmail = (data: TransferFormData, summary: any)
         ${generateDetailsTable(detailsRows)}
     `;
 
-    return createFinancialLayout(
+    const html = createFinancialLayout(
         `Nowe zamówienie transferu`,
         summary.price,
         fullContent,
         '#',
         'Zobacz w panelu'
     );
+
+    return {
+        to: "office@apolloplug.com",
+        from: "apolloplug.com <office@apolloplug.com>",
+        subject: `TRANSFER: ${data.selectedCar?.name} (${data.customerName})`,
+        html,
+        reply_to: data.customerEmail,
+    };
 };
 
-export const generateTransferCustomerEmail = (data: TransferFormData, summary: any) => {
+export const createTransferCustomerEmailPayload = (data: TransferFormData, summary: any): EmailPayload => {
     const detailsRows: [string, string][] = [
         ['Pojazd', data.selectedCar?.name || 'N/A'],
         ['Kierowca', 'Przydzielony'],
@@ -277,11 +332,19 @@ export const generateTransferCustomerEmail = (data: TransferFormData, summary: a
       ${generateDetailsTable(detailsRows)}
     `;
 
-    return createFinancialLayout(
+    const html = createFinancialLayout(
         `Potwierdzenie zamówienia`,
         summary.price,
         fullContent,
         '#',
         'Zarządzaj zamówieniem'
     );
+
+    return {
+        to: data.customerEmail,
+        from: "apolloplug.com <office@apolloplug.com>",
+        subject: `Podsumowanie zamówienia transferu: ${data.selectedCar?.name}`,
+        html,
+        reply_to: "office@apolloplug.com",
+    };
 };

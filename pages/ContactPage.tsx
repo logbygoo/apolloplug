@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { InformationCircleIcon } from '../components/HeroIcons';
 import Seo from '../components/Seo';
-import { generateContactAdminEmail, generateContactCustomerEmail } from '../configs/notifications/emailTemplates';
+import { createContactAdminEmailPayload, createContactCustomerEmailPayload } from '../configs/notifications/emailTemplates';
 
 const ContactPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -19,17 +19,11 @@ const ContactPage: React.FC = () => {
 
     try {
       // 1. Send email to admin
-      const adminHtml = generateContactAdminEmail(name, email, message);
+      const adminPayload = createContactAdminEmailPayload(name, email, message);
       const adminResponse = await fetch("https://mail.apolloplug.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: "office@apolloplug.com",
-          from: "Apollo Plug <office@apolloplug.com>",
-          subject: `Nowe zapytanie ze strony: ${name}`,
-          html: adminHtml,
-          reply_to: email,
-        }),
+        body: JSON.stringify(adminPayload),
       });
 
       if (!adminResponse.ok) {
@@ -37,17 +31,11 @@ const ContactPage: React.FC = () => {
       }
 
       // 2. Send confirmation email to customer
-      const customerHtml = generateContactCustomerEmail(name, message);
+      const customerPayload = createContactCustomerEmailPayload(name, email, message);
       const customerResponse = await fetch("https://mail.apolloplug.com", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: email,
-          from: "Apollo Plug <no-reply@mail.apolloplug.com>",
-          subject: "Potwierdzenie otrzymania wiadomości | ApolloPlug.com",
-          html: customerHtml,
-          reply_to: "office@apolloplug.com",
-        }),
+        body: JSON.stringify(customerPayload),
       });
       
       if (!customerResponse.ok) {

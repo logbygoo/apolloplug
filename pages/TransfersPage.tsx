@@ -6,8 +6,8 @@ import { TRANSFERS_CONFIG } from '../configs/transfersConfig';
 import { CreditCardIcon, CheckIcon, ChevronDownIcon, ClockIcon, ArrowRightIcon, CurrencyDollarIcon, CalendarDaysIcon } from '../components/HeroIcons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
-import { generateTransferAdminEmail, generateTransferCustomerEmail } from '../configs/notifications/emailTemplates';
-import { getTransferAdminSms, getTransferCustomerSms } from '../configs/notifications/smsTemplates';
+import { createTransferAdminEmailPayload, createTransferCustomerEmailPayload } from '../configs/notifications/emailTemplates';
+import { createTransferAdminSmsPayload, createTransferCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 
 // Declare the global 'google' object to fix TypeScript errors.
 declare const google: any;
@@ -383,28 +383,25 @@ const TransfersPage: React.FC = () => {
   const handleFinalSubmit = async () => {
     setIsLoading(true);
     try {
+        const adminEmailPayload = createTransferAdminEmailPayload(formData, summary);
         const adminEmailResponse = await fetch("https://mail.apolloplug.com", {
             method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                to: "office@apolloplug.com", from: "apolloplug.com <office@apolloplug.com>",
-                subject: `Nowy transfer: ${formData.selectedCar?.name} (${formData.customerName})`,
-                html: generateTransferAdminEmail(formData, summary), reply_to: formData.customerEmail,
-            }),
+            body: JSON.stringify(adminEmailPayload),
         });
         if (!adminEmailResponse.ok) throw new Error("Admin email failed");
 
         // Fire and forget customer/sms notifications
+        const customerEmailPayload = createTransferCustomerEmailPayload(formData, summary);
         fetch("https://mail.apolloplug.com", {
             method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                to: formData.customerEmail, from: "apolloplug.com <office@apolloplug.com>",
-                subject: `Podsumowanie zamówienia transferu: ${formData.selectedCar?.name}`,
-                html: generateTransferCustomerEmail(formData, summary), reply_to: "office@apolloplug.com",
-            }),
+            body: JSON.stringify(customerEmailPayload),
         }).catch(e => console.warn("Customer email failed", e));
         
-        fetch("https://apollosms.spam01.workers.dev/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ to: "720100600", message: getTransferAdminSms(formData, summary), from: "4628" }) }).catch(e => console.warn("Admin SMS failed", e));
-        fetch("https://apollosms.spam01.workers.dev/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ to: formData.customerPhone, message: getTransferCustomerSms(formData), from: "4628" }) }).catch(e => console.warn("Customer SMS failed", e));
+        const adminSmsPayload = createTransferAdminSmsPayload(formData, summary);
+        fetch("https://apollosms.spam01.workers.dev/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(adminSmsPayload) }).catch(e => console.warn("Admin SMS failed", e));
+        
+        const customerSmsPayload = createTransferCustomerSmsPayload(formData);
+        fetch("https://apollosms.spam01.workers.dev/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(customerSmsPayload) }).catch(e => console.warn("Customer SMS failed", e));
 
         setStep('submitted');
     } catch (error) {
@@ -468,7 +465,7 @@ const TransfersPage: React.FC = () => {
       <div className="container mx-auto px-4 md:px-6 py-12">
         <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
             <div className="lg:col-span-2">
-                <form className="space-y-10" onSubmit={handleNextStep}>
+                <form id="transfer-form" className="space-y-10" onSubmit={handleNextStep}>
                     {step === 'details' && (
                         <>
                             <section>
@@ -573,7 +570,7 @@ const TransfersPage: React.FC = () => {
                         <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-4 mt-2">
                             <span>Do zapłaty</span><span>{summary.price}</span>
                         </div>
-                        <Button size="lg" className="w-full" onClick={handleNextStep} disabled={isLoading || summary.rawPrice <= 0}>{getButtonText()}</Button>
+                        <Button form="transfer-form" type="submit" size="lg" className="w-full" disabled={isLoading || summary.rawPrice <= 0}>{getButtonText()}</Button>
                         {step === 'customer' && <Button onClick={() => setStep('details')} variant="secondary" className="w-full" type="button" disabled={isLoading}>Wróć do szczegółów</Button>}
                         {step === 'payment' && <Button onClick={() => setStep('customer')} variant="secondary" className="w-full" type="button" disabled={isLoading}>Wróć do danych</Button>}
                     </div>

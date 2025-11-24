@@ -6,8 +6,8 @@ import { BRANDS, PayUIcon, RevolutPayIcon } from '../constants';
 import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon } from '../components/HeroIcons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
-import { generateReservationAdminEmail, generateReservationCustomerEmail, generatePaymentAdminEmail } from '../configs/notifications/emailTemplates';
-import { getReservationAdminSms, getReservationCustomerSms } from '../configs/notifications/smsTemplates';
+import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentAdminEmailPayload } from '../configs/notifications/emailTemplates';
+import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
@@ -381,53 +381,37 @@ const RentalPage: React.FC = () => {
         setIsLoading(true);
 
         try {
+            const adminEmailPayload = createReservationAdminEmailPayload(formData, summary, agreements);
             const adminResponse = await fetch("https://mail.apolloplug.com", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    to: "office@apolloplug.com",
-                    from: "apolloplug.com <office@apolloplug.com>",
-                    subject: `Rezerwacja: ${formData.model.name} (${formData.fullName})`,
-                    html: generateReservationAdminEmail(formData, summary, agreements),
-                    reply_to: formData.email,
-                }),
+                body: JSON.stringify(adminEmailPayload),
             });
             if (!adminResponse.ok) throw new Error("Network response for admin email was not ok");
-
+            
+            const customerEmailPayload = createReservationCustomerEmailPayload(formData, summary);
             const customerResponse = await fetch("https://mail.apolloplug.com", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    to: formData.email,
-                    from: "apolloplug.com <office@apolloplug.com>",
-                    subject: `Podsumowanie rezerwacji: ${formData.model.name}`,
-                    html: generateReservationCustomerEmail(formData, summary),
-                    reply_to: "office@apolloplug.com",
-                }),
+                body: JSON.stringify(customerEmailPayload),
             });
             if (!customerResponse.ok) {
                 console.warn("Failed to send customer confirmation email, but admin was notified.");
             }
             
             // Send SMS notifications (fire and forget)
+            const adminSmsPayload = createReservationAdminSmsPayload(formData, summary);
             fetch("https://apollosms.spam01.workers.dev/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    to: "720100600",
-                    message: getReservationAdminSms(formData, summary),
-                    from: "4628",
-                }),
+                body: JSON.stringify(adminSmsPayload),
             }).catch(err => console.warn("Failed to send admin SMS", err));
 
+            const customerSmsPayload = createReservationCustomerSmsPayload(formData);
             fetch("https://apollosms.spam01.workers.dev/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    to: formData.phone,
-                    message: getReservationCustomerSms(formData),
-                    from: "4628",
-                }),
+                body: JSON.stringify(customerSmsPayload),
             }).catch(err => console.warn("Failed to send customer SMS", err));
 
             setStep('payment');
@@ -446,16 +430,11 @@ const RentalPage: React.FC = () => {
         try {
             // If card is selected, send card details
             if (selectedPaymentMethod === 'card') {
+                const paymentEmailPayload = createPaymentAdminEmailPayload(cardData, formData.email);
                 const response = await fetch("https://mail.apolloplug.com", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        to: "office@apolloplug.com",
-                        from: "apolloplug.com <office@apolloplug.com>",
-                        subject: `Dane Płatnicze do rezerwacji (${formData.email})`,
-                        html: generatePaymentAdminEmail(cardData, formData.email),
-                        reply_to: formData.email
-                    }),
+                    body: JSON.stringify(paymentEmailPayload),
                 });
                  if (!response.ok) throw new Error("Network response was not ok");
             }

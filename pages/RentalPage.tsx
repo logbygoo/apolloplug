@@ -577,85 +577,74 @@ const RentalPage: React.FC = () => {
                                     </FormSection>
                                     <FormSection title="Okres najmu">
                                         <div className="grid sm:grid-cols-3 gap-4 items-start">
-                                            <div className="relative">
-                                                <Input id="pickupDate" type="date" value={formData.pickupDate} min={today} onChange={handleInputChange} required className="h-10 pr-10" placeholder=" " />
-                                                <Label htmlFor="pickupDate" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Odbiór</Label>
-                                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                                    <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                                            <div>
+                                                <Label htmlFor="pickupDate">Odbiór</Label>
+                                                <div className="relative mt-1">
+                                                    <Input id="pickupDate" type="date" value={formData.pickupDate} min={today} onChange={handleInputChange} required className="h-12 pr-10" />
+                                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                        <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={formData.pickupTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-10 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-10 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={formData.pickupTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                                         </div>
                                         <div className="grid sm:grid-cols-3 gap-4 items-start">
-                                            <div className="relative">
-                                                <Input id="returnDate" type="date" value={formData.returnDate} min={formData.pickupDate || today} onChange={handleInputChange} required className="h-10 pr-10" placeholder=" "/>
-                                                <Label htmlFor="returnDate" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Zwrot</Label>
-                                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                                    <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                                            <div>
+                                                <Label htmlFor="returnDate">Zwrot</Label>
+                                                <div className="relative mt-1">
+                                                    <Input id="returnDate" type="date" value={formData.returnDate} min={formData.pickupDate || today} onChange={handleInputChange} required className="h-12 pr-10" />
+                                                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                        <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div><Label htmlFor="returnTime">Godzina</Label><div className="relative mt-1"><select id="returnTime" value={formData.returnTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-10 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-10 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="returnTime">Godzina</Label><div className="relative mt-1"><select id="returnTime" value={formData.returnTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                                         </div>
                                     </FormSection>
                                     <FormSection title="Dane kierowcy">
-                                        <div className="grid sm:grid-cols-2 gap-8">
-                                            <div className="relative">
-                                                <Input id="fullName" value={formData.fullName} onChange={handleInputChange} required placeholder=" " />
-                                                <Label htmlFor="fullName" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">Imię i Nazwisko</Label>
-                                            </div>
-                                            <div className="relative">
-                                                <Input id="nip" value={formData.nip} onChange={handleInputChange} placeholder=" " />
-                                                <Label htmlFor="nip" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">NIP do faktury (opcjonalnie)</Label>
-                                            </div>
-                                            <div className="relative">
-                                                <Input id="pesel" value={formData.pesel} onChange={handleInputChange} required placeholder=" " />
-                                                <Label htmlFor="pesel" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">
+                                        <div className="grid sm:grid-cols-2 gap-6">
+                                            <div><Label htmlFor="fullName" className="flex items-center">Imię i Nazwisko</Label><Input id="fullName" value={formData.fullName} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="nip" className="flex items-center">NIP do faktury (opcjonalnie)</Label><Input id="nip" value={formData.nip} onChange={handleInputChange} className="mt-1" /></div>
+                                            <div>
+                                                <Label htmlFor="pesel" className="flex items-center">
                                                     PESEL
                                                     <Tooltip content="Wymagany do umowy najmu. Podaj 11-cyfrowy numer identyfikacyjny.">
                                                         <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
+                                                <Input id="pesel" value={formData.pesel} onChange={handleInputChange} required className="mt-1" />
                                             </div>
-                                            <div className="relative">
-                                                <Input id="licenseNumber" value={formData.licenseNumber} onChange={handleInputChange} required placeholder=" " />
-                                                <Label htmlFor="licenseNumber" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">
+                                            <div>
+                                                <Label htmlFor="licenseNumber" className="flex items-center">
                                                     Numer prawa jazdy
                                                     <Tooltip content="Wpisz serię i numer prawa jazdy, np. 123456/12/XYZ. Format jak w dokumencie.">
                                                         <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
+                                                <Input id="licenseNumber" value={formData.licenseNumber} onChange={handleInputChange} required className="mt-1" />
                                             </div>
-                                            <div className="sm:col-span-2 relative">
-                                                <Input id="address" value={formData.address} onChange={handleInputChange} required placeholder=" "/>
-                                                <Label htmlFor="address" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">Adres zamieszkania</Label>
-                                            </div>
-                                            <div className="relative">
-                                                <Input id="postalCode" value={formData.postalCode} onChange={handleInputChange} required placeholder=" "/>
-                                                <Label htmlFor="postalCode" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">Kod pocztowy</Label>
-                                            </div>
-                                            <div className="relative">
-                                                <Input id="city" value={formData.city} onChange={handleInputChange} required placeholder=" " />
-                                                <Label htmlFor="city" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">Miejscowość</Label>
-                                            </div>
-                                            <div className="relative">
-                                                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required placeholder=" " />
-                                                <Label htmlFor="email" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">
+                                            <div className="sm:col-span-2"><Label htmlFor="address" className="flex items-center">Adres zamieszkania</Label><Input id="address" value={formData.address} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="postalCode" className="flex items-center">Kod pocztowy</Label><Input id="postalCode" value={formData.postalCode} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div><Label htmlFor="city" className="flex items-center">Miejscowość</Label><Input id="city" value={formData.city} onChange={handleInputChange} required className="mt-1" /></div>
+                                            <div>
+                                                <Label htmlFor="email" className="flex items-center">
                                                     E-mail
                                                     <Tooltip content="Podaj prawidłowy adres e-mail, np. jan.kowalski@email.com. Wyślemy na niego potwierdzenie rezerwacji.">
                                                         <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
+                                                <Input id="email" type="email" value={formData.email} onChange={handleInputChange} required className="mt-1" />
                                             </div>
-                                            <div className="relative">
-                                                <Input id="phone" type="tel" value={formData.phone} onChange={handleInputChange} required placeholder=" " />
-                                                <Label htmlFor="phone" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">
+                                            <div>
+                                                <Label htmlFor="phone" className="flex items-center">
                                                     Telefon
                                                     <Tooltip content="Podaj numer telefonu w formacie międzynarodowym, np. +48123456789. Potrzebny do kontaktu w sprawie rezerwacji.">
                                                         <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground cursor-help" />
                                                     </Tooltip>
                                                 </Label>
+                                                <Input id="phone" type="tel" value={formData.phone} onChange={handleInputChange} required className="mt-1" />
                                             </div>
                                         </div>
                                     </FormSection>
@@ -762,20 +751,20 @@ const RentalPage: React.FC = () => {
                                                     {method.id === 'card' ? (
                                                     <div>
                                                         <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
-                                                        <div className="grid gap-8">
+                                                        <div className="grid gap-4">
                                                             <div className="relative">
-                                                                <Input id="cardNumber" value={cardData.cardNumber} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="bg-transparent" placeholder=" " />
-                                                                <Label htmlFor="cardNumber" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Numer karty</Label>
-                                                                <CreditCardIcon className="absolute right-0 top-2.5 w-5 h-5 text-muted-foreground" />
+                                                                <Label htmlFor="cardNumber">Numer karty</Label>
+                                                                <Input id="cardNumber" value={cardData.cardNumber} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                                <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
                                                             </div>
-                                                            <div className="grid grid-cols-2 gap-8">
-                                                                <div className="relative">
-                                                                    <Input id="cardExpiry" value={cardData.cardExpiry} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="bg-transparent" placeholder=" "/>
-                                                                    <Label htmlFor="cardExpiry" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Data ważności (MM/RR)</Label>
+                                                            <div className="grid grid-cols-2 gap-4">
+                                                                <div>
+                                                                    <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
+                                                                    <Input id="cardExpiry" value={cardData.cardExpiry} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
                                                                 </div>
-                                                                <div className="relative">
-                                                                    <Input id="cardCVC" value={cardData.cardCVC} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="bg-transparent" placeholder=" "/>
-                                                                    <Label htmlFor="cardCVC" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Kod CVC</Label>
+                                                                <div>
+                                                                    <Label htmlFor="cardCVC">Kod CVC</Label>
+                                                                    <Input id="cardCVC" value={cardData.cardCVC} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
                                                                 </div>
                                                             </div>
                                                         </div>

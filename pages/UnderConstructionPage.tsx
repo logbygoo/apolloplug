@@ -35,17 +35,17 @@ const UnderConstructionPage: React.FC<UnderConstructionPageProps> = ({ onAuthent
           Pracujemy nad czymś wspaniałym. Wkrótce wrócimy! Wprowadź hasło, aby uzyskać dostęp.
         </p>
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-          <div className="relative">
+          <div>
+            <Label htmlFor="password" className="sr-only">Hasło</Label>
             <Input
               id="password"
               type="password"
-              placeholder=" "
+              placeholder="Wpisz hasło"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               className="text-center"
             />
-             <Label htmlFor="password" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] left-1/2 -translate-x-1/2 peer-focus:left-1/2 peer-focus:-translate-x-1/2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Hasło</Label>
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <Button type="submit" className="w-full" size="lg">

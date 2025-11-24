@@ -184,29 +184,50 @@ const AnimatedTimeline = () => {
     const timelineSteps = [
         {
             icon: KeyIcon,
-            title: "Testy i Wynajem",
-            description: "Umów jazdę próbną lub wynajmij auto, aby bez zobowiązań poczuć, jak jeździ się elektrykiem.",
+            title: "Decyzja o zakupie",
+            description: "To bardzo wazny krok.",
             linkText: "Sprawdź ofertę",
             linkUrl: "/wynajem"
         },
         {
             icon: Cog6ToothIcon,
-            title: "Zamówienie Auta",
-            description: "Pomożemy Ci w konfiguracji i złożeniu zamówienia na Twój wymarzony model, dbając o każdy detal.",
+            title: "Jazda próbna i Testy",
+            description: "Umów się na jazdję próbną lub przejażdżkę z naszym kierowcą albo wynajmij na dzień, tydzień, miesiąc lub dłużej :)",
             linkText: "Zobacz flotę",
             linkUrl: "/flota"
         },
         {
             icon: ShieldCheckIcon,
-            title: "Finansowanie",
-            description: "Zajmiemy się znalezieniem najlepszej oferty ubezpieczenia i finansowania dopasowanej do Twoich potrzeb.",
+            title: "Zamówienie",
+            description: "Złożymy za Ciebie zamówienie i będziemy nadzorować jego przebieg",
             linkText: "Zapytaj o ofertę",
             linkUrl: "/kontakt"
         },
         {
             icon: SparklesIcon,
-            title: "Odbiór Auta",
-            description: "Sfinalizujemy proces, przygotujemy pojazd i umówimy dogodny termin odbioru Twojego nowego samochodu.",
+            title: "Oczekiwanie na VIN",
+            description: "Podczas oczekiwania wynajmuj od nas pojazd na preferencyjnych warunkach na czas oczekiwania.",
+            linkText: "Skontaktuj się",
+            linkUrl: "/kontakt"
+        },
+        {
+            icon: SparklesIcon,
+            title: "Finansowanie",
+            description: "Leasing, Kredyt, Gotówka - pomożemy przy każdej z tych opcji.",
+            linkText: "Skontaktuj się",
+            linkUrl: "/kontakt"
+        },
+        {
+            icon: SparklesIcon,
+            title: "Ubezpieczenie",
+            description: "Pomożemy wybrać najlepsze ubezpieczenie dla Twojego nowego auta.",
+            linkText: "Skontaktuj się",
+            linkUrl: "/kontakt"
+        },
+        {
+            icon: SparklesIcon,
+            title: "Odbiór auta ❤️",
+            description: "Odbierzemy auto i wykonamy wymagane ogledziny auta przy odbiorze ",
             linkText: "Skontaktuj się",
             linkUrl: "/kontakt"
         },

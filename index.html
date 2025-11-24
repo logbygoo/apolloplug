@@ -143,6 +143,79 @@
       box-shadow: 0 0 0 rgba(66, 133, 244, 0.4);
       animation: pulse-dot 2s infinite;
     }
+
+    /* New Vertical Timeline */
+    .timeline-line-bg-vertical, .timeline-line-progress-vertical {
+        position: absolute;
+        left: 2rem; /* Aligns with center of 4rem dot */
+        top: 2rem;  /* Starts at center of first dot */
+        bottom: 2rem; /* Ends at center of last dot */
+        width: 2px;
+        transform: translateX(-50%);
+    }
+    .timeline-line-bg-vertical {
+        background-color: hsl(0 0% 90%);
+        z-index: 1;
+    }
+    .timeline-line-progress-vertical {
+        background-color: hsl(0 0% 10%);
+        z-index: 2;
+        transition: height 0.4s ease-in-out;
+    }
+    .timeline-step-container-vertical {
+        display: flex;
+        align-items: flex-start;
+        cursor: pointer;
+        position: relative; /* To ensure it's on top of lines */
+        z-index: 3;
+    }
+    .timeline-step-vertical {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        background-color: #fff;
+        border: 4px solid hsl(0 0% 90%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        color: hsl(0 0% 45%);
+        flex-shrink: 0;
+        position: relative; /* Added for countdown circle positioning */
+    }
+    .timeline-step-vertical.active {
+        border-color: hsl(0 0% 10%);
+        background-color: hsl(0 0% 10%);
+        color: #fff;
+    }
+    .timeline-content-vertical {
+        margin-left: 1.5rem;
+        padding-top: 0.75rem; /* Adjusted alignment */
+    }
+    .timeline-title-vertical {
+        margin-top: 0;
+        font-weight: 700; /* Bolder */
+        color: hsl(0 0% 45%);
+        transition: color 0.3s ease;
+        font-size: 1.5rem; /* Increased size */
+    }
+    .timeline-title-vertical.active {
+        color: hsl(0 0% 10%);
+    }
+    
+    /* Countdown Animation */
+    @keyframes countdown-drain {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 301.59; } /* 2 * PI * 48 */
+    }
+    .countdown-progress {
+      animation: countdown-drain 5s linear forwards;
+      stroke: #3b82f6; /* Blue color for the countdown */
+    }
+    .timeline-wrapper:hover .countdown-progress {
+      animation-play-state: paused;
+    }
+
 </style>
 </head>
   <body>

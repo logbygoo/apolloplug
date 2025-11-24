@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
-import { BoltIcon, PowerIcon } from '../components/HeroIcons';
+import { BoltIcon, PowerIcon, KeyIcon, Cog6ToothIcon, ShieldCheckIcon, SparklesIcon } from '../components/HeroIcons';
 import Seo from '../components/Seo';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 
@@ -177,6 +177,93 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
   );
 };
 
+const AnimatedTimeline = () => {
+    const [activeStep, setActiveStep] = useState(0);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const timelineSteps = [
+        {
+            icon: KeyIcon,
+            title: "Testy i Wynajem",
+            description: "Umów jazdę próbną lub wynajmij auto, aby bez zobowiązań poczuć, jak jeździ się elektrykiem.",
+        },
+        {
+            icon: Cog6ToothIcon,
+            title: "Zamówienie Auta",
+            description: "Pomożemy Ci w konfiguracji i złożeniu zamówienia na Twój wymarzony model, dbając o każdy detal.",
+        },
+        {
+            icon: ShieldCheckIcon,
+            title: "Finansowanie",
+            description: "Zajmiemy się znalezieniem najlepszej oferty ubezpieczenia i finansowania dopasowanej do Twoich potrzeb.",
+        },
+        {
+            icon: SparklesIcon,
+            title: "Odbiór Auta",
+            description: "Sfinalizujemy proces, przygotujemy pojazd i umówimy dogodny termin odbioru Twojego nowego samochodu.",
+        },
+    ];
+    
+    useEffect(() => {
+        if (isHovered) return;
+
+        const timer = setInterval(() => {
+            setActiveStep(prev => (prev + 1) % timelineSteps.length);
+        }, 5000); // Change step every 5 seconds
+        
+        return () => clearInterval(timer);
+    }, [activeStep, isHovered, timelineSteps.length]);
+
+    const progressHeight = activeStep > 0 ? `${(activeStep / (timelineSteps.length - 1)) * 100}%` : '0%';
+
+    return (
+        <section className="py-12 md:py-20 bg-secondary">
+            <div 
+              className="timeline-wrapper container mx-auto px-4"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+                <div className="text-center mb-12 md:mb-16">
+                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Twoja Droga do Własnego EV</h2>
+                    <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">Z nami przejdziesz przez cały proces bezproblemowo. Od pierwszej jazdy próbnej, aż po odbiór kluczyków.</p>
+                </div>
+
+                <div className="relative max-w-lg mx-auto">
+                    <div className="timeline-line-bg-vertical"></div>
+                    <div className="timeline-line-progress-vertical" style={{ height: progressHeight }}></div>
+                    <div className="space-y-2 relative">
+                        {timelineSteps.map((step, index) => (
+                            <div key={index} className="timeline-step-container-vertical" onClick={() => setActiveStep(index)}>
+                                <div className={`timeline-step-vertical ${index <= activeStep ? 'active' : ''}`}>
+                                    {index === activeStep && (
+                                        <svg key={activeStep} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+12px)] h-[calc(100%+12px)] -rotate-90" viewBox="0 0 100 100">
+                                            <circle
+                                                className="countdown-progress"
+                                                cx="50" cy="50" r="48"
+                                                fill="transparent"
+                                                strokeWidth="4"
+                                                strokeDasharray="301.59"
+                                                strokeDashoffset="0"
+                                            />
+                                        </svg>
+                                    )}
+                                    <step.icon className="w-8 h-8 relative" />
+                                </div>
+                                <div className="timeline-content-vertical">
+                                    <p className={`timeline-title-vertical ${index === activeStep ? 'active' : ''}`}>{step.title}</p>
+                                    <div className={`overflow-hidden transition-all duration-500 ${index === activeStep ? 'max-h-40 mt-2' : 'max-h-0'}`}>
+                                        <p className="text-muted-foreground">{step.description}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
 const loadGoogleMapsScript = (callback: () => void) => {
   if (typeof google !== 'undefined' && google.maps) {
     callback();
@@ -315,6 +402,8 @@ const HomePage: React.FC = () => {
       <HeroSlider />
       
       <HorizontalCarousel items={vehicleCarouselItems} />
+
+      <AnimatedTimeline />
 
       <section className="h-[50vh] w-full bg-zinc-200">
         <GoogleMap />

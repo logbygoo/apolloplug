@@ -57,7 +57,7 @@ export interface TransferFormData {
     pickupTime: string;
     pickupAddress: any | null;
     destinationAddress: any | null;
-    transferType: 'self' | 'someone' | 'package' | 'hourly';
+    transferType: 'someone' | 'package' | 'hourly';
     selectedCar: Car | null;
     selectedPackage: HourlyPackage | null;
     customerName: string;
@@ -169,7 +169,7 @@ const TransfersPage: React.FC = () => {
     pickupTime: getInitialPickupTime(),
     pickupAddress: null,
     destinationAddress: null,
-    transferType: 'self',
+    transferType: 'someone',
     selectedCar: RENTAL_CARS.find(c => c.available) || null,
     selectedPackage: null,
     customerName: '',
@@ -471,7 +471,6 @@ const TransfersPage: React.FC = () => {
                             <section>
                                 <div className="flex flex-wrap items-center gap-4 mb-8">
                                     <span className='font-medium text-sm text-muted-foreground'>Wybierz rodzaj podróży</span>
-                                    <button type="button" onClick={() => setFormValue('transferType', 'self')} className={pillButtonClasses(formData.transferType === 'self')}>Dla siebie</button>
                                     <button type="button" onClick={() => setFormValue('transferType', 'someone')} className={pillButtonClasses(formData.transferType === 'someone')}>Dla kogoś</button>
                                     <button type="button" onClick={() => setFormValue('transferType', 'package')} className={pillButtonClasses(formData.transferType === 'package')}>Paczka</button>
                                     <button type="button" onClick={() => setFormValue('transferType', 'hourly')} className={pillButtonClasses(formData.transferType === 'hourly')}>Kierowca na godziny</button>

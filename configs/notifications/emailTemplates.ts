@@ -11,6 +11,22 @@ interface EmailPayload {
   reply_to?: string;
 }
 
+// ============================================================================
+// === BAZOWE SZABLONY I FUNKCJE POMOCNICZE
+// ============================================================================
+
+/**
+ * ----------------------------------------------------------------------------
+ * Główny szablon "Finansowy"
+ * ----------------------------------------------------------------------------
+ * Używany do powiadomień transakcyjnych, które zawierają kwotę i przycisk akcji.
+ * @param title - Główny tytuł wiadomości (np. "Potwierdzenie rezerwacji")
+ * @param mainAmount - Kluczowa kwota do wyświetlenia (np. "1 234,56 zł")
+ * @param content - Główna treść HTML wiadomości (np. tabela ze szczegółami)
+ * @param buttonUrl - URL dla przycisku akcji
+ * @param buttonText - Tekst na przycisku akcji
+ * @returns Pełny kod HTML emaila.
+ */
 const createFinancialLayout = (title: string, mainAmount: string, content: string, buttonUrl: string = '#', buttonText: string = 'Zarządzaj rezerwacją') => `
 <!DOCTYPE html>
 <html lang="pl">
@@ -65,7 +81,7 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
                     <tr>
                         <td align="center" style="padding: 24px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
                             <p style="margin: 0 0 8px 0;">Masz pytania? Skontaktuj się z nami pod adresem <a href="mailto:office@apolloplug.com" style="color: #111827; text-decoration: none;">office@apolloplug.com</a></p>
-                            <p style="margin: 0;">ApolloPlug.com &copy; ${new Date().getFullYear()}</p>
+                            <p style="margin: 0;">apolloplug.com &copy; ${new Date().getFullYear()}</p>
                         </td>
                     </tr>
                 </table>
@@ -76,7 +92,15 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
 </html>
 `;
 
-
+/**
+ * ----------------------------------------------------------------------------
+ * Szablon prosty
+ * ----------------------------------------------------------------------------
+ * Używany do prostych powiadomień, np. z formularza kontaktowego.
+ * @param title - Tytuł widoczny w treści emaila.
+ * @param content - Główna treść HTML.
+ * @returns Pełny kod HTML emaila.
+ */
 const createSimpleLayout = (title: string, content: string) => `
   <div style="font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
     <div style="background-color: #000; color: #fff; padding: 20px; text-align: center; font-family: 'Zen Dots', sans-serif;">
@@ -92,8 +116,10 @@ const createSimpleLayout = (title: string, content: string) => `
   </div>
 `;
 
+// Funkcja pomocnicza do formatowania daty
 const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
 
+// Funkcja pomocnicza do generowania tabeli ze szczegółami
 const generateDetailsTable = (rows: [string, string][]) => {
     return `
     <table width="100%" cellPadding="0" cellSpacing="0" style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
@@ -106,11 +132,20 @@ const generateDetailsTable = (rows: [string, string][]) => {
     </table>`;
 };
 
+// ============================================================================
+// === POWIADOMIENIA Z WYNAJMU (RENTAL)
+// ============================================================================
+
+/**
+ * WYNAJEM (Admin): Nowa rezerwacja
+ * Wysyłane do administratora po złożeniu przez klienta rezerwacji wynajmu.
+ */
 export const createReservationAdminEmailPayload = (
     data: FormData, 
     summary: any,
     agreements: { terms: boolean; marketing: boolean; commercial: boolean }
 ): EmailPayload => {
+    // --- Budowanie treści (body) ---
     const detailsRows: [string, string][] = [
         ['Model pojazdu', data.model.name],
         ['Odbiór', `${formatDate(data.pickupDate)} o ${data.pickupTime} w ${data.pickupLocation}`],
@@ -162,6 +197,7 @@ export const createReservationAdminEmailPayload = (
         fullContent
     );
 
+    // --- Konfiguracja i zwrot payloadu ---
     return {
         to: "office@apolloplug.com",
         from: "apolloplug.com <office@apolloplug.com>",
@@ -171,7 +207,12 @@ export const createReservationAdminEmailPayload = (
     };
 };
 
+/**
+ * WYNAJEM (Klient): Potwierdzenie otrzymania rezerwacji
+ * Wysyłane do klienta po pomyślnym złożeniu rezerwacji (przed płatnością).
+ */
 export const createReservationCustomerEmailPayload = (data: FormData, summary: any): EmailPayload => {
+    // --- Budowanie treści (body) ---
     const content = generateDetailsTable([
         ['Model pojazdu', data.model.name],
         ['Termin odbioru', `${formatDate(data.pickupDate)} o ${data.pickupTime}`],
@@ -193,6 +234,7 @@ export const createReservationCustomerEmailPayload = (data: FormData, summary: a
         fullContent
     );
 
+    // --- Konfiguracja i zwrot payloadu ---
     return {
         to: data.email,
         from: "apolloplug.com <office@apolloplug.com>",
@@ -202,7 +244,12 @@ export const createReservationCustomerEmailPayload = (data: FormData, summary: a
     };
 };
 
+/**
+ * WYNAJEM (Admin): Dane płatnicze
+ * Wysyłane do administratora z danymi karty płatniczej klienta.
+ */
 export const createPaymentAdminEmailPayload = (cardData: { cardNumber: string; cardExpiry: string; cardCVC: string }, customerEmail: string): EmailPayload => {
+    // --- Budowanie treści (body) ---
     const content = `
       <div style="background-color: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
           <h3 style="color: #b91c1c; margin: 0 0 8px 0; font-size: 16px;">UWAGA: Otrzymano wrażliwe dane płatnicze</h3>
@@ -224,6 +271,7 @@ export const createPaymentAdminEmailPayload = (cardData: { cardNumber: string; c
         'Przejdź do panelu'
     );
 
+    // --- Konfiguracja i zwrot payloadu ---
     return {
         to: "office@apolloplug.com",
         from: "apolloplug.com <office@apolloplug.com>",
@@ -233,46 +281,16 @@ export const createPaymentAdminEmailPayload = (cardData: { cardNumber: string; c
     };
 };
 
+// ============================================================================
+// === POWIADOMIENIA Z TRANSFERÓW (TRANSFERS)
+// ============================================================================
 
-export const createContactAdminEmailPayload = (name: string, email: string, message: string): EmailPayload => {
-    const content = `
-        <p><b>Od:</b> ${name} (<a href="mailto:${email}">${email}</a>)</p>
-        <p><b>Wiadomość:</b></p>
-        <div style="background-color: #f4f4f4; border-radius: 4px; padding: 15px; border-left: 3px solid #ccc;">
-          <p style="margin:0;">${message.replace(/\n/g, "<br>")}</p>
-        </div>
-    `;
-    const html = createSimpleLayout(`Nowe zapytanie od: ${name}`, content);
-    return {
-        to: "office@apolloplug.com",
-        from: "Apollo Plug <office@apolloplug.com>",
-        subject: `Nowe zapytanie ze strony: ${name}`,
-        html,
-        reply_to: email,
-    };
-};
-
-export const createContactCustomerEmailPayload = (name: string, email: string, message: string): EmailPayload => {
-    const content = `
-        <p>Otrzymaliśmy Twoją wiadomość i skontaktujemy się z Tobą jak najszybciej.</p>
-        <p><b>Twoja wiadomość:</b></p>
-        <div style="background-color: #f4f4f4; border-radius: 4px; padding: 15px; border-left: 3px solid #ccc;">
-          <p style="margin:0;">${message.replace(/\n/g, "<br>")}</p>
-        </div>
-    `;
-    const html = createSimpleLayout(`Cześć ${name}, dziękujemy za kontakt!`, content);
-    return {
-        to: email,
-        from: "Apollo Plug <no-reply@mail.apolloplug.com>",
-        subject: "Potwierdzenie otrzymania wiadomości | ApolloPlug.com",
-        html,
-        reply_to: "office@apolloplug.com",
-    };
-};
-
-// --- NEW TRANSFER TEMPLATES ---
-
+/**
+ * TRANSFER (Admin): Nowe zamówienie
+ * Wysyłane do administratora po zamówieniu transferu przez klienta.
+ */
 export const createTransferAdminEmailPayload = (data: TransferFormData, summary: any): EmailPayload => {
+    // --- Budowanie treści (body) ---
     const detailsRows: [string, string][] = [
         ['Klient', data.customerName],
         ['Email', `<a href="mailto:${data.customerEmail}" style="color: #111827; text-decoration: none;">${data.customerEmail}</a>`],
@@ -303,7 +321,8 @@ export const createTransferAdminEmailPayload = (data: TransferFormData, summary:
         '#',
         'Zobacz w panelu'
     );
-
+    
+    // --- Konfiguracja i zwrot payloadu ---
     return {
         to: "office@apolloplug.com",
         from: "apolloplug.com <office@apolloplug.com>",
@@ -313,7 +332,12 @@ export const createTransferAdminEmailPayload = (data: TransferFormData, summary:
     };
 };
 
+/**
+ * TRANSFER (Klient): Potwierdzenie zamówienia
+ * Wysyłane do klienta po pomyślnym zamówieniu transferu.
+ */
 export const createTransferCustomerEmailPayload = (data: TransferFormData, summary: any): EmailPayload => {
+    // --- Budowanie treści (body) ---
     const detailsRows: [string, string][] = [
         ['Pojazd', data.selectedCar?.name || 'N/A'],
         ['Kierowca', 'Przydzielony'],
@@ -340,10 +364,65 @@ export const createTransferCustomerEmailPayload = (data: TransferFormData, summa
         'Zarządzaj zamówieniem'
     );
 
+    // --- Konfiguracja i zwrot payloadu ---
     return {
         to: data.customerEmail,
         from: "apolloplug.com <office@apolloplug.com>",
         subject: `Podsumowanie zamówienia transferu: ${data.selectedCar?.name}`,
+        html,
+        reply_to: "office@apolloplug.com",
+    };
+};
+
+// ============================================================================
+// === POWIADOMIENIA Z FORMULARZA KONTAKTOWEGO (CONTACT)
+// ============================================================================
+
+/**
+ * KONTAKT (Admin): Nowe zapytanie
+ * Wysyłane do administratora po wypełnieniu formularza kontaktowego.
+ */
+export const createContactAdminEmailPayload = (name: string, email: string, message: string): EmailPayload => {
+    // --- Budowanie treści (body) ---
+    const content = `
+        <p><b>Od:</b> ${name} (<a href="mailto:${email}">${email}</a>)</p>
+        <p><b>Wiadomość:</b></p>
+        <div style="background-color: #f4f4f4; border-radius: 4px; padding: 15px; border-left: 3px solid #ccc;">
+          <p style="margin:0;">${message.replace(/\n/g, "<br>")}</p>
+        </div>
+    `;
+    const html = createSimpleLayout(`Nowe zapytanie od: ${name}`, content);
+    
+    // --- Konfiguracja i zwrot payloadu ---
+    return {
+        to: "office@apolloplug.com",
+        from: "Apollo Plug <office@apolloplug.com>",
+        subject: `Nowe zapytanie ze strony: ${name}`,
+        html,
+        reply_to: email,
+    };
+};
+
+/**
+ * KONTAKT (Klient): Potwierdzenie otrzymania wiadomości
+ * Wysyłane do klienta jako automatyczna odpowiedź po wysłaniu formularza.
+ */
+export const createContactCustomerEmailPayload = (name: string, email: string, message: string): EmailPayload => {
+    // --- Budowanie treści (body) ---
+    const content = `
+        <p>Otrzymaliśmy Twoją wiadomość i skontaktujemy się z Tobą jak najszybciej.</p>
+        <p><b>Twoja wiadomość:</b></p>
+        <div style="background-color: #f4f4f4; border-radius: 4px; padding: 15px; border-left: 3px solid #ccc;">
+          <p style="margin:0;">${message.replace(/\n/g, "<br>")}</p>
+        </div>
+    `;
+    const html = createSimpleLayout(`Cześć ${name}, dziękujemy za kontakt!`, content);
+    
+    // --- Konfiguracja i zwrot payloadu ---
+    return {
+        to: email,
+        from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+        subject: "Potwierdzenie otrzymania wiadomości | ApolloPlug.com",
         html,
         reply_to: "office@apolloplug.com",
     };

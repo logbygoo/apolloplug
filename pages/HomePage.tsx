@@ -241,7 +241,7 @@ const AnimatedTimeline = () => {
                     <div className="timeline-line-progress-vertical" style={{ height: progressHeight }}></div>
                     <div className="space-y-2 relative">
                         {timelineSteps.map((step, index) => (
-                            <div key={index} className="timeline-step-container-vertical mb-4" onClick={() => setActiveStep(index)}>
+                            <div key={index} className="timeline-step-container-vertical mb-10" onClick={() => setActiveStep(index)}>
                                 <div className={`timeline-step-vertical ${index <= activeStep ? 'active' : ''}`}>
                                     {index === activeStep && (
                                         <svg key={activeStep} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+12px)] h-[calc(100%+12px)] -rotate-90" viewBox="0 0 100 100">

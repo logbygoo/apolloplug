@@ -122,10 +122,10 @@ const HeroSlider: React.FC = () => {
       </div>
 
       <button onClick={goToPrevious} className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
       </button>
       <button onClick={goToNext} className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
     </section>
   );
@@ -179,77 +179,79 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
 
 const AnimatedTimeline = () => {
     const [activeStep, setActiveStep] = useState(0);
-    const [isHovered, setIsHovered] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     const timelineSteps = [
         {
             icon: KeyIcon,
             title: "Decyzja o zakupie",
-            description: "To moment, w którym zaczyna się cała przygoda. Jeśli zastanawiasz się nad wejściem w świat elektryków, pomożemy Ci przejść przez pierwsze pytania i wątpliwości. Wyjaśnimy jak wygląda codzienna jazda, ładowanie i koszty. Dostaniesz konkretne wskazówki, które pozwolą Ci świadomie wybrać auto, które naprawdę będzie Ci pasowało."
+            description: "To moment, w którym zaczyna się cała przygoda. Jeśli zastanawiasz się nad wejściem w świat elektryków, pomożemy Ci przejść przez pierwsze pytania i wątpliwości. Wyjaśnimy jak wygląda codzienna jazda, ładowanie i koszty. Dostaniesz konkretne wskazówki, które pozwolą Ci świadomie wybrać auto, które naprawdę będzie Ci pasowało.",
+            buttons: [],
         },
         {
             icon: Cog6ToothIcon,
             title: "Jazda próbna i Testy",
-            description: "Umów się na jazdję próbną lub przejażdżkę z naszym kierowcą albo wynajmij na dzień, tydzień, miesiąc lub dłużej :)",
-            linkText: "Zobacz flotę",
-            linkUrl: "/flota"
+            description: "Trudno podjąć decyzję, jeśli nie poczujesz auta na żywo. Umówimy Cię na jazdę próbną, żebyś spokojnie sprawdził jak auto przyspiesza i zachowuje się w mieście. Możesz też wynająć je na dzień, tydzień albo dłużej, aby poznać je w prawdziwych, codziennych sytuacjach.",
+            buttons: [
+                { text: "Wynajmij EV", url: "/wynajem" },
+                { text: "Zamów z kierowcą", url: "/transfery" }
+            ]
         },
         {
             icon: ShieldCheckIcon,
             title: "Zamówienie",
-            description: "Złożymy za Ciebie zamówienie i będziemy nadzorować jego przebieg",
-            linkText: "Zapytaj o ofertę",
-            linkUrl: "/kontakt"
+            description: "Kiedy wybór jest już pewny, bierzemy na siebie cały proces zamawiania auta. Pilnujemy formalności i sprawdzamy kolejne etapy realizacji. Masz stały kontakt i wiesz, co dzieje się z Twoim zamówieniem, ale nie musisz zajmować się papierologią.",
+            buttons: [
+                { text: "Kup z ApolloPlug", url: "/zakup" }
+            ]
         },
         {
             icon: SparklesIcon,
             title: "Oczekiwanie na VIN",
-            description: "Podczas oczekiwania wynajmuj od nas pojazd na preferencyjnych warunkach na czas oczekiwania.",
-            linkText: "Skontaktuj się",
-            linkUrl: "/kontakt"
+            description: "Czas oczekiwania bywa nużący, dlatego w tym okresie możesz korzystać z auta od nas. Dostajesz je na preferencyjnych warunkach, żebyś mógł swobodnie jeździć i nie martwić się o zastępstwo. To wygodne rozwiązanie, dzięki któremu spokojnie doczekasz właściwego samochodu.",
+            buttons: [
+                { text: "Wynajem", url: "/wynajem" }
+            ]
         },
         {
             icon: SparklesIcon,
             title: "Finansowanie",
-            description: "Leasing, Kredyt, Gotówka - pomożemy przy każdej z tych opcji.",
-            linkText: "Skontaktuj się",
-            linkUrl: "/kontakt"
+            description: "Wspólnie przeanalizujemy różne formy finansowania, żeby dobrać tę, która będzie wygodna i przejrzysta. Leasing, kredyt lub płatność gotówką – każda opcja ma swoje plusy. Współpracujemy z wieloma firmami, więc możesz liczyć na konkretne propozycje.",
+            buttons: [
+                { text: "Zapytaj o finansowanie", url: "/kontakt" }
+            ]
         },
         {
             icon: SparklesIcon,
             title: "Ubezpieczenie",
-            description: "Pomożemy wybrać najlepsze ubezpieczenie dla Twojego nowego auta.",
-            linkText: "Skontaktuj się",
-            linkUrl: "/kontakt"
+            description: "Dobre ubezpieczenie daje spokój już od pierwszego dnia. Pomożemy Ci wybrać polisę dopasowaną do Twoich potrzeb i wartości auta. Przejdziemy przez kilka wariantów, żebyś wiedział, czym różnią się poszczególne opcje.",
+            buttons: [
+                { text: "Sprawdź oferty", url: "/ubezpieczenia" }
+            ]
         },
         {
             icon: SparklesIcon,
             title: "Odbiór auta ❤️",
-            description: "Odbierzemy auto i wykonamy wymagane ogledziny auta przy odbiorze ",
-            linkText: "Skontaktuj się",
-            linkUrl: "/kontakt"
+            description: "Kiedy auto w końcu dociera, chcemy żeby ten moment był dla Ciebie przyjemny i bezstresowy. Możemy pojechać z Tobą na odbiór i dopilnować oględzin, albo zrobić to za Ciebie i dostarczyć samochód pod wskazany adres.",
+            buttons: [],
         },
     ];
     
     useEffect(() => {
-        if (isHovered) return;
+        if (isPaused) return;
 
         const timer = setInterval(() => {
             setActiveStep(prev => (prev + 1) % timelineSteps.length);
         }, 5000); // Change step every 5 seconds
         
         return () => clearInterval(timer);
-    }, [activeStep, isHovered, timelineSteps.length]);
+    }, [activeStep, isPaused, timelineSteps.length]);
 
     const progressHeight = activeStep > 0 ? `${(activeStep / (timelineSteps.length - 1)) * 100}%` : '0%';
 
     return (
         <section className="py-12 md:py-20 bg-secondary">
-            <div 
-              className="timeline-wrapper container mx-auto px-4"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
+            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Twoja Droga do Własnego EV</h2>
                     <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">Z nami przejdziesz przez cały proces bezproblemowo. Od pierwszej jazdy próbnej, aż po odbiór kluczyków.</p>
@@ -258,18 +260,30 @@ const AnimatedTimeline = () => {
                 <div className="relative max-w-lg mx-auto">
                     <div className="timeline-line-bg-vertical"></div>
                     <div className="timeline-line-progress-vertical" style={{ height: progressHeight }}></div>
-                    <div className="space-y-2 relative">
+                    <div className="space-y-12 relative">
                         {timelineSteps.map((step, index) => (
-                            <div key={index} className="timeline-step-container-vertical mb-10" onClick={() => setActiveStep(index)}>
+                            <div 
+                                key={index} 
+                                className="timeline-step-container-vertical" 
+                                onClick={() => setActiveStep(index)}
+                                onMouseEnter={() => {
+                                    if (index === activeStep) {
+                                        setIsPaused(true);
+                                    }
+                                }}
+                                onMouseLeave={() => {
+                                    setIsPaused(false);
+                                }}
+                            >
                                 <div className={`timeline-step-vertical ${index <= activeStep ? 'active' : ''}`}>
                                     {index === activeStep && (
                                         <svg key={activeStep} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+12px)] h-[calc(100%+12px)] -rotate-90" viewBox="0 0 100 100">
                                             <circle
                                                 className="countdown-progress"
-                                                cx="50" cy="50" r="48"
+                                                cx="50" cy="50" r="49.5"
                                                 fill="transparent"
-                                                strokeWidth="4"
-                                                strokeDasharray="301.59"
+                                                strokeWidth="2"
+                                                strokeDasharray="311.02"
                                                 strokeDashoffset="0"
                                             />
                                         </svg>
@@ -278,11 +292,21 @@ const AnimatedTimeline = () => {
                                 </div>
                                 <div className="timeline-content-vertical">
                                     <p className={`timeline-title-vertical ${index === activeStep ? 'active' : ''}`}>{step.title}</p>
-                                    <div className={`overflow-hidden transition-all duration-500 ${index === activeStep ? 'max-h-48 mt-2' : 'max-h-0'}`}>
+                                    <div className={`overflow-hidden transition-all duration-500 ${index === activeStep ? 'max-h-96 mt-2' : 'max-h-0'}`}>
                                         <p className="text-muted-foreground">{step.description}</p>
-                                        <Link to={step.linkUrl} className="mt-4 inline-block bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium px-4 py-2 rounded-full">
-                                            {step.linkText}
-                                        </Link>
+                                        {step.buttons && step.buttons.length > 0 && (
+                                            <div className="mt-4 flex flex-wrap gap-3">
+                                                {step.buttons.map((button, btnIndex) => (
+                                                    <Link 
+                                                        key={btnIndex}
+                                                        to={button.url} 
+                                                        className="inline-block bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium px-4 py-2 rounded-full"
+                                                    >
+                                                        {button.text}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>

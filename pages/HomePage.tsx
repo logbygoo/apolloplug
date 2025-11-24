@@ -185,9 +185,7 @@ const AnimatedTimeline = () => {
         {
             icon: KeyIcon,
             title: "Decyzja o zakupie",
-            description: "To bardzo wazny krok.",
-            linkText: "Sprawdź ofertę",
-            linkUrl: "/wynajem"
+            description: "To moment, w którym zaczyna się cała przygoda. Jeśli zastanawiasz się nad wejściem w świat elektryków, pomożemy Ci przejść przez pierwsze pytania i wątpliwości. Wyjaśnimy jak wygląda codzienna jazda, ładowanie i koszty. Dostaniesz konkretne wskazówki, które pozwolą Ci świadomie wybrać auto, które naprawdę będzie Ci pasowało."
         },
         {
             icon: Cog6ToothIcon,

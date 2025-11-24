@@ -186,21 +186,29 @@ const AnimatedTimeline = () => {
             icon: KeyIcon,
             title: "Testy i Wynajem",
             description: "Umów jazdę próbną lub wynajmij auto, aby bez zobowiązań poczuć, jak jeździ się elektrykiem.",
+            linkText: "Sprawdź ofertę",
+            linkUrl: "/wynajem"
         },
         {
             icon: Cog6ToothIcon,
             title: "Zamówienie Auta",
             description: "Pomożemy Ci w konfiguracji i złożeniu zamówienia na Twój wymarzony model, dbając o każdy detal.",
+            linkText: "Zobacz flotę",
+            linkUrl: "/flota"
         },
         {
             icon: ShieldCheckIcon,
             title: "Finansowanie",
             description: "Zajmiemy się znalezieniem najlepszej oferty ubezpieczenia i finansowania dopasowanej do Twoich potrzeb.",
+            linkText: "Zapytaj o ofertę",
+            linkUrl: "/kontakt"
         },
         {
             icon: SparklesIcon,
             title: "Odbiór Auta",
             description: "Sfinalizujemy proces, przygotujemy pojazd i umówimy dogodny termin odbioru Twojego nowego samochodu.",
+            linkText: "Skontaktuj się",
+            linkUrl: "/kontakt"
         },
     ];
     
@@ -233,7 +241,7 @@ const AnimatedTimeline = () => {
                     <div className="timeline-line-progress-vertical" style={{ height: progressHeight }}></div>
                     <div className="space-y-2 relative">
                         {timelineSteps.map((step, index) => (
-                            <div key={index} className="timeline-step-container-vertical" onClick={() => setActiveStep(index)}>
+                            <div key={index} className="timeline-step-container-vertical mb-4" onClick={() => setActiveStep(index)}>
                                 <div className={`timeline-step-vertical ${index <= activeStep ? 'active' : ''}`}>
                                     {index === activeStep && (
                                         <svg key={activeStep} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%+12px)] h-[calc(100%+12px)] -rotate-90" viewBox="0 0 100 100">
@@ -251,8 +259,11 @@ const AnimatedTimeline = () => {
                                 </div>
                                 <div className="timeline-content-vertical">
                                     <p className={`timeline-title-vertical ${index === activeStep ? 'active' : ''}`}>{step.title}</p>
-                                    <div className={`overflow-hidden transition-all duration-500 ${index === activeStep ? 'max-h-40 mt-2' : 'max-h-0'}`}>
+                                    <div className={`overflow-hidden transition-all duration-500 ${index === activeStep ? 'max-h-48 mt-2' : 'max-h-0'}`}>
                                         <p className="text-muted-foreground">{step.description}</p>
+                                        <Link to={step.linkUrl} className="mt-4 inline-block bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium px-4 py-2 rounded-full">
+                                            {step.linkText}
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

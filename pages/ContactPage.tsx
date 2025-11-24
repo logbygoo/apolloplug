@@ -55,7 +55,7 @@ const ContactPage: React.FC = () => {
     ({ className, ...props }, ref) => {
         return (
             <textarea
-                className={`block min-h-[140px] w-full rounded-md bg-secondary p-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+                className={`block py-2.5 px-0 w-full text-sm text-foreground bg-transparent border-0 border-b-2 border-border appearance-none focus:outline-none focus:ring-0 focus:border-primary peer min-h-[140px] ${className}`}
                 ref={ref}
                 {...props}
             />
@@ -102,25 +102,25 @@ const ContactPage: React.FC = () => {
                   <Button onClick={() => setSubmitted(false)} variant="secondary" className="mt-6">Napisz kolejną</Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <Label htmlFor="name" className="flex items-center">
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <div className="relative">
+                    <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required placeholder=" " />
+                    <Label htmlFor="name" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                       Imię i nazwisko
                     </Label>
-                    <Input id="name" type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1" />
                   </div>
-                   <div>
-                    <Label htmlFor="email" className="flex items-center">
+                   <div className="relative">
+                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder=" " />
+                    <Label htmlFor="email" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 flex items-center">
                       E-mail
                       <InformationCircleIcon className="w-4 h-4 ml-1.5 text-muted-foreground" />
                     </Label>
-                    <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1" />
                   </div>
-                  <div>
-                     <Label htmlFor="message" className="flex items-center">
+                  <div className="relative">
+                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required placeholder=" "/>
+                     <Label htmlFor="message" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                       Wiadomość
                     </Label>
-                    <Textarea id="message" value={message} onChange={e => setMessage(e.target.value)} required className="mt-1" />
                   </div>
                   {error && <p className="text-sm text-destructive">{error}</p>}
                   <Button type="submit" className="w-full" size="lg" disabled={isLoading}>

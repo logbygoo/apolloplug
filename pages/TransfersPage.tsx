@@ -415,18 +415,18 @@ const TransfersPage: React.FC = () => {
     const getButtonText = () => {
         if (isLoading) return 'Przetwarzanie...';
         switch (step) {
-            case 'details': return 'Zamawiam';
-            case 'customer': return 'Opłać zamówienie';
-            case 'payment': return 'Zapłać';
+            case 'details': return 'Przejdź do danych';
+            case 'customer': return 'Przejdź do płatności';
+            case 'payment': return 'Zapłać i zamów';
             default: return '';
         }
     };
     
     const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(({ className, ...props }, ref) => (
-        <textarea
-            className={`block min-h-[120px] w-full rounded-md bg-secondary p-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
-            ref={ref} {...props}
-        />
+      <textarea
+        className={`block py-2.5 px-0 w-full text-sm text-foreground bg-transparent border-0 border-b-2 border-border appearance-none focus:outline-none focus:ring-0 focus:border-primary peer min-h-[120px] ${className}`}
+        ref={ref} {...props}
+      />
     ));
 
     if (step === 'submitted') {
@@ -476,25 +476,30 @@ const TransfersPage: React.FC = () => {
                                     <button type="button" onClick={() => setFormValue('transferType', 'hourly')} className={pillButtonClasses(formData.transferType === 'hourly')}>Kierowca na godziny</button>
                                 </div>
                                 <div className="space-y-6">
-                                    <div>
-                                        <Label htmlFor="pickupDate">Kiedy</Label>
-                                        <div className="grid sm:grid-cols-2 gap-4 mt-1">
-                                            <div className="relative"><Input id="pickupDate" type="date" value={formData.pickupDate} onChange={e => setFormValue('pickupDate', e.target.value)} min={today} required className="pr-10" /><div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"><CalendarDaysIcon className="h-5 w-5 text-muted-foreground" /></div></div>
-                                            <div className="relative"><select id="pickupTime" value={formData.pickupTime} onChange={e => setFormValue('pickupTime', e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none" required>{availableTimeOptions.length > 0 ? availableTimeOptions.map(t => <option key={t} value={t}>{t}</option>) : <option disabled>Brak dostępnych godzin</option>}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div>
+                                    <div className="grid sm:grid-cols-2 gap-4">
+                                        <div className="relative">
+                                            <Input id="pickupDate" type="date" value={formData.pickupDate} onChange={e => setFormValue('pickupDate', e.target.value)} min={today} required className="pr-10 h-10" />
+                                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"><CalendarDaysIcon className="h-5 w-5 text-muted-foreground" /></div>
+                                        </div>
+                                        <div className="relative">
+                                            <select id="pickupTime" value={formData.pickupTime} onChange={e => setFormValue('pickupTime', e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-10 appearance-none" required>{availableTimeOptions.length > 0 ? availableTimeOptions.map(t => <option key={t} value={t}>{t}</option>) : <option disabled>Brak dostępnych godzin</option>}</select>
+                                            <ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/>
                                         </div>
                                     </div>
-                                    <div>
-                                        <Label htmlFor="pickupAddress">Skąd</Label>
-                                        <div className="relative mt-1"><div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><div className="w-2.5 h-2.5 bg-muted-foreground rounded-full" /></div><Input id="pickupAddress" ref={pickupInputRef} placeholder="Wpisz adres początkowy" required className="pl-10" /></div>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><div className="w-2.5 h-2.5 bg-muted-foreground rounded-full" /></div>
+                                        <Input id="pickupAddress" ref={pickupInputRef} placeholder=" " required className="pl-10" />
+                                        <Label htmlFor="pickupAddress" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] start-10 peer-focus:start-10 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Skąd</Label>
                                     </div>
                                     {formData.transferType !== 'hourly' ? (
-                                        <div>
-                                            <Label htmlFor="destinationAddress">Dokąd</Label>
-                                            <div className="relative mt-1"><div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none"><div className="w-2.5 h-2.5 bg-foreground" /></div><Input id="destinationAddress" ref={destinationInputRef} placeholder="Wpisz adres docelowy" required className="pl-10"/></div>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"><div className="w-2.5 h-2.5 bg-foreground" /></div>
+                                            <Input id="destinationAddress" ref={destinationInputRef} placeholder=" " required className="pl-10"/>
+                                            <Label htmlFor="destinationAddress" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] start-10 peer-focus:start-10 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Dokąd</Label>
                                         </div>
                                     ) : (
-                                        <div className="space-y-3">
-                                            <Label>Wybierz pakiet godzin</Label>
+                                        <div className="space-y-3 pt-4">
+                                            <p className="text-sm font-medium">Wybierz pakiet godzin</p>
                                             {hourlyPackages.map(pkg => <PackageCard key={pkg.id} item={pkg} isSelected={formData.selectedPackage?.id === pkg.id} onSelect={() => setFormValue('selectedPackage', pkg)} />)}
                                         </div>
                                     )}
@@ -507,7 +512,12 @@ const TransfersPage: React.FC = () => {
                         </>
                     )}
                     {step === 'customer' && (
-                        <section><h2 className="text-2xl font-bold tracking-tight mb-6">Dane zamawiającego</h2><div className="grid sm:grid-cols-2 gap-6"><div><Label htmlFor="customerName">Imię i nazwisko</Label><Input id="customerName" value={formData.customerName} onChange={e => setFormValue('customerName', e.target.value)} required className="mt-1"/></div><div><Label htmlFor="customerPhone">Telefon</Label><Input id="customerPhone" type="tel" value={formData.customerPhone} onChange={e => setFormValue('customerPhone', e.target.value)} required className="mt-1"/></div><div className="sm:col-span-2"><Label htmlFor="customerEmail">E-mail</Label><Input id="customerEmail" type="email" value={formData.customerEmail} onChange={e => setFormValue('customerEmail', e.target.value)} required className="mt-1"/></div><div className="sm:col-span-2"><Label htmlFor="driverMessage">Wiadomość dla kierowcy</Label><Textarea id="driverMessage" value={formData.driverMessage} onChange={e => setFormValue('driverMessage', e.target.value)} className="mt-1" placeholder="Np. kod do bramy, piętro, numer mieszkania..." /></div><div className="sm:col-span-2 space-y-3"><AgreementCheckbox id="terms" label={<>Akceptuję regulamin świadczenia usług.*</>} isChecked={agreements.terms} onToggle={() => setAgreements(p => ({...p, terms: !p.terms}))} /><AgreementCheckbox id="marketing" label="Wyrażam zgodę na otrzymywanie informacji handlowych." isChecked={agreements.marketing} onToggle={() => setAgreements(p => ({...p, marketing: !p.marketing}))} /></div></div></section>
+                        <section><h2 className="text-2xl font-bold tracking-tight mb-6">Dane zamawiającego</h2><div className="grid sm:grid-cols-2 gap-8">
+                            <div className="relative"><Input id="customerName" placeholder=" " value={formData.customerName} onChange={e => setFormValue('customerName', e.target.value)} required /><Label htmlFor="customerName" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Imię i nazwisko</Label></div>
+                            <div className="relative"><Input id="customerPhone" type="tel" placeholder=" " value={formData.customerPhone} onChange={e => setFormValue('customerPhone', e.target.value)} required /><Label htmlFor="customerPhone" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Telefon</Label></div>
+                            <div className="sm:col-span-2 relative"><Input id="customerEmail" type="email" placeholder=" " value={formData.customerEmail} onChange={e => setFormValue('customerEmail', e.target.value)} required /><Label htmlFor="customerEmail" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">E-mail</Label></div>
+                            <div className="sm:col-span-2 relative"><Textarea id="driverMessage" placeholder=" " value={formData.driverMessage} onChange={e => setFormValue('driverMessage', e.target.value)} /><Label htmlFor="driverMessage" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Wiadomość dla kierowcy (opcjonalnie)</Label></div>
+                            <div className="sm:col-span-2 space-y-3"><AgreementCheckbox id="terms" label={<>Akceptuję regulamin świadczenia usług.*</>} isChecked={agreements.terms} onToggle={() => setAgreements(p => ({...p, terms: !p.terms}))} /><AgreementCheckbox id="marketing" label="Wyrażam zgodę na otrzymywanie informacji handlowych." isChecked={agreements.marketing} onToggle={() => setAgreements(p => ({...p, marketing: !p.marketing}))} /></div></div></section>
                     )}
                     {step === 'payment' && (
                         <section>
@@ -527,20 +537,20 @@ const TransfersPage: React.FC = () => {
                                         <div className="p-6 bg-sky-50 border-t border-sky-300">
                                             <div>
                                                 <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
-                                                <div className="grid gap-4">
+                                                <div className="grid gap-8">
                                                     <div className="relative">
-                                                        <Label htmlFor="cardNumber">Numer karty</Label>
-                                                        <Input id="cardNumber" required className="mt-1 bg-white" />
-                                                        <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
+                                                        <Input id="cardNumber" placeholder=" " required className="bg-transparent" />
+                                                        <Label htmlFor="cardNumber" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Numer karty</Label>
+                                                        <CreditCardIcon className="absolute right-0 top-2.5 w-5 h-5 text-muted-foreground" />
                                                     </div>
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        <div>
-                                                            <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
-                                                            <Input id="cardExpiry" required className="mt-1 bg-white" />
+                                                    <div className="grid grid-cols-2 gap-8">
+                                                        <div className="relative">
+                                                            <Input id="cardExpiry" placeholder=" " required className="bg-transparent" />
+                                                             <Label htmlFor="cardExpiry" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Data ważności (MM/RR)</Label>
                                                         </div>
-                                                        <div>
-                                                            <Label htmlFor="cardCVC">Kod CVC</Label>
-                                                            <Input id="cardCVC" required className="mt-1 bg-white" />
+                                                        <div className="relative">
+                                                            <Input id="cardCVC" placeholder=" " required className="bg-transparent" />
+                                                            <Label htmlFor="cardCVC" className="absolute text-sm text-muted-foreground duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-primary peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Kod CVC</Label>
                                                         </div>
                                                     </div>
                                                 </div>

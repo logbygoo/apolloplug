@@ -414,7 +414,7 @@ const HomePage: React.FC = () => {
 
   const vehicleCarouselItems: CarouselItem[] = [
     {
-      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Model-3-Main-Hero-Desktop-LHD-Animation-Glob",
+      image: "https://img.apolloplug.com/tesla-3/main-cards-tesla-3.jpg",
       category: 'Sportowy sedan',
       title: 'Model 3',
       subtitle: 'Już za 194 990 zł',
@@ -422,7 +422,7 @@ const HomePage: React.FC = () => {
       secondaryBtnText: 'Dowiedz się więcej',
     },
     {
-      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Homepage-Model-Y-Hero-Desktop",
+      image: "https://img.apolloplug.com/tesla-y/main-cards-tesla-y.jpg",
       category: 'Średniej wielkości SUV',
       title: 'Model Y',
       subtitle: 'Już za 219 990 zł',
@@ -430,7 +430,7 @@ const HomePage: React.FC = () => {
       secondaryBtnText: 'Dowiedz się więcej',
     },
     {
-      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Model-X-Main-Hero-Desktop-LHD",
+      image: "https://img.apolloplug.com/tesla-x/main-cards-tesla-x.jpg",
       category: 'Luksusowy SUV',
       title: 'Model X',
       subtitle: 'Niedoścignione osiągi',
@@ -438,10 +438,18 @@ const HomePage: React.FC = () => {
       secondaryBtnText: 'Dowiedz się więcej',
     },
     {
-      image: "https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Mega-Menu-Vehicles-Model-S.png",
+      image: "https://img.apolloplug.com/tesla-s/main-cards-tesla-s.jpg",
       category: 'Luksusowy sedan',
       title: 'Model S',
-      subtitle: 'Przyszłość jest teraz',
+      subtitle: 'Najwyższe przyśpieszenie',
+      primaryBtnText: 'Zamów teraz',
+      secondaryBtnText: 'Dowiedz się więcej',
+    },
+    {
+      image: "https://img.apolloplug.com/cybertruck/main-cards-tesla-cybertruck.jpg",
+      category: 'Nie z tej planety',
+      title: 'Tesla Cybertruck',
+      subtitle: 'Tak bardzo inny',
       primaryBtnText: 'Zamów teraz',
       secondaryBtnText: 'Dowiedz się więcej',
     },

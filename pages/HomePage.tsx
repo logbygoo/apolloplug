@@ -151,8 +151,12 @@ const CarouselCard: React.FC<{ item: CarouselItem }> = ({ item }) => (
       <h3 className="text-3xl font-bold">{item.title}</h3>
       {item.subtitle && <p className="text-sm mt-1">{item.subtitle}</p>}
       <div className="mt-6 flex flex-col sm:flex-row gap-4">
-        <Button variant="primary">{item.primaryBtnText}</Button>
-        <Button variant="secondary" className="bg-white/90 text-black hover:bg-white/80">{item.secondaryBtnText}</Button>
+        <Link to="/wynajem">
+            <Button variant="primary">{item.primaryBtnText}</Button>
+        </Link>
+        <Link to="/transfery">
+            <Button variant="secondary" className="bg-white/90 text-black hover:bg-white/80">{item.secondaryBtnText}</Button>
+        </Link>
       </div>
     </div>
   </div>

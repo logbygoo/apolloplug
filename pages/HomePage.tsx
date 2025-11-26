@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
-import { BoltIcon, PowerIcon, KeyIcon, Cog6ToothIcon, ShieldCheckIcon, SparklesIcon, ClockIcon, PuzzlePiece, LightBulb, DocumentTextIcon, superchargerMapIconSvg, destinationChargerMapIconSvg } from '../components/HeroIcons';
+import { BoltIcon, PowerIcon, KeyIcon, ShieldCheckIcon, SparklesIcon, ClockIcon, PuzzlePiece, LightBulb, DocumentTextIcon } from '../icons';
+import { superchargerMapIconSvg, destinationChargerMapIconSvg } from '../icons';
 import Seo from '../components/Seo';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 

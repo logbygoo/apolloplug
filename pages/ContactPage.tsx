@@ -1,20 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import { PageHeader } from '../components/ui';
-import { PhoneIcon } from '../components/HeroIcons';
-import Seo from '../components/Seo';
-import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { 
+  PhoneIcon,
   EnvelopeIcon, 
   WhatsAppIcon, 
   TelegramIcon, 
   MessengerIcon, 
   InstagramIcon, 
   TikTokIcon,
+  ArrowTopRightOnSquareIcon
+} from '../icons';
+import { 
   superchargerMapIconSvg,
   greenwayMapIconSvg,
-  pickupPointMapIconSvg,
-  ArrowTopRightOnSquareIcon
-} from '../components/HeroIcons';
+  pickupPointMapIconSvg
+} from '../icons';
+import Seo from '../components/Seo';
+import { MAPS_API_KEY } from '../configs/mapsConfig';
+
 
 // Declare google for TypeScript
 declare const google: any;

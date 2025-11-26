@@ -13,7 +13,7 @@ import PurchasePage from './pages/PurchasePage';
 import InsurancePage from './pages/InsurancePage';
 import DocumentationPage from './pages/DocumentationPage';
 import { ApolloPlugLogo } from './constants';
-import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './components/HeroIcons';
+import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './icons';
 import { CONFIG } from './config';
 import UnderConstructionPage from './pages/UnderConstructionPage';
 import ScrollToTop from './components/ScrollToTop';
@@ -115,7 +115,7 @@ const Footer: React.FC = () => {
             </NavLink>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">Apollo Plug © {new Date().getFullYear()}</p>
+        <p className="text-xs text-muted-foreground">apolloplug.com © {new Date().getFullYear()} all rights reserved</p>
       </div>
     </footer>
   );

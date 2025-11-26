@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
 import { BRANDS, PayUIcon, RevolutPayIcon } from '../constants';
-import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon } from '../components/HeroIcons';
+import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon } from '../icons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentConfirmationAdminEmailPayload } from '../configs/notifications/emailTemplates';

@@ -3,7 +3,7 @@ import { Input, Label, Button } from '../components/ui';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { TRANSFERS_CONFIG } from '../configs/transfersConfig';
-import { CreditCardIcon, CheckIcon, ChevronDownIcon, ClockIcon, ArrowRightIcon, CurrencyDollarIcon, CalendarDaysIcon } from '../components/HeroIcons';
+import { CreditCardIcon, CheckIcon, ChevronDownIcon, ClockIcon, ArrowRightIcon, CurrencyDollarIcon, CalendarDaysIcon } from '../icons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createTransferAdminEmailPayload, createTransferCustomerEmailPayload } from '../configs/notifications/emailTemplates';

@@ -54,7 +54,7 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="hidden lg:flex items-center gap-4">
-             <a href="#" aria-label="Support"><PhoneIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
+             <a href="callto:500308400" aria-label="Support"><PhoneIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
              <a href="#" aria-label="Language"><FlagIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
              <NavLink to="/kontakt" aria-label="Contact"><EnvelopeIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></NavLink>
           </div>

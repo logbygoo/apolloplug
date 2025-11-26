@@ -36,7 +36,7 @@ export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = (p
 );
 
 export const BRANDS = [
-  { id: 'tesla', name: 'Tesla', logoUrl: 'https://img.apolloplug.com/img/logo-tesla.svg', available: true },
-  { id: 'porsche', name: 'Porsche', logoUrl: 'https://img.apolloplug.com/img/logo-porsche.svg', available: false },
-  { id: 'bmw', name: 'BMW', logoUrl: 'https://img.apolloplug.com/img/logo-bmw.svg', available: false },
+  { id: 'tesla', name: 'Tesla', logoUrl: 'https://img.apolloplug.com/img/logo-tesla-black.png', available: true },
+  { id: 'mercedes', name: 'Porsche', logoUrl: 'https://img.apolloplug.com/img/logo-mercedes-black.png', available: false },
+  { id: 'bud', name: 'BMW', logoUrl: 'https://img.apolloplug.com/img/logo-byd-black.png', available: false },
 ];

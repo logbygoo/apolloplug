@@ -34,7 +34,7 @@ export const createReservationAdminSmsPayload = (formData: FormData, summary: Su
     return {
         to: "720100600",
         message,
-        from: "4628"
+        from: "apolloplug"
     };
 };
 
@@ -49,7 +49,7 @@ export const createReservationCustomerSmsPayload = (formData: FormData): SmsPayl
     return {
         to: formData.phone,
         message,
-        from: "4628"
+        from: "apolloplug"
     };
 };
 
@@ -71,7 +71,7 @@ export const createTransferAdminSmsPayload = (formData: TransferFormData, summar
     return {
         to: "720100600",
         message,
-        from: "4628"
+        from: "apolloplug"
     };
 };
 
@@ -82,10 +82,10 @@ export const createTransferAdminSmsPayload = (formData: TransferFormData, summar
  * @returns Obiekt payloadu SMS.
  */
 export const createTransferCustomerSmsPayload = (formData: TransferFormData): SmsPayload => {
-    const message = `Dziekujemy za zamowienie transferu. Szczegoly znajdziesz w mailu wyslanym na ${formData.customerEmail}. Pozdrawiamy, ApolloPlug.com`;
+    const message = `Dziekujemy za zamowienie transferu. Po akceptacji zlecenia przydzielimy kierowce. Dziekujemy 🚕 `;
     return {
         to: formData.customerPhone,
         message,
-        from: "4628"
+        from: "apolloplug"
     };
 };

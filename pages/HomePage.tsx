@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
 import { BoltIcon, PowerIcon, KeyIcon, ShieldCheckIcon, SparklesIcon, ClockIcon, PuzzlePiece, LightBulb, DocumentTextIcon } from '../icons';
-import { superchargerMapIconSvg, destinationChargerMapIconSvg } from '../icons';
+import { superchargerMapIconSvg, greenwayMapIconSvg, pickupPointMapIconSvg, buildingCompanyMapIconSvg } from '../icons';
 import Seo from '../components/Seo';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { LOCATIONS } from '../configs/locationsConfig';
@@ -379,28 +379,26 @@ const GoogleMap = () => {
         styles: [{ stylers: [{ saturation: -100 }] }],
       });
       
-      const superchargerIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(superchargerMapIconSvg),
+      const createIcon = (svg: string) => ({
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
         scaledSize: new google.maps.Size(36, 36),
         anchor: new google.maps.Point(18, 18),
-      };
+      });
 
-      const destinationChargerIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(destinationChargerMapIconSvg),
-        scaledSize: new google.maps.Size(36, 36),
-        anchor: new google.maps.Point(18, 18),
+      const icons = {
+        supercharger: createIcon(superchargerMapIconSvg),
+        greenway: createIcon(greenwayMapIconSvg),
+        pickup_point: createIcon(pickupPointMapIconSvg),
+        building_company: createIcon(buildingCompanyMapIconSvg),
       };
-
 
       LOCATIONS.forEach(loc => {
-        if (loc.type === 'supercharger' || loc.type === 'greenway') {
-            new google.maps.Marker({
-            position: { lat: loc.lat, lng: loc.lng },
-            map: map,
-            title: loc.title,
-            icon: loc.type === 'supercharger' ? superchargerIcon : destinationChargerIcon,
-            });
-        }
+        new google.maps.Marker({
+          position: { lat: loc.lat, lng: loc.lng },
+          map: map,
+          title: loc.title,
+          icon: icons[loc.type],
+        });
       });
     });
   }, []);

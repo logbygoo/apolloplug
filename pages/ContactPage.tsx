@@ -11,7 +11,9 @@ import {
   InstagramIcon, 
   TikTokIcon,
   superchargerMapIconSvg,
-  greenwayMapIconSvg
+  greenwayMapIconSvg,
+  pickupPointMapIconSvg,
+  ArrowTopRightOnSquareIcon
 } from '../components/HeroIcons';
 
 // Declare google for TypeScript
@@ -36,6 +38,24 @@ const loadGoogleMapsScript = (callback: () => void) => {
   }
 };
 
+interface Location {
+  lat: number;
+  lng: number;
+  type: 'supercharger' | 'greenway' | 'pickup_point';
+  title: string;
+  address: string;
+  price?: number | null;
+}
+
+const locations: Location[] = [
+  { lat: 52.1657, lng: 20.9671, type: 'pickup_point', title: 'Lotnisko Chopina', address: 'Żwirki i Wigury 1, Warszawa', price: 0 },
+  { lat: 52.2619, lng: 20.9100, type: 'pickup_point', title: 'Lotnisko Babice', address: 'gen. S. Kaliskiego 57, Warszawa', price: 100 },
+  { lat: 52.2280, lng: 21.0035, type: 'pickup_point', title: 'Warszawa Centralna', address: 'Aleje Jerozolimskie 54, Warszawa', price: 0 },
+  { lat: 52.1755, lng: 20.9427, type: 'supercharger', title: 'Supercharger Aleja Krakowska 61', address: 'Aleja Krakowska 61, Warszawa', price: null },
+  { lat: 52.2968, lng: 21.1189, type: 'supercharger', title: 'Supercharger Radzymińska 334', address: 'Radzymińska 334, Ząbki', price: null },
+  { lat: 52.2272, lng: 20.9023, type: 'greenway', title: 'Greenway Batalionów Chłopskich 73', address: 'Batalionów Chłopskich 73, Warszawa', price: null },
+];
+
 const ContactMap: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -49,12 +69,6 @@ const ContactMap: React.FC = () => {
         disableDefaultUI: true,
         styles: [{ stylers: [{ saturation: -100 }] }],
       });
-
-      const locations = [
-        { lat: 52.1755, lng: 20.9427, type: 'supercharger', title: 'Aleja Krakowska 61 (Supercharger)' },
-        { lat: 52.2968, lng: 21.1189, type: 'supercharger', title: 'Radzymińska 334, Ząbki (Supercharger)' },
-        { lat: 52.2272, lng: 20.9023, type: 'greenway', title: 'Batalionów Chłopskich 73 (Greenway)' },
-      ];
       
       const superchargerIcon = {
         url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(superchargerMapIconSvg),
@@ -68,13 +82,27 @@ const ContactMap: React.FC = () => {
         anchor: new google.maps.Point(18, 18),
       };
 
+      const pickupPointIcon = {
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(pickupPointMapIconSvg),
+        scaledSize: new google.maps.Size(36, 36),
+        anchor: new google.maps.Point(18, 18),
+      };
+
+      const getIcon = (type: Location['type']) => {
+        switch (type) {
+          case 'supercharger': return superchargerIcon;
+          case 'greenway': return greenwayIcon;
+          case 'pickup_point': return pickupPointIcon;
+          default: return undefined;
+        }
+      }
 
       locations.forEach(loc => {
         new google.maps.Marker({
           position: { lat: loc.lat, lng: loc.lng },
           map: map,
           title: loc.title,
-          icon: loc.type === 'supercharger' ? superchargerIcon : greenwayIcon,
+          icon: getIcon(loc.type),
         });
       });
     });
@@ -82,6 +110,39 @@ const ContactMap: React.FC = () => {
 
   return (
     <div ref={mapRef} className="w-full h-[500px] bg-secondary rounded-lg overflow-hidden relative" />
+  );
+};
+
+const LocationItem: React.FC<{ location: Location }> = ({ location }) => {
+  const getIconSvg = (type: Location['type']) => {
+    switch (type) {
+      case 'supercharger': return superchargerMapIconSvg;
+      case 'greenway': return greenwayMapIconSvg;
+      case 'pickup_point': return pickupPointMapIconSvg;
+      default: return '';
+    }
+  };
+  
+  const iconSrc = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(getIconSvg(location.type))}`;
+  const navLink = `https://www.google.com/maps/dir/?api=1&destination=${location.lat},${location.lng}`;
+
+  return (
+    <div className="flex items-center gap-4 py-3 border-b border-border last:border-b-0">
+      <img src={iconSrc} alt={`${location.type} icon`} className="w-9 h-9 flex-shrink-0"/>
+      <div className="flex-grow">
+        <h3 className="font-semibold text-foreground">{location.title}</h3>
+        <p className="text-sm text-muted-foreground">{location.address}</p>
+        {location.price !== null && typeof location.price !== 'undefined' && (
+          <p className="text-sm text-foreground mt-1">
+            {location.price > 0 ? `Wydanie/zwrot: ${location.price} zł` : 'Wydanie/zwrot bezpłatny'}
+          </p>
+        )}
+      </div>
+      <a href={navLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors p-2 rounded-md bg-secondary hover:bg-muted">
+        <span className="hidden sm:inline">Nawiguj</span>
+        <ArrowTopRightOnSquareIcon className="w-5 h-5"/>
+      </a>
+    </div>
   );
 };
 
@@ -150,7 +211,10 @@ const ContactPage: React.FC = () => {
         </div>
 
         <section>
-            <h2 className="text-3xl font-bold tracking-tight text-center mb-8">Punkty odbioru</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-center mb-8">Punkty odbioru i ładowania</h2>
+            <div className="mb-6 bg-card border border-border rounded-lg p-4">
+              {locations.map(loc => <LocationItem key={loc.title} location={loc} />)}
+            </div>
             <ContactMap />
         </section>
       </div>

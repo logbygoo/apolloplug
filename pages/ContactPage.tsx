@@ -13,8 +13,9 @@ import {
 import { 
   superchargerMapIconSvg,
   greenwayMapIconSvg,
-  pickupPointMapIconSvg
-} from '../icons';
+  pickupPointMapIconSvg,
+  buildingCompanyMapIconSvg
+} from '../icons/mapIcons';
 import Seo from '../components/Seo';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 
@@ -44,19 +45,21 @@ const loadGoogleMapsScript = (callback: () => void) => {
 interface Location {
   lat: number;
   lng: number;
-  type: 'supercharger' | 'greenway' | 'pickup_point';
+  type: 'supercharger' | 'greenway' | 'pickup_point' | 'building_company';
   title: string;
   address: string;
   price?: number | null;
 }
 
 const locations: Location[] = [
-  { lat: 52.1657, lng: 20.9671, type: 'pickup_point', title: 'Lotnisko Chopina', address: 'Żwirki i Wigury 1, Warszawa', price: 0 },
+  { lat: 52.1657, lng: 20.9671, type: 'pickup_point', title: 'Lotnisko Chopina', address: 'Żwirki i Wigury 1, Warszawa', price: 100 },
   { lat: 52.2619, lng: 20.9100, type: 'pickup_point', title: 'Lotnisko Babice', address: 'gen. S. Kaliskiego 57, Warszawa', price: 100 },
-  { lat: 52.2280, lng: 21.0035, type: 'pickup_point', title: 'Warszawa Centralna', address: 'Aleje Jerozolimskie 54, Warszawa', price: 0 },
+  { lat: 52.4511, lng: 20.6518, type: 'pickup_point', title: 'Lotnisko Modlin', address: 'Generała Wiktora Thommée 1a, Nowy Dwór Mazowiecki', price: 150 },
+  { lat: 52.2280, lng: 21.0035, type: 'pickup_point', title: 'Warszawa Centralna', address: 'Aleje Jerozolimskie 54, Warszawa', price: 100 },
   { lat: 52.1755, lng: 20.9427, type: 'supercharger', title: 'Supercharger Aleja Krakowska 61', address: 'Aleja Krakowska 61, Warszawa', price: null },
-  { lat: 52.2968, lng: 21.1189, type: 'supercharger', title: 'Supercharger Radzymińska 334', address: 'Radzymińska 334, Ząbki', price: null },
+  { lat: 52.2968, lng: 21.1189, type: 'supercharger', title: 'Supercharger Radzymińska 334', address: 'Radzymińska 334, Ząbki', price: 100 },
   { lat: 52.2272, lng: 20.9023, type: 'greenway', title: 'Greenway Batalionów Chłopskich 73', address: 'Batalionów Chłopskich 73, Warszawa', price: null },
+  { lat: 52.2330, lng: 20.9818, type: 'building_company', title: 'Biuro apolloplug.com', address: 'Grzybowska 86, Warszawa', price: 0 },
 ];
 
 const ContactMap: React.FC = () => {
@@ -91,11 +94,18 @@ const ContactMap: React.FC = () => {
         anchor: new google.maps.Point(18, 18),
       };
 
+      const buildingCompanyIcon = {
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(buildingCompanyMapIconSvg),
+        scaledSize: new google.maps.Size(36, 36),
+        anchor: new google.maps.Point(18, 18),
+      };
+
       const getIcon = (type: Location['type']) => {
         switch (type) {
           case 'supercharger': return superchargerIcon;
           case 'greenway': return greenwayIcon;
           case 'pickup_point': return pickupPointIcon;
+          case 'building_company': return buildingCompanyIcon;
           default: return undefined;
         }
       }
@@ -122,6 +132,7 @@ const LocationItem: React.FC<{ location: Location }> = ({ location }) => {
       case 'supercharger': return superchargerMapIconSvg;
       case 'greenway': return greenwayMapIconSvg;
       case 'pickup_point': return pickupPointMapIconSvg;
+      case 'building_company': return buildingCompanyMapIconSvg;
       default: return '';
     }
   };
@@ -135,10 +146,12 @@ const LocationItem: React.FC<{ location: Location }> = ({ location }) => {
       <div className="flex-grow">
         <h3 className="font-semibold text-foreground">{location.title}</h3>
         <p className="text-sm text-muted-foreground">{location.address}</p>
-        {location.price !== null && typeof location.price !== 'undefined' && (
-          <p className="text-sm text-foreground mt-1">
-            {location.price > 0 ? `Wydanie/zwrot: ${location.price} zł` : 'Wydanie/zwrot bezpłatny'}
-          </p>
+        {location.price > 0 && (
+          <div className="mt-1">
+            <span className="inline-block bg-white text-orange-600 border border-orange-600 rounded-full px-3 py-1 text-xs font-semibold">
+                Wydanie/zwrot dodatkowo płatny
+            </span>
+          </div>
         )}
       </div>
       <a href={navLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors p-2 rounded-md bg-secondary hover:bg-muted">

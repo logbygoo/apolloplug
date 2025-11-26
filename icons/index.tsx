@@ -3,6 +3,7 @@ export * from './ArrowTopRightOnSquareIcon';
 export * from './BanknotesIcon';
 export * from './Bars3Icon';
 export * from './BoltIcon';
+export * from './BuildingCompanyIcon';
 export * from './BuildingLibraryIcon';
 export * from './CalendarDaysIcon';
 export * from './CheckIcon';

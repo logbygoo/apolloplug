@@ -286,8 +286,8 @@ const RentalPage: React.FC = () => {
     }, [formData.model, setSearchParams, step]);
 
     const summary = useMemo(() => {
-        const { pickupDate, returnDate, options, model } = formData;
-        const defaultReturn = { rentalDays: 0, rentalPrice: 0, optionsPrice: 0, totalPrice: 0, deposit: 5000, totalWithDeposit: 5000, totalKmLimit: 0, costPerKmOverLimit: 0 };
+        const { pickupDate, returnDate, options, model, pickupLocation, returnLocation } = formData;
+        const defaultReturn = { rentalDays: 0, rentalPrice: 0, optionsPrice: 0, totalPrice: 0, deposit: 5000, totalWithDeposit: 5000, totalKmLimit: 0, costPerKmOverLimit: 0, pickupFee: 0, returnFee: 0 };
         if (!pickupDate || !returnDate || !model) {
             return defaultReturn;
         }
@@ -332,11 +332,17 @@ const RentalPage: React.FC = () => {
             }
         });
         
-        const totalPrice = rentalPrice + optionsPrice;
+        const pickupLoc = RENTAL_LOCATIONS_DATA.find(loc => loc.title === pickupLocation);
+        const pickupFee = pickupLoc?.price || 0;
+
+        const returnLoc = RENTAL_LOCATIONS_DATA.find(loc => loc.title === returnLocation);
+        const returnFee = returnLoc?.price || 0;
+
+        const totalPrice = rentalPrice + optionsPrice + pickupFee + returnFee;
         const deposit = model.deposit || 5000;
         const totalWithDeposit = totalPrice + deposit;
 
-        return { rentalDays, rentalPrice, optionsPrice, totalPrice, deposit, totalWithDeposit, totalKmLimit, costPerKmOverLimit };
+        return { rentalDays, rentalPrice, optionsPrice, totalPrice, deposit, totalWithDeposit, totalKmLimit, costPerKmOverLimit, pickupFee, returnFee };
     }, [formData]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -583,7 +589,7 @@ const RentalPage: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={formData.pickupTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                                         </div>
                                         <div className="grid sm:grid-cols-3 gap-4 items-start">
                                             <div>
@@ -596,7 +602,7 @@ const RentalPage: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div><Label htmlFor="returnTime">Godzina</Label><div className="relative mt-1"><select id="returnTime" value={formData.returnTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                                         </div>
                                     </FormSection>
                                     <FormSection title="Dane kierowcy">
@@ -687,6 +693,12 @@ const RentalPage: React.FC = () => {
                                             <div className="space-y-2 border-t border-border pt-4">
                                                 <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
                                                 <div className="flex justify-between"><span className="text-muted-foreground">Cena najmu</span><span className="font-medium">{summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                                {summary.pickupFee > 0 && (
+                                                    <div className="flex justify-between"><span className="text-muted-foreground">Podstawienie auta</span><span className="font-medium">{`${summary.pickupFee.toLocaleString('pl-PL')} zł`}</span></div>
+                                                )}
+                                                {summary.returnFee > 0 && (
+                                                    <div className="flex justify-between"><span className="text-muted-foreground">Odbiór auta</span><span className="font-medium">{`${summary.returnFee.toLocaleString('pl-PL')} zł`}</span></div>
+                                                )}
                                                 <div className="flex justify-between"><span className="text-muted-foreground">Limit kilometrów</span><span className="font-medium">{summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '-'}</span></div>
                                                 <div className="flex justify-between"><span className="text-muted-foreground">Koszt poza limitem</span><span className="font-medium">{summary.costPerKmOverLimit > 0 ? `${summary.costPerKmOverLimit.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} zł/km` : '-'}</span></div>
                                                 <div className="flex justify-between"><span className="text-muted-foreground">Opcje dodatkowe</span><span className="font-medium">{summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}</span></div>
@@ -801,6 +813,12 @@ const RentalPage: React.FC = () => {
                                   <h2 className="text-3xl font-bold">Podsumowanie</h2>
                                   <div className="space-y-2 border-t border-border pt-4">
                                       <div className="flex justify-between"><span className="text-muted-foreground">Okres najmu</span><span className="font-medium">{summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '-'}</span></div>
+                                      {summary.pickupFee > 0 && (
+                                          <div className="flex justify-between text-sm"><span className="text-muted-foreground">Podstawienie auta</span><span className="font-medium">{`${summary.pickupFee.toLocaleString('pl-PL')} zł`}</span></div>
+                                      )}
+                                      {summary.returnFee > 0 && (
+                                          <div className="flex justify-between text-sm"><span className="text-muted-foreground">Odbiór auta</span><span className="font-medium">{`${summary.returnFee.toLocaleString('pl-PL')} zł`}</span></div>
+                                      )}
                                       <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                       <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
                                       <div className="flex justify-between font-bold pt-2 mt-2"><span className="text-muted-foreground">Do zapłaty łącznie</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>

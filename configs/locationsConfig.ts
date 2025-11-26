@@ -15,5 +15,5 @@ export const LOCATIONS: Location[] = [
   { lat: 52.1755, lng: 20.9427, type: 'supercharger', title: 'Supercharger Aleja Krakowska 61', address: 'Aleja Krakowska 61, Warszawa', price: null },
   { lat: 52.2968, lng: 21.1189, type: 'supercharger', title: 'Supercharger Radzymińska 334', address: 'Radzymińska 334, Ząbki', price: 100 },
   { lat: 52.2272, lng: 20.9023, type: 'greenway', title: 'Greenway Batalionów Chłopskich 73', address: 'Batalionów Chłopskich 73, Warszawa', price: null },
-  { lat: 52.2330, lng: 20.9818, type: 'building_company', title: 'Biuro ApolloPlug', address: 'Grzybowska 87, Warszawa', price: 0 },
+  { lat: 52.2330, lng: 20.9818, type: 'building_company', title: 'main office apolloplug.com', address: 'Grzybowska 87, Warszawa', price: 0 },
 ];

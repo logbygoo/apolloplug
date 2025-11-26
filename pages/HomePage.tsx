@@ -447,8 +447,12 @@ const HomePage: React.FC = () => {
                 Odbieraj auta w całym mieście prosto z ładowarek lub zamawiaj dostawę pod dom.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Button variant="primary" size="lg">Wypożycz auto</Button>
-                <Button variant="secondary" size="lg">Auto z kierowcą</Button>
+                <Link to="/wynajem">
+                  <Button variant="primary" size="lg">Wypożycz auto</Button>
+                </Link>
+                <Link to="/transfery">
+                  <Button variant="secondary" size="lg">Auto z kierowcą</Button>
+                </Link>
               </div>
             </div>
 

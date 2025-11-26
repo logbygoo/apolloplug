@@ -154,10 +154,7 @@ const ContactPage: React.FC = () => {
             <section>
                 <h2 className="text-2xl font-bold tracking-tight mb-4">Podmiot odpowiedzialny</h2>
                 <div className="text-muted-foreground space-y-1">
-                    <p>forfinance sp. z o.o.</p>
-                    <p>ul. grzybowska 97</p>
-                    <p>00-844 warszawa</p>
-                    <p>nip: 527-283-91-27</p>
+                    <p>apolloplug.com należy do forfinance sp. z o.o., ul. grzybowska 97, 00-844 warszawa, nip: 527-283-91-27</p>
                     <p>tel. 500-308-400</p>
                     <p>mail. office@apolloplug.com</p>
                 </div>
@@ -166,7 +163,7 @@ const ContactPage: React.FC = () => {
                 <h2 className="text-2xl font-bold tracking-tight mb-4">Licencja Taxi Premium</h2>
                   <div className="bg-secondary p-6 rounded-lg text-center">
                     <p className="text-lg font-semibold text-foreground">Warszawa</p>
-                    //<p className="text-sm text-muted-foreground">Licencja nr 12345/XYZ/2024</p>
+                    <p className="text-sm text-muted-foreground"></p>
                 </div>
             </section>
         </div>

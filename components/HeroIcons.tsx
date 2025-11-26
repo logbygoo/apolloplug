@@ -207,3 +207,28 @@ export const InstagramIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) =>
 export const TikTokIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M24.562,7.613c-1.508-.983-2.597-2.557-2.936-4.391-.073-.396-.114-.804-.114-1.221h-4.814l-.008,19.292c-.081,2.16-1.859,3.894-4.039,3.894-.677,0-1.315-.169-1.877-.465-1.288-.678-2.169-2.028-2.169-3.582,0-2.231,1.815-4.047,4.046-4.047,.417,0,.816,.069,1.194,.187v-4.914c-.391-.053-.788-.087-1.194-.087-4.886,0-8.86,3.975-8.86,8.86,0,2.998,1.498,5.65,3.783,7.254,1.439,1.01,3.19,1.606,5.078,1.606,4.886,0,8.86-3.975,8.86-8.86V11.357c1.888,1.355,4.201,2.154,6.697,2.154v-4.814c-1.345,0-2.597-.4-3.647-1.085Z"></path></svg>
 );
+
+// ADDED: SVG strings for map markers
+export const superchargerMapIconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <circle cx="18" cy="18" r="18" fill="#ef4444"/>
+  <path d="M13.5 2.25a.75.75 0 00-1.5 0v3a.75.75 0 001.5 0v-3zM13.125 6a.75.75 0 00-1.25 0v3.375a.75.75 0 001.5 0V6.375a.75.75 0 00-.25-.563zM10.875 6a.75.75 0 011.25 0v3.375a.75.75 0 01-1.5 0V6.375a.75.75 0 01.25-.563zM12 9.75a.75.75 0 01.75.75v3a.75.75 0 01-1.5 0v-3a.75.75 0 01.75-.75zM12 15a.75.75 0 00-1.5 0v3a.75.75 0 001.5 0v-3zM13.125 15.188a.75.75 0 00-1.25 0v3.187a.75.75 0 001.5 0v-3.188a.75.75 0 00-.25-.562zM10.875 15.188a.75.75 0 011.25 0v3.187a.75.75 0 01-1.5 0v-3.188a.75.75 0 01.25-.562z" fill="white" transform="translate(6 6)"/>
+  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM3.75 12a8.25 8.25 0 1116.5 0 8.25 8.25 0 01-16.5 0z" clip-rule="evenodd" fill="white" transform="translate(6 6)"/>
+  <path d="M12.53 8.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06z" fill="white" transform="translate(6 6)"/>
+  <path d="M15.53 11.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06z" fill="white" transform="translate(6 6)"/>
+</svg>
+`;
+
+export const destinationChargerMapIconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <circle cx="18" cy="18" r="18" fill="#71717a"/>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" stroke-width="2" stroke="white" fill="none" transform="translate(6 6)"/>
+</svg>
+`;
+
+export const greenwayMapIconSvg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <circle cx="18" cy="18" r="18" fill="#22c55e"/>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" stroke-width="1.5" stroke="white" fill="none" transform="translate(6 6)"/>
+</svg>
+`;

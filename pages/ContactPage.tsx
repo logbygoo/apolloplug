@@ -9,7 +9,9 @@ import {
   TelegramIcon, 
   MessengerIcon, 
   InstagramIcon, 
-  TikTokIcon 
+  TikTokIcon,
+  superchargerMapIconSvg,
+  greenwayMapIconSvg
 } from '../components/HeroIcons';
 
 // Declare google for TypeScript
@@ -54,24 +56,14 @@ const ContactMap: React.FC = () => {
         { lat: 52.2272, lng: 20.9023, type: 'greenway', title: 'Batalionów Chłopskich 73 (Greenway)' },
       ];
       
-      const superchargerSvg = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px">
-            <path d="M13.5 2.25a.75.75 0 00-1.5 0v3a.75.75 0 001.5 0v-3zM13.125 6a.75.75 0 00-1.25 0v3.375a.75.75 0 001.5 0V6.375a.75.75 0 00-.25-.563zM10.875 6a.75.75 0 011.25 0v3.375a.75.75 0 01-1.5 0V6.375a.75.75 0 01.25-.563zM12 9.75a.75.75 0 01.75.75v3a.75.75 0 01-1.5 0v-3a.75.75 0 01.75-.75zM12 15a.75.75 0 00-1.5 0v3a.75.75 0 001.5 0v-3zM13.125 15.188a.75.75 0 00-1.25 0v3.187a.75.75 0 001.5 0v-3.188a.75.75 0 00-.25-.562zM10.875 15.188a.75.75 0 011.25 0v3.187a.75.75 0 01-1.5 0v-3.188a.75.75 0 01.25-.562z" />
-            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM3.75 12a8.25 8.25 0 1116.5 0 8.25 8.25 0 01-16.5 0z" clip-rule="evenodd" />
-            <path d="M12.53 8.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06z" />
-            <path d="M15.53 11.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06z" />
-        </svg>`;
-
-      const greenwaySvg = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" /></svg>`;
-
       const superchargerIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<div style="width:36px;height:36px;border-radius:50%;background-color:#ef4444;display:flex;align-items:center;justify-content:center;">${superchargerSvg}</div>`),
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(superchargerMapIconSvg),
         scaledSize: new google.maps.Size(36, 36),
         anchor: new google.maps.Point(18, 18),
       };
 
       const greenwayIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<div style="width:36px;height:36px;border-radius:50%;background-color:#22c55e;display:flex;align-items:center;justify-content:center;">${greenwaySvg}</div>`),
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(greenwayMapIconSvg),
         scaledSize: new google.maps.Size(36, 36),
         anchor: new google.maps.Point(18, 18),
       };
@@ -89,16 +81,7 @@ const ContactMap: React.FC = () => {
   }, []);
 
   return (
-    <div ref={mapRef} className="w-full h-[500px] bg-secondary rounded-lg overflow-hidden relative">
-      {MAPS_API_KEY === 'TUTAJ_WSTAW_SWOJ_KLUCZ_API' && (
-        <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 z-10">
-          <div>
-            <h3 className="text-xl font-bold">Mapa jest nieaktywna</h3>
-            <p className="mt-2 text-sm">Wprowadź klucz API Google Maps, aby ją włączyć.</p>
-          </div>
-        </div>
-      )}
-    </div>
+    <div ref={mapRef} className="w-full h-[500px] bg-secondary rounded-lg overflow-hidden relative" />
   );
 };
 
@@ -154,9 +137,7 @@ const ContactPage: React.FC = () => {
             <section>
                 <h2 className="text-2xl font-bold tracking-tight mb-4">Podmiot odpowiedzialny</h2>
                 <div className="text-muted-foreground space-y-1">
-                    <p>apolloplug.com należy do forfinance sp. z o.o., ul. grzybowska 97, 00-844 warszawa, nip: 527-283-91-27</p>
-                    <p>tel. 500-308-400</p>
-                    <p>mail. office@apolloplug.com</p>
+                    <p>apolloplug.com należy do forfinance sp. z o.o., ul. grzybowska 97, 00-844 warszawa, nip: 527-283-91-27, tel. 500-308-400, mail. office@apolloplug.com</p>
                 </div>
             </section>
             <section>

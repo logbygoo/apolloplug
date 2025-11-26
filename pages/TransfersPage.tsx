@@ -454,13 +454,7 @@ const TransfersPage: React.FC = () => {
   return (
     <div className="bg-background text-foreground">
       <Seo title="Transfery VIP Tesla" description="Zamów profesjonalny i dyskretny transfer VIP naszą luksusową flotą Tesli. Idealne na lotnisko, spotkania biznesowe i specjalne okazje." />
-      <div ref={mapRef} className="w-full h-[40vh] bg-secondary relative">
-          {MAPS_API_KEY === 'TUTAJ_WSTAW_SWOJ_KLUCZ_API' && (
-              <div className="absolute inset-0 bg-black/70 flex items-center justify-center text-white text-center p-4 z-10">
-                <div> <h3 className="text-xl font-bold">Mapa jest nieaktywna</h3> <p className="mt-2 text-sm">Wprowadź klucz API Google Maps w pliku <code className="bg-white/20 px-1 rounded">configs/mapsConfig.ts</code>, aby ją włączyć.</p> </div>
-            </div>
-          )}
-      </div>
+      <div ref={mapRef} className="w-full h-[40vh] bg-secondary relative" />
 
       <div className="container mx-auto px-4 md:px-6 py-12">
         <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">

@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
 import { BoltIcon, PowerIcon, KeyIcon, ShieldCheckIcon, SparklesIcon, ClockIcon, PuzzlePiece, LightBulb, DocumentTextIcon } from '../icons';
-import { superchargerMapIconSvg, greenwayMapIconSvg, pickupPointMapIconSvg, buildingCompanyMapIconSvg } from '../icons';
+import { getMapIcon } from '../icons/mapIcons';
 import Seo from '../components/Seo';
-import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { LOCATIONS } from '../configs/locationsConfig';
+import { loadGoogleMapsScript } from '../utils/maps';
 
 // Declare google for TypeScript
 declare const google: any;
@@ -346,25 +346,6 @@ const AnimatedTimeline = () => {
     );
 };
 
-const loadGoogleMapsScript = (callback: () => void) => {
-  if (typeof google !== 'undefined' && google.maps) {
-    callback();
-    return;
-  }
-  const existingScript = document.getElementById('googleMapsScript');
-  if (!existingScript) {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=marker,places,directions`;
-    script.id = 'googleMapsScript';
-    document.body.appendChild(script);
-    script.onload = () => {
-      callback();
-    };
-  } else {
-     existingScript.addEventListener('load', callback);
-  }
-};
-
 const GoogleMap = () => {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -379,25 +360,12 @@ const GoogleMap = () => {
         styles: [{ stylers: [{ saturation: -100 }] }],
       });
       
-      const createIcon = (svg: string) => ({
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
-        scaledSize: new google.maps.Size(36, 36),
-        anchor: new google.maps.Point(18, 18),
-      });
-
-      const icons = {
-        supercharger: createIcon(superchargerMapIconSvg),
-        greenway: createIcon(greenwayMapIconSvg),
-        pickup_point: createIcon(pickupPointMapIconSvg),
-        building_company: createIcon(buildingCompanyMapIconSvg),
-      };
-
       LOCATIONS.forEach(loc => {
         new google.maps.Marker({
           position: { lat: loc.lat, lng: loc.lng },
           map: map,
           title: loc.title,
-          icon: icons[loc.type],
+          icon: getMapIcon(loc.type),
         });
       });
     });

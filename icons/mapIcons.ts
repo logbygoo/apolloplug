@@ -1,3 +1,8 @@
+import type { Location } from '../configs/locationsConfig';
+
+// Declare google for TypeScript
+declare const google: any;
+
 export const superchargerMapIconSvg = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <circle cx="12" cy="12" r="12" fill="#ef4444"/>
@@ -44,3 +49,29 @@ export const buildingCompanyMapIconSvg = `
   </g>
 </svg>
 `;
+
+export const getMapIcon = (type: Location['type']) => {
+  let svg;
+  switch (type) {
+    case 'supercharger':
+      svg = superchargerMapIconSvg;
+      break;
+    case 'greenway':
+      svg = greenwayMapIconSvg;
+      break;
+    case 'pickup_point':
+      svg = pickupPointMapIconSvg;
+      break;
+    case 'building_company':
+      svg = buildingCompanyMapIconSvg;
+      break;
+    default:
+      svg = pickupPointMapIconSvg; 
+  }
+
+  return {
+    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+    scaledSize: new google.maps.Size(36, 36),
+    anchor: new google.maps.Point(18, 18),
+  };
+};

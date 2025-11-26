@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
-import { LOCATIONS } from '../configs/locationsConfig';
+import { LOCATIONS, Location } from '../configs/locationsConfig';
 import { BRANDS, PayUIcon, RevolutPayIcon } from '../constants';
 import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon } from '../icons';
 import type { Car } from '../types';
@@ -17,9 +17,7 @@ const timeOptions = Array.from({ length: 25 }, (_, i) => {
     return `${String(hour).padStart(2, '0')}:${minute}`;
 }).filter(Boolean) as string[];
 
-const RENTAL_LOCATIONS = LOCATIONS
-  .filter(loc => loc.type === 'pickup_point' || loc.type === 'building_company')
-  .map(loc => loc.title);
+const RENTAL_LOCATIONS_DATA: Location[] = LOCATIONS;
 
 const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
   if (typeof price === 'number') {
@@ -220,10 +218,10 @@ const getInitialFormData = (modelIdFromUrl: string | null): FormData => {
         model: firstAvailableCar,
         pickupDate: today,
         pickupTime: '10:00',
-        pickupLocation: RENTAL_LOCATIONS[0],
+        pickupLocation: RENTAL_LOCATIONS_DATA[0]?.title || '',
         returnDate: tomorrow,
         returnTime: '10:00',
-        returnLocation: RENTAL_LOCATIONS[0],
+        returnLocation: RENTAL_LOCATIONS_DATA[0]?.title || '',
         fullName: '',
         nip: '',
         pesel: '',
@@ -585,7 +583,7 @@ const RentalPage: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={formData.pickupTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                                         </div>
                                         <div className="grid sm:grid-cols-3 gap-4 items-start">
                                             <div>
@@ -598,7 +596,7 @@ const RentalPage: React.FC = () => {
                                                 </div>
                                             </div>
                                             <div><Label htmlFor="returnTime">Godzina</Label><div className="relative mt-1"><select id="returnTime" value={formData.returnTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>Wybierz</option>{RENTAL_LOCATIONS.map(l=><option key={l} value={l}>{l}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
                                         </div>
                                     </FormSection>
                                     <FormSection title="Dane kierowcy">

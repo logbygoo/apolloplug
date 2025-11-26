@@ -14,34 +14,16 @@ import {
   superchargerMapIconSvg,
   greenwayMapIconSvg,
   pickupPointMapIconSvg,
-  buildingCompanyMapIconSvg
+  buildingCompanyMapIconSvg,
+  getMapIcon,
 } from '../icons/mapIcons';
 import Seo from '../components/Seo';
-import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { LOCATIONS, Location } from '../configs/locationsConfig';
+import { loadGoogleMapsScript } from '../utils/maps';
 
 
 // Declare google for TypeScript
 declare const google: any;
-
-const loadGoogleMapsScript = (callback: () => void) => {
-  if (typeof google !== 'undefined' && google.maps) {
-    callback();
-    return;
-  }
-  const existingScript = document.getElementById('googleMapsScript');
-  if (!existingScript) {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=marker`;
-    script.id = 'googleMapsScript';
-    document.body.appendChild(script);
-    script.onload = () => {
-      callback();
-    };
-  } else {
-     existingScript.addEventListener('load', callback);
-  }
-};
 
 const ContactMap: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -57,46 +39,12 @@ const ContactMap: React.FC = () => {
         styles: [{ stylers: [{ saturation: -100 }] }],
       });
       
-      const superchargerIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(superchargerMapIconSvg),
-        scaledSize: new google.maps.Size(36, 36),
-        anchor: new google.maps.Point(18, 18),
-      };
-
-      const greenwayIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(greenwayMapIconSvg),
-        scaledSize: new google.maps.Size(36, 36),
-        anchor: new google.maps.Point(18, 18),
-      };
-
-      const pickupPointIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(pickupPointMapIconSvg),
-        scaledSize: new google.maps.Size(36, 36),
-        anchor: new google.maps.Point(18, 18),
-      };
-
-      const buildingCompanyIcon = {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(buildingCompanyMapIconSvg),
-        scaledSize: new google.maps.Size(36, 36),
-        anchor: new google.maps.Point(18, 18),
-      };
-
-      const getIcon = (type: Location['type']) => {
-        switch (type) {
-          case 'supercharger': return superchargerIcon;
-          case 'greenway': return greenwayIcon;
-          case 'pickup_point': return pickupPointIcon;
-          case 'building_company': return buildingCompanyIcon;
-          default: return undefined;
-        }
-      }
-
       LOCATIONS.forEach(loc => {
         new google.maps.Marker({
           position: { lat: loc.lat, lng: loc.lng },
           map: map,
           title: loc.title,
-          icon: getIcon(loc.type),
+          icon: getMapIcon(loc.type),
         });
       });
     });

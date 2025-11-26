@@ -1,36 +1,16 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Input, Label, Button } from '../components/ui';
 import { RENTAL_CARS } from '../configs/rentConfig';
-import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { TRANSFERS_CONFIG } from '../configs/transfersConfig';
 import { CreditCardIcon, CheckIcon, ChevronDownIcon, ClockIcon, ArrowRightIcon, CurrencyDollarIcon, CalendarDaysIcon } from '../icons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createTransferAdminEmailPayload, createTransferCustomerEmailPayload } from '../configs/notifications/emailTemplates';
 import { createTransferAdminSmsPayload, createTransferCustomerSmsPayload } from '../configs/notifications/smsTemplates';
+import { loadGoogleMapsScript } from '../utils/maps';
 
 // Declare the global 'google' object to fix TypeScript errors.
 declare const google: any;
-
-// Helper to load Google Maps script
-const loadGoogleMapsScript = (callback: () => void) => {
-  if (typeof google !== 'undefined' && google.maps && google.maps.marker) {
-    callback();
-    return;
-  }
-  const existingScript = document.getElementById('googleMapsScript');
-  if (!existingScript) {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=places,directions,marker`;
-    script.id = 'googleMapsScript';
-    document.body.appendChild(script);
-    script.onload = () => {
-      callback();
-    };
-  } else {
-     existingScript.addEventListener('load', callback);
-  }
-};
 
 const today = new Date().toISOString().split('T')[0];
 const timeOptions = Array.from({ length: 48 }, (_, i) => {
@@ -270,7 +250,7 @@ const TransfersPage: React.FC = () => {
           }, () => {}, { enableHighAccuracy: true }
         );
       }
-    });
+    }, 'places,directions,marker');
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

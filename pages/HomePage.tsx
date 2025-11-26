@@ -184,6 +184,8 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
 const AnimatedTimeline = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
+    const timelineRef = useRef<HTMLElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
 
     const timelineSteps = [
         {
@@ -242,19 +244,39 @@ const AnimatedTimeline = () => {
     ];
     
     useEffect(() => {
-        if (isPaused) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsVisible(entry.isIntersecting);
+            },
+            { threshold: 0.1 } // Uruchom, gdy 10% elementu jest widoczne
+        );
+
+        const currentRef = timelineRef.current;
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isPaused || !isVisible) return; // Zatrzymaj animację, jeśli jest zapauzowana lub niewidoczna
 
         const timer = setInterval(() => {
             setActiveStep(prev => (prev + 1) % timelineSteps.length);
-        }, 5000); // Change step every 5 seconds
+        }, 5000);
         
         return () => clearInterval(timer);
-    }, [activeStep, isPaused, timelineSteps.length]);
+    }, [activeStep, isPaused, isVisible, timelineSteps.length]);
 
     const progressHeight = activeStep > 0 ? `${(activeStep / (timelineSteps.length - 1)) * 100}%` : '0%';
 
     return (
-        <section className="py-12 md:py-20 bg-secondary">
+        <section ref={timelineRef} className="py-12 md:py-20 bg-secondary">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Twoja Droga do Własnego EV</h2>

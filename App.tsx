@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-do
 import HomePage from './pages/HomePage';
 import TransfersPage from './pages/TransfersPage';
 import RentalPage from './pages/RentalPage';
-import InvestPage from './pages/InvestPage';
+import FinancingPage from './pages/FinancingPage';
 import FleetPage from './pages/FleetPage';
 import CarDetailPage from './pages/CarDetailPage';
 import ContactPage from './pages/ContactPage';
@@ -24,7 +24,7 @@ const mainNavLinks = [
   { path: '/transfery', name: 'Transfery' },
   { path: '/zakup', name: 'Zakup' },
   { path: '/ubezpieczenia', name: 'Ubezpieczenia' },
-  { path: '/inwestuj', name: 'Inwestycje' },
+  { path: '/finansowanie', name: 'Finansowanie' },
 ];
 
 const Header: React.FC = () => {
@@ -145,7 +145,7 @@ const App: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/transfery" element={<TransfersPage />} />
             <Route path="/wynajem" element={<RentalPage />} />
-            <Route path="/inwestuj" element={<InvestPage />} />
+            <Route path="/finansowanie" element={<FinancingPage />} />
             <Route path="/flota" element={<FleetPage />} />
             <Route path="/flota/:carId" element={<CarDetailPage />} />
             <Route path="/kontakt" element={<ContactPage />} />

@@ -35,15 +35,6 @@ export interface HeroCar {
   theme?: 'dark' | 'light';
 }
 
-export interface InvestmentProject {
-  id:string;
-  carName: string;
-  imageUrl: string;
-  amountRaised: number;
-  goal: number;
-  investorCount: number;
-}
-
 export interface Article {
   slug: string;
   title: string;

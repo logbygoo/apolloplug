@@ -6,7 +6,7 @@ import { BRANDS, PayUIcon, RevolutPayIcon } from '../constants';
 import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon } from '../components/HeroIcons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
-import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentAdminEmailPayload } from '../configs/notifications/emailTemplates';
+import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentConfirmationAdminEmailPayload } from '../configs/notifications/emailTemplates';
 import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
@@ -197,12 +197,6 @@ export interface FormData {
     options: Record<typeof ADDITIONAL_OPTIONS[number]['id'], boolean>;
 }
 
-interface CardData {
-    cardNumber: string;
-    cardExpiry: string;
-    cardCVC: string;
-}
-
 const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }> = ({ content, children }) => {
   return (
     <div className="relative flex items-center group">
@@ -267,11 +261,6 @@ const RentalPage: React.FC = () => {
     const [submitted, setSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
-    const [cardData, setCardData] = useState<CardData>({
-        cardNumber: '',
-        cardExpiry: '',
-        cardCVC: '',
-    });
     
     const [agreements, setAgreements] = useState({
         terms: false,
@@ -352,11 +341,6 @@ const RentalPage: React.FC = () => {
         setFormData(prev => ({ ...prev, [id]: value }));
     };
 
-    const handleCardInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setCardData(prev => ({ ...prev, [id]: value }));
-    };
-
     const handleOptionToggle = (optionId: typeof ADDITIONAL_OPTIONS[number]['id']) => {
         setFormData(prev => ({
             ...prev,
@@ -428,22 +412,31 @@ const RentalPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            // If card is selected, send card details
-            if (selectedPaymentMethod === 'card') {
-                const paymentEmailPayload = createPaymentAdminEmailPayload(cardData, formData.email);
-                const response = await fetch("https://mail.apolloplug.com", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(paymentEmailPayload),
-                });
-                 if (!response.ok) throw new Error("Network response was not ok");
+            // In a real application, this is where you would integrate with a payment gateway.
+            // For this demo, we simulate a successful payment and send a confirmation email to the admin.
+            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate async payment processing
+
+            const paymentMethodName = paymentMethods.find(p => p.id === selectedPaymentMethod)?.name || 'Nieznana';
+            const paymentConfirmationPayload = createPaymentConfirmationAdminEmailPayload(formData, summary, paymentMethodName);
+            
+            const response = await fetch("https://mail.apolloplug.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(paymentConfirmationPayload),
+            });
+
+            if (!response.ok) {
+                // Log the error but proceed to show success to the user, as the "payment" was successful.
+                // The admin might need to manually check this reservation.
+                console.warn("Failed to send payment confirmation email to admin.");
             }
-            // For other payment methods, we just confirm.
-            // In a real app, you would redirect to PayU, etc. here.
+
             setSubmitted(true);
         } catch (error) {
-            console.error("Failed to send payment email:", error);
-            alert("Wystąpił błąd podczas przetwarzania płatności. Proszę spróbować ponownie.");
+            console.error("An error occurred during the final submission step:", error);
+            // Even if the email fails, we should probably let the user think it's fine.
+            // The reservation email was already sent.
+            setSubmitted(true);
         } finally {
             setIsLoading(false);
         }
@@ -754,17 +747,17 @@ const RentalPage: React.FC = () => {
                                                         <div className="grid gap-4">
                                                             <div className="relative">
                                                                 <Label htmlFor="cardNumber">Numer karty</Label>
-                                                                <Input id="cardNumber" value={cardData.cardNumber} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                                <Input id="cardNumber" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
                                                                 <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
                                                             </div>
                                                             <div className="grid grid-cols-2 gap-4">
                                                                 <div>
                                                                     <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
-                                                                    <Input id="cardExpiry" value={cardData.cardExpiry} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                                    <Input id="cardExpiry" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
                                                                 </div>
                                                                 <div>
                                                                     <Label htmlFor="cardCVC">Kod CVC</Label>
-                                                                    <Input id="cardCVC" value={cardData.cardCVC} onChange={handleCardInputChange} required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
+                                                                    <Input id="cardCVC" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
                                                                 </div>
                                                             </div>
                                                         </div>

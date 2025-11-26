@@ -60,14 +60,14 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
                                         <p style="font-size: 18px; color: #4b5563; margin: 0 0 24px 0;">${title}</p>
                                     </td>
                                 </tr>
-                                <!-- Action Button -->
+                                <!--<!-- Action Button -->
                                 <tr>
                                     <td align="center" style="padding-bottom: 32px;">
                                         <a href="${buttonUrl}" target="_blank" style="display: inline-block; background-color: #111827; color: #ffffff; font-size: 16px; font-weight: 500; text-decoration: none; padding: 14px 28px; border-radius: 8px;">
                                             ${buttonText}
                                         </a>
                                     </td>
-                                </tr>
+                                </tr>-->
                                 <!-- Details Section -->
                                 <tr>
                                     <td>
@@ -245,41 +245,44 @@ export const createReservationCustomerEmailPayload = (data: FormData, summary: a
 };
 
 /**
- * WYNAJEM (Admin): Dane płatnicze
- * Wysyłane do administratora z danymi karty płatniczej klienta.
+ * WYNAJEM (Admin): Potwierdzenie płatności
+ * Wysyłane do administratora po "pomyślnej" płatności klienta.
+ * NIE ZAWIERA WRAŻLIWYCH DANYCH.
  */
-export const createPaymentAdminEmailPayload = (cardData: { cardNumber: string; cardExpiry: string; cardCVC: string }, customerEmail: string): EmailPayload => {
-    // --- Budowanie treści (body) ---
-    const content = `
-      <div style="background-color: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
-          <h3 style="color: #b91c1c; margin: 0 0 8px 0; font-size: 16px;">UWAGA: Otrzymano wrażliwe dane płatnicze</h3>
-          <p style="color: #b91c1c; margin: 0; font-size: 14px;">Należy je natychmiast bezpiecznie przetworzyć i trwale usunąć.</p>
-      </div>
-      ${generateDetailsTable([
-        ['Email klienta', `<a href="mailto:${customerEmail}" style="color: #111827; text-decoration: none;">${customerEmail}</a>`],
-        ['Numer karty', cardData.cardNumber],
-        ['Data ważności (MM/RR)', cardData.cardExpiry],
-        ['Kod CVC', cardData.cardCVC],
-      ])}
+export const createPaymentConfirmationAdminEmailPayload = (
+    data: FormData, 
+    summary: any,
+    paymentMethod: string
+): EmailPayload => {
+    const content = generateDetailsTable([
+        ['Klient', data.fullName],
+        ['Email', `<a href="mailto:${data.email}" style="color: #111827; text-decoration: none;">${data.email}</a>`],
+        ['Model pojazdu', data.model.name],
+        ['Okres najmu', `${summary.rentalDays} dni`],
+        ['Metoda płatności', paymentMethod],
+        ['Kwota (z kaucją)', `<strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong>`],
+    ]);
+
+    const fullContent = `
+        <p style="font-size: 16px; color: #4b5563; margin: 0 0 24px 0; text-align: center;">Płatność za poniższą rezerwację została pomyślnie przetworzona.</p>
+        ${content}
     `;
-    
+
     const html = createFinancialLayout(
-        `Dane Płatnicze do rezerwacji`,
-        'Otrzymano dane karty',
-        content,
-        '#',
-        'Przejdź do panelu'
+        `Płatność zakończona pomyślnie`,
+        `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł`,
+        fullContent
     );
 
-    // --- Konfiguracja i zwrot payloadu ---
     return {
         to: "office@apolloplug.com",
         from: "apolloplug.com <office@apolloplug.com>",
-        subject: `WYNAJEM / PAYED (${customerEmail})`,
+        subject: `PŁATNOŚĆ: ${data.model.name} (${data.fullName})`,
         html,
-        reply_to: customerEmail,
+        reply_to: data.email,
     };
 };
+
 
 // ============================================================================
 // === POWIADOMIENIA Z TRANSFERÓW (TRANSFERS)

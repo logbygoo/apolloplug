@@ -11,6 +11,7 @@ import BlogPage from './pages/BlogPage';
 import BlogArticlePage from './pages/BlogArticlePage';
 import PurchasePage from './pages/PurchasePage';
 import InsurancePage from './pages/InsurancePage';
+import DocumentationPage from './pages/DocumentationPage';
 import { ApolloPlugLogo } from './constants';
 import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './components/HeroIcons';
 import { CONFIG } from './config';
@@ -36,9 +37,9 @@ const Header: React.FC = () => {
     <>
       <header className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-14 max-w-screen-2xl items-center px-4 md:px-6">
-          <NavLink to="/" className="flex items-center mr-6">
+          <a href="/#/" className="flex items-center mr-6">
             <ApolloPlugLogo />
-          </NavLink>
+          </a>
           
           <nav className="hidden lg:flex flex-1 justify-center gap-6 text-sm font-medium">
             {mainNavLinks.map((link) => (
@@ -99,22 +100,22 @@ const Header: React.FC = () => {
 
 const Footer: React.FC = () => {
     const footerLinks = [
-        { path: '/', name: `Apollo Plug © ${new Date().getFullYear()}` },
-        { path: '#', name: 'Prywatność i przepisy prawne' },
+        { path: '/dokumentacja', name: 'Polityka prywatności' },
+        { path: '/dokumentacja', name: 'Regulamin' },
+        { path: '/dokumentacja', name: 'Prywatność i przepisy prawne' },
         { path: '/kontakt', name: 'Kontakt' },
-        { path: '/blog', name: 'Blog' },
-        { path: '#', name: 'Lokalizacje' },
     ];
   return (
     <footer className="bg-background">
-      <div className="container mx-auto max-w-screen-2xl px-4 md:px-6 py-8">
-        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
+      <div className="container mx-auto max-w-screen-2xl px-4 md:px-6 py-8 text-center">
+        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-4">
           {footerLinks.map(link => (
             <NavLink key={link.name} to={link.path} className="text-xs text-muted-foreground hover:text-foreground">
               {link.name}
             </NavLink>
           ))}
         </div>
+        <p className="text-xs text-muted-foreground">Apollo Plug © {new Date().getFullYear()}</p>
       </div>
     </footer>
   );
@@ -152,6 +153,7 @@ const App: React.FC = () => {
             <Route path="/blog/:articleSlug" element={<BlogArticlePage />} />
             <Route path="/zakup" element={<PurchasePage />} />
             <Route path="/ubezpieczenia" element={<InsurancePage />} />
+            <Route path="/dokumentacja" element={<DocumentationPage />} />
           </Routes>
         </main>
         <Footer />

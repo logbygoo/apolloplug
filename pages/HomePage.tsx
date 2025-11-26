@@ -535,6 +535,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
       
+      {/*
       <section className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-secondary rounded-lg relative overflow-hidden group">
@@ -563,6 +564,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
+      */}
 
     </div>
   );

@@ -3,8 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
 import { LOCATIONS, Location } from '../configs/locationsConfig';
-import { BRANDS, PayUIcon, RevolutPayIcon } from '../constants';
-import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon } from '../icons';
+import { BRANDS } from '../constants';
+import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon, PayUIcon, RevolutPayIcon } from '../icons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentConfirmationAdminEmailPayload } from '../configs/notifications/emailTemplates';
@@ -57,6 +57,15 @@ const BrandCard: React.FC<{ brand: typeof BRANDS[number], isSelected: boolean, o
 
 const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void; }> = ({ car, isSelected, onSelect }) => {
     const isAvailable = car.available !== false;
+    
+    // Calculate the minimum price from the price tiers
+    const minPrice = useMemo(() => {
+        if (car.priceTiers && car.priceTiers.length > 0) {
+            return Math.min(...car.priceTiers.map(tier => tier.pricePerDay));
+        }
+        return car.pricePerDay;
+    }, [car]);
+
     return (
         <div
             onClick={isAvailable ? onSelect : undefined}
@@ -78,7 +87,7 @@ const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void;
             <div className="mt-auto text-center">
                 <h3 className="font-semibold">{car.name}</h3>
                 {isAvailable ? (
-                    <p className="text-sm text-muted-foreground">{car.pricePerDay} zł/dzień</p>
+                    <p className="text-sm text-muted-foreground">od {minPrice} zł/dzień</p>
                 ) : (
                     <p className="text-sm text-muted-foreground">&nbsp;</p>
                 )}
@@ -286,19 +295,22 @@ const RentalPage: React.FC = () => {
     }, [formData.model, setSearchParams, step]);
 
     const summary = useMemo(() => {
-        const { pickupDate, returnDate, options, model, pickupLocation, returnLocation } = formData;
+        const { pickupDate, returnDate, pickupTime, returnTime, options, model, pickupLocation, returnLocation } = formData;
         const defaultReturn = { rentalDays: 0, rentalPrice: 0, optionsPrice: 0, totalPrice: 0, deposit: 5000, totalWithDeposit: 5000, totalKmLimit: 0, costPerKmOverLimit: 0, pickupFee: 0, returnFee: 0 };
-        if (!pickupDate || !returnDate || !model) {
+
+        if (!pickupDate || !returnDate || !pickupTime || !returnTime || !model) {
             return defaultReturn;
         }
-        
-        const start = new Date(pickupDate);
-        const end = new Date(returnDate);
+
+        const start = new Date(`${pickupDate}T${pickupTime}`);
+        const end = new Date(`${returnDate}T${returnTime}`);
+
         if (start >= end) {
             return defaultReturn;
         }
 
         const diffTime = end.getTime() - start.getTime();
+        // A rental day is a full 24-hour period. Any fraction of a day counts as a full day.
         const rentalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
 
         const tier = model.priceTiers?.find(t => {

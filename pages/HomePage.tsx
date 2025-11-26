@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
-import { BoltIcon, PowerIcon, KeyIcon, Cog6ToothIcon, ShieldCheckIcon, SparklesIcon } from '../components/HeroIcons';
+import { BoltIcon, PowerIcon, KeyIcon, Cog6ToothIcon, ShieldCheckIcon, SparklesIcon, ClockIcon, PuzzlePiece, LightBulb, DocumentTextIcon } from '../components/HeroIcons';
 import Seo from '../components/Seo';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 
@@ -195,7 +195,7 @@ const AnimatedTimeline = () => {
             buttons: [],
         },
         {
-            icon: Cog6ToothIcon,
+            icon: PuzzlePiece,
             title: "Jazda próbna i Testy",
             description: "Trudno podjąć decyzję, jeśli nie poczujesz auta na żywo. Umówimy Cię na jazdę próbną, żebyś spokojnie sprawdził jak auto przyspiesza i zachowuje się w mieście. Możesz też wynająć je na dzień, tydzień albo dłużej, aby poznać je w prawdziwych, codziennych sytuacjach.",
             buttons: [
@@ -212,7 +212,7 @@ const AnimatedTimeline = () => {
             ]
         },
         {
-            icon: SparklesIcon,
+            icon: ClockIcon,
             title: "Oczekiwanie na VIN",
             description: "Czas oczekiwania bywa nużący, dlatego w tym okresie możesz korzystać z auta od nas. Dostajesz je na preferencyjnych warunkach, żebyś mógł swobodnie jeździć i nie martwić się o zastępstwo. To wygodne rozwiązanie, dzięki któremu spokojnie doczekasz właściwego samochodu.",
             buttons: [
@@ -220,7 +220,7 @@ const AnimatedTimeline = () => {
             ]
         },
         {
-            icon: SparklesIcon,
+            icon: LightBulb,
             title: "Finansowanie",
             description: "Wspólnie przeanalizujemy różne formy finansowania, żeby dobrać tę, która będzie wygodna i przejrzysta. Leasing, kredyt lub płatność gotówką – każda opcja ma swoje plusy. Współpracujemy z wieloma firmami, więc możesz liczyć na konkretne propozycje.",
             buttons: [
@@ -228,7 +228,7 @@ const AnimatedTimeline = () => {
             ]
         },
         {
-            icon: SparklesIcon,
+            icon: DocumentTextIcon,
             title: "Ubezpieczenie",
             description: "Dobre ubezpieczenie daje spokój już od pierwszego dnia. Pomożemy Ci wybrać polisę dopasowaną do Twoich potrzeb i wartości auta. Przejdziemy przez kilka wariantów, żebyś wiedział, czym różnią się poszczególne opcje.",
             buttons: [
@@ -501,34 +501,34 @@ const HomePage: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-12">
             <div className="flex-1 max-w-lg text-center md:text-left">
-              <h2 className="text-4xl font-semibold tracking-tight">Doładuj samochód</h2>
+              <h2 className="text-4xl font-semibold tracking-tight">Punkty w całym mieście</h2>
               <p className="mt-3 text-foreground/70">
-                Zobacz dostępną w pobliżu sieć stacji Tesla Supercharger i Destination Charger.
+                Odbieraj auta w całym mieście prosto z ładowarek lub zamawiaj dostawę pod dom.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Button variant="primary" size="lg">Wyświetl sieć</Button>
-                <Button variant="secondary" size="lg">Dowiedz się więcej</Button>
+                <Button variant="primary" size="lg">Wypożycz auto</Button>
+                <Button variant="secondary" size="lg">Auto z kierowcą</Button>
               </div>
             </div>
 
             <div className="flex items-start gap-8 sm:gap-12">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-3">
-                  <p className="text-4xl font-bold tracking-tight">14 075</p>
+                  <p className="text-4xl font-bold tracking-tight">2 aktywne</p>
                   <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white shadow-md">
                     <BoltIcon className="w-5 h-5"/>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">Supercharger</p>
+                <p className="text-sm text-muted-foreground mt-2">Stacje Supercharger</p>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center gap-3">
-                  <p className="text-4xl font-bold tracking-tight">4717</p>
+                  <p className="text-4xl font-bold tracking-tight">do 30km</p>
                   <div className="w-10 h-10 rounded-full bg-zinc-500 flex items-center justify-center text-white shadow-md">
                     <PowerIcon className="w-6 h-6"/>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">Stacje Destination Chargers</p>
+                <p className="text-sm text-muted-foreground mt-2">Dostawa pod dom</p>
               </div>
             </div>
           </div>
@@ -544,7 +544,7 @@ const HomePage: React.FC = () => {
               <Button variant="secondary" className="mt-6 bg-white hover:bg-zinc-200 text-secondary-foreground shadow-sm">Umów się na jazdę próbną</Button>
             </div>
             <img 
-              src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-3-20-inch-Performance-Wheel-and-Tire-Package-Desktop.png"
+              src="https://img.apolloplug.com/img/tesla-3-low-600x400.jpg"
               alt="Koło Tesli"
               className="absolute w-[350px] h-auto -right-12 -bottom-16 transition-transform duration-300 group-hover:scale-105"
             />
@@ -556,7 +556,7 @@ const HomePage: React.FC = () => {
               <Button variant="secondary" className="mt-6 bg-white hover:bg-zinc-200 text-secondary-foreground shadow-sm">Kup teraz</Button>
             </div>
             <img 
-              src="https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto/Model-Y-Roof-Rack-v2-Desktop.png" 
+              src="https://img.apolloplug.com/img/tesla-cybertruck-low-600x400.jpg" 
               alt="Bagażnik dachowy Tesli"
               className="absolute w-[450px] h-auto -right-16 bottom-0 transition-transform duration-300 group-hover:scale-105"
             />

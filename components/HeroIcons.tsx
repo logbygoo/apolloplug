@@ -210,12 +210,8 @@ export const TikTokIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 
 // ADDED: SVG strings for map markers
 export const superchargerMapIconSvg = `
-<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-  <circle cx="18" cy="18" r="18" fill="#ef4444"/>
-  <path d="M13.5 2.25a.75.75 0 00-1.5 0v3a.75.75 0 001.5 0v-3zM13.125 6a.75.75 0 00-1.25 0v3.375a.75.75 0 001.5 0V6.375a.75.75 0 00-.25-.563zM10.875 6a.75.75 0 011.25 0v3.375a.75.75 0 01-1.5 0V6.375a.75.75 0 01.25-.563zM12 9.75a.75.75 0 01.75.75v3a.75.75 0 01-1.5 0v-3a.75.75 0 01.75-.75zM12 15a.75.75 0 00-1.5 0v3a.75.75 0 001.5 0v-3zM13.125 15.188a.75.75 0 00-1.25 0v3.187a.75.75 0 001.5 0v-3.188a.75.75 0 00-.25-.562zM10.875 15.188a.75.75 0 011.25 0v3.187a.75.75 0 01-1.5 0v-3.188a.75.75 0 01.25-.562z" fill="white" transform="translate(6 6)"/>
-  <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM3.75 12a8.25 8.25 0 1116.5 0 8.25 8.25 0 01-16.5 0z" clip-rule="evenodd" fill="white" transform="translate(6 6)"/>
-  <path d="M12.53 8.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06z" fill="white" transform="translate(6 6)"/>
-  <path d="M15.53 11.47a.75.75 0 00-1.06 0l-3 3a.75.75 0 001.06 1.06l3-3a.75.75 0 000-1.06z" fill="white" transform="translate(6 6)"/>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21 10.5h.375c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125H21M4.5 10.5h6.75V15H4.5v-4.5ZM3.75 18h15A2.25 2.25 0 0 0 21 15.75v-6a2.25 2.25 0 0 0-2.25-2.25h-15A2.25 2.25 0 0 0 1.5 9.75v6A2.25 2.25 0 0 0 3.75 18Z" />
 </svg>
 `;
 

@@ -6,6 +6,7 @@ import { BoltIcon, PowerIcon, KeyIcon, ShieldCheckIcon, SparklesIcon, ClockIcon,
 import { superchargerMapIconSvg, destinationChargerMapIconSvg } from '../icons';
 import Seo from '../components/Seo';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
+import { LOCATIONS } from '../configs/locationsConfig';
 
 // Declare google for TypeScript
 declare const google: any;
@@ -377,13 +378,6 @@ const GoogleMap = () => {
         disableDefaultUI: true,
         styles: [{ stylers: [{ saturation: -100 }] }],
       });
-
-      const locations = [
-        { lat: 52.232, lng: 21.010, type: 'supercharger', title: 'Supercharger Złote Tarasy' },
-        { lat: 52.260, lng: 20.982, type: 'supercharger', title: 'Supercharger Arkadia' },
-        { lat: 52.205, lng: 21.010, type: 'destination', title: 'Destination Charger Hotel' },
-        { lat: 52.170, lng: 20.967, type: 'destination', title: 'Destination Charger Business Park' },
-      ];
       
       const superchargerIcon = {
         url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(superchargerMapIconSvg),
@@ -398,13 +392,15 @@ const GoogleMap = () => {
       };
 
 
-      locations.forEach(loc => {
-        new google.maps.Marker({
-          position: { lat: loc.lat, lng: loc.lng },
-          map: map,
-          title: loc.title,
-          icon: loc.type === 'supercharger' ? superchargerIcon : destinationChargerIcon,
-        });
+      LOCATIONS.forEach(loc => {
+        if (loc.type === 'supercharger' || loc.type === 'greenway') {
+            new google.maps.Marker({
+            position: { lat: loc.lat, lng: loc.lng },
+            map: map,
+            title: loc.title,
+            icon: loc.type === 'supercharger' ? superchargerIcon : destinationChargerIcon,
+            });
+        }
       });
     });
   }, []);

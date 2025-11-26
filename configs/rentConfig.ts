@@ -109,11 +109,6 @@ export const RENTAL_CARS: Car[] = [
   }
 ];
 
-export const RENTAL_LOCATIONS = [
-  "Warszawa, Lotnisko Chopina (WAW)",
-  "Warszawa, Centrum",
-];
-
 export const ADDITIONAL_OPTIONS = [
     { id: 'insurance', name: 'Ubezpieczenie OC AC NNW', price: 0, type: 'one_time', description: 'Zabezpiecza kierowcę przed kosztami szkód spowodowanymi przez innych uczestników ruchu.' },
     { id: 'tires', name: 'Ubezpieczenie opon', price: { 'tesla-3-highland': 9, 'tesla-y-jupiter': 12, 'tesla-x': 15, 'tesla-cybertruck': 19 }, type: 'per_day', description: 'Pokrycie kosztów uszkodzenia opon.' },

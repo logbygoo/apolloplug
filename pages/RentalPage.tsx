@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Input, Label, PageHeader } from '../components/ui';
-import { RENTAL_CARS, RENTAL_LOCATIONS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
+import { RENTAL_CARS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
+import { LOCATIONS } from '../configs/locationsConfig';
 import { BRANDS, PayUIcon, RevolutPayIcon } from '../constants';
 import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon } from '../icons';
 import type { Car } from '../types';
@@ -15,6 +16,10 @@ const timeOptions = Array.from({ length: 25 }, (_, i) => {
     if (hour > 20) return null;
     return `${String(hour).padStart(2, '0')}:${minute}`;
 }).filter(Boolean) as string[];
+
+const RENTAL_LOCATIONS = LOCATIONS
+  .filter(loc => loc.type === 'pickup_point' || loc.type === 'building_company')
+  .map(loc => loc.title);
 
 const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
   if (typeof price === 'number') {

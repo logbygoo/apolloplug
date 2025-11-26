@@ -4,7 +4,7 @@ import { PhoneIcon } from '../components/HeroIcons';
 import Seo from '../components/Seo';
 import { MAPS_API_KEY } from '../configs/mapsConfig';
 import { 
-  SmsIcon, 
+  EnvelopeIcon, 
   WhatsAppIcon, 
   TelegramIcon, 
   MessengerIcon, 
@@ -108,7 +108,7 @@ const ContactPage: React.FC = () => {
 
   const contactMethods = [
     { name: 'Telefon', icon: PhoneIcon, href: 'tel:500308400' },
-    { name: 'SMS', icon: SmsIcon, href: 'sms:500308400' },
+    { name: 'SMS', icon: EnvelopeIcon, href: 'sms:500308400' },
     { name: 'WhatsApp', icon: WhatsAppIcon, href: 'https://wa.me/48500308400' },
     { name: 'Telegram', icon: TelegramIcon, href: 'https://t.me/apolloplug' },
     { name: 'Messenger', icon: MessengerIcon, href: 'https://m.me/apolloplug' },
@@ -142,7 +142,7 @@ const ContactPage: React.FC = () => {
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-4 md:gap-6 max-w-3xl mx-auto">
                 {contactMethods.map(method => (
                     <a key={method.name} href={method.href} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center justify-center gap-2 p-4 bg-secondary rounded-lg hover:bg-muted transition-colors group">
-                        <method.icon className="w-10 h-10 text-muted-foreground group-hover:text-foreground transition-colors" />
+                        <method.icon className="w-10 h-10 group-hover:text-foreground transition-colors" />
                         <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">{method.name}</span>
                     </a>
                 ))}

@@ -3,15 +3,13 @@ import { CAR_FLEET } from '../configs/fleetConfig';
 import { Button, Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription, PageHeader } from '../components/ui';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 const FleetPage: React.FC = () => {
   const breadcrumbs = [{ name: 'Pojazdy' }];
   return (
     <div className="bg-background">
-      <Seo
-        title="Flota Pojazdów Elektrycznych - Tesla"
-        description="Poznaj naszą flotę w 100% elektrycznych samochodów Tesla. Zobacz dostępne modele, specyfikacje i ceny wynajmu."
-      />
+      <Seo {...SEO_CONFIG['/flota']} />
       <PageHeader 
         title="Nasza Flota"
         subtitle="Wybierz jeden z naszych w pełni elektrycznych pojazdów i poczuj przyszłość motoryzacji."

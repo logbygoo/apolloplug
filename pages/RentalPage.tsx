@@ -9,6 +9,7 @@ import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentConfirmationAdminEmailPayload } from '../configs/notifications/emailTemplates';
 import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
@@ -509,10 +510,7 @@ const RentalPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            <Seo
-                title="Wynajem Samochodów Elektrycznych Tesla"
-                description="Zarezerwuj Teslę Model 3, Y, lub X. Oferujemy elastyczny wynajem krótkoterminowy i długoterminowy. Sprawdź cennik i dostępność online."
-            />
+            <Seo {...SEO_CONFIG['/wynajem']} />
             <PageHeader
                 title="Wynajem Auta EV"
                 subtitle="Zarezerwuj swój wymarzony samochód elektryczny w kilku prostych krokach."

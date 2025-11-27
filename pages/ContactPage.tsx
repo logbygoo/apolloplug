@@ -20,6 +20,7 @@ import {
 import Seo from '../components/Seo';
 import { LOCATIONS, Location } from '../configs/locationsConfig';
 import { loadGoogleMapsScript } from '../utils/maps';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 
 // Declare google for TypeScript
@@ -107,10 +108,7 @@ const ContactPage: React.FC = () => {
 
   return (
     <div className="bg-background">
-      <Seo
-        title="Kontakt"
-        description="Skontaktuj się z nami w sprawie wynajmu Tesli, transferów VIP lub inwestycji. Jesteśmy dostępni telefonicznie, mailowo oraz w naszym biurze w Warszawie."
-      />
+      <Seo {...SEO_CONFIG['/kontakt']} />
       <PageHeader 
         title="Kontakt"
         subtitle="Masz pytania? Chcesz nawiązać współpracę? Jesteśmy do Twojej dyspozycji."

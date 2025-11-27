@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PageHeader } from '../components/ui';
 import Seo from '../components/Seo';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 const docs = [
   { title: 'Regulamin apolloplug', url: '/docs/regulamin-apolloplug.pdf' },
@@ -18,10 +19,7 @@ const DocumentationPage: React.FC = () => {
 
   return (
     <div className="bg-background text-foreground">
-      <Seo
-        title="Dokumentacja"
-        description="Zapoznaj się z regulaminami, polityką prywatności i innymi ważnymi dokumentami dotyczącymi usług ApolloPlug."
-      />
+      <Seo {...SEO_CONFIG['/dokumentacja']} />
       <PageHeader
         title="Dokumentacja"
         subtitle="Wszystkie niezbędne dokumenty w jednym miejscu."

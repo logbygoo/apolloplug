@@ -3,15 +3,13 @@ import { PageHeader, Card, CardHeader, CardTitle, CardDescription, CardContent, 
 import { Link } from 'react-router-dom';
 import { ARTICLES } from '../configs/blogConfig';
 import Seo from '../components/Seo';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 const BlogPage: React.FC = () => {
     const breadcrumbs = [{ name: 'Blog' }];
     return (
         <div className="bg-background">
-            <Seo
-                title="Blog o Elektromobilności"
-                description="Najnowsze wiadomości, porady i artykuły ze świata samochodów elektrycznych. Bądź na bieżąco z trendami dzięki blogowi ApolloPlug."
-            />
+            <Seo {...SEO_CONFIG['/blog']} />
             <PageHeader title="Blog" subtitle="Nowości, porady i artykuły ze świata elektromobilności." breadcrumbs={breadcrumbs} />
             <div className="container mx-auto max-w-4xl px-4 md:px-6 pb-16 md:pb-24">
                 {ARTICLES.length > 0 ? (

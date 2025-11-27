@@ -10,6 +10,7 @@ import {
   DocumentTextIcon,
   BoltIcon,
 } from '../icons';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 const features = [
   {
@@ -44,10 +45,7 @@ const InsurancePage: React.FC = () => {
   const breadcrumbs = [{ name: 'Ubezpieczenia' }];
   return (
     <div className="bg-background text-foreground">
-      <Seo
-        title="Ubezpieczenia dla Samochodów Elektrycznych"
-        description="Znajdź najlepsze i najtańsze ubezpieczenie OC/AC dla Twojego samochodu elektrycznego. Porównujemy oferty wielu firm, gwarantując najniższą cenę."
-      />
+      <Seo {...SEO_CONFIG['/ubezpieczenia']} />
       <PageHeader
         title="Ubezpieczenia dla Twojego EV"
         subtitle="Zapewnij swojemu autu elektrycznemu najlepszą ochronę, nie przepłacając. Znajdziemy dla Ciebie najkorzystniejszą ofertę OC/AC na rynku."

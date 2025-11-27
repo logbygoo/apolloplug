@@ -8,6 +8,7 @@ import Seo from '../components/Seo';
 import { createTransferAdminEmailPayload, createTransferCustomerEmailPayload } from '../configs/notifications/emailTemplates';
 import { createTransferAdminSmsPayload, createTransferCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 import { loadGoogleMapsScript } from '../utils/maps';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 // Declare the global 'google' object to fix TypeScript errors.
 declare const google: any;
@@ -433,7 +434,7 @@ const TransfersPage: React.FC = () => {
 
   return (
     <div className="bg-background text-foreground">
-      <Seo title="Transfery VIP Tesla" description="Zamów profesjonalny i dyskretny transfer VIP naszą luksusową flotą Tesli. Idealne na lotnisko, spotkania biznesowe i specjalne okazje." />
+      <Seo {...SEO_CONFIG['/transfery']} />
       <div ref={mapRef} className="w-full h-[40vh] bg-secondary relative" />
 
       <div className="container mx-auto px-4 md:px-6 py-12">

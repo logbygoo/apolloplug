@@ -7,6 +7,7 @@ import { getMapIcon } from '../icons/mapIcons';
 import Seo from '../components/Seo';
 import { LOCATIONS } from '../configs/locationsConfig';
 import { loadGoogleMapsScript } from '../utils/maps';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 // Declare google for TypeScript
 declare const google: any;
@@ -424,10 +425,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="bg-background">
-      <Seo 
-        title="ApolloPlug - Wynajem i transfery autami Tesla"
-        description="Doświadcz przyszłości motoryzacji. Wynajmuj Tesle, korzystaj z transferów VIP i inwestuj w elektromobilność. ApolloPlug - Twoje centrum EV."
-      />
+      <Seo {...SEO_CONFIG['/']} />
       <HeroSlider />
       
       <HorizontalCarousel items={vehicleCarouselItems} />

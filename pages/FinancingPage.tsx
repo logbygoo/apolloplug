@@ -8,6 +8,7 @@ import {
   BanknotesIcon,
   SparklesIcon,
 } from '../icons';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 const features = [
   {
@@ -37,10 +38,7 @@ const FinancingPage: React.FC = () => {
   const breadcrumbs = [{ name: 'Finansowanie' }];
   return (
     <div className="bg-background text-foreground">
-      <Seo
-        title="Finansowanie Samochodów Elektrycznych"
-        description="Elastyczne opcje finansowania Twojego nowego EV. Oferujemy leasing, wynajem długoterminowy i kredyt. Znajdź rozwiązanie idealne dla siebie."
-      />
+      <Seo {...SEO_CONFIG['/finansowanie']} />
       <PageHeader
         title="Finansowanie Twojego EV"
         subtitle="Współpracujemy z wiodącymi instytucjami finansowymi, aby znaleźć dla Ciebie najlepsze rozwiązanie. Porównamy dziesiątki ofert leasingu, wynajmu i kredytu, oszczędzając Twój czas i pieniądze."

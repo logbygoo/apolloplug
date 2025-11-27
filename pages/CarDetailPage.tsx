@@ -3,6 +3,8 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { PageHeader, Button } from '../components/ui';
 import Seo from '../components/Seo';
+import { SEO_CONFIG } from '../configs/seoConfig';
+import type { SeoData } from '../types';
 
 const CarDetailPage: React.FC = () => {
     const { carId } = useParams<{ carId: string }>();
@@ -16,13 +18,20 @@ const CarDetailPage: React.FC = () => {
         { name: 'Pojazdy', path: '/flota' },
         { name: car.name },
     ];
+    
+    const baseSeoData = SEO_CONFIG['/flota/:carId'];
+    const seoData: SeoData = {
+      ...baseSeoData,
+      title: baseSeoData.title.replace('{carName}', car.name),
+      description: baseSeoData.description.replace('{carName}', car.name),
+      ogTitle: (baseSeoData.ogTitle || baseSeoData.title).replace('{carName}', car.name),
+      ogDescription: (baseSeoData.ogDescription || baseSeoData.description).replace('{carName}', car.name),
+      ogImage: car.imageUrl[0],
+    };
 
     return (
         <div className="bg-background">
-            <Seo
-                title={`${car.name} - Dane techniczne i wynajem`}
-                description={`Wynajmij Teslę ${car.name}. Sprawdź specyfikację, osiągi, zasięg i cennik. Zarezerwuj online w ApolloPlug.`}
-            />
+            <Seo {...seoData} />
             <PageHeader title={car.name} subtitle={car.description} breadcrumbs={breadcrumbs} />
             <div className="container mx-auto px-4 md:px-6 pb-16 md:pb-24">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">

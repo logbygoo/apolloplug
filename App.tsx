@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HashRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import TransfersPage from './pages/TransfersPage';
 import RentalPage from './pages/RentalPage';
@@ -136,7 +136,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <ScrollToTop />
       <div className="flex min-h-screen flex-col bg-background text-foreground font-sans">
         <Header />
@@ -158,7 +158,7 @@ const App: React.FC = () => {
         </main>
         <Footer />
       </div>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 

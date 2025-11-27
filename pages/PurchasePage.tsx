@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { PageHeader, Button } from '../components/ui';
 import Seo from '../components/Seo';
 import { DocumentTextIcon, KeyIcon, BanknotesIcon, ShieldCheckIcon, SparklesIcon, HomeIcon } from '../icons';
+import { SEO_CONFIG } from '../configs/seoConfig';
 
 const features = [
   {
@@ -44,10 +45,7 @@ const PurchasePage: React.FC = () => {
   const breadcrumbs = [{ name: 'Zakup' }];
   return (
     <div className="bg-background text-foreground">
-      <Seo
-        title="Zamów z nami swoje EV"
-        description="Kompleksowa pomoc w zakupie Twojego wymarzonego EV. Zajmujemy się całym procesem - od konfiguracji, przez finansowanie i ubezpieczenie, aż po odbiór."
-      />
+      <Seo {...SEO_CONFIG['/zakup']} />
       <PageHeader
         title="Zamów z nami swoje EV"
         subtitle="Zajmiemy się wszystkim za Ciebie – od konfiguracji, przez finansowanie, aż po dostawę pod same drzwi. Skup się na przyjemności z jazdy, resztę zostaw nam."

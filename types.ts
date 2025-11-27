@@ -43,3 +43,12 @@ export interface Article {
   excerpt: string;
   content: string;
 }
+
+export interface SeoData {
+  title: string;
+  description: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogType?: string;
+}

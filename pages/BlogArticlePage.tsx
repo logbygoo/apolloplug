@@ -3,6 +3,8 @@ import { useParams, Navigate } from 'react-router-dom';
 import { PageHeader } from '../components/ui';
 import { ARTICLES } from '../configs/blogConfig';
 import Seo from '../components/Seo';
+import { SEO_CONFIG } from '../configs/seoConfig';
+import type { SeoData } from '../types';
 
 const BlogArticlePage: React.FC = () => {
     const { articleSlug } = useParams<{ articleSlug: string }>();
@@ -16,12 +18,19 @@ const BlogArticlePage: React.FC = () => {
         { name: 'Blog', path: '/blog' },
         { name: article.title },
     ];
+
+    const seoData: SeoData = {
+      ...SEO_CONFIG['/blog/:articleSlug'],
+      title: article.title,
+      description: article.excerpt,
+      ogTitle: article.title,
+      ogDescription: article.excerpt,
+      ogImage: article.thumbnailUrl,
+    };
+
     return (
         <div className="bg-background">
-            <Seo
-                title={article.title}
-                description={article.excerpt}
-            />
+            <Seo {...seoData} />
             <PageHeader 
                 title={article.title} 
                 breadcrumbs={breadcrumbs} 

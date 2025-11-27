@@ -11,6 +11,13 @@ import { createReservationAdminEmailPayload, createReservationCustomerEmailPaylo
 import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 import { SEO_CONFIG } from '../configs/seoConfig';
 
+// Declare gtag for TypeScript
+declare global {
+  interface Window {
+    gtag?: (command: string, action: string, params?: { [key: string]: any }) => void;
+  }
+}
+
 const timeOptions = Array.from({ length: 25 }, (_, i) => {
     const hour = Math.floor(i / 2) + 8;
     const minute = i % 2 === 0 ? '00' : '30';
@@ -419,6 +426,15 @@ const RentalPage: React.FC = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(customerSmsPayload),
             }).catch(err => console.warn("Failed to send customer SMS", err));
+
+            // Fire Google Ads conversion event
+            if (typeof window.gtag === 'function') {
+                window.gtag('event', 'conversion', {
+                    'send_to': 'AW-17760954062/WQuYCP6q7McbEM7NipVC',
+                    'value': 1.0,
+                    'currency': 'PLN'
+                });
+            }
 
             setStep('payment');
         } catch (error) {

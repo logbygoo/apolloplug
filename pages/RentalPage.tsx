@@ -670,7 +670,7 @@ const RentalPage: React.FC = () => {
                                             <div className="space-y-4">
                                                 <AgreementCheckbox
                                                     id="terms"
-                                                    label={<>Akceptuję{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">regulamin</Link>{' '}oraz{' '}<Link to="/rules" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">politykę prywatności</Link>{' '}apolloplug.com <span className="text-destructive">*</span></>}
+                                                    label={<>Akceptuję{' '}<Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">regulamin</Link>{' '}oraz{' '}<Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">politykę prywatności</Link>{' '}apolloplug.com <span className="text-destructive">*</span></>}
                                                     isChecked={agreements.terms}
                                                     onToggle={() => handleAgreementToggle('terms')}
                                                 />

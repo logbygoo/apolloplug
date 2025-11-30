@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
@@ -36,11 +37,18 @@ const RentalCarLandingPage: React.FC = () => {
         return carRental.pricePerDay;
     }, [carRental]);
 
-    const galleryImages = [
-        ...carRental.imageUrl,
-        // Add duplicates if only 1 image to allow slider to function
-        ...(carRental.imageUrl.length < 2 ? [carRental.imageUrl[0]] : []) 
-    ];
+    // Priority: use landingPageImages if available (better for hero slider), fallback to standard imageUrl
+    const galleryImages = useMemo(() => {
+        const images = carRental.landingPageImages && carRental.landingPageImages.length > 0 
+            ? carRental.landingPageImages 
+            : carRental.imageUrl;
+            
+        // Add duplicate if only 1 image to allow slider to function properly
+        if (images.length < 2) {
+            return [...images, images[0]];
+        }
+        return images;
+    }, [carRental]);
 
     // --- Slider Logic (Same as HomePage) ---
     useEffect(() => {

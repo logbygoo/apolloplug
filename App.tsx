@@ -20,7 +20,7 @@ import ScrollToTop from './components/ScrollToTop';
 
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
-  { path: '/wynajem', name: 'Wynajem' },
+  { path: '/wynajem', name: 'Wypożyczalnia' },
   { path: '/transfery', name: 'Transfery' },
   { path: '/zakup', name: 'Zakup' },
   { path: '/ubezpieczenia', name: 'Ubezpieczenia' },
@@ -55,7 +55,23 @@ const Header: React.FC = () => {
 
           <div className="hidden lg:flex items-center gap-4">
              <a href="tel:500308400" aria-label="Support"><PhoneIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
-             <a href="#" aria-label="Language"><FlagIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
+             
+             {/* Language Dropdown */}
+             <div className="relative group h-14 flex items-center">
+                <button className="flex items-center focus:outline-none" aria-label="Language">
+                   <FlagIcon className="h-6 w-6 text-foreground/70 group-hover:text-foreground transition-colors" />
+                </button>
+                <div className="absolute right-0 top-12 w-40 bg-card border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
+                   <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      Wybierz język
+                   </div>
+                   <div className="h-px bg-border my-0"></div>
+                   <a href="#" className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors">
+                      Polski
+                   </a>
+                </div>
+             </div>
+
              <NavLink to="/kontakt" aria-label="Contact"><EnvelopeIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></NavLink>
           </div>
 
@@ -108,6 +124,17 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-background">
       <div className="container mx-auto max-w-screen-2xl px-4 md:px-6 py-8 text-center">
+        
+        {/* Payment Icons */}
+        <div className="mt-[100px] mb-8 flex flex-wrap justify-center items-center gap-4 opacity-70 grayscale hover:grayscale-0 transition-all duration-300">
+            <img src="https://img.apolloplug.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
+            <img src="https://img.apolloplug.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
+            <img src="https://img.apolloplug.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
+            <img src="https://img.apolloplug.com/img/pay-visa.svg" alt="Visa" className="h-6" />
+            <img src="https://img.apolloplug.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
+            <img src="https://img.apolloplug.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
+        </div>
+
         <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-4">
           {footerLinks.map(link => (
             <NavLink key={link.name} to={link.path} className="text-xs text-muted-foreground hover:text-foreground">

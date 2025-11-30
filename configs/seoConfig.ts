@@ -18,6 +18,12 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     title: '{carName} - Dane techniczne i wynajem',
     description: 'Wynajmij Teslę {carName}. Sprawdź specyfikację, osiągi, zasięg i cennik. Zarezerwuj online w ApolloPlug.',
   },
+  '/wypozycz/:carId': {
+    title: 'Wynajem {carName} Warszawa | Wypożyczalnia Tesla',
+    description: 'Oferujemy wynajem {carName} w Warszawie. Sprawdź cennik, dostępność i zarezerwuj online. Tesla na doby, miesiące i długi termin.',
+    ogTitle: 'Wynajem {carName} - Najlepsza oferta w Warszawie',
+    ogDescription: 'Chcesz wynająć Teslę? Sprawdź naszą ofertę na {carName}. Minimum formalności, pełne ubezpieczenie i nowe modele.',
+  },
   '/wypozyczalnia': {
     title: 'Wynajem Samochodów Elektrycznych Tesla',
     description: 'Zarezerwuj Teslę Model 3, Y, lub X. Oferujemy elastyczny wynajem krótkoterminowy i długoterminowy. Sprawdź cennik i dostępność online.',

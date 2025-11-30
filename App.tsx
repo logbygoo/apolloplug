@@ -12,6 +12,7 @@ import BlogArticlePage from './pages/BlogArticlePage';
 import PurchasePage from './pages/PurchasePage';
 import InsurancePage from './pages/InsurancePage';
 import DocumentationPage from './pages/DocumentationPage';
+import RentalCarLandingPage from './pages/RentalCarLandingPage'; // Import new page
 import { ApolloPlugLogo } from './constants';
 import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './icons';
 import { CONFIG } from './config';
@@ -175,6 +176,7 @@ const App: React.FC = () => {
             <Route path="/finansowanie" element={<FinancingPage />} />
             <Route path="/flota" element={<FleetPage />} />
             <Route path="/flota/:carId" element={<CarDetailPage />} />
+            <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:articleSlug" element={<BlogArticlePage />} />

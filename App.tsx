@@ -142,7 +142,7 @@ const Footer: React.FC = () => {
             </NavLink>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">Apollo Plug © {new Date().getFullYear()}</p>
+        <p className="text-xs text-muted-foreground">apolloplug.com © {new Date().getFullYear()} all rights reserved</p>
       </div>
     </footer>
   );

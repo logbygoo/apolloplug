@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
@@ -21,27 +21,54 @@ const RentalCarLandingPage: React.FC = () => {
     const carFleet = CAR_FLEET.find(c => c.id === carId);
     const carRental = RENTAL_CARS.find(c => c.id === carId);
     
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isHovered, setIsHovered] = useState(false);
 
     if (!carFleet || !carRental) {
         return <Navigate to="/wypozyczalnia" replace />;
     }
 
-    // Merge image lists and add placeholders if needed to make the slider work better visually
+    // Calculate minimum price dynamically
+    const minPrice = useMemo(() => {
+        if (carRental.priceTiers && carRental.priceTiers.length > 0) {
+            return Math.min(...carRental.priceTiers.map(tier => tier.pricePerDay));
+        }
+        return carRental.pricePerDay;
+    }, [carRental]);
+
     const galleryImages = [
         ...carRental.imageUrl,
-        // Add more specific/contextual images if available in real config, 
-        // using duplicates here just to demonstrate slider functionality if only 1 img exists
-        ...(carRental.imageUrl.length < 2 ? [carRental.imageUrl[0], carRental.imageUrl[0]] : []) 
+        // Add duplicates if only 1 image to allow slider to function
+        ...(carRental.imageUrl.length < 2 ? [carRental.imageUrl[0]] : []) 
     ];
 
-    const nextImage = () => {
-        setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
+    // --- Slider Logic (Same as HomePage) ---
+    useEffect(() => {
+        // Preload images
+        galleryImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    }, [galleryImages]);
+
+    const goToNext = useCallback(() => {
+        setCurrentIndex(prevIndex => (prevIndex === galleryImages.length - 1 ? 0 : prevIndex + 1));
+    }, [galleryImages.length]);
+
+    const goToPrevious = () => {
+        setCurrentIndex(prevIndex => (prevIndex === 0 ? galleryImages.length - 1 : prevIndex - 1));
     };
 
-    const prevImage = () => {
-        setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    const goToSlide = (index: number) => {
+        setCurrentIndex(index);
     };
+
+    useEffect(() => {
+        if (isHovered) return;
+        const slideInterval = setInterval(goToNext, 10000);
+        return () => clearInterval(slideInterval);
+    }, [currentIndex, isHovered, goToNext]);
+
 
     const seoData: SeoData = {
       ...SEO_CONFIG['/wypozycz/:carId'],
@@ -63,60 +90,97 @@ const RentalCarLandingPage: React.FC = () => {
         <div className="bg-background">
             <Seo {...seoData} />
             
-            {/* HERO SECTION WITH SLIDER */}
-            <section className="relative h-[60vh] md:h-[75vh] w-full overflow-hidden bg-zinc-900">
-                 <div 
-                    className="absolute inset-0 w-full h-full transition-transform duration-700 ease-in-out"
-                    style={{ backgroundImage: `url(${galleryImages[currentImageIndex]})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                >
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+            {/* HERO SLIDER (Matching HomePage Style) */}
+            <section 
+                className="relative h-[600px] w-full text-white"
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+            >
+                {/* Progress Bar */}
+                <div className="absolute top-0 left-0 w-full h-1 bg-black/20 z-10">
+                    <div 
+                        key={currentIndex}
+                        className="h-full bg-white"
+                        style={{
+                            animation: 'progressBarFill 10s linear forwards',
+                            animationPlayState: isHovered ? 'paused' : 'running'
+                        }}
+                    />
                 </div>
 
-                {galleryImages.length > 1 && (
-                    <>
-                        <button onClick={prevImage} className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-all border border-white/10 z-10">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-                        </button>
-                        <button onClick={nextImage} className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/30 hover:bg-black/50 text-white backdrop-blur-sm transition-all border border-white/10 z-10">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-                        </button>
-                        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-2">
-                            {galleryImages.map((_, idx) => (
-                                <button 
-                                    key={idx} 
-                                    onClick={() => setCurrentImageIndex(idx)}
-                                    className={`w-2.5 h-2.5 rounded-full transition-all ${idx === currentImageIndex ? 'bg-white w-8' : 'bg-white/50 hover:bg-white/80'}`} 
+                {/* Background Images */}
+                <div className="absolute inset-0 w-full h-full">
+                    {galleryImages.map((img, index) => (
+                        <div
+                            key={index}
+                            className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
+                                currentIndex === index ? 'opacity-100' : 'opacity-0'
+                            }`}
+                            style={{ backgroundImage: `url(${img})` }}
+                            role="img"
+                            aria-label={`Zdjęcie ${carFleet.name} ${index + 1}`}
+                        />
+                    ))}
+                </div>
+
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black/40" />
+
+                {/* Content */}
+                <div className="relative container mx-auto h-full flex flex-col justify-center items-center text-center px-4">
+                    <div className="animate-fade-in-up">
+                        <span className="inline-block px-3 py-1 mb-6 text-sm font-semibold tracking-wider uppercase bg-white/20 backdrop-blur-sm rounded-sm border border-white/30">
+                            Dostępny od ręki
+                        </span>
+                        <h1 className="text-4xl md:text-6xl font-semibold text-shadow-md mb-4">
+                            Wynajem {carFleet.name}
+                        </h1>
+                        <p className="mt-2 text-xl md:text-2xl text-shadow text-white/90 max-w-2xl mx-auto">
+                            Poczuj przyszłość motoryzacji w Warszawie
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-6 mt-10 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Link to={`/wypozyczalnia?model=${carId}`}>
+                                <Button size="lg" variant="primary" className="w-64 text-lg h-14">
+                                    Cena od {minPrice} zł / doba
+                                </Button>
+                            </Link>
+                            <Link to="/flota">
+                                <Button 
+                                    size="lg" 
+                                    variant="secondary" 
+                                    className="w-64 text-lg h-14 bg-white/20 !text-white border border-white/50 hover:bg-white/30"
+                                >
+                                    Zobacz pełną ofertę
+                                </Button>
+                            </Link>
+                        </div>
+                        
+                        {/* Slide Indicators */}
+                        <div className="flex gap-2 mt-4">
+                            {galleryImages.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => goToSlide(index)}
+                                    className={`h-1.5 w-6 rounded-full transition-colors ${
+                                        currentIndex === index ? 'bg-white' : 'bg-white/20 hover:bg-white/40'
+                                    }`}
+                                    aria-label={`Przejdź do slajdu ${index + 1}`}
                                 />
                             ))}
                         </div>
-                    </>
-                )}
-
-                <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 pb-16">
-                    <div className="container mx-auto">
-                        <div className="max-w-3xl animate-fade-in-up">
-                            <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-white uppercase bg-blue-600 rounded-sm">
-                                Dostępny od ręki
-                            </span>
-                            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight shadow-black drop-shadow-lg">
-                                Wynajem {carFleet.name}
-                                <span className="block text-xl md:text-3xl font-medium text-gray-300 mt-2">Poczuj przyszłość motoryzacji w Warszawie</span>
-                            </h1>
-                            <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                                <Link to={`/wypozyczalnia?model=${carId}`}>
-                                    <Button size="lg" className="w-full sm:w-auto text-lg px-8 py-6 shadow-lg shadow-blue-900/20">
-                                        Wypożycz teraz od {carRental.pricePerDay} zł
-                                    </Button>
-                                </Link>
-                                <Link to="/flota">
-                                    <Button variant="secondary" size="lg" className="w-full sm:w-auto bg-white/10 text-white hover:bg-white/20 border-white/10 backdrop-blur-md">
-                                        Zobacz pełną ofertę
-                                    </Button>
-                                </Link>
-                            </div>
-                        </div>
                     </div>
                 </div>
+
+                {/* Navigation Arrows */}
+                <button onClick={goToPrevious} className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <button onClick={goToNext} className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
             </section>
 
             {/* KEY METRICS */}
@@ -136,8 +200,8 @@ const RentalCarLandingPage: React.FC = () => {
                             <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Miejsca</p>
                         </div>
                          <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter text-blue-600">{carRental.pricePerDay} zł</p>
-                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Cena za dobę</p>
+                            <p className="text-3xl font-bold tracking-tighter text-blue-600">{minPrice} zł</p>
+                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Cena od / doba</p>
                         </div>
                     </div>
                 </div>
@@ -217,8 +281,8 @@ const RentalCarLandingPage: React.FC = () => {
                             <h3 className="text-xl font-bold mb-4">Zarezerwuj termin</h3>
                             <div className="space-y-4 mb-6">
                                 <div className="flex justify-between items-center py-2 border-b border-border">
-                                    <span className="text-muted-foreground">Cena za dobę</span>
-                                    <span className="font-bold">{carRental.pricePerDay} zł</span>
+                                    <span className="text-muted-foreground">Cena od</span>
+                                    <span className="font-bold">{minPrice} zł / doba</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2 border-b border-border">
                                     <span className="text-muted-foreground">Kaucja zwrotna</span>

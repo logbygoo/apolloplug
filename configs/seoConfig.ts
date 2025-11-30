@@ -18,7 +18,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     title: '{carName} - Dane techniczne i wynajem',
     description: 'Wynajmij Teslę {carName}. Sprawdź specyfikację, osiągi, zasięg i cennik. Zarezerwuj online w ApolloPlug.',
   },
-  '/wynajem': {
+  '/wypozyczalnia': {
     title: 'Wynajem Samochodów Elektrycznych Tesla',
     description: 'Zarezerwuj Teslę Model 3, Y, lub X. Oferujemy elastyczny wynajem krótkoterminowy i długoterminowy. Sprawdź cennik i dostępność online.',
     ogImage: 'https://img.apolloplug.com/img/tesla-3-low-600x400.jpg',

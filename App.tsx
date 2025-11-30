@@ -20,7 +20,7 @@ import ScrollToTop from './components/ScrollToTop';
 
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
-  { path: '/wynajem', name: 'Wypożyczalnia' },
+  { path: '/wypozyczalnia', name: 'Wypożyczalnia' },
   { path: '/transfery', name: 'Transfery' },
   { path: '/zakup', name: 'Zakup' },
   { path: '/ubezpieczenia', name: 'Ubezpieczenia' },
@@ -171,7 +171,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/transfery" element={<TransfersPage />} />
-            <Route path="/wynajem" element={<RentalPage />} />
+            <Route path="/wypozyczalnia" element={<RentalPage />} />
             <Route path="/finansowanie" element={<FinancingPage />} />
             <Route path="/flota" element={<FleetPage />} />
             <Route path="/flota/:carId" element={<CarDetailPage />} />

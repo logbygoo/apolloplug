@@ -482,7 +482,7 @@ const RentalPage: React.FC = () => {
 
 
     const breadcrumbs = useMemo(() => {
-        const crumbs: { name: string; path?: string; }[] = [{ name: 'Wynajem', path: '/wynajem' }];
+        const crumbs: { name: string; path?: string; }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
         if (formData.model) {
             crumbs.push({ name: formData.model.name });
         }
@@ -532,7 +532,7 @@ const RentalPage: React.FC = () => {
                 subtitle="Zarezerwuj swój wymarzony samochód elektryczny w kilku prostych krokach."
                 breadcrumbs={breadcrumbs}
             />
-            <div className="container mx-auto px-4 md:px-6 pb-12 md:pb-16">
+            <div className="container mx-auto px-4 md:px-6 pb-16 md:pb-16">
                 {step === 'details' && (
                     <>
                         <form onSubmit={handleProceedToPayment}>

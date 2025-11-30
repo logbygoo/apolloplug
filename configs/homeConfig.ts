@@ -16,7 +16,7 @@ export const HERO_CARS: HeroCar[] = [
     imageUrl: 'https://img.apolloplug.com/tesla-y/tesla-y-02.jpg',
     subtitle: 'Wynajem od 390 zł/dzień',
     primaryBtnText: 'Wynajmij teraz',
-    primaryBtnLink: '/wynajem',
+    primaryBtnLink: '/wypozyczalnia',
     secondaryBtnText: 'Zobacz flotę',
     secondaryBtnLink: '/flota',
     theme: 'light',

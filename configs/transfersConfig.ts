@@ -1,3 +1,4 @@
+
 // Konfiguracja cennika dla usług transferu
 
 export const TRANSFERS_CONFIG = {

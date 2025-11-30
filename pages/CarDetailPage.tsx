@@ -57,7 +57,7 @@ const CarDetailPage: React.FC = () => {
                             </div>
                         </div>
                          <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                            <Link to={`/wynajem?model=${car.id}`} className="w-full">
+                            <Link to={`/wypozyczalnia?model=${car.id}`} className="w-full">
                                 <Button className="w-full" variant="primary" size="lg">Wynajmij</Button>
                             </Link>
                             <Link to="/kontakt" className="w-full">

@@ -154,7 +154,7 @@ const CarouselCard: React.FC<{ item: CarouselItem }> = ({ item }) => (
       <h3 className="text-3xl font-bold">{item.title}</h3>
       {item.subtitle && <p className="text-sm mt-1">{item.subtitle}</p>}
       <div className="mt-6 flex flex-col sm:flex-row gap-4">
-        <Link to="/wynajem">
+        <Link to="/wypozyczalnia">
             <Button variant="primary">{item.primaryBtnText}</Button>
         </Link>
         <Link to="/transfery">
@@ -202,7 +202,7 @@ const AnimatedTimeline = () => {
             title: "Jazda próbna i Testy",
             description: "Trudno podjąć decyzję, jeśli nie poczujesz auta na żywo. Umówimy Cię na jazdę próbną, żebyś spokojnie sprawdził jak auto przyspiesza i zachowuje się w mieście. Możesz też wynająć je na dzień, tydzień albo dłużej, aby poznać je w prawdziwych, codziennych sytuacjach.",
             buttons: [
-                { text: "Wynajmij EV", url: "/wynajem" },
+                { text: "Wynajmij EV", url: "/wypozyczalnia" },
                 { text: "Zamów z kierowcą", url: "/transfery" }
             ]
         },
@@ -219,7 +219,7 @@ const AnimatedTimeline = () => {
             title: "Oczekiwanie na VIN",
             description: "Czas oczekiwania bywa nużący, dlatego w tym okresie możesz korzystać z auta od nas. Dostajesz je na preferencyjnych warunkach, żebyś mógł swobodnie jeździć i nie martwić się o zastępstwo. To wygodne rozwiązanie, dzięki któremu spokojnie doczekasz właściwego samochodu.",
             buttons: [
-                { text: "Wynajem", url: "/wynajem" }
+                { text: "Wynajem", url: "/wypozyczalnia" }
             ]
         },
         {
@@ -445,7 +445,7 @@ const HomePage: React.FC = () => {
                 Odbieraj auta w całym mieście prosto z ładowarek lub zamawiaj dostawę pod dom.
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Link to="/wynajem">
+                <Link to="/wypozyczalnia">
                   <Button variant="primary" size="lg">Wypożycz auto</Button>
                 </Link>
                 <Link to="/transfery">

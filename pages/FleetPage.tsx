@@ -48,11 +48,11 @@ const FleetPage: React.FC = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="flex gap-4">
-                  <Link to={`/flota/${car.id}`} className="w-full">
-                    <Button className="w-full" variant="primary">Zobacz szczegóły</Button>
+                  <Link to={`/wypozyczalnia?model=${car.id}`} className="w-full">
+                    <Button className="w-full" variant="primary">Wypożycz</Button>
                   </Link>
-                  <Link to="/kontakt" className="w-full">
-                    <Button className="w-full" variant="secondary">Jazda próbna</Button>
+                  <Link to="/transfery" className="w-full">
+                    <Button className="w-full" variant="secondary">Zamów TAXI</Button>
                   </Link>
                 </CardFooter>
               </div>

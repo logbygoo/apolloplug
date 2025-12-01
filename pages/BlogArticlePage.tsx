@@ -18,11 +18,11 @@ const BlogArticlePage: React.FC = () => {
             if (!articleSlug) return;
             setLoading(true);
             try {
-                // Try fetching from API first
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-                const response = await fetch(`https://article.ffgroup.pl/api/articles?project_id=1&status=Published&slug=${articleSlug}`, {
+                // Use relative path to hit functions/api/articles.ts
+                const response = await fetch(`/api/articles?project_id=1&status=Published&slug=${articleSlug}`, {
                     signal: controller.signal
                 });
                 clearTimeout(timeoutId);
@@ -33,19 +33,21 @@ const BlogArticlePage: React.FC = () => {
                 
                 const data = await response.json();
                 
+                // The API might return an array with one item or the item itself depending on implementation
+                // Our SQL function returns an array of results
                 let foundArticle = null;
                 if (Array.isArray(data)) {
-                    foundArticle = data.find((a: BlogPost) => a.slug === articleSlug);
+                    foundArticle = data[0];
                 } else if (data.results && Array.isArray(data.results)) {
-                    foundArticle = data.results.find((a: BlogPost) => a.slug === articleSlug);
-                } else if (data.slug === articleSlug) {
+                    foundArticle = data.results[0];
+                } else {
                     foundArticle = data;
                 }
 
                 if (foundArticle) {
                     setArticle(foundArticle);
                 } else {
-                     // Try local fallback if API returns but article not found
+                    // Try local fallback if API returns but article not found
                     const localArticle = ARTICLES.find(a => a.slug === articleSlug);
                     if (localArticle) {
                         setArticle(localArticle);
@@ -55,7 +57,6 @@ const BlogArticlePage: React.FC = () => {
                 }
             } catch (err) {
                 console.warn("API unavailable or failed, checking local data", err);
-                // Fallback to local data
                 const localArticle = ARTICLES.find(a => a.slug === articleSlug);
                 if (localArticle) {
                     setArticle(localArticle);
@@ -81,8 +82,6 @@ const BlogArticlePage: React.FC = () => {
     }
 
     if (error || !article) {
-        // Fallback to check if it's a static route mismatch or just not found
-        // For now, redirect to blog list
         return <Navigate to="/blog" replace />;
     }
     
@@ -91,7 +90,6 @@ const BlogArticlePage: React.FC = () => {
         { name: article.name },
     ];
 
-    // Helper to strip HTML for description
     const getExcerpt = (htmlContent: string) => {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = htmlContent;
@@ -99,7 +97,6 @@ const BlogArticlePage: React.FC = () => {
         return text.length > 160 ? text.substring(0, 160) + "..." : text;
     };
 
-    // Images logic: use thumbnailUrl if present (from mock), else use API convention
     const mainImageUrl = article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}-mini.jpg`;
     const ogImageUrl = article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}.jpg`; 
 
@@ -131,7 +128,6 @@ const BlogArticlePage: React.FC = () => {
                         alt={article.name}
                         className="w-full h-auto object-cover max-h-[500px]"
                         onError={(e) => {
-                             // Fallback if the -mini convention fails or image missing
                             (e.target as HTMLImageElement).src = ogImageUrl;
                         }}
                     />

@@ -10,11 +10,10 @@ export const ARTICLES: BlogPost[] = [
         slug: 'jak-wybrac-wypozyczalnie-aut-elektrycznych',
         date_published: '2025-02-15',
         date_modified: '2025-02-15',
-        thumbnailUrl: 'https://img.apolloplug.com/blog/wypozyczalnia-aut-elektrycznych-miniatura.jpg',
+        // Updated to match the pattern provided: https://article.ffgroup.pl/1/{slug}.jpg
+        thumbnailUrl: 'https://article.ffgroup.pl/1/jak-wybrac-wypozyczalnie-aut-elektrycznych.jpg',
         content: `
     <p>Wynajem samochodu elektrycznego to coraz popularniejsza opcja - zarówno wśród osób prywatnych, jak i firm. EV kusi ciszą, niższymi kosztami eksploatacji i możliwością wjazdu do stref czystego transportu. Ale zanim podpiszesz umowę, warto wiedzieć, na co zwrócić uwagę, aby uniknąć nieprzyjemnych niespodzianek.</p>
-
-    <img src="https://img.apolloplug.com/blog/wypozyczalnia-aut-elektrycznych-biuro.jpg" alt="Punkt odbioru samochodów elektrycznych w wypożyczalni" style="width:100%; border-radius:16px; margin:20px 0;">
 
     <h2>1. Przejrzysta umowa i brak ukrytych opłat</h2>
     <p>Dobra wypożyczalnia aut elektrycznych jasno komunikuje wszystkie warunki. Zwróć uwagę, czy umowa zawiera:</p>
@@ -33,7 +32,6 @@ export const ARTICLES: BlogPost[] = [
       <li>częstotliwość przeglądów technicznych,</li>
       <li>aktualizacje oprogramowania pokładowego.</li>
     </ul>
-    <img src="https://img.apolloplug.com/blog/przeglad-floty-ev.jpg" alt="Przegląd floty samochodów elektrycznych w wypożyczalni" style="width:100%; border-radius:16px; margin:20px 0;">
     <p>Wypożyczalnie oferujące nowe modele (np. Tesla Model 3, Hyundai Ioniq 6, Kia EV6) zazwyczaj dbają o wyższy standard obsługi i bezpieczeństwo klientów.</p>
 
     <h2>3. Ładowanie i sieć partnerów</h2>
@@ -56,7 +54,6 @@ export const ARTICLES: BlogPost[] = [
 
     <h2>5. Opinie klientów i lokalizacja</h2>
     <p>Zanim dokonasz rezerwacji, zajrzyj do opinii w Google i na portalach branżowych. Klienci często opisują rzeczy, których nie widać na stronie - np. trudności ze zwrotem kaucji lub problemy z ładowaniem.</p>
-    <img src="https://img.apolloplug.com/blog/klient-wypozyczalnia-ev.jpg" alt="Zadowolony klient po wynajmie auta elektrycznego" style="width:100%; border-radius:16px; margin:20px 0;">
     <p>Jeśli wypożyczalnia działa w dużym mieście (Warszawa, Kraków, Gdańsk), sprawdź też, czy ma punkty odbioru przy dworcach i lotniskach - to często oszczędność czasu i pieniędzy.</p>
 
     <h2>6. Bonus: co warto mieć ze sobą</h2>
@@ -67,8 +64,6 @@ export const ARTICLES: BlogPost[] = [
     </ul>
 
     <p>Świadomy wybór wypożyczalni to nie tylko niższe koszty, ale też większy komfort podróży. Warto poświęcić chwilę na sprawdzenie szczegółów - dzięki temu Twój pierwszy (lub kolejny) wynajem auta elektrycznego będzie czystą przyjemnością.</p>
-
-    <img src="https://img.apolloplug.com/blog/podroz-ev-wynajem.jpg" alt="Podróż samochodem elektrycznym z wypożyczalni" style="width:100%; border-radius:16px; margin-top:20px;">
   `,
     }
 ];

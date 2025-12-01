@@ -11,17 +11,16 @@ const BlogPage: React.FC = () => {
     const breadcrumbs = [{ name: 'Blog' }];
     const [articles, setArticles] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
-    // Removed error state to prefer silent fallback
 
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                // Fetching from the assumed API endpoint based on instructions
-                // Adding a timeout to fail fast if the server hangs
+                // Fetching from Cloudflare Pages Function
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-                const response = await fetch('https://article.ffgroup.pl/api/articles?project_id=1&status=Published', {
+                // Use relative path to hit functions/api/articles.ts
+                const response = await fetch('/api/articles?project_id=1&status=Published', {
                     signal: controller.signal
                 });
                 clearTimeout(timeoutId);
@@ -31,10 +30,9 @@ const BlogPage: React.FC = () => {
                 }
                 const data = await response.json();
                 
-                // Ensure data is an array
                 const articlesData = Array.isArray(data) ? data : (data.results || []);
                 
-                // Sort by date_published descending
+                // Sort by date_published descending (already handled by SQL but good to be safe)
                 const sortedArticles = articlesData.sort((a: BlogPost, b: BlogPost) => 
                     new Date(b.date_published).getTime() - new Date(a.date_published).getTime()
                 );
@@ -42,7 +40,6 @@ const BlogPage: React.FC = () => {
                 setArticles(sortedArticles);
             } catch (err) {
                 console.warn("API unavailable, loading mock data:", err);
-                // Fallback to local data
                 setArticles(ARTICLES);
             } finally {
                 setLoading(false);
@@ -52,7 +49,6 @@ const BlogPage: React.FC = () => {
         fetchArticles();
     }, []);
 
-    // Helper to strip HTML and create excerpt
     const getExcerpt = (htmlContent: string) => {
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = htmlContent;

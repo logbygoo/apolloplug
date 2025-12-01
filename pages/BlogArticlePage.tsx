@@ -97,15 +97,15 @@ const BlogArticlePage: React.FC = () => {
         return text.length > 160 ? text.substring(0, 160) + "..." : text;
     };
 
-    const mainImageUrl = article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}-mini.jpg`;
-    const ogImageUrl = article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}.jpg`; 
-
+    // Main image in full resolution (.jpg)
+    const mainImageUrl = `https://article.ffgroup.pl/1/${article.slug}.jpg`;
+    
     const seoData: SeoData = {
       title: article.name,
       description: getExcerpt(article.content),
       ogTitle: article.name,
       ogDescription: getExcerpt(article.content),
-      ogImage: ogImageUrl,
+      ogImage: mainImageUrl,
       ogType: 'article',
     };
 
@@ -128,7 +128,8 @@ const BlogArticlePage: React.FC = () => {
                         alt={article.name}
                         className="w-full h-auto object-cover max-h-[500px]"
                         onError={(e) => {
-                            (e.target as HTMLImageElement).src = ogImageUrl;
+                            // Fallback if main image fails
+                            (e.target as HTMLImageElement).src = 'https://img.apolloplug.com/og/default.jpg';
                         }}
                     />
                 </div>

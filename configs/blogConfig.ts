@@ -10,8 +10,8 @@ export const ARTICLES: BlogPost[] = [
         slug: 'jak-wybrac-wypozyczalnie-aut-elektrycznych',
         date_published: '2025-02-15',
         date_modified: '2025-02-15',
-        // Updated to match the pattern provided: https://article.ffgroup.pl/1/{slug}.jpg
-        thumbnailUrl: 'https://article.ffgroup.pl/1/jak-wybrac-wypozyczalnie-aut-elektrycznych.jpg',
+        // Updated to match the pattern: https://article.ffgroup.pl/1/{slug}-mini.jpg
+        thumbnailUrl: 'https://article.ffgroup.pl/1/jak-wybrac-wypozyczalnie-aut-elektrycznych-mini.jpg',
         content: `
     <p>Wynajem samochodu elektrycznego to coraz popularniejsza opcja - zarówno wśród osób prywatnych, jak i firm. EV kusi ciszą, niższymi kosztami eksploatacji i możliwością wjazdu do stref czystego transportu. Ale zanim podpiszesz umowę, warto wiedzieć, na co zwrócić uwagę, aby uniknąć nieprzyjemnych niespodzianek.</p>
 

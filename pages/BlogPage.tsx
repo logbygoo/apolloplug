@@ -72,7 +72,7 @@ const BlogPage: React.FC = () => {
                                 <Card className="flex flex-col md:flex-row overflow-hidden transition-shadow hover:shadow-lg">
                                     <div className="md:w-1/3 relative overflow-hidden">
                                         <img 
-                                            src={article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}.jpg`} 
+                                            src={article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}-mini.jpg`} 
                                             alt={article.name} 
                                             className="object-cover w-full h-48 md:h-full transition-transform duration-300 group-hover:scale-105"
                                             onError={(e) => {

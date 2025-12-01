@@ -5,7 +5,7 @@ export const ARTICLES: BlogPost[] = [
     {
         id: 'local-1',
         project_id: 1,
-        status: 'Published',
+        status: 'published',
         name: 'Na co zwracać uwagę wybierając wypożyczalnię aut elektrycznych?',
         slug: 'jak-wybrac-wypozyczalnie-aut-elektrycznych',
         date_published: '2025-02-15',

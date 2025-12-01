@@ -22,7 +22,7 @@ const BlogArticlePage: React.FC = () => {
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
 
                 // Use relative path to hit functions/api/articles.ts
-                const response = await fetch(`/api/articles?project_id=1&status=Published&slug=${articleSlug}`, {
+                const response = await fetch(`/api/articles?project_id=1&status=published&slug=${articleSlug}`, {
                     signal: controller.signal
                 });
                 clearTimeout(timeoutId);

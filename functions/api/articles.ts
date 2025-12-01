@@ -1,3 +1,4 @@
+
 // Define Cloudflare Workers types locally to avoid compilation errors if types are missing
 interface D1Result<T = unknown> {
   results: T[];
@@ -47,7 +48,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   const status = url.searchParams.get("status");
   const slug = url.searchParams.get("slug");
 
-  // CORS headers (przydatne w dev mode, na produkcji Pages są z automatu same origin)
+  // CORS headers
   const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
@@ -59,30 +60,39 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    // Sprawdź czy binding DB istnieje
     if (!env.DB) {
-      throw new Error("Database binding 'DB' not found. Check Cloudflare Pages settings.");
+      throw new Error("Database binding 'DB' not found.");
     }
 
-    let query = "SELECT * FROM articles WHERE 1=1";
+    // Build query
+    const conditions: string[] = [];
     const params: any[] = [];
 
     if (projectId) {
-      query += " AND project_id = ?";
-      params.push(projectId);
+      conditions.push("project_id = ?");
+      // Cast to number to ensure DB matches correctly if column is INTEGER
+      params.push(Number(projectId));
     }
 
     if (status) {
-      query += " AND status = ?";
+      conditions.push("status = ?");
       params.push(status);
     }
 
     if (slug) {
-      query += " AND slug = ?";
+      conditions.push("slug = ?");
       params.push(slug);
     }
 
+    let query = "SELECT * FROM articles";
+    if (conditions.length > 0) {
+      query += " WHERE " + conditions.join(" AND ");
+    }
     query += " ORDER BY date_published DESC";
+
+    // Debug logging to Cloudflare console
+    console.log("Executing SQL:", query);
+    console.log("With params:", params);
 
     const { results } = await env.DB.prepare(query).bind(...params).all();
 
@@ -93,6 +103,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       }
     });
   } catch (e: any) {
+    console.error("Database Error:", e);
     return new Response(JSON.stringify({ error: e.message }), { 
       status: 500, 
       headers: {

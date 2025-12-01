@@ -1,21 +1,31 @@
+
 import React, { useEffect, useState } from 'react';
 import { PageHeader, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { ARTICLES } from '../configs/blogConfig';
 import type { BlogPost } from '../types';
 
 const BlogPage: React.FC = () => {
     const breadcrumbs = [{ name: 'Blog' }];
     const [articles, setArticles] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    // Removed error state to prefer silent fallback
 
     useEffect(() => {
         const fetchArticles = async () => {
             try {
                 // Fetching from the assumed API endpoint based on instructions
-                const response = await fetch('https://article.ffgroup.pl/api/articles?project_id=1&status=Published');
+                // Adding a timeout to fail fast if the server hangs
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+                const response = await fetch('https://article.ffgroup.pl/api/articles?project_id=1&status=Published', {
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch articles');
                 }
@@ -31,8 +41,9 @@ const BlogPage: React.FC = () => {
 
                 setArticles(sortedArticles);
             } catch (err) {
-                console.error("Error fetching articles:", err);
-                setError('Nie udało się pobrać artykułów.');
+                console.warn("API unavailable, loading mock data:", err);
+                // Fallback to local data
+                setArticles(ARTICLES);
             } finally {
                 setLoading(false);
             }
@@ -58,10 +69,6 @@ const BlogPage: React.FC = () => {
                     <div className="text-center py-16">
                         <p className="text-muted-foreground">Ładowanie artykułów...</p>
                     </div>
-                ) : error ? (
-                    <div className="text-center py-16">
-                        <p className="text-destructive">{error}</p>
-                    </div>
                 ) : articles.length > 0 ? (
                     <div className="grid gap-8 md:grid-cols-1">
                         {articles.map(article => (
@@ -69,7 +76,7 @@ const BlogPage: React.FC = () => {
                                 <Card className="flex flex-col md:flex-row overflow-hidden transition-shadow hover:shadow-lg">
                                     <div className="md:w-1/3 relative overflow-hidden">
                                         <img 
-                                            src={`https://article.ffgroup.pl/1/${article.slug}.jpg`} 
+                                            src={article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}.jpg`} 
                                             alt={article.name} 
                                             className="object-cover w-full h-48 md:h-full transition-transform duration-300 group-hover:scale-105"
                                             onError={(e) => {

@@ -37,15 +37,6 @@ export interface HeroCar {
   theme?: 'dark' | 'light';
 }
 
-export interface Article {
-  slug: string;
-  title: string;
-  publishDate: string;
-  thumbnailUrl: string;
-  excerpt: string;
-  content: string;
-}
-
 export interface BlogPost {
   id: string;
   project_id: number;
@@ -55,6 +46,7 @@ export interface BlogPost {
   date_published: string;
   date_modified: string;
   content: string;
+  thumbnailUrl?: string; // Optional override for local/mock data
 }
 
 export interface SeoData {

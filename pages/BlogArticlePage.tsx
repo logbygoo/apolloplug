@@ -1,8 +1,10 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { PageHeader } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { ARTICLES } from '../configs/blogConfig';
 import type { SeoData, BlogPost } from '../types';
 
 const BlogArticlePage: React.FC = () => {
@@ -16,9 +18,14 @@ const BlogArticlePage: React.FC = () => {
             if (!articleSlug) return;
             setLoading(true);
             try {
-                // Fetching all articles and filtering, or specific slug endpoint if available.
-                // Assuming filtered list for now as per D1 pattern often used.
-                const response = await fetch(`https://article.ffgroup.pl/api/articles?project_id=1&status=Published&slug=${articleSlug}`);
+                // Try fetching from API first
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+                const response = await fetch(`https://article.ffgroup.pl/api/articles?project_id=1&status=Published&slug=${articleSlug}`, {
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
                 
                 if (!response.ok) {
                     throw new Error('Failed to fetch article');
@@ -26,7 +33,6 @@ const BlogArticlePage: React.FC = () => {
                 
                 const data = await response.json();
                 
-                // Handle response structure (array vs object)
                 let foundArticle = null;
                 if (Array.isArray(data)) {
                     foundArticle = data.find((a: BlogPost) => a.slug === articleSlug);
@@ -39,11 +45,23 @@ const BlogArticlePage: React.FC = () => {
                 if (foundArticle) {
                     setArticle(foundArticle);
                 } else {
-                    setError(true);
+                     // Try local fallback if API returns but article not found
+                    const localArticle = ARTICLES.find(a => a.slug === articleSlug);
+                    if (localArticle) {
+                        setArticle(localArticle);
+                    } else {
+                        setError(true);
+                    }
                 }
             } catch (err) {
-                console.error(err);
-                setError(true);
+                console.warn("API unavailable or failed, checking local data", err);
+                // Fallback to local data
+                const localArticle = ARTICLES.find(a => a.slug === articleSlug);
+                if (localArticle) {
+                    setArticle(localArticle);
+                } else {
+                    setError(true);
+                }
             } finally {
                 setLoading(false);
             }
@@ -81,9 +99,9 @@ const BlogArticlePage: React.FC = () => {
         return text.length > 160 ? text.substring(0, 160) + "..." : text;
     };
 
-    // Images based on requirements
-    const mainImageUrl = `https://article.ffgroup.pl/1/${article.slug}-mini.jpg`;
-    const ogImageUrl = `https://article.ffgroup.pl/1/${article.slug}.jpg`; // Usually thumbnail is better for OG share if 'mini' is weirdly named, but let's stick to the list image for OG.
+    // Images logic: use thumbnailUrl if present (from mock), else use API convention
+    const mainImageUrl = article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}-mini.jpg`;
+    const ogImageUrl = article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}.jpg`; 
 
     const seoData: SeoData = {
       title: article.name,

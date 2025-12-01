@@ -1,13 +1,17 @@
-import type { Article } from '../types';
 
-export const ARTICLES: Article[] = [
-{
-  slug: 'jak-wybrac-wypozyczalnie-aut-elektrycznych',
-  title: 'Na co zwracać uwagę wybierając wypożyczalnię aut elektrycznych?',
-  publishDate: '2025-02-15',
-  thumbnailUrl: 'https://img.apolloplug.com/blog/wypozyczalnia-aut-elektrycznych-miniatura.jpg',
-  excerpt: 'Dowiedz się, jak bezpiecznie i świadomie wynająć auto elektryczne. Sprawdź, co powinno znaleźć się w umowie, jakie są ukryte opłaty i na co zwrócić uwagę przy wyborze wypożyczalni.',
-  content: `
+import type { BlogPost } from '../types';
+
+export const ARTICLES: BlogPost[] = [
+    {
+        id: 'local-1',
+        project_id: 1,
+        status: 'Published',
+        name: 'Na co zwracać uwagę wybierając wypożyczalnię aut elektrycznych?',
+        slug: 'jak-wybrac-wypozyczalnie-aut-elektrycznych',
+        date_published: '2025-02-15',
+        date_modified: '2025-02-15',
+        thumbnailUrl: 'https://img.apolloplug.com/blog/wypozyczalnia-aut-elektrycznych-miniatura.jpg',
+        content: `
     <p>Wynajem samochodu elektrycznego to coraz popularniejsza opcja - zarówno wśród osób prywatnych, jak i firm. EV kusi ciszą, niższymi kosztami eksploatacji i możliwością wjazdu do stref czystego transportu. Ale zanim podpiszesz umowę, warto wiedzieć, na co zwrócić uwagę, aby uniknąć nieprzyjemnych niespodzianek.</p>
 
     <img src="https://img.apolloplug.com/blog/wypozyczalnia-aut-elektrycznych-biuro.jpg" alt="Punkt odbioru samochodów elektrycznych w wypożyczalni" style="width:100%; border-radius:16px; margin:20px 0;">
@@ -66,5 +70,5 @@ export const ARTICLES: Article[] = [
 
     <img src="https://img.apolloplug.com/blog/podroz-ev-wynajem.jpg" alt="Podróż samochodem elektrycznym z wypożyczalni" style="width:100%; border-radius:16px; margin-top:20px;">
   `,
-},
+    }
 ];

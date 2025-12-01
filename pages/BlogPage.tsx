@@ -1,32 +1,89 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageHeader, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui';
 import { Link } from 'react-router-dom';
-import { ARTICLES } from '../configs/blogConfig';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import type { BlogPost } from '../types';
 
 const BlogPage: React.FC = () => {
     const breadcrumbs = [{ name: 'Blog' }];
+    const [articles, setArticles] = useState<BlogPost[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchArticles = async () => {
+            try {
+                // Fetching from the assumed API endpoint based on instructions
+                const response = await fetch('https://article.ffgroup.pl/api/articles?project_id=1&status=Published');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch articles');
+                }
+                const data = await response.json();
+                
+                // Ensure data is an array
+                const articlesData = Array.isArray(data) ? data : (data.results || []);
+                
+                // Sort by date_published descending
+                const sortedArticles = articlesData.sort((a: BlogPost, b: BlogPost) => 
+                    new Date(b.date_published).getTime() - new Date(a.date_published).getTime()
+                );
+
+                setArticles(sortedArticles);
+            } catch (err) {
+                console.error("Error fetching articles:", err);
+                setError('Nie udało się pobrać artykułów.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchArticles();
+    }, []);
+
+    // Helper to strip HTML and create excerpt
+    const getExcerpt = (htmlContent: string) => {
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = htmlContent;
+        const text = tempDiv.textContent || tempDiv.innerText || "";
+        return text.length > 150 ? text.substring(0, 150) + "..." : text;
+    };
+
     return (
         <div className="bg-background">
             <Seo {...SEO_CONFIG['/blog']} />
             <PageHeader title="Blog" subtitle="Nowości, porady i artykuły ze świata elektromobilności." breadcrumbs={breadcrumbs} />
             <div className="container mx-auto max-w-4xl px-4 md:px-6 pb-16 md:pb-24">
-                {ARTICLES.length > 0 ? (
+                {loading ? (
+                    <div className="text-center py-16">
+                        <p className="text-muted-foreground">Ładowanie artykułów...</p>
+                    </div>
+                ) : error ? (
+                    <div className="text-center py-16">
+                        <p className="text-destructive">{error}</p>
+                    </div>
+                ) : articles.length > 0 ? (
                     <div className="grid gap-8 md:grid-cols-1">
-                        {ARTICLES.sort((a, b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()).map(article => (
-                            <Link key={article.slug} to={`/blog/${article.slug}`} className="group block">
+                        {articles.map(article => (
+                            <Link key={article.id} to={`/${article.slug}`} className="group block">
                                 <Card className="flex flex-col md:flex-row overflow-hidden transition-shadow hover:shadow-lg">
-                                    <div className="md:w-1/3">
-                                        <img src={article.thumbnailUrl} alt={article.title} className="object-cover w-full h-48 md:h-full" />
+                                    <div className="md:w-1/3 relative overflow-hidden">
+                                        <img 
+                                            src={`https://article.ffgroup.pl/1/${article.slug}.jpg`} 
+                                            alt={article.name} 
+                                            className="object-cover w-full h-48 md:h-full transition-transform duration-300 group-hover:scale-105"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = 'https://img.apolloplug.com/og/default.jpg';
+                                            }}
+                                        />
                                     </div>
                                     <div className="md:w-2/3 flex flex-col">
                                         <CardHeader>
-                                            <CardTitle className="group-hover:text-primary transition-colors">{article.title}</CardTitle>
-                                            <CardDescription>{new Date(article.publishDate).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })}</CardDescription>
+                                            <CardTitle className="group-hover:text-primary transition-colors">{article.name}</CardTitle>
+                                            <CardDescription>{new Date(article.date_published).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })}</CardDescription>
                                         </CardHeader>
                                         <CardContent className="flex-grow">
-                                            <p className="text-muted-foreground">{article.excerpt}</p>
+                                            <p className="text-muted-foreground">{getExcerpt(article.content)}</p>
                                         </CardContent>
                                         <CardFooter>
                                             <span className="text-sm font-semibold text-primary">Czytaj więcej →</span>

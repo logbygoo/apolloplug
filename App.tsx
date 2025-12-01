@@ -179,10 +179,12 @@ const App: React.FC = () => {
             <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
             <Route path="/kontakt" element={<ContactPage />} />
             <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:articleSlug" element={<BlogArticlePage />} />
             <Route path="/zakup" element={<PurchasePage />} />
             <Route path="/ubezpieczenia" element={<InsurancePage />} />
             <Route path="/dokumentacja" element={<DocumentationPage />} />
+            
+            {/* Catch-all route for blog articles at root level */}
+            <Route path="/:articleSlug" element={<BlogArticlePage />} />
           </Routes>
         </main>
         <Footer />

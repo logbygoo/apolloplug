@@ -46,6 +46,17 @@ export interface Article {
   content: string;
 }
 
+export interface BlogPost {
+  id: string;
+  project_id: number;
+  status: string;
+  name: string; // Title
+  slug: string;
+  date_published: string;
+  date_modified: string;
+  content: string;
+}
+
 export interface SeoData {
   title: string;
   description: string;

@@ -60,33 +60,33 @@ const BlogPage: React.FC = () => {
         <div className="bg-background">
             <Seo {...SEO_CONFIG['/blog']} />
             <PageHeader title="Blog" subtitle="Nowości, porady i artykuły ze świata elektromobilności." breadcrumbs={breadcrumbs} />
-            <div className="container mx-auto max-w-4xl px-4 md:px-6 pb-16 md:pb-24">
+            <div className="container mx-auto max-w-6xl px-4 md:px-6 pb-16 md:pb-24">
                 {loading ? (
                     <div className="text-center py-16">
                         <p className="text-muted-foreground">Ładowanie artykułów...</p>
                     </div>
                 ) : articles.length > 0 ? (
-                    <div className="grid gap-8 md:grid-cols-1">
+                    <div className="grid gap-8 md:grid-cols-2">
                         {articles.map(article => (
-                            <Link key={article.id} to={`/${article.slug}`} className="group block">
-                                <Card className="flex flex-col md:flex-row overflow-hidden transition-shadow hover:shadow-lg">
-                                    <div className="md:w-1/3 relative overflow-hidden">
+                            <Link key={article.id} to={`/${article.slug}`} className="group block h-full">
+                                <Card className="flex flex-col overflow-hidden transition-shadow hover:shadow-lg h-full">
+                                    <div className="w-full relative overflow-hidden h-56">
                                         <img 
                                             src={article.thumbnailUrl || `https://article.ffgroup.pl/1/${article.slug}-mini.jpg`} 
                                             alt={article.name} 
-                                            className="object-cover w-full h-48 md:h-full transition-transform duration-300 group-hover:scale-105"
+                                            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                                             onError={(e) => {
                                                 (e.target as HTMLImageElement).src = 'https://img.apolloplug.com/og/default.jpg';
                                             }}
                                         />
                                     </div>
-                                    <div className="md:w-2/3 flex flex-col">
+                                    <div className="flex flex-col flex-grow">
                                         <CardHeader>
-                                            <CardTitle className="group-hover:text-primary transition-colors">{article.name}</CardTitle>
+                                            <CardTitle className="group-hover:text-primary transition-colors line-clamp-2">{article.name}</CardTitle>
                                             <CardDescription>{new Date(article.date_published).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' })}</CardDescription>
                                         </CardHeader>
                                         <CardContent className="flex-grow">
-                                            <p className="text-muted-foreground">{getExcerpt(article.content)}</p>
+                                            <p className="text-muted-foreground line-clamp-3">{getExcerpt(article.content)}</p>
                                         </CardContent>
                                         <CardFooter>
                                             <span className="text-sm font-semibold text-primary">Czytaj więcej →</span>

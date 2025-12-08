@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -13,6 +14,7 @@ import PurchasePage from './pages/PurchasePage';
 import InsurancePage from './pages/InsurancePage';
 import DocumentationPage from './pages/DocumentationPage';
 import RentalCarLandingPage from './pages/RentalCarLandingPage'; // Import new page
+import PdfViewerPage from './pages/PdfViewerPage'; // Import new PDF viewer page
 import { ApolloPlugLogo } from './constants';
 import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './icons';
 import { CONFIG } from './config';
@@ -167,27 +169,37 @@ const App: React.FC = () => {
     <BrowserRouter>
       <ScrollToTop />
       <div className="flex min-h-screen flex-col bg-background text-foreground font-sans">
-        <Header />
-        <main className="flex-grow pt-14">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/transfery" element={<TransfersPage />} />
-            <Route path="/wypozyczalnia" element={<RentalPage />} />
-            <Route path="/finansowanie" element={<FinancingPage />} />
-            <Route path="/flota" element={<FleetPage />} />
-            <Route path="/flota/:carId" element={<CarDetailPage />} />
-            <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
-            <Route path="/kontakt" element={<ContactPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/zakup" element={<PurchasePage />} />
-            <Route path="/ubezpieczenia" element={<InsurancePage />} />
-            <Route path="/dokumentacja" element={<DocumentationPage />} />
-            
-            {/* Catch-all route for blog articles at root level */}
-            <Route path="/:articleSlug" element={<BlogArticlePage />} />
-          </Routes>
-        </main>
-        <Footer />
+        <Routes>
+           {/* PDF Viewer route is completely separate to allow clean printing */}
+           <Route path="/pdf/:slug.pdf" element={<PdfViewerPage />} />
+           
+           {/* Main App Layout for everything else */}
+           <Route path="*" element={
+             <>
+                <Header />
+                <main className="flex-grow pt-14">
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/transfery" element={<TransfersPage />} />
+                    <Route path="/wypozyczalnia" element={<RentalPage />} />
+                    <Route path="/finansowanie" element={<FinancingPage />} />
+                    <Route path="/flota" element={<FleetPage />} />
+                    <Route path="/flota/:carId" element={<CarDetailPage />} />
+                    <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
+                    <Route path="/kontakt" element={<ContactPage />} />
+                    <Route path="/blog" element={<BlogPage />} />
+                    <Route path="/zakup" element={<PurchasePage />} />
+                    <Route path="/ubezpieczenia" element={<InsurancePage />} />
+                    <Route path="/dokumentacja" element={<DocumentationPage />} />
+                    
+                    {/* Catch-all route for blog articles at root level */}
+                    <Route path="/:articleSlug" element={<BlogArticlePage />} />
+                  </Routes>
+                </main>
+                <Footer />
+             </>
+           } />
+        </Routes>
       </div>
     </BrowserRouter>
   );

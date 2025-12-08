@@ -5,99 +5,96 @@ import { COMPANY_DETAILS } from '../companyDetails';
 export const SampleContractContent = (
   <div className="pdf-content">
     <style>{`
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
       .pdf-content {
-        width: 794px; /* A4 width at 96 DPI */
-        min-height: 1123px; /* A4 height at 96 DPI */
-        padding: 40px; /* Margins */
+        width: 210mm;
+        min-height: 296mm; /* Slightly less than 297mm to prevent slight overflow triggering new page */
+        padding: 15mm 15mm;
         background: white;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 11px;
+        font-family: 'Inter', sans-serif;
+        font-size: 8pt;
         color: #000;
         line-height: 1.3;
         box-sizing: border-box;
-        overflow: hidden; /* Safety clip */
+        overflow: hidden;
       }
 
       .pdf-content h1 {
         text-align: center;
-        font-size: 18px;
-        margin-bottom: 15px;
+        font-size: 14pt;
+        margin-bottom: 5mm;
         text-transform: uppercase;
-        font-weight: bold;
+        font-weight: 700;
       }
 
       .pdf-content table {
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed; /* Crucial for preventing overflow */
-        margin-bottom: 15px;
+        table-layout: fixed;
+        margin-bottom: 5mm;
       }
 
       .pdf-content th, 
       .pdf-content td {
-        border: 1px solid #555;
-        padding: 5px;
+        border: 0.5pt solid #000;
+        padding: 1mm 2mm;
         vertical-align: top;
-        word-wrap: break-word; /* Ensure text breaks */
-        overflow-wrap: break-word;
+        word-wrap: break-word;
+        font-size: 8pt;
+      }
+
+      .pdf-content .section-title {
+        background: #e0e0e0;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        padding: 1.5mm;
+        font-size: 9pt;
+      }
+
+      .pdf-content .car-scheme {
+        height: 35mm;
+        text-align: center;
+        font-size: 7pt;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 0.5pt dashed #ccc;
+        margin: 1mm;
+      }
+
+      .pdf-content .fuel-box {
+        text-align: center;
+        height: 12mm;
+        vertical-align: middle;
+      }
+
+      .pdf-content .notes-box {
+        height: 18mm;
+      }
+
+      .pdf-content .sign-box {
+        height: 15mm;
+      }
+
+      .pdf-content .footer {
+        margin-top: 5mm;
+        font-size: 7pt;
+        width: 100%;
+        border-top: 0.5pt solid #000;
+        padding-top: 2mm;
       }
 
       .pdf-content .no-border {
         border: none !important;
       }
-
-      .pdf-content .section-title {
-        background: #e0e0e0;
-        font-weight: bold;
-        text-align: center;
-        text-transform: uppercase;
-        padding: 6px;
-      }
-
-      .pdf-content .subheader {
-        background: #f5f5f5;
-        font-weight: bold;
-      }
-
-      .pdf-content .small {
-        font-size: 9px;
-      }
-
-      .pdf-content .car-scheme {
-        height: 110px;
-        text-align: center;
-        font-size: 9px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .pdf-content .fuel-box {
-        text-align: center;
-        font-size: 10px;
-        height: 45px;
-        vertical-align: middle;
-      }
-
-      .pdf-content .notes-box {
-        height: 60px;
-      }
-
-      .pdf-content .sign-box {
-        height: 40px;
-      }
-
-      .pdf-content .footer {
-        margin-top: 20px;
-        font-size: 9px;
-        width: 100%;
-      }
-
+      
       .pdf-content .right {
         text-align: right;
       }
-      
-      /* Reset standard styles that might interfere */
+
       .pdf-content p { margin: 0; }
     `}</style>
 
@@ -116,20 +113,17 @@ export const SampleContractContent = (
         </tr>
         <tr>
             <td>
-                Firma: {COMPANY_DETAILS.name}<br />
-                Adres: {COMPANY_DETAILS.address}<br />
-                KRS: {COMPANY_DETAILS.krs}<br />
-                NIP: {COMPANY_DETAILS.nip}<br />
+                <strong>{COMPANY_DETAILS.name}</strong><br />
+                {COMPANY_DETAILS.address}<br />
+                NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}<br />
                 REGON: {COMPANY_DETAILS.regon}
             </td>
             <td>
-                Imię i nazwisko: Jan Kowalski<br />
-                Adres: ul. Testowa 5 m. 12, 01-234 Warszawa<br />
-                NIP: 5556667788<br />
-                PESEL: 80010112345<br />
-                Telefon: +48 600 000 000<br />
-                E-mail: jan.kowalski@example.com<br />
-                Prawo jazdy nr: ABC123456
+                <strong>Imię i nazwisko:</strong> Jan Kowalski<br />
+                <strong>Adres:</strong> ul. Testowa 5 m. 12, 01-234 Warszawa<br />
+                <strong>PESEL:</strong> 80010112345<br />
+                <strong>Telefon:</strong> +48 600 000 000<br />
+                <strong>Dokument tożsamości:</strong> DO ABC123456
             </td>
         </tr>
         </tbody>
@@ -143,11 +137,9 @@ export const SampleContractContent = (
         </tr>
         <tr>
             <td>
-                Marka / model: Volvo S90<br />
-                Rodzaj paliwa: Diesel<br />
-                Pojemność / moc: 2.0 / 190 KM<br />
-                Nr rejestracyjny: WX 12345<br />
-                Nr VIN: YV1A2345678901234
+                Marka / model: <strong>Tesla Model 3</strong> &nbsp;|&nbsp;
+                Nr rej.: <strong>WX 12345</strong> &nbsp;|&nbsp;
+                VIN: <strong>5YJ3E7EB0MF123456</strong>
             </td>
         </tr>
         </tbody>
@@ -156,10 +148,10 @@ export const SampleContractContent = (
     {/* Wydanie pojazdu */}
     <table>
         <colgroup>
-            <col style={{ width: '35%' }} />
-            <col style={{ width: '21%' }} />
-            <col style={{ width: '22%' }} />
-            <col style={{ width: '22%' }} />
+            <col style={{ width: '30%' }} />
+            <col style={{ width: '23%' }} />
+            <col style={{ width: '23%' }} />
+            <col style={{ width: '24%' }} />
         </colgroup>
         <tbody>
         <tr>
@@ -172,41 +164,40 @@ export const SampleContractContent = (
         <tr>
             <td rowSpan={3}>
                 <div className="car-scheme">
-                    <strong>Schemat pojazdu (rysunek)</strong><br/><br/>
-                    LEGENDA:<br />
-                    R-rysa, O-odprysk<br />
-                    W-wgniecenie, P-pęknięcie<br />
-                    B-brak uszkodzeń
+                    [SCHEMAT POJAZDU]<br/>
+                    (Brak uszkodzeń)
                 </div>
             </td>
             <td colSpan={3}>
-                Data: 10.12.2025<br />
-                Godzina: 09:30
+                Data: <strong>10.12.2025</strong><br />
+                Godzina: <strong>09:30</strong><br/>
+                Miejsce: <strong>Warszawa</strong>
             </td>
         </tr>
         <tr>
-            <th>Stan paliwa</th>
+            <th>Bateria / Zasięg</th>
             <th>Przebieg</th>
-            <th>Uwagi dodatkowe</th>
+            <th>Uwagi / Wyposażenie</th>
         </tr>
         <tr>
             <td className="fuel-box">
-                Poziom: 3/4
+                85% / 420 km
             </td>
             <td className="fuel-box">
                 25 350 km
             </td>
             <td className="notes-box">
-                Brak widocznych uszkodzeń nadwozia.<br />
-                Wnętrze czyste, komplet dokumentów.
+                Kabel Typ 2: TAK<br/>
+                Ładowarka mobilna: TAK<br/>
+                Trójkąt/Gaśnica: TAK
             </td>
         </tr>
         <tr>
-            <td colSpan={2} className="small">
-                Wynajmujący (potwierdzam zgodność)
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+                Wynajmujący (podpis)
             </td>
-            <td colSpan={2} className="small">
-                Najemca (zgadzam się z opisem)
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+                Najemca (podpis)
             </td>
         </tr>
         <tr>
@@ -219,10 +210,10 @@ export const SampleContractContent = (
     {/* Zwrot pojazdu */}
     <table>
         <colgroup>
-            <col style={{ width: '35%' }} />
-            <col style={{ width: '21%' }} />
-            <col style={{ width: '22%' }} />
-            <col style={{ width: '22%' }} />
+            <col style={{ width: '30%' }} />
+            <col style={{ width: '23%' }} />
+            <col style={{ width: '23%' }} />
+            <col style={{ width: '24%' }} />
         </colgroup>
         <tbody>
         <tr>
@@ -235,41 +226,38 @@ export const SampleContractContent = (
         <tr>
             <td rowSpan={3}>
                 <div className="car-scheme">
-                    <strong>Schemat pojazdu (rysunek)</strong><br/><br/>
-                    LEGENDA:<br />
-                    R-rysa, O-odprysk<br />
-                    W-wgniecenie, P-pęknięcie<br />
-                    B-brak uszkodzeń
+                    [SCHEMAT POJAZDU]<br/>
+                    (Zaznacz uszkodzenia)
                 </div>
             </td>
             <td colSpan={3}>
-                Data: 15.12.2025<br />
-                Godzina: 18:15
+                Data: ...........................<br />
+                Godzina: ........................<br/>
+                Miejsce: ........................
             </td>
         </tr>
         <tr>
-            <th>Stan paliwa</th>
+            <th>Bateria / Zasięg</th>
             <th>Przebieg</th>
-            <th>Uwagi dodatkowe</th>
+            <th>Uwagi / Braki</th>
         </tr>
         <tr>
             <td className="fuel-box">
-                Poziom: 1/2
+                ....... %
             </td>
             <td className="fuel-box">
-                27 980 km
+                ................ km
             </td>
             <td className="notes-box">
-                Niewielka rysa na tylnym zderzaku.<br />
-                Wnętrze wymaga sprzątania.
+                
             </td>
         </tr>
         <tr>
-            <td colSpan={2} className="small">
-                Wynajmujący (potwierdzam zgodność)
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+                Wynajmujący (podpis)
             </td>
-            <td colSpan={2} className="small">
-                Najemca (zgadzam się z opisem)
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+                Najemca (podpis)
             </td>
         </tr>
         <tr>
@@ -279,18 +267,17 @@ export const SampleContractContent = (
         </tbody>
     </table>
 
-    {/* Stopka */}
     <div className="footer">
-        <table>
-            <tbody>
-            <tr>
-                <td className="no-border small">
-                    {COMPANY_DETAILS.website} &nbsp;|&nbsp; {COMPANY_DETAILS.email} &nbsp;|&nbsp; {COMPANY_DETAILS.phone}
-                </td>
-                <td className="no-border small right">
-                    Strona 1 z 1
-                </td>
-            </tr>
+        <table style={{ border: 'none', margin: 0 }}>
+             <tbody>
+                <tr>
+                    <td className="no-border" style={{ padding: 0 }}>
+                        {COMPANY_DETAILS.website} &nbsp;|&nbsp; {COMPANY_DETAILS.email} &nbsp;|&nbsp; {COMPANY_DETAILS.phone}
+                    </td>
+                    <td className="no-border right" style={{ padding: 0 }}>
+                        Strona 1 z 1
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

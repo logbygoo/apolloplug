@@ -32,13 +32,9 @@ const PdfViewerPage: React.FC = () => {
         const element = contentRef.current;
         if (!element) return;
 
-        // A4 Dimensions:
-        // Width in pt: 595.28
-        // Width in px (96 DPI): 794
-        
-        const doc = new jsPDF('p', 'pt', 'a4');
-        const pdfWidthPt = 595.28;
-        const htmlWidthPx = 794;
+        // Initialize jsPDF with millimeters and A4 format
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = 210; // A4 width in mm
 
         const options = {
           callback: (doc: jsPDF) => {
@@ -47,19 +43,20 @@ const PdfViewerPage: React.FC = () => {
             setPdfUrl(dataUri);
             setIsGenerating(false);
           },
-          // This ensures the 794px HTML fits exactly into the 595.28pt PDF width
-          width: pdfWidthPt, 
-          windowWidth: htmlWidthPx,
+          // Tell jsPDF to scale the HTML content to fit 210mm width
+          width: pdfWidth, 
+          // Tell html2canvas the virtual window width is 794px (standard 96DPI mapping for 210mm)
+          // This ensures the CSS pixels in SampleContract map correctly to the PDF layout
+          windowWidth: 794, 
           autoPaging: 'text' as const,
           x: 0,
           y: 0,
           html2canvas: {
-            scale: 2, // Improves text sharpness
+            scale: 2, // 2x scale for sharper text
             useCORS: true,
             logging: false,
-            // Explicitly set the canvas dimensions to match the source element
-            width: htmlWidthPx,
-            windowWidth: htmlWidthPx,
+            width: 794,
+            windowWidth: 794,
           }
         };
 
@@ -101,12 +98,11 @@ const PdfViewerPage: React.FC = () => {
       ) : (
         /* 
            Off-screen container for generation.
-           Crucial: using 'absolute' + 'left: -9999px' instead of 'hidden/invisible'
-           ensures the layout engine renders it fully (including fonts/tables) before capture.
-           Fixed width of 794px matches A4 @ 96 DPI.
+           Positioned absolutely far off-screen to avoid visual glitches but kept in DOM for rendering.
+           The inner width is explicitly 210mm to match A4.
         */
-        <div style={{ position: 'absolute', left: '-9999px', top: 0, width: '794px' }}>
-            <div ref={contentRef}>
+        <div style={{ position: 'absolute', left: '-10000px', top: 0 }}>
+            <div ref={contentRef} style={{ width: '210mm', margin: 0, padding: 0, backgroundColor: 'white' }}>
                 {documentData.content}
             </div>
         </div>

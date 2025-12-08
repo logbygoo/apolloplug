@@ -6,14 +6,10 @@ export const SampleContractContent = (
   <div className="pdf-content">
     <style>{`
       .pdf-content {
-        width: 794px; /* Exact A4 width at 96 DPI */
-        min-height: 1123px; /* Exact A4 height at 96 DPI */
-        padding: 40px;
+        padding: 20px;
         background: white;
-        font-family: Arial, Helvetica, sans-serif; /* System fonts with full UTF-8 support */
         font-size: 12px;
         color: #000;
-        line-height: 1.3;
         box-sizing: border-box;
         overflow: hidden;
       }

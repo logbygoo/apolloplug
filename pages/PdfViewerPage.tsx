@@ -36,7 +36,7 @@ const PdfViewerPage: React.FC = () => {
         // 1. Capture the HTML as a high-res canvas using html2canvas
         // scale: 2 ensures the text remains crisp in the PDF (Retina quality)
         const canvas = await html2canvas(element, {
-          scale: 2,
+          scale: 3,
           useCORS: true,
           logging: false,
         });

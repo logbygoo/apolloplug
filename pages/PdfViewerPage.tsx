@@ -12,6 +12,81 @@ const PdfViewerPage: React.FC = () => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(true);
 
+  // A4 dimensions at 96 DPI (approx)
+  // A4 is 210mm x 297mm. 
+  // 1 inch = 25.4mm. 96px/inch.
+  // Width: 794px. Height: 1123px.
+  const PAGE_HEIGHT_PX = 1122; 
+
+  const autoPaginate = (container: HTMLElement) => {
+    // Elements to check for page breaks. We prioritize specific block elements.
+    // 'tr' covers table rows. 'p', 'h1-h6', 'li' cover text. 'div' is too generic usually, but might be needed for some layouts.
+    const selector = 'p, h1, h2, h3, h4, h5, h6, li, tr, .avoid-break'; 
+    const elements = Array.from(container.querySelectorAll(selector)) as HTMLElement[];
+    
+    // Sort elements by their vertical position to process them in order
+    // This is crucial because moving an element affects the position of all subsequent elements
+    elements.sort((a, b) => {
+        const rectA = a.getBoundingClientRect();
+        const rectB = b.getBoundingClientRect();
+        return rectA.top - rectB.top;
+    });
+
+    let currentBreakLine = PAGE_HEIGHT_PX;
+    const containerTop = container.getBoundingClientRect().top;
+
+    for (const el of elements) {
+        // Force a reflow/re-measure because previous iterations might have moved this element
+        const rect = el.getBoundingClientRect();
+        const elTop = rect.top - containerTop;
+        const elBottom = rect.bottom - containerTop;
+        const elHeight = rect.height;
+
+        // If the element is completely before the break line, skip it
+        if (elBottom <= currentBreakLine) continue;
+
+        // If the element starts *after* the current break line, we need to find the next break line
+        while (elTop >= currentBreakLine) {
+            currentBreakLine += PAGE_HEIGHT_PX;
+        }
+
+        // Now check if the element *crosses* the current break line
+        // Condition: Starts before the line, ends after the line
+        if (elTop < currentBreakLine && elBottom > currentBreakLine) {
+            
+            // Corner case: If the element itself is taller than a page, we can't really avoid cutting it 
+            // without complex splitting logic. We just let it be or push it to start at the top of the next page to minimize damage.
+            if (elHeight > PAGE_HEIGHT_PX) {
+                // If it's already at the top of a page (approx), don't move it
+                if (elTop % PAGE_HEIGHT_PX < 50) {
+                     continue; 
+                }
+            }
+
+            // Calculate how much we need to push it down to start on the next page
+            const pushAmount = currentBreakLine - elTop;
+            
+            // Apply spacing
+            if (el.tagName === 'TR') {
+                // For table rows, we can't use margin. We add padding to cells.
+                const cells = Array.from(el.children) as HTMLElement[];
+                cells.forEach(cell => {
+                    const currentPadding = parseFloat(window.getComputedStyle(cell).paddingTop) || 0;
+                    cell.style.paddingTop = `${currentPadding + pushAmount}px`;
+                });
+            } else {
+                // For block elements, margin-top works well
+                const currentMargin = parseFloat(window.getComputedStyle(el).marginTop) || 0;
+                el.style.marginTop = `${currentMargin + pushAmount}px`;
+            }
+
+            // We effectively moved content down. The break line logic still holds for the "page grid",
+            // but we've now ensured this specific element starts *after* the break line.
+            // We don't update currentBreakLine here; the loop will catch up or the 'while' loop above handles it for next elements.
+        }
+    }
+  };
+
   useEffect(() => {
     if (!documentData || !slug) return;
 
@@ -33,12 +108,16 @@ const PdfViewerPage: React.FC = () => {
         const element = contentRef.current;
         if (!element) return;
 
+        // Run smart pagination to insert spacers
+        autoPaginate(element);
+
         // 1. Capture the HTML as a high-res canvas using html2canvas
         // scale: 2 ensures the text remains crisp in the PDF (Retina quality)
         const canvas = await html2canvas(element, {
-          scale: 3,
+          scale: 2, // 2 is usually enough, 3 can be heavy
           useCORS: true,
           logging: false,
+          windowWidth: 794, // Ensure we capture at A4 width context
         });
 
         // 2. Initialize jsPDF

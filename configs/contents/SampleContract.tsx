@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { COMPANY_DETAILS } from '../../companyDetails';
+import { COMPANY_DETAILS } from '../companyDetails';
 
 export const SampleContractContent = (
   <div className="pdf-content">

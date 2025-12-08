@@ -33,7 +33,7 @@ export const SampleContractContent = (
       .pdf-content td {
         border: 1px solid #000;
         padding: 5px 8px;
-        vertical-align: top;
+        vertical-align: middle;
         word-wrap: break-word;
         font-size: 12px;
       }

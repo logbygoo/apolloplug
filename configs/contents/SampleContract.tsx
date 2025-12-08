@@ -10,6 +10,8 @@ export const SampleContractContent = (
             font-size: 11px;
             margin: 20px;
             padding: 20px; /* Added padding to wrapper to simulate body margin on A4 */
+            max-width:1000px;
+            background: red;
         }
 
         .pdf-content h1 {

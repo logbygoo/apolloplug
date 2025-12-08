@@ -165,7 +165,7 @@ export const SampleContractContent = (
             <div className="cell-left">
               Marka / model: <strong>Tesla Model 3</strong> &nbsp;|&nbsp;
               Nr rej.: <strong>WX 12345</strong> &nbsp;|&nbsp;
-              VIN: <strong>5YJ3E000000000000</strong>
+              VIN: <strong>0000000000000000</strong>
             </div>
           </td>
         </tr>

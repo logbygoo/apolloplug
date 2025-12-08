@@ -5,14 +5,12 @@ import { COMPANY_DETAILS } from '../companyDetails';
 export const SampleContractContent = (
   <div className="pdf-content">
     <style>{`
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
       .pdf-content {
         width: 794px;
         min-height: 1123px; /* A4 height at 96 DPI */
         padding: 40px;
         background: white;
-        font-family: 'Inter', sans-serif;
+        font-family: Arial, sans-serif;
         font-size: 12px;
         color: #000;
         line-height: 1.3;

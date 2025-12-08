@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { COMPANY_DETAILS } from '../companyDetails';
 
-export const SampleRentalAgreementContent = (
+export const SampleContractContent = (
   <div className="pdf-content">
     <style>{`
       .pdf-content {

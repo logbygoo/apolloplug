@@ -119,9 +119,9 @@ const Header: React.FC = () => {
 
 const Footer: React.FC = () => {
     const footerLinks = [
+        { path: '/dokumentacja?doc=protokol-wydania-zwrotu', name: 'Protokół wydania/zwrotu' },
         { path: '/dokumentacja', name: 'Polityka prywatności' },
         { path: '/dokumentacja', name: 'Regulamin' },
-        { path: '/dokumentacja', name: 'Prywatność i przepisy prawne' },
         { path: '/kontakt', name: 'Kontakt' },
     ];
   return (

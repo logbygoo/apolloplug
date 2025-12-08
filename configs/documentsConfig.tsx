@@ -37,6 +37,11 @@ export const DOCUMENTS_DATA: DocumentContent[] = [
     content: TransportRulesContent
   },
   {
+    title: 'Protokół wydania/zwrotu',
+    slug: 'protokol-wydania-zwrotu',
+    content: SampleContractContent
+  },
+  {
     title: 'Przykładowe dokumenty',
     slug: 'wzor-umowy',
     content: SampleContractContent

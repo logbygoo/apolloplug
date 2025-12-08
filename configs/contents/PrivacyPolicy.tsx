@@ -1,12 +1,13 @@
 
 import React from 'react';
+import { COMPANY_DETAILS } from '../companyDetails';
 
 export const PrivacyPolicyContent = (
   <>
     <h1>Polityka Prywatności</h1>
     
     <h2>1. Kto jest administratorem danych?</h2>
-    <p>Administratorem Twoich danych osobowych jest forfinance sp. z o.o., ul. Grzybowska 87, 00-844 Warszawa.</p>
+    <p>Administratorem Twoich danych osobowych jest {COMPANY_DETAILS.name}, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip}.</p>
 
     <h2>2. Jakie dane przetwarzamy?</h2>
     <p>Przetwarzamy dane, które podajesz nam podczas:</p>

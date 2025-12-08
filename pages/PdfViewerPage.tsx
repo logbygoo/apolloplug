@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DOCUMENTS_DATA } from '../configs/documentsConfig';
+import { COMPANY_DETAILS } from '../configs/companyDetails';
 import { ApolloPlugLogo } from '../constants';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -103,18 +104,21 @@ const PdfViewerPage: React.FC = () => {
       ) : (
         /* Hidden rendering container for PDF generation */
         <div className="fixed top-0 left-0 w-[794px] invisible z-[-1]" style={{ pointerEvents: 'none' }}>
-            <div ref={contentRef} className="bg-white w-[794px] min-h-[1123px] p-[60px] text-black box-border">
+            <div ref={contentRef} className="bg-white w-[794px] min-h-[1123px] p-[60px] text-black box-border relative">
                 {/* Document Header */}
-                <div className="border-b-2 border-black pb-6 mb-8 flex justify-between items-end">
+                <div className="border-b-2 border-black pb-6 mb-8 flex justify-between items-start">
                     <div>
-                        <div className="scale-75 origin-bottom-left text-black">
+                        <div className="scale-75 origin-top-left text-black">
                             <ApolloPlugLogo />
                         </div>
                     </div>
-                    <div className="text-right text-xs text-gray-500 font-sans">
-                        <p>apolloplug.com</p>
-                        <p>forfinance sp. z o.o.</p>
-                        <p>Warszawa, Grzybowska 87</p>
+                    <div className="text-right text-[10px] text-gray-500 font-sans leading-tight">
+                        <p className="font-bold text-black text-xs mb-1">{COMPANY_DETAILS.name}</p>
+                        <p>{COMPANY_DETAILS.address}</p>
+                        <p>NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}</p>
+                        <p>Kapitał zakładowy: {COMPANY_DETAILS.capital}</p>
+                        <p className="mt-1 font-medium">{COMPANY_DETAILS.website}</p>
+                        <p>{COMPANY_DETAILS.email} | {COMPANY_DETAILS.phone}</p>
                     </div>
                 </div>
 
@@ -124,8 +128,8 @@ const PdfViewerPage: React.FC = () => {
                 </article>
 
                 {/* Footer */}
-                <div className="mt-20 pt-4 border-t border-gray-200 text-center text-[10px] text-gray-400 font-sans">
-                    Dokument wygenerowany elektronicznie ze strony apolloplug.com w dniu {new Date().toLocaleDateString('pl-PL')}
+                <div className="absolute bottom-[60px] left-[60px] right-[60px] pt-4 border-t border-gray-200 text-center text-[10px] text-gray-400 font-sans">
+                    Dokument wygenerowany elektronicznie ze strony {COMPANY_DETAILS.website} w dniu {new Date().toLocaleDateString('pl-PL')}
                 </div>
             </div>
         </div>

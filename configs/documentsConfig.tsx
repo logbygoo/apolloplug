@@ -5,6 +5,9 @@ import { PrivacyPolicyContent } from './contents/PrivacyPolicy';
 import { RentalRulesContent } from './contents/RentalRules';
 import { TransportRulesContent } from './contents/TransportRules';
 import { SampleContractContent } from './contents/SampleContract';
+import { COMPANY_DETAILS } from './companyDetails';
+
+export { COMPANY_DETAILS };
 
 export interface DocumentContent {
   title: string;

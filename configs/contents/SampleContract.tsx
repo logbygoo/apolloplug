@@ -144,7 +144,7 @@ export const SampleContractContent = (
           <td>
             <div className="cell-left">
               <div>
-                <strong>Jan Kowalski</strong>, ul. Testowa 5 m. 12, 01-234 Warszawa, PESEL: 80010112345, Telefon: +48 600 000 000, Dokument tożsamości:</strong> DO ABC123456
+                <strong>Jan Kowalski</strong>, ul. Testowa 5 m. 12, 01-234 Warszawa, PESEL: 80010112345, Telefon: +48 600 000 000, Dokument tożsamości: DO ABC123456
               </div>
             </div>
           </td>

@@ -12,7 +12,7 @@ export const SampleContractContent = (
         margin: 0;                 /* Removed auto margin to prevent centering offsets in capture */
         padding: 40px;             /* Standard margins for the document */
         box-sizing: border-box;
-        background-color: #ffffff;
+        background-color: red;
         color: #000000;
         line-height: 1.4;
     }

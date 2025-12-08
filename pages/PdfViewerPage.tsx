@@ -17,12 +17,15 @@ const PdfViewerPage: React.FC = () => {
     const cacheKey = `pdf_cache_${slug}`;
     
     // 1. Check Session Storage for cached PDF
+    // CACHE DISABLED FOR DEVELOPMENT
+    /*
     const cachedPdf = sessionStorage.getItem(cacheKey);
     if (cachedPdf) {
         setPdfUrl(cachedPdf);
         setIsGenerating(false);
         return;
     }
+    */
 
     // 2. If no cache, generate PDF
     if (!contentRef.current) return;
@@ -57,11 +60,14 @@ const PdfViewerPage: React.FC = () => {
           callback: (doc: jsPDF) => {
             const dataUri = doc.output('datauristring');
             
+            // CACHE DISABLED FOR DEVELOPMENT
+            /*
             try {
                 sessionStorage.setItem(cacheKey, dataUri);
             } catch (e) {
                 console.warn("Failed to cache PDF in sessionStorage (quota exceeded?)", e);
             }
+            */
             
             setPdfUrl(dataUri);
             setIsGenerating(false);

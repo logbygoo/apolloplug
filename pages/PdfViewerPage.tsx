@@ -42,17 +42,10 @@ const PdfViewerPage: React.FC = () => {
             setPdfUrl(dataUri);
             setIsGenerating(false);
           },
-          // A4 Width in mm. Setting this forces jsPDF to scale the HTML to fit this width.
-          width: 210, 
-          // The virtual window width in pixels. 794px corresponds to 210mm at 96 DPI.
-          // This tells html2canvas to render the layout as if it were on an A4-sized screen.
-          windowWidth: 794,
-          x: 0,
-          y: 0,
           html2canvas: {
             useCORS: true,
             logging: false,
-            scale: 1, // Reset scale to 1, let jsPDF handle the fitting via 'width' parameter
+            scale: 0.4, // Reset scale to 1, let jsPDF handle the fitting via 'width' parameter
           }
         });
 

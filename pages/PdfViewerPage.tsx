@@ -42,18 +42,15 @@ const PdfViewerPage: React.FC = () => {
             setPdfUrl(dataUri);
             setIsGenerating(false);
           },
-          // Map the 794px width content to 210mm PDF width
-          width: 21,
-          // Vital: Force html2canvas to render at 794px width (standard A4 @ 96DPI)
-          windowWidth: 79,
-          autoPaging: 'text' as const,
+          // A4 Width in mm (Standard A4 is 210mm x 297mm)
+          width: 210,
+          // Corresponds to 210mm at 96 DPI (approx 794px)
+          windowWidth: 794,
           x: 0,
           y: 0,
           html2canvas: {
-            scale: 0.2, // 2x scale for sharper text
             useCORS: true,
             logging: false,
-            windowWidth: 79, // Ensure canvas thinks window is 794px wide
           }
         };
 
@@ -94,14 +91,11 @@ const PdfViewerPage: React.FC = () => {
         />
       ) : (
         /* 
-           Off-screen container for generation.
-           Positioned absolutely far off-screen to avoid visual glitches but kept in DOM for rendering.
-           The inner width is explicitly 794px to match A4 pixel width at 96 DPI.
+           Off-screen container for generation. 
+           We use the HTML content directly from the document file.
         */
-        <div style={{ position: 'absolute', left: '-10000px', top: 0 }}>
-            <div ref={contentRef} style={{ width: '794px', margin: 0, padding: 0, backgroundColor: 'white' }}>
-                {documentData.content}
-            </div>
+        <div style={{ position: 'absolute', left: '-10000px', top: 0 }} ref={contentRef}>
+            {documentData.content}
         </div>
       )}
     </div>

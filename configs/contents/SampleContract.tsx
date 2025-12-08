@@ -13,7 +13,6 @@ export const SampleContractContent = (
         overflow: hidden;
       }
 
-      /* ważne – wszystkie elementy liczą szerokość z borderem i paddingiem */
       .pdf-content *,
       .pdf-content *::before,
       .pdf-content *::after {
@@ -31,7 +30,7 @@ export const SampleContractContent = (
       .pdf-content table {
         width: 100%;
         border-collapse: collapse;
-        border-spacing: 0;       /* brak dodatkowych odstępów od tabeli */
+        border-spacing: 0;
         table-layout: fixed;
         margin-bottom: 20px;
       }
@@ -39,23 +38,37 @@ export const SampleContractContent = (
       .pdf-content th, 
       .pdf-content td {
         border: 1px solid #000;
-        padding: 6px 8px;         /* trochę większy i równy z każdej strony */
-        vertical-align: middle;   /* środek komórki */
-        word-wrap: break-word;
-        word-break: break-word;
+        padding: 0;                /* padding bierzemy na wrapperze w środku */
+        vertical-align: middle;
         font-size: 12px;
-        line-height: 1.3;         /* stabilna wysokość linii */
       }
 
-      /* nagłówki sekcji */
+      /* wrapper do wyrównywania treści w komórkach */
+      .pdf-content .cell-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 8px;
+        width: 100%;
+        height: 100%;
+        line-height: 1.3;
+      }
+
+      .pdf-content .cell-left {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 6px 8px;
+        width: 100%;
+        height: 100%;
+        line-height: 1.3;
+      }
+
       .pdf-content .section-title {
         background: #e0e0e0;
         font-weight: 700;
-        text-align: center;
         text-transform: uppercase;
         font-size: 13px;
-        /* minimalna wysokość żeby tekst był wyraźnie na środku */
-        height: 28px;
       }
 
       .pdf-content .car-scheme {
@@ -68,12 +81,12 @@ export const SampleContractContent = (
         align-items: center;
         border: 1px dashed #ccc;
         margin: 4px;
+        padding: 4px;
       }
 
       .pdf-content .fuel-box {
         text-align: center;
         height: 40px;
-        vertical-align: middle;
       }
 
       .pdf-content .notes-box {
@@ -113,22 +126,34 @@ export const SampleContractContent = (
       </colgroup>
       <tbody>
         <tr>
-          <th className="section-title">Wynajmujący</th>
-          <th className="section-title">Najemca</th>
+          <th className="section-title">
+            <div className="cell-center">Wynajmujący</div>
+          </th>
+          <th className="section-title">
+            <div className="cell-center">Najemca</div>
+          </th>
         </tr>
         <tr>
           <td>
-            <strong>{COMPANY_DETAILS.name}</strong><br />
-            {COMPANY_DETAILS.address}<br />
-            NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}<br />
-            REGON: {COMPANY_DETAILS.regon}
+            <div className="cell-left">
+              <div>
+                <strong>{COMPANY_DETAILS.name}</strong><br />
+                {COMPANY_DETAILS.address}<br />
+                NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}<br />
+                REGON: {COMPANY_DETAILS.regon}
+              </div>
+            </div>
           </td>
           <td>
-            <strong>Imię i nazwisko:</strong> Jan Kowalski<br />
-            <strong>Adres:</strong> ul. Testowa 5 m. 12, 01-234 Warszawa<br />
-            <strong>PESEL:</strong> 80010112345<br />
-            <strong>Telefon:</strong> +48 600 000 000<br />
-            <strong>Dokument tożsamości:</strong> DO ABC123456
+            <div className="cell-left">
+              <div>
+                <strong>Imię i nazwisko:</strong> Jan Kowalski<br />
+                <strong>Adres:</strong> ul. Testowa 5 m. 12, 01-234 Warszawa<br />
+                <strong>PESEL:</strong> 80010112345<br />
+                <strong>Telefon:</strong> +48 600 000 000<br />
+                <strong>Dokument tożsamości:</strong> DO ABC123456
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -138,13 +163,17 @@ export const SampleContractContent = (
     <table>
       <tbody>
         <tr>
-          <th className="section-title">Przedmiot najmu</th>
+          <th className="section-title">
+            <div className="cell-center">Przedmiot najmu</div>
+          </th>
         </tr>
         <tr>
           <td>
-            Marka / model: <strong>Tesla Model 3</strong> &nbsp;|&nbsp;
-            Nr rej.: <strong>WX 12345</strong> &nbsp;|&nbsp;
-            VIN: <strong>5YJ3E7EB0MF123456</strong>
+            <div className="cell-left">
+              Marka / model: <strong>Tesla Model 3</strong> &nbsp;|&nbsp;
+              Nr rej.: <strong>WX 12345</strong> &nbsp;|&nbsp;
+              VIN: <strong>5YJ3E7EB0MF123456</strong>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -160,11 +189,17 @@ export const SampleContractContent = (
       </colgroup>
       <tbody>
         <tr>
-          <th className="section-title" colSpan={4}>WYDANIE POJAZDU</th>
+          <th className="section-title" colSpan={4}>
+            <div className="cell-center">WYDANIE POJAZDU</div>
+          </th>
         </tr>
         <tr>
-          <th>Stan pojazdu</th>
-          <th colSpan={3}>Data i godzina wydania</th>
+          <th>
+            <div className="cell-center">Stan pojazdu</div>
+          </th>
+          <th colSpan={3}>
+            <div className="cell-center">Data i godzina wydania</div>
+          </th>
         </tr>
         <tr>
           <td rowSpan={3}>
@@ -174,35 +209,55 @@ export const SampleContractContent = (
             </div>
           </td>
           <td colSpan={3}>
-            Data: <strong>10.12.2025</strong><br />
-            Godzina: <strong>09:30</strong><br/>
-            Miejsce: <strong>Warszawa</strong>
+            <div className="cell-left">
+              <div>
+                Data: <strong>10.12.2025</strong><br />
+                Godzina: <strong>09:30</strong><br/>
+                Miejsce: <strong>Warszawa</strong>
+              </div>
+            </div>
           </td>
         </tr>
         <tr>
-          <th>Bateria / Zasięg</th>
-          <th>Przebieg</th>
-          <th>Uwagi / Wyposażenie</th>
+          <th>
+            <div className="cell-center">Bateria / Zasięg</div>
+          </th>
+          <th>
+            <div className="cell-center">Przebieg</div>
+          </th>
+          <th>
+            <div className="cell-center">Uwagi / Wyposażenie</div>
+          </th>
         </tr>
         <tr>
-          <td className="fuel-box">
-            85% / 420 km
+          <td>
+            <div className="cell-center fuel-box">
+              85% / 420 km
+            </div>
           </td>
-          <td className="fuel-box">
-            25 350 km
+          <td>
+            <div className="cell-center fuel-box">
+              25 350 km
+            </div>
           </td>
-          <td className="notes-box">
-            Kabel Typ 2: TAK<br/>
-            Ładowarka mobilna: TAK<br/>
-            Trójkąt/Gaśnica: TAK
+          <td>
+            <div className="cell-left notes-box">
+              Kabel Typ 2: TAK<br/>
+              Ładowarka mobilna: TAK<br/>
+              Trójkąt/Gaśnica: TAK
+            </div>
           </td>
         </tr>
         <tr>
-          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
-            Wynajmujący (podpis)
+          <td colSpan={2} className="section-title">
+            <div className="cell-left" style={{ fontSize: '10px' }}>
+              Wynajmujący (podpis)
+            </div>
           </td>
-          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
-            Najemca (podpis)
+          <td colSpan={2} className="section-title">
+            <div className="cell-left" style={{ fontSize: '10px' }}>
+              Najemca (podpis)
+            </div>
           </td>
         </tr>
         <tr>
@@ -222,11 +277,17 @@ export const SampleContractContent = (
       </colgroup>
       <tbody>
         <tr>
-          <th className="section-title" colSpan={4}>ZWROT POJAZDU</th>
+          <th className="section-title" colSpan={4}>
+            <div className="cell-center">ZWROT POJAZDU</div>
+          </th>
         </tr>
         <tr>
-          <th>Stan pojazdu</th>
-          <th colSpan={3}>Data i godzina zwrotu</th>
+          <th>
+            <div className="cell-center">Stan pojazdu</div>
+          </th>
+          <th colSpan={3}>
+            <div className="cell-center">Data i godzina zwrotu</div>
+          </th>
         </tr>
         <tr>
           <td rowSpan={3}>
@@ -236,33 +297,53 @@ export const SampleContractContent = (
             </div>
           </td>
           <td colSpan={3}>
-            Data: ...........................<br />
-            Godzina: ........................<br/>
-            Miejsce: ........................
+            <div className="cell-left">
+              <div>
+                Data: ...........................<br />
+                Godzina: ........................<br/>
+                Miejsce: ........................
+              </div>
+            </div>
           </td>
         </tr>
         <tr>
-          <th>Bateria / Zasięg</th>
-          <th>Przebieg</th>
-          <th>Uwagi / Braki</th>
+          <th>
+            <div className="cell-center">Bateria / Zasięg</div>
+          </th>
+          <th>
+            <div className="cell-center">Przebieg</div>
+          </th>
+          <th>
+            <div className="cell-center">Uwagi / Braki</div>
+          </th>
         </tr>
         <tr>
-          <td className="fuel-box">
-            ....... %
+          <td>
+            <div className="cell-center fuel-box">
+              ....... %
+            </div>
           </td>
-          <td className="fuel-box">
-            ................ km
+          <td>
+            <div className="cell-center fuel-box">
+              ................ km
+            </div>
           </td>
-          <td className="notes-box">
-            
+          <td>
+            <div className="cell-left notes-box">
+              
+            </div>
           </td>
         </tr>
         <tr>
-          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
-            Wynajmujący (podpis)
+          <td colSpan={2} className="section-title">
+            <div className="cell-left" style={{ fontSize: '10px' }}>
+              Wynajmujący (podpis)
+            </div>
           </td>
-          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
-            Najemca (podpis)
+          <td colSpan={2} className="section-title">
+            <div className="cell-left" style={{ fontSize: '10px' }}>
+              Najemca (podpis)
+            </div>
           </td>
         </tr>
         <tr>

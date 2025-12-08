@@ -145,7 +145,7 @@ export const SampleContractContent = (
           </td>
           <td>
             <div className="cell-multiline">
-              Imię i nazwisko: <strong>Jan Kowalski</strong>, Adres zamieszkania: ul. Testowa 5 m. 12, 01-234 Warszawa, PESEL: 80010112345, Dokument tożsamości: DO ABC123456, Prawo jazdy: B/PL 1234567, Telefon: +48 600 000 000, E-mail: jan.kowalski@example.com
+              <strong>Jan Kowalski</strong>, Adres zamieszkania: ul. Testowa 5 m. 12, 01-234 Warszawa, PESEL: 80010112345, Dokument tożsamości: DO ABC123456, Prawo jazdy: B/PL 1234567, Telefon: +48 600 000 000, E-mail: jan.kowalski@example.com
             </div>
           </td>
         </tr>
@@ -430,12 +430,12 @@ export const SampleContractContent = (
         <tr>
           <th>
             <div className="cell-left small">
-              Wynajmujący: {COMPANY_DETAILS.name}, {COMPANY_DETAILS.address}
+              Wynajmujący: <br /><br /><br />
             </div>
           </th>
           <th>
             <div className="cell-left small">
-              Najemca: Jan Kowalski, ul. Testowa 5 m. 12, 01-234 Warszawa
+              Najemca: <br /><br /><br />
             </div>
           </th>
         </tr>

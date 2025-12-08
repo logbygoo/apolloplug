@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DOCUMENTS_DATA } from '../configs/documentsConfig';
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const PdfViewerPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -32,22 +33,42 @@ const PdfViewerPage: React.FC = () => {
         const element = contentRef.current;
         if (!element) return;
 
-        // Initialize jsPDF with millimeters and A4 format
+        // 1. Capture the HTML as a high-res canvas using html2canvas
+        // scale: 2 ensures the text remains crisp in the PDF (Retina quality)
+        const canvas = await html2canvas(element, {
+          scale: 0.25,
+          useCORS: true,
+          logging: false,
+        });
+
+        // 2. Initialize jsPDF
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
         const doc = new jsPDF('p', 'mm', 'a4');
         
-        await doc.html(element, {
-          callback: (doc: jsPDF) => {
-            const dataUri = doc.output('datauristring');
-            // sessionStorage.setItem(cacheKey, dataUri); // CACHE DISABLED
-            setPdfUrl(dataUri);
-            setIsGenerating(false);
-          },
-          html2canvas: {
-            useCORS: true,
-            logging: false,
-            scale: 0.35, // Reset scale to 1, let jsPDF handle the fitting via 'width' parameter
-          }
-        });
+        const imgWidth = 210; // A4 width in mm
+        const pageHeight = 297; // A4 height in mm
+        
+        // Calculate the height of the image on the PDF based on the aspect ratio
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        // 3. Add image to PDF (handle multi-page if content is long)
+        doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight; // Move the image up
+          doc.addPage();
+          doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        const dataUri = doc.output('datauristring');
+        // sessionStorage.setItem(cacheKey, dataUri); // CACHE DISABLED
+        setPdfUrl(dataUri);
+        setIsGenerating(false);
 
       } catch (error) {
         console.error("Error generating PDF:", error);
@@ -55,8 +76,8 @@ const PdfViewerPage: React.FC = () => {
       }
     };
 
-    // Small delay to ensure DOM render
-    const timeout = setTimeout(generatePdf, 500);
+    // Delay to ensure fonts and DOM are fully ready
+    const timeout = setTimeout(generatePdf, 800);
     return () => clearTimeout(timeout);
   }, [documentData, slug]);
 
@@ -68,8 +89,7 @@ const PdfViewerPage: React.FC = () => {
     );
   }
 
-  // Inject ref directly into the content element if it's a valid React element
-  // This avoids adding an extra wrapper div that might mess up styles
+  // Inject ref directly into the content element
   const contentWithRef = React.isValidElement(documentData.content) 
     ? React.cloneElement(documentData.content as React.ReactElement<any>, { ref: contentRef })
     : <div ref={contentRef}>{documentData.content}</div>;
@@ -92,10 +112,10 @@ const PdfViewerPage: React.FC = () => {
       ) : (
         /* 
            Off-screen container for generation.
-           Position fixed off-screen ensures it is rendered in the DOM for html2canvas to see,
-           but hidden from the user. We DO NOT use extra wrapper divs here to avoid style conflicts.
+           Left: -10000px keeps it out of view but renders it in DOM.
+           Width: 794px forces exact A4 pixel width (96 DPI).
         */
-        <div style={{ position: 'fixed', left: '-10000px', top: 0 }}>
+        <div style={{ position: 'absolute', left: '-10000px', top: 0, width: '794px' }}>
             {contentWithRef}
         </div>
       )}

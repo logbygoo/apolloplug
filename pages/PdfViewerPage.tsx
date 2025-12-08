@@ -29,24 +29,30 @@ const PdfViewerPage: React.FC = () => {
 
     const generatePdf = async () => {
       try {
-        const element = contentRef.current;
+        // CRITICAL CHANGE: Try to select the specific .pdf-content element.
+        // If it exists, we generate the PDF from THAT element to respect its exact CSS.
+        // Fallback to contentRef.current for other documents.
+        const specificContent = contentRef.current?.querySelector('.pdf-content') as HTMLElement;
+        const element = specificContent || contentRef.current;
+        
         if (!element) return;
 
-        // Create PDF with A4 format (pt units)
-        const doc = new jsPDF('p', 'pt', 'a4');
-        
-        // A4 width at 96 DPI is approximately 794px
-        // In points (1/72 inch), A4 is 595.28 pt
-        const a4WidthPx = 794;
+        // A4 format in points (pt)
         const a4WidthPt = 595.28;
+        // HTML rendering width in pixels (794px is approx A4 @ 96DPI)
+        const a4WidthPx = 794;
+
+        const doc = new jsPDF('p', 'pt', 'a4');
 
         const options = {
           html2canvas: {
-            scale: 2, // Higher scale for better quality
+            scale: 2, // Higher scale for better text quality
             logging: false,
             useCORS: true,
             windowWidth: a4WidthPx,
-            width: a4WidthPx
+            width: a4WidthPx,
+            scrollY: 0,
+            scrollX: 0
           },
           callback: (doc: jsPDF) => {
             const dataUri = doc.output('datauristring');
@@ -62,7 +68,8 @@ const PdfViewerPage: React.FC = () => {
           },
           x: 0,
           y: 0,
-          width: a4WidthPt,
+          // This tells jsPDF to scale the HTML content (794px) down to fit the PDF width (595.28pt)
+          width: a4WidthPt, 
           windowWidth: a4WidthPx,
           autoPaging: 'text' as const
         };
@@ -74,7 +81,7 @@ const PdfViewerPage: React.FC = () => {
       }
     };
 
-    // Small timeout to ensure fonts and styles are loaded before capturing
+    // Small timeout to ensure fonts/images are rendered
     const timeout = setTimeout(generatePdf, 500);
     return () => clearTimeout(timeout);
   }, [documentData, slug]);
@@ -104,11 +111,12 @@ const PdfViewerPage: React.FC = () => {
         />
       ) : (
         /* 
-           Hidden rendering container. 
-           We fix the width to 794px (approx A4 @ 96 DPI) to match the html2canvas windowWidth.
+           Hidden container. 
+           We use a fixed width container matching the PDF generation width 
+           to ensure text wrapping is calculated correctly before capture.
         */
         <div className="fixed top-0 left-0 w-[794px] h-0 overflow-hidden invisible z-[-1]">
-            <div ref={contentRef} className="bg-white w-[794px] min-h-[1123px] text-black box-border relative">
+            <div ref={contentRef} className="w-[794px]">
                 {documentData.content}
             </div>
         </div>

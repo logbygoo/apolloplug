@@ -4,95 +4,104 @@ import { COMPANY_DETAILS } from '../companyDetails';
 
 export const SampleContractContent = (
   <div className="pdf-content">
-    <style>{`
-        .pdf-content {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 11px;
-            width: 100%;
-            box-sizing: border-box;
-            padding: 40px; /* Simulates document margins inside the container */
-            background-color: #ffffff;
-            color: #000000;
-        }
+<style>{`
+    .pdf-content {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        width: 794px;              /* Exact A4 width at 96 DPI */
+        margin: 0;                 /* Removed auto margin to prevent centering offsets in capture */
+        padding: 40px;             /* Standard margins for the document */
+        box-sizing: border-box;
+        background-color: #ffffff;
+        color: #000000;
+        line-height: 1.4;
+    }
 
-        .pdf-content h1 {
-            text-align: center;
-            font-size: 18px;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            color: #000000;
-        }
+    /* Reset global box-sizing for this component to ensure widths are respected */
+    .pdf-content * {
+        box-sizing: border-box;
+    }
 
-        .pdf-content table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed; /* Ensures table stays within 100% width */
-        }
+    .pdf-content h1 {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        color: #000000;
+    }
 
-        .pdf-content th, .pdf-content td {
-            border: 1px solid #000;
-            padding: 5px;
-            vertical-align: top;
-            word-wrap: break-word; /* Forces long text to wrap */
-        }
+    .pdf-content table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;       /* Critical: Prevents table from expanding beyond 100% */
+    }
 
-        .pdf-content .no-border {
-            border: none;
-        }
+    .pdf-content th, .pdf-content td {
+        border: 1px solid #000;
+        padding: 5px;
+        vertical-align: top;
+        word-wrap: break-word;     /* Forces text to wrap */
+        overflow-wrap: break-word;
+        font-size: 10px;
+    }
 
-        .pdf-content .section-title {
-            background: #e0e0e0;
-            font-weight: bold;
-            text-align: center;
-            text-transform: uppercase;
-        }
+    .pdf-content .no-border {
+        border: none;
+    }
 
-        .pdf-content .subheader {
-            background: #f5f5f5;
-            font-weight: bold;
-        }
+    .pdf-content .section-title {
+        background: #e0e0e0;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+    }
 
-        .pdf-content .small {
-            font-size: 9px;
-        }
+    .pdf-content .subheader {
+        background: #f5f5f5;
+        font-weight: bold;
+    }
 
-        .pdf-content .car-scheme {
-            height: 110px;
-            text-align: center;
-            font-size: 9px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
+    .pdf-content .small {
+        font-size: 9px;
+    }
 
-        .pdf-content .fuel-box {
-            text-align: center;
-            font-size: 10px;
-            height: 45px;
-        }
+    .pdf-content .car-scheme {
+        height: 110px;
+        text-align: center;
+        font-size: 9px;
+        border: 1px solid #ccc;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
 
-        .pdf-content .notes-box {
-            height: 60px;
-        }
+    .pdf-content .fuel-box {
+        text-align: center;
+        font-size: 10px;
+        height: 45px;
+    }
 
-        .pdf-content .sign-box {
-            height: 40px;
-        }
+    .pdf-content .notes-box {
+        height: 60px;
+    }
 
-        .pdf-content .footer {
-            margin-top: 20px;
-            font-size: 9px;
-            border-top: 1px solid #ccc;
-            padding-top: 5px;
-        }
+    .pdf-content .sign-box {
+        height: 40px;
+    }
 
-        .pdf-content .right {
-            text-align: right;
-        }
-    `}</style>
+    .pdf-content .footer {
+        margin-top: 20px;
+        font-size: 9px;
+        border-top: 1px solid #ccc;
+        padding-top: 5px;
+    }
+
+    .pdf-content .right {
+        text-align: right;
+    }
+`}</style>
 
     <h1>PROTOKÓŁ ZDAWCZO-ODBIORCZY</h1>
 

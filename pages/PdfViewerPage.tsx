@@ -14,11 +14,9 @@ const PdfViewerPage: React.FC = () => {
   useEffect(() => {
     if (!documentData || !slug) return;
 
-    const cacheKey = `pdf_cache_${slug}`;
-    
-    // 1. Check Session Storage for cached PDF
-    // CACHE DISABLED FOR DEVELOPMENT
+    // CACHE DISABLED TEMPORARILY
     /*
+    const cacheKey = `pdf_cache_${slug}`;
     const cachedPdf = sessionStorage.getItem(cacheKey);
     if (cachedPdf) {
         setPdfUrl(cachedPdf);
@@ -27,57 +25,42 @@ const PdfViewerPage: React.FC = () => {
     }
     */
 
-    // 2. If no cache, generate PDF
     if (!contentRef.current) return;
 
     const generatePdf = async () => {
       try {
-        // CRITICAL CHANGE: Try to select the specific .pdf-content element.
-        // If it exists, we generate the PDF from THAT element to respect its exact CSS.
-        // Fallback to contentRef.current for other documents.
-        const specificContent = contentRef.current?.querySelector('.pdf-content') as HTMLElement;
-        const element = specificContent || contentRef.current;
-        
+        const element = contentRef.current;
         if (!element) return;
 
-        // A4 format in points (pt)
-        const a4WidthPt = 595.28;
-        // HTML rendering width in pixels (794px is approx A4 @ 96DPI)
-        const a4WidthPx = 794;
-
+        // A4 Dimensions:
+        // Width in pt: 595.28
+        // Width in px (96 DPI): 794
+        
         const doc = new jsPDF('p', 'pt', 'a4');
+        const pdfWidthPt = 595.28;
+        const htmlWidthPx = 794;
 
         const options = {
-          html2canvas: {
-            scale: 2, // Higher scale for better text quality
-            logging: false,
-            useCORS: true,
-            windowWidth: a4WidthPx,
-            width: a4WidthPx,
-            scrollY: 0,
-            scrollX: 0
-          },
           callback: (doc: jsPDF) => {
             const dataUri = doc.output('datauristring');
-            
-            // CACHE DISABLED FOR DEVELOPMENT
-            /*
-            try {
-                sessionStorage.setItem(cacheKey, dataUri);
-            } catch (e) {
-                console.warn("Failed to cache PDF in sessionStorage (quota exceeded?)", e);
-            }
-            */
-            
+            // sessionStorage.setItem(cacheKey, dataUri); // CACHE DISABLED
             setPdfUrl(dataUri);
             setIsGenerating(false);
           },
+          // This ensures the 794px HTML fits exactly into the 595.28pt PDF width
+          width: pdfWidthPt, 
+          windowWidth: htmlWidthPx,
+          autoPaging: 'text' as const,
           x: 0,
           y: 0,
-          // This tells jsPDF to scale the HTML content (794px) down to fit the PDF width (595.28pt)
-          width: a4WidthPt, 
-          windowWidth: a4WidthPx,
-          autoPaging: 'text' as const
+          html2canvas: {
+            scale: 2, // Improves text sharpness
+            useCORS: true,
+            logging: false,
+            // Explicitly set the canvas dimensions to match the source element
+            width: htmlWidthPx,
+            windowWidth: htmlWidthPx,
+          }
         };
 
         await doc.html(element, options);
@@ -87,7 +70,7 @@ const PdfViewerPage: React.FC = () => {
       }
     };
 
-    // Small timeout to ensure fonts/images are rendered
+    // Small delay to ensure DOM render
     const timeout = setTimeout(generatePdf, 500);
     return () => clearTimeout(timeout);
   }, [documentData, slug]);
@@ -101,7 +84,7 @@ const PdfViewerPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-screen bg-secondary flex items-center justify-center overflow-hidden">
+    <div className="w-full h-screen bg-secondary flex items-center justify-center overflow-hidden relative">
       {isGenerating && !pdfUrl && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-50">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
@@ -117,12 +100,13 @@ const PdfViewerPage: React.FC = () => {
         />
       ) : (
         /* 
-           Hidden container. 
-           We use a fixed width container matching the PDF generation width 
-           to ensure text wrapping is calculated correctly before capture.
+           Off-screen container for generation.
+           Crucial: using 'absolute' + 'left: -9999px' instead of 'hidden/invisible'
+           ensures the layout engine renders it fully (including fonts/tables) before capture.
+           Fixed width of 794px matches A4 @ 96 DPI.
         */
-        <div className="fixed top-0 left-0 w-[794px] h-0 overflow-hidden invisible z-[-1]">
-            <div ref={contentRef} className="w-[794px]">
+        <div style={{ position: 'absolute', left: '-9999px', top: 0, width: '794px' }}>
+            <div ref={contentRef}>
                 {documentData.content}
             </div>
         </div>

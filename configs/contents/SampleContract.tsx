@@ -43,7 +43,6 @@ export const SampleContractContent = (
         font-weight: 700;
         text-align: center;
         text-transform: uppercase;
-        padding: 8px;
         font-size: 13px;
       }
 

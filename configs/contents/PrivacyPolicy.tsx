@@ -3,6 +3,74 @@ import { COMPANY_DETAILS } from '../companyDetails';
 
 export const PrivacyPolicyContent = (
   <div className="pdf-content">
+
+<style>{`
+  .privacy-content {
+    padding: 20px 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #000;
+    line-height: 1.55;
+    background: #fff;
+    box-sizing: border-box;
+  }
+
+  /* Zera marginesów globalnych */
+  .privacy-content *, 
+  .privacy-content *::before, 
+  .privacy-content *::after {
+    box-sizing: inherit;
+  }
+
+  .privacy-content h1 {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .privacy-content h2 {
+    font-size: 16px;
+    margin-top: 22px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .privacy-content h3 {
+    font-size: 14px;
+    margin-top: 16px;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .privacy-content p {
+    margin: 8px 0;
+    text-align: justify;
+  }
+
+  .privacy-content ol {
+    margin: 8px 0 8px 18px;
+    padding: 0;
+  }
+
+  .privacy-content ol li {
+    margin-bottom: 6px;
+  }
+
+  .privacy-content strong {
+    font-weight: 700;
+  }
+
+  .privacy-content .footer {
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 1px solid #000;
+    font-size: 10px;
+    text-align: right;
+  }
+`}</style>
+
     <h1>Polityka prywatności serwisu {COMPANY_DETAILS.website}</h1>
 
     <p><strong>1. Postanowienia ogólne</strong></p>

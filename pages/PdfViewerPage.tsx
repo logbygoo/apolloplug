@@ -2,10 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DOCUMENTS_DATA } from '../configs/documentsConfig';
-import { COMPANY_DETAILS } from '../configs/companyDetails';
-import { ApolloPlugLogo } from '../constants';
 import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const PdfViewerPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -102,35 +99,10 @@ const PdfViewerPage: React.FC = () => {
             title={documentData.title}
         />
       ) : (
-        /* Hidden rendering container for PDF generation */
+        /* Hidden rendering container for PDF generation. Pure blank canvas. */
         <div className="fixed top-0 left-0 w-[794px] invisible z-[-1]" style={{ pointerEvents: 'none' }}>
-            <div ref={contentRef} className="bg-white w-[794px] min-h-[1123px] p-[60px] text-black box-border relative">
-                {/* Document Header */}
-                <div className="border-b-2 border-black pb-6 mb-8 flex justify-between items-start">
-                    <div>
-                        <div className="scale-75 origin-top-left text-black">
-                            <ApolloPlugLogo />
-                        </div>
-                    </div>
-                    <div className="text-right text-[10px] text-gray-500 font-sans leading-tight">
-                        <p className="font-bold text-black text-xs mb-1">{COMPANY_DETAILS.name}</p>
-                        <p>{COMPANY_DETAILS.address}</p>
-                        <p>NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}</p>
-                        <p>Kapitał zakładowy: {COMPANY_DETAILS.capital}</p>
-                        <p className="mt-1 font-medium">{COMPANY_DETAILS.website}</p>
-                        <p>{COMPANY_DETAILS.email} | {COMPANY_DETAILS.phone}</p>
-                    </div>
-                </div>
-
-                {/* Content */}
-                <article className="prose prose-sm max-w-none font-serif text-justify prose-headings:font-sans prose-headings:font-bold prose-h1:text-2xl prose-h1:text-center prose-h1:mb-8 prose-h2:text-lg prose-h2:mt-6 prose-h2:mb-2 prose-p:my-3 prose-li:my-1 text-black">
-                    {documentData.content}
-                </article>
-
-                {/* Footer */}
-                <div className="absolute bottom-[60px] left-[60px] right-[60px] pt-4 border-t border-gray-200 text-center text-[10px] text-gray-400 font-sans">
-                    Dokument wygenerowany elektronicznie ze strony {COMPANY_DETAILS.website} w dniu {new Date().toLocaleDateString('pl-PL')}
-                </div>
+            <div ref={contentRef} className="bg-white w-[794px] min-h-[1123px] text-black box-border relative">
+                {documentData.content}
             </div>
         </div>
       )}

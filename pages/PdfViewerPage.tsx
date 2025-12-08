@@ -12,94 +12,82 @@ const PdfViewerPage: React.FC = () => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(true);
 
-  // A4 dimensions at 96 DPI (approx)
-  // A4 is 210mm x 297mm. 
-  // 1 inch = 25.4mm. 96px/inch.
-  // Width: 794px. Height: 1123px.
-  const PAGE_HEIGHT_PX = 1122; 
+  // A4 dimensions at 96 DPI
+  const PAGE_HEIGHT_PX = 1123; 
+  const PAGE_MARGIN_PX = 40; // ~10mm top/bottom margin for subsequent pages
 
   const autoPaginate = (container: HTMLElement) => {
-    // Elements to check for page breaks. We prioritize specific block elements.
-    // 'tr' covers table rows. 'p', 'h1-h6', 'li' cover text. 'div' is too generic usually, but might be needed for some layouts.
+    // Elements to check for page breaks.
     const selector = 'p, h1, h2, h3, h4, h5, h6, li, tr, .avoid-break'; 
     const elements = Array.from(container.querySelectorAll(selector)) as HTMLElement[];
     
-    // Sort elements by their vertical position to process them in order
-    // This is crucial because moving an element affects the position of all subsequent elements
+    // Sort by position to process in order
     elements.sort((a, b) => {
         const rectA = a.getBoundingClientRect();
         const rectB = b.getBoundingClientRect();
         return rectA.top - rectB.top;
     });
 
-    let currentBreakLine = PAGE_HEIGHT_PX;
     const containerTop = container.getBoundingClientRect().top;
 
     for (const el of elements) {
-        // Force a reflow/re-measure because previous iterations might have moved this element
         const rect = el.getBoundingClientRect();
         const elTop = rect.top - containerTop;
-        const elBottom = rect.bottom - containerTop;
         const elHeight = rect.height;
+        const elBottom = elTop + elHeight;
 
-        // If the element is completely before the break line, skip it
-        if (elBottom <= currentBreakLine) continue;
+        // Determine which page this element starts on (0-indexed)
+        const pageIndex = Math.floor(elTop / PAGE_HEIGHT_PX);
+        
+        // The line where the current page ends
+        const breakLine = (pageIndex + 1) * PAGE_HEIGHT_PX;
+        
+        // The effective "safe area" limit before the footer/bottom margin starts
+        const footerLimit = breakLine - PAGE_MARGIN_PX;
 
-        // If the element starts *after* the current break line, we need to find the next break line
-        while (elTop >= currentBreakLine) {
-            currentBreakLine += PAGE_HEIGHT_PX;
-        }
+        // If element crosses the footer limit (enters bottom margin) OR crosses the break line completely
+        // We need to push it to the next page.
+        if (elBottom > footerLimit) {
+             // Skip massive elements that are larger than a page (can't really split them easily here)
+             if (elHeight > (PAGE_HEIGHT_PX - 2 * PAGE_MARGIN_PX)) continue;
 
-        // Now check if the element *crosses* the current break line
-        // Condition: Starts before the line, ends after the line
-        if (elTop < currentBreakLine && elBottom > currentBreakLine) {
-            
-            // Corner case: If the element itself is taller than a page, we can't really avoid cutting it 
-            // without complex splitting logic. We just let it be or push it to start at the top of the next page to minimize damage.
-            if (elHeight > PAGE_HEIGHT_PX) {
-                // If it's already at the top of a page (approx), don't move it
-                if (elTop % PAGE_HEIGHT_PX < 50) {
-                     continue; 
-                }
-            }
-
-            // Calculate how much we need to push it down to start on the next page
-            const pushAmount = currentBreakLine - elTop;
-            
-            // Apply spacing
-            if (el.tagName === 'TR') {
-                // For table rows, we can't use margin. We add padding to cells.
-                const cells = Array.from(el.children) as HTMLElement[];
-                cells.forEach(cell => {
-                    const currentPadding = parseFloat(window.getComputedStyle(cell).paddingTop) || 0;
-                    cell.style.paddingTop = `${currentPadding + pushAmount}px`;
-                });
-            } else {
-                // For block elements, margin-top works well
-                const currentMargin = parseFloat(window.getComputedStyle(el).marginTop) || 0;
-                el.style.marginTop = `${currentMargin + pushAmount}px`;
-            }
-
-            // We effectively moved content down. The break line logic still holds for the "page grid",
-            // but we've now ensured this specific element starts *after* the break line.
-            // We don't update currentBreakLine here; the loop will catch up or the 'while' loop above handles it for next elements.
+             // Calculate where this element SHOULD start on the next page
+             // It should start at (breakLine + PAGE_MARGIN_PX) to simulate a top margin on the new page
+             const targetTop = breakLine + PAGE_MARGIN_PX;
+             
+             // If it's already past the break line, check if it respects the top margin
+             if (elTop > breakLine) {
+                 if (elTop < targetTop) {
+                     // It's on the new page but too high up (no top margin). Push it down.
+                     const push = targetTop - elTop;
+                     applySpacing(el, push);
+                 }
+             } else {
+                 // It's straddling the break or in the footer area. Push it to next page + margin.
+                 const push = targetTop - elTop;
+                 applySpacing(el, push);
+             }
         }
     }
   };
 
+  const applySpacing = (el: HTMLElement, px: number) => {
+      if (el.tagName === 'TR') {
+          // For table rows, margin doesn't work reliably. Add padding to all cells.
+          const cells = Array.from(el.children) as HTMLElement[];
+          cells.forEach(cell => {
+              const currentPadding = parseFloat(window.getComputedStyle(cell).paddingTop) || 0;
+              cell.style.paddingTop = `${currentPadding + px}px`;
+          });
+      } else {
+          // For blocks, use margin-top
+          const currentMargin = parseFloat(window.getComputedStyle(el).marginTop) || 0;
+          el.style.marginTop = `${currentMargin + px}px`;
+      }
+  };
+
   useEffect(() => {
     if (!documentData || !slug) return;
-
-    // CACHE DISABLED TEMPORARILY
-    /*
-    const cacheKey = `pdf_cache_${slug}`;
-    const cachedPdf = sessionStorage.getItem(cacheKey);
-    if (cachedPdf) {
-        setPdfUrl(cachedPdf);
-        setIsGenerating(false);
-        return;
-    }
-    */
 
     if (!contentRef.current) return;
 
@@ -108,16 +96,15 @@ const PdfViewerPage: React.FC = () => {
         const element = contentRef.current;
         if (!element) return;
 
-        // Run smart pagination to insert spacers
+        // Run smart pagination
         autoPaginate(element);
 
-        // 1. Capture the HTML as a high-res canvas using html2canvas
-        // scale: 2 ensures the text remains crisp in the PDF (Retina quality)
+        // 1. Capture the HTML as a high-res canvas
         const canvas = await html2canvas(element, {
-          scale: 2, // 2 is usually enough, 3 can be heavy
+          scale: 2, 
           useCORS: true,
           logging: false,
-          windowWidth: 794, // Ensure we capture at A4 width context
+          windowWidth: 794, // Force A4 width context
         });
 
         // 2. Initialize jsPDF
@@ -127,25 +114,23 @@ const PdfViewerPage: React.FC = () => {
         const imgWidth = 210; // A4 width in mm
         const pageHeight = 297; // A4 height in mm
         
-        // Calculate the height of the image on the PDF based on the aspect ratio
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         let heightLeft = imgHeight;
         let position = 0;
 
-        // 3. Add image to PDF (handle multi-page if content is long)
+        // 3. Add image pages
         doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
 
         while (heightLeft > 0) {
-          position = heightLeft - imgHeight; // Move the image up
+          position = heightLeft - imgHeight; // This shifts the image slice for the next page
           doc.addPage();
           doc.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
           heightLeft -= pageHeight;
         }
 
         const dataUri = doc.output('datauristring');
-        // sessionStorage.setItem(cacheKey, dataUri); // CACHE DISABLED
         setPdfUrl(dataUri);
         setIsGenerating(false);
 
@@ -155,7 +140,6 @@ const PdfViewerPage: React.FC = () => {
       }
     };
 
-    // Delay to ensure fonts and DOM are fully ready
     const timeout = setTimeout(generatePdf, 800);
     return () => clearTimeout(timeout);
   }, [documentData, slug]);
@@ -163,12 +147,11 @@ const PdfViewerPage: React.FC = () => {
   if (!documentData) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-muted-foreground">Dokument nie został znaleziony.</p>
+        <p className="text-muted-foreground">Dokument nie został znalezion.</p>
       </div>
     );
   }
 
-  // Inject ref directly into the content element
   const contentWithRef = React.isValidElement(documentData.content) 
     ? React.cloneElement(documentData.content as React.ReactElement<any>, { ref: contentRef })
     : <div ref={contentRef}>{documentData.content}</div>;
@@ -189,11 +172,7 @@ const PdfViewerPage: React.FC = () => {
             title={documentData.title}
         />
       ) : (
-        /* 
-           Off-screen container for generation.
-           Left: -10000px keeps it out of view but renders it in DOM.
-           Width: 794px forces exact A4 pixel width (96 DPI).
-        */
+        /* Generation container: Left -10000px, fixed A4 pixel width */
         <div style={{ position: 'absolute', left: '-10000px', top: 0, width: '794px' }}>
             {contentWithRef}
         </div>

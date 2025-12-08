@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { COMPANY_DETAILS } from '../companyDetails';
 
@@ -14,6 +13,13 @@ export const SampleContractContent = (
         overflow: hidden;
       }
 
+      /* ważne – wszystkie elementy liczą szerokość z borderem i paddingiem */
+      .pdf-content *,
+      .pdf-content *::before,
+      .pdf-content *::after {
+        box-sizing: inherit;
+      }
+
       .pdf-content h1 {
         text-align: center;
         font-size: 20px;
@@ -25,6 +31,7 @@ export const SampleContractContent = (
       .pdf-content table {
         width: 100%;
         border-collapse: collapse;
+        border-spacing: 0;       /* brak dodatkowych odstępów od tabeli */
         table-layout: fixed;
         margin-bottom: 20px;
       }
@@ -32,18 +39,23 @@ export const SampleContractContent = (
       .pdf-content th, 
       .pdf-content td {
         border: 1px solid #000;
-        padding: 5px 8px;
-        vertical-align: middle;
+        padding: 6px 8px;         /* trochę większy i równy z każdej strony */
+        vertical-align: middle;   /* środek komórki */
         word-wrap: break-word;
+        word-break: break-word;
         font-size: 12px;
+        line-height: 1.3;         /* stabilna wysokość linii */
       }
 
+      /* nagłówki sekcji */
       .pdf-content .section-title {
         background: #e0e0e0;
         font-weight: 700;
         text-align: center;
         text-transform: uppercase;
         font-size: 13px;
+        /* minimalna wysokość żeby tekst był wyraźnie na środku */
+        height: 28px;
       }
 
       .pdf-content .car-scheme {
@@ -99,180 +111,180 @@ export const SampleContractContent = (
         <col style={{ width: '50%' }} />
         <col style={{ width: '50%' }} />
       </colgroup>
-        <tbody>
+      <tbody>
         <tr>
-            <th className="section-title">Wynajmujący</th>
-            <th className="section-title">Najemca</th>
+          <th className="section-title">Wynajmujący</th>
+          <th className="section-title">Najemca</th>
         </tr>
         <tr>
-            <td>
-                <strong>{COMPANY_DETAILS.name}</strong><br />
-                {COMPANY_DETAILS.address}<br />
-                NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}<br />
-                REGON: {COMPANY_DETAILS.regon}
-            </td>
-            <td>
-                <strong>Imię i nazwisko:</strong> Jan Kowalski<br />
-                <strong>Adres:</strong> ul. Testowa 5 m. 12, 01-234 Warszawa<br />
-                <strong>PESEL:</strong> 80010112345<br />
-                <strong>Telefon:</strong> +48 600 000 000<br />
-                <strong>Dokument tożsamości:</strong> DO ABC123456
-            </td>
+          <td>
+            <strong>{COMPANY_DETAILS.name}</strong><br />
+            {COMPANY_DETAILS.address}<br />
+            NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}<br />
+            REGON: {COMPANY_DETAILS.regon}
+          </td>
+          <td>
+            <strong>Imię i nazwisko:</strong> Jan Kowalski<br />
+            <strong>Adres:</strong> ul. Testowa 5 m. 12, 01-234 Warszawa<br />
+            <strong>PESEL:</strong> 80010112345<br />
+            <strong>Telefon:</strong> +48 600 000 000<br />
+            <strong>Dokument tożsamości:</strong> DO ABC123456
+          </td>
         </tr>
-        </tbody>
+      </tbody>
     </table>
 
     {/* Przedmiot najmu */}
     <table>
-        <tbody>
+      <tbody>
         <tr>
-            <th className="section-title">Przedmiot najmu</th>
+          <th className="section-title">Przedmiot najmu</th>
         </tr>
         <tr>
-            <td>
-                Marka / model: <strong>Tesla Model 3</strong> &nbsp;|&nbsp;
-                Nr rej.: <strong>WX 12345</strong> &nbsp;|&nbsp;
-                VIN: <strong>5YJ3E7EB0MF123456</strong>
-            </td>
+          <td>
+            Marka / model: <strong>Tesla Model 3</strong> &nbsp;|&nbsp;
+            Nr rej.: <strong>WX 12345</strong> &nbsp;|&nbsp;
+            VIN: <strong>5YJ3E7EB0MF123456</strong>
+          </td>
         </tr>
-        </tbody>
+      </tbody>
     </table>
 
     {/* Wydanie pojazdu */}
     <table>
-        <colgroup>
-            <col style={{ width: '30%' }} />
-            <col style={{ width: '23%' }} />
-            <col style={{ width: '23%' }} />
-            <col style={{ width: '24%' }} />
-        </colgroup>
-        <tbody>
+      <colgroup>
+        <col style={{ width: '30%' }} />
+        <col style={{ width: '23%' }} />
+        <col style={{ width: '23%' }} />
+        <col style={{ width: '24%' }} />
+      </colgroup>
+      <tbody>
         <tr>
-            <th className="section-title" colSpan={4}>WYDANIE POJAZDU</th>
+          <th className="section-title" colSpan={4}>WYDANIE POJAZDU</th>
         </tr>
         <tr>
-            <th>Stan pojazdu</th>
-            <th colSpan={3}>Data i godzina wydania</th>
+          <th>Stan pojazdu</th>
+          <th colSpan={3}>Data i godzina wydania</th>
         </tr>
         <tr>
-            <td rowSpan={3}>
-                <div className="car-scheme">
-                    [SCHEMAT POJAZDU]<br/>
-                    (Brak uszkodzeń)
-                </div>
-            </td>
-            <td colSpan={3}>
-                Data: <strong>10.12.2025</strong><br />
-                Godzina: <strong>09:30</strong><br/>
-                Miejsce: <strong>Warszawa</strong>
-            </td>
+          <td rowSpan={3}>
+            <div className="car-scheme">
+              [SCHEMAT POJAZDU]<br/>
+              (Brak uszkodzeń)
+            </div>
+          </td>
+          <td colSpan={3}>
+            Data: <strong>10.12.2025</strong><br />
+            Godzina: <strong>09:30</strong><br/>
+            Miejsce: <strong>Warszawa</strong>
+          </td>
         </tr>
         <tr>
-            <th>Bateria / Zasięg</th>
-            <th>Przebieg</th>
-            <th>Uwagi / Wyposażenie</th>
+          <th>Bateria / Zasięg</th>
+          <th>Przebieg</th>
+          <th>Uwagi / Wyposażenie</th>
         </tr>
         <tr>
-            <td className="fuel-box">
-                85% / 420 km
-            </td>
-            <td className="fuel-box">
-                25 350 km
-            </td>
-            <td className="notes-box">
-                Kabel Typ 2: TAK<br/>
-                Ładowarka mobilna: TAK<br/>
-                Trójkąt/Gaśnica: TAK
-            </td>
+          <td className="fuel-box">
+            85% / 420 km
+          </td>
+          <td className="fuel-box">
+            25 350 km
+          </td>
+          <td className="notes-box">
+            Kabel Typ 2: TAK<br/>
+            Ładowarka mobilna: TAK<br/>
+            Trójkąt/Gaśnica: TAK
+          </td>
         </tr>
         <tr>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
-                Wynajmujący (podpis)
-            </td>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
-                Najemca (podpis)
-            </td>
+          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
+            Wynajmujący (podpis)
+          </td>
+          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
+            Najemca (podpis)
+          </td>
         </tr>
         <tr>
-            <td colSpan={2} className="sign-box"></td>
-            <td colSpan={2} className="sign-box"></td>
+          <td colSpan={2} className="sign-box"></td>
+          <td colSpan={2} className="sign-box"></td>
         </tr>
-        </tbody>
+      </tbody>
     </table>
 
     {/* Zwrot pojazdu */}
     <table>
-        <colgroup>
-            <col style={{ width: '30%' }} />
-            <col style={{ width: '23%' }} />
-            <col style={{ width: '23%' }} />
-            <col style={{ width: '24%' }} />
-        </colgroup>
-        <tbody>
+      <colgroup>
+        <col style={{ width: '30%' }} />
+        <col style={{ width: '23%' }} />
+        <col style={{ width: '23%' }} />
+        <col style={{ width: '24%' }} />
+      </colgroup>
+      <tbody>
         <tr>
-            <th className="section-title" colSpan={4}>ZWROT POJAZDU</th>
+          <th className="section-title" colSpan={4}>ZWROT POJAZDU</th>
         </tr>
         <tr>
-            <th>Stan pojazdu</th>
-            <th colSpan={3}>Data i godzina zwrotu</th>
+          <th>Stan pojazdu</th>
+          <th colSpan={3}>Data i godzina zwrotu</th>
         </tr>
         <tr>
-            <td rowSpan={3}>
-                <div className="car-scheme">
-                    [SCHEMAT POJAZDU]<br/>
-                    (Zaznacz uszkodzenia)
-                </div>
-            </td>
-            <td colSpan={3}>
-                Data: ...........................<br />
-                Godzina: ........................<br/>
-                Miejsce: ........................
-            </td>
+          <td rowSpan={3}>
+            <div className="car-scheme">
+              [SCHEMAT POJAZDU]<br/>
+              (Zaznacz uszkodzenia)
+            </div>
+          </td>
+          <td colSpan={3}>
+            Data: ...........................<br />
+            Godzina: ........................<br/>
+            Miejsce: ........................
+          </td>
         </tr>
         <tr>
-            <th>Bateria / Zasięg</th>
-            <th>Przebieg</th>
-            <th>Uwagi / Braki</th>
+          <th>Bateria / Zasięg</th>
+          <th>Przebieg</th>
+          <th>Uwagi / Braki</th>
         </tr>
         <tr>
-            <td className="fuel-box">
-                ....... %
-            </td>
-            <td className="fuel-box">
-                ................ km
-            </td>
-            <td className="notes-box">
-                
-            </td>
+          <td className="fuel-box">
+            ....... %
+          </td>
+          <td className="fuel-box">
+            ................ km
+          </td>
+          <td className="notes-box">
+            
+          </td>
         </tr>
         <tr>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
-                Wynajmujący (podpis)
-            </td>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
-                Najemca (podpis)
-            </td>
+          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
+            Wynajmujący (podpis)
+          </td>
+          <td colSpan={2} className="section-title" style={{ textAlign: 'left', fontSize: '10px' }}>
+            Najemca (podpis)
+          </td>
         </tr>
         <tr>
-            <td colSpan={2} className="sign-box"></td>
-            <td colSpan={2} className="sign-box"></td>
+          <td colSpan={2} className="sign-box"></td>
+          <td colSpan={2} className="sign-box"></td>
         </tr>
-        </tbody>
+      </tbody>
     </table>
 
     <div className="footer">
-        <table style={{ border: 'none', margin: 0 }}>
-             <tbody>
-                <tr>
-                    <td className="no-border" style={{ padding: 0 }}>
-                        {COMPANY_DETAILS.website} &nbsp;|&nbsp; {COMPANY_DETAILS.email} &nbsp;|&nbsp; {COMPANY_DETAILS.phone}
-                    </td>
-                    <td className="no-border right" style={{ padding: 0 }}>
-                        Strona 1 z 1
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+      <table style={{ border: 'none', margin: 0 }}>
+        <tbody>
+          <tr>
+            <td className="no-border" style={{ padding: 0 }}>
+              {COMPANY_DETAILS.website} &nbsp;|&nbsp; {COMPANY_DETAILS.email} &nbsp;|&nbsp; {COMPANY_DETAILS.phone}
+            </td>
+            <td className="no-border right" style={{ padding: 0 }}>
+              Strona 1 z 1
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>

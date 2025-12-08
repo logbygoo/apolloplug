@@ -8,16 +8,24 @@ export const SampleContractContent = (
     .pdf-content {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 11px;
-        width: 794px;              /* Exact A4 width at 96 DPI */
-        margin: 0;                 /* Removed auto margin to prevent centering offsets in capture */
-        padding: 40px;             /* Standard margins for the document */
-        box-sizing: border-box;
-        background-color: red;
+
+        /* KLUCZOWE: realna szerokość treści mniejsza niż 794px */
+        width: 700px;            /* bezpiecznie poniżej 794 */
+        margin: 0 auto;
+        padding: 20px 25px;      /* wewnętrzne "marginesy" dokumentu */
+        background-color: #ffffff;
         color: #000000;
-        line-height: 1.4;
+        box-sizing: border-box;
+
+        /* Dodatkowe zmniejszenie całości, gdyby okno było ciut węższe 
+           html2canvas bierze pod uwagę zoom w Chrome/Edge */
+        zoom: 0.95;
+        /* fallback dla Firefoxa, gdyby kiedyś było użyte */
+        -moz-transform: scale(0.95);
+        -moz-transform-origin: top left;
     }
 
-    /* Reset global box-sizing for this component to ensure widths are respected */
+    /* wszystko liczy szerokość z borderem i paddingiem */
     .pdf-content * {
         box-sizing: border-box;
     }
@@ -33,16 +41,15 @@ export const SampleContractContent = (
     .pdf-content table {
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed;       /* Critical: Prevents table from expanding beyond 100% */
+        table-layout: fixed;     /* tabelki nie rozpychają kontenera */
     }
 
     .pdf-content th, .pdf-content td {
         border: 1px solid #000;
         padding: 5px;
         vertical-align: top;
-        word-wrap: break-word;     /* Forces text to wrap */
-        overflow-wrap: break-word;
-        font-size: 10px;
+        word-wrap: break-word;
+        word-break: break-word;  /* łamie też długie ciągi bez spacji */
     }
 
     .pdf-content .no-border {
@@ -70,7 +77,7 @@ export const SampleContractContent = (
         text-align: center;
         font-size: 9px;
         border: 1px solid #ccc;
-        padding: 5px;
+        padding: 10px;
         display: flex;
         align-items: center;
         justify-content: center;

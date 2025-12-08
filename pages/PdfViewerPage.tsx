@@ -43,9 +43,9 @@ const PdfViewerPage: React.FC = () => {
             setIsGenerating(false);
           },
           // Map the 794px width content to 210mm PDF width
-          width: 210,
+          width: 21,
           // Vital: Force html2canvas to render at 794px width (standard A4 @ 96DPI)
-          windowWidth: 794,
+          windowWidth: 79,
           autoPaging: 'text' as const,
           x: 0,
           y: 0,

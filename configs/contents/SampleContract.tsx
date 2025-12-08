@@ -140,23 +140,12 @@ export const SampleContractContent = (
         <tr>
           <td>
             <div className="cell-multiline">
-              <strong>{COMPANY_DETAILS.name}</strong><br />
-              {COMPANY_DETAILS.address}<br />
-              NIP: {COMPANY_DETAILS.nip} &nbsp;|&nbsp; KRS: {COMPANY_DETAILS.krs}<br />
-              REGON: {COMPANY_DETAILS.regon}<br />
-              Tel.: {COMPANY_DETAILS.phone}<br />
-              E-mail: {COMPANY_DETAILS.email}
+              <strong>{COMPANY_DETAILS.name}, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip} &nbsp;|&nbsp; KRS: {COMPANY_DETAILS.krs}, REGON: {COMPANY_DETAILS.regon}, Tel.: {COMPANY_DETAILS.phone}, E-mail: {COMPANY_DETAILS.email}
             </div>
           </td>
           <td>
             <div className="cell-multiline">
-              <strong>Imię i nazwisko:</strong> Jan Kowalski<br />
-              <strong>Adres zamieszkania:</strong> ul. Testowa 5 m. 12, 01-234 Warszawa<br />
-              <strong>PESEL:</strong> 80010112345<br />
-              <strong>Dokument tożsamości:</strong> DO ABC123456<br />
-              <strong>Prawo jazdy:</strong> B/PL 1234567<br />
-              <strong>Telefon:</strong> +48 600 000 000<br />
-              <strong>E-mail:</strong> jan.kowalski@example.com
+              Imię i nazwisko: <strong>Jan Kowalski</strong>, Adres zamieszkania: ul. Testowa 5 m. 12, 01-234 Warszawa, PESEL: 80010112345, Dokument tożsamości: DO ABC123456, Prawo jazdy: B/PL 1234567, Telefon: +48 600 000 000, E-mail: jan.kowalski@example.com
             </div>
           </td>
         </tr>
@@ -425,23 +414,35 @@ export const SampleContractContent = (
     </table>
 
     {/* Podpisy */}
+    {/* Podpisy */}
     <table>
+      <colgroup>
+        <col style={{ width: '50%' }} />
+        <col style={{ width: '50%' }} />
+      </colgroup>
       <tbody>
         <tr>
-          <th className="section-title">
+          <th className="section-title" colSpan={2}>
             <div className="cell-center">Podpisy stron</div>
           </th>
         </tr>
+
         <tr>
-          <td>
-            <div className="cell-multiline small">
-              Wynajmujący:<br />
-              ......................................................................................
-              <br /><br />
-              Najemca:<br />
-              ......................................................................................
+          <th>
+            <div className="cell-left small">
+              Wynajmujący: {COMPANY_DETAILS.name}, {COMPANY_DETAILS.address}
             </div>
-          </td>
+          </th>
+          <th>
+            <div className="cell-left small">
+              Najemca: Jan Kowalski, ul. Testowa 5 m. 12, 01-234 Warszawa
+            </div>
+          </th>
+        </tr>
+
+        <tr>
+          <td className="sign-box"></td>
+          <td className="sign-box"></td>
         </tr>
       </tbody>
     </table>

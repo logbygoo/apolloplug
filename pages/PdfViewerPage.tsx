@@ -34,8 +34,7 @@ const PdfViewerPage: React.FC = () => {
 
         // Initialize jsPDF with millimeters and A4 format
         const doc = new jsPDF('p', 'mm', 'a4');
-        const pdfWidth = 210; // A4 width in mm
-
+        
         const options = {
           callback: (doc: jsPDF) => {
             const dataUri = doc.output('datauristring');
@@ -43,11 +42,10 @@ const PdfViewerPage: React.FC = () => {
             setPdfUrl(dataUri);
             setIsGenerating(false);
           },
-          // Tell jsPDF to scale the HTML content to fit 210mm width
-          width: pdfWidth, 
-          // Tell html2canvas the virtual window width is 794px (standard 96DPI mapping for 210mm)
-          // This ensures the CSS pixels in SampleContract map correctly to the PDF layout
-          windowWidth: 794, 
+          // Map the 794px width content to 210mm PDF width
+          width: 210,
+          // Vital: Force html2canvas to render at 794px width (standard A4 @ 96DPI)
+          windowWidth: 794,
           autoPaging: 'text' as const,
           x: 0,
           y: 0,
@@ -55,8 +53,7 @@ const PdfViewerPage: React.FC = () => {
             scale: 2, // 2x scale for sharper text
             useCORS: true,
             logging: false,
-            width: 794,
-            windowWidth: 794,
+            windowWidth: 794, // Ensure canvas thinks window is 794px wide
           }
         };
 
@@ -99,10 +96,10 @@ const PdfViewerPage: React.FC = () => {
         /* 
            Off-screen container for generation.
            Positioned absolutely far off-screen to avoid visual glitches but kept in DOM for rendering.
-           The inner width is explicitly 210mm to match A4.
+           The inner width is explicitly 794px to match A4 pixel width at 96 DPI.
         */
         <div style={{ position: 'absolute', left: '-10000px', top: 0 }}>
-            <div ref={contentRef} style={{ width: '210mm', margin: 0, padding: 0, backgroundColor: 'white' }}>
+            <div ref={contentRef} style={{ width: '794px', margin: 0, padding: 0, backgroundColor: 'white' }}>
                 {documentData.content}
             </div>
         </div>

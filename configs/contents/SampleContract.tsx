@@ -8,12 +8,12 @@ export const SampleContractContent = (
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
       .pdf-content {
-        width: 210mm;
-        min-height: 296mm; /* Slightly less than 297mm to prevent slight overflow triggering new page */
-        padding: 15mm 15mm;
+        width: 794px;
+        min-height: 1123px; /* A4 height at 96 DPI */
+        padding: 40px;
         background: white;
         font-family: 'Inter', sans-serif;
-        font-size: 8pt;
+        font-size: 12px;
         color: #000;
         line-height: 1.3;
         box-sizing: border-box;
@@ -22,8 +22,8 @@ export const SampleContractContent = (
 
       .pdf-content h1 {
         text-align: center;
-        font-size: 14pt;
-        margin-bottom: 5mm;
+        font-size: 20px;
+        margin-bottom: 20px;
         text-transform: uppercase;
         font-weight: 700;
       }
@@ -32,16 +32,16 @@ export const SampleContractContent = (
         width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
-        margin-bottom: 5mm;
+        margin-bottom: 20px;
       }
 
       .pdf-content th, 
       .pdf-content td {
-        border: 0.5pt solid #000;
-        padding: 1mm 2mm;
+        border: 1px solid #000;
+        padding: 5px 8px;
         vertical-align: top;
         word-wrap: break-word;
-        font-size: 8pt;
+        font-size: 12px;
       }
 
       .pdf-content .section-title {
@@ -49,42 +49,42 @@ export const SampleContractContent = (
         font-weight: 700;
         text-align: center;
         text-transform: uppercase;
-        padding: 1.5mm;
-        font-size: 9pt;
+        padding: 8px;
+        font-size: 13px;
       }
 
       .pdf-content .car-scheme {
-        height: 35mm;
+        height: 130px;
         text-align: center;
-        font-size: 7pt;
+        font-size: 10px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        border: 0.5pt dashed #ccc;
-        margin: 1mm;
+        border: 1px dashed #ccc;
+        margin: 4px;
       }
 
       .pdf-content .fuel-box {
         text-align: center;
-        height: 12mm;
+        height: 40px;
         vertical-align: middle;
       }
 
       .pdf-content .notes-box {
-        height: 18mm;
+        height: 70px;
       }
 
       .pdf-content .sign-box {
-        height: 15mm;
+        height: 50px;
       }
 
       .pdf-content .footer {
-        margin-top: 5mm;
-        font-size: 7pt;
+        margin-top: 20px;
+        font-size: 10px;
         width: 100%;
-        border-top: 0.5pt solid #000;
-        padding-top: 2mm;
+        border-top: 1px solid #000;
+        padding-top: 10px;
       }
 
       .pdf-content .no-border {
@@ -193,10 +193,10 @@ export const SampleContractContent = (
             </td>
         </tr>
         <tr>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
                 Wynajmujący (podpis)
             </td>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
                 Najemca (podpis)
             </td>
         </tr>
@@ -253,10 +253,10 @@ export const SampleContractContent = (
             </td>
         </tr>
         <tr>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
                 Wynajmujący (podpis)
             </td>
-            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '7pt'}}>
+            <td colSpan={2} className="section-title" style={{textAlign: 'left', fontSize: '10px'}}>
                 Najemca (podpis)
             </td>
         </tr>

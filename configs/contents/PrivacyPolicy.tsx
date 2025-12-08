@@ -6,7 +6,7 @@ export const PrivacyPolicyContent = (
 
     <style>{`
       .privacy-content {
-        padding: 20px;
+        padding: 50px;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 12px;
         color: #000;

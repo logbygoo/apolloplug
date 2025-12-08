@@ -5,6 +5,7 @@ import { PrivacyPolicyContent } from './contents/PrivacyPolicy';
 import { RentalRulesContent } from './contents/RentalRules';
 import { TransportRulesContent } from './contents/TransportRules';
 import { SampleContractContent } from './contents/SampleContract';
+import { SampleProtocolContent } from './contents/SampleProtocolContent';
 import { COMPANY_DETAILS } from './companyDetails';
 
 export { COMPANY_DETAILS };
@@ -37,12 +38,12 @@ export const DOCUMENTS_DATA: DocumentContent[] = [
     content: TransportRulesContent
   },
   {
-    title: 'Protokół wydania/zwrotu',
+    title: 'Protokół wydania/zwrotu (przykad)',
     slug: 'protokol-wydania-zwrotu',
-    content: SampleContractContent
+    content: SampleProtocolContent
   },
   {
-    title: 'Przykładowe dokumenty',
+    title: 'Umowa wynajmu auta (przykład)',
     slug: 'wzor-umowy',
     content: SampleContractContent
   }

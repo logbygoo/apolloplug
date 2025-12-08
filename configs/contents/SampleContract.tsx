@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { COMPANY_DETAILS } from '../companyDetails';
 
@@ -8,6 +9,7 @@ export const SampleContractContent = (
         padding: 20px;
         background: white;
         font-size: 12px;
+        font-family: Arial, sans-serif;
         color: #000;
         box-sizing: border-box;
         overflow: hidden;
@@ -38,30 +40,16 @@ export const SampleContractContent = (
       .pdf-content th, 
       .pdf-content td {
         border: 1px solid #000;
-        padding: 0;                /* padding bierzemy na wrapperze w środku */
-        vertical-align: middle;
+        padding: 0;
+        vertical-align: top;
         font-size: 12px;
       }
 
-      /* wrapper do wyrównywania treści w komórkach */
-      .pdf-content .cell-center {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      .pdf-content .cell-pad {
         padding: 6px 8px;
         width: 100%;
         height: 100%;
-        line-height: 1.3;
-      }
-
-      .pdf-content .cell-left {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 6px 8px;
-        width: 100%;
-        height: 100%;
-        line-height: 1.3;
+        line-height: 1.4;
       }
 
       .pdf-content .section-title {
@@ -69,32 +57,14 @@ export const SampleContractContent = (
         font-weight: 700;
         text-transform: uppercase;
         font-size: 13px;
-      }
-
-      .pdf-content .car-scheme {
-        height: 130px;
         text-align: center;
-        font-size: 10px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        border: 1px dashed #ccc;
-        margin: 4px;
-        padding: 4px;
-      }
-
-      .pdf-content .fuel-box {
-        text-align: center;
-        height: 40px;
-      }
-
-      .pdf-content .notes-box {
-        height: 70px;
+        vertical-align: middle;
       }
 
       .pdf-content .sign-box {
-        height: 50px;
+        height: 80px;
+        vertical-align: bottom;
+        padding: 10px;
       }
 
       .pdf-content .footer {
@@ -112,13 +82,35 @@ export const SampleContractContent = (
       .pdf-content .right {
         text-align: right;
       }
+      
+      .pdf-content .center {
+        text-align: center;
+      }
 
-      .pdf-content p { margin: 0; }
+      .pdf-content p { margin: 0; margin-bottom: 5px; }
     `}</style>
 
-    <h1>PROTOKÓŁ ZDAWCZO-ODBIORCZY</h1>
+    <h1>UMOWA NAJMU SAMOCHODU</h1>
 
-    {/* Dane stron */}
+    {/* Data i Miejsce */}
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <div className="cell-pad">
+              <strong>Data zawarcia:</strong> .....................................
+            </div>
+          </td>
+          <td>
+            <div className="cell-pad">
+              <strong>Miejsce zawarcia:</strong> .....................................
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    {/* Strony umowy */}
     <table>
       <colgroup>
         <col style={{ width: '50%' }} />
@@ -126,218 +118,117 @@ export const SampleContractContent = (
       </colgroup>
       <tbody>
         <tr>
-          <th className="section-title">
-            <div className="cell-center">Wynajmujący</div>
-          </th>
-          <th className="section-title">
-            <div className="cell-center">Najemca</div>
-          </th>
+          <th className="section-title"><div className="cell-pad">Wynajmujący</div></th>
+          <th className="section-title"><div className="cell-pad">Najemca</div></th>
         </tr>
         <tr>
           <td>
-            <div className="cell-left">
-              <div>
-                <strong>{COMPANY_DETAILS.name}</strong>, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}, REGON: {COMPANY_DETAILS.regon}
-              </div>
+            <div className="cell-pad">
+              <strong>{COMPANY_DETAILS.name}</strong><br/>
+              {COMPANY_DETAILS.address}<br/>
+              NIP: {COMPANY_DETAILS.nip}<br/>
+              KRS: {COMPANY_DETAILS.krs}<br/>
+              Tel: {COMPANY_DETAILS.phone}
             </div>
           </td>
           <td>
-            <div className="cell-left">
-              <div>
-                <strong>Jan Kowalski</strong>, ul. Testowa 5 m. 12, 01-234 Warszawa, PESEL: 80010112345, Telefon: +48 600 000 000, Dokument tożsamości: DO ABC123456
-              </div>
+            <div className="cell-pad">
+              <strong>Imię i nazwisko / Firma:</strong><br/>
+              Jan Kowalski<br/>
+              <strong>Adres:</strong><br/>
+              ul. Testowa 1, 00-000 Warszawa<br/>
+              <strong>PESEL / NIP:</strong> 00000000000<br/>
+              <strong>Nr dokumentu:</strong> ABC 123456
             </div>
           </td>
         </tr>
       </tbody>
     </table>
 
-    {/* Przedmiot najmu */}
+    {/* Przedmiot umowy */}
     <table>
-      <tbody>
-        <tr>
-          <th className="section-title">
-            <div className="cell-center">Przedmiot najmu</div>
-          </th>
-        </tr>
-        <tr>
-          <td>
-            <div className="cell-left">
-              Marka / model: <strong>Tesla Model 3</strong> &nbsp;|&nbsp;
-              Nr rej.: <strong>WX 12345</strong> &nbsp;|&nbsp;
-              VIN: <strong>0000000000000000</strong>
-            </div>
-          </td>
-        </tr>
-      </tbody>
+        <tbody>
+            <tr>
+                <th className="section-title" colSpan={2}><div className="cell-pad">§1 PRZEDMIOT NAJMU</div></th>
+            </tr>
+            <tr>
+                <td colSpan={2}>
+                    <div className="cell-pad">
+                        1. Wynajmujący oddaje w najem Najemcy samochód marki <strong>Tesla Model 3</strong>, 
+                        o numerze rejestracyjnym <strong>WX 12345</strong> i numerze VIN <strong>0000000000000000</strong>.<br/>
+                        2. Najemca oświadcza, że zapoznał się ze stanem technicznym pojazdu i nie wnosi do niego zastrzeżeń (szczegóły w Protokole Zdawczo-Odbiorczym).
+                    </div>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
-    {/* Wydanie pojazdu */}
+    {/* Czas trwania i warunki */}
     <table>
-      <colgroup>
-        <col style={{ width: '30%' }} />
-        <col style={{ width: '23%' }} />
-        <col style={{ width: '23%' }} />
-        <col style={{ width: '24%' }} />
-      </colgroup>
-      <tbody>
-        <tr>
-          <th className="section-title" colSpan={4}>
-            <div className="cell-center">WYDANIE POJAZDU</div>
-          </th>
-        </tr>
-        <tr>
-          <th>
-            <div className="cell-center">Stan pojazdu</div>
-          </th>
-          <th colSpan={3}>
-            <div className="cell-center">Data i godzina zwrotu</div>
-          </th>
-        </tr>
-        <tr>
-          <td rowSpan={3}>
-            <div className="car-scheme">
-              [SCHEMAT POJAZDU]<br/>
-              (Zaznacz uszkodzenia)
-            </div>
-          </td>
-          <td colSpan={3}>
-            <div className="cell-center">
-              <div>
-                Data: ....../....../................     Godzina: ......:......     Miejsce: ........................ <br /><br />
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            <div className="cell-center">Bateria / Zasięg</div>
-          </th>
-          <th>
-            <div className="cell-center">Przebieg</div>
-          </th>
-          <th>
-            <div className="cell-center">Uwagi / Braki</div>
-          </th>
-        </tr>
-        <tr>
-          <td>
-            <div className="cell-center fuel-box">
-              ....... %
-            </div>
-          </td>
-          <td>
-            <div className="cell-center fuel-box">
-              ................ km
-            </div>
-          </td>
-          <td>
-            <div className="cell-left notes-box">
-              
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan={2} className="section-title">
-            <div className="cell-left" style={{ fontSize: '10px' }}>
-              Wynajmujący (podpis)
-            </div>
-          </td>
-          <td colSpan={2} className="section-title">
-            <div className="cell-left" style={{ fontSize: '10px' }}>
-              Najemca (podpis)
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan={2} className="sign-box"></td>
-          <td colSpan={2} className="sign-box"></td>
-        </tr>
-      </tbody>
+        <tbody>
+            <tr>
+                <th className="section-title" colSpan={2}><div className="cell-pad">§2 WARUNKI NAJMU</div></th>
+            </tr>
+            <tr>
+                <td>
+                    <div className="cell-pad">
+                        <strong>Okres najmu:</strong><br/>
+                        Od: ..................................... Godz: ..........<br/>
+                        Do: ..................................... Godz: ..........
+                    </div>
+                </td>
+                <td>
+                    <div className="cell-pad">
+                        <strong>Koszty:</strong><br/>
+                        Stawka dobowa: ................. PLN brutto<br/>
+                        Kaucja zwrotna: ................. PLN<br/>
+                        Limit kilometrów: ................. km / doba
+                    </div>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
-    {/* Zwrot pojazdu */}
+    {/* Oświadczenia */}
     <table>
-      <colgroup>
-        <col style={{ width: '30%' }} />
-        <col style={{ width: '23%' }} />
-        <col style={{ width: '23%' }} />
-        <col style={{ width: '24%' }} />
-      </colgroup>
-      <tbody>
-        <tr>
-          <th className="section-title" colSpan={4}>
-            <div className="cell-center">ZWROT POJAZDU</div>
-          </th>
-        </tr>
-        <tr>
-          <th>
-            <div className="cell-center">Stan pojazdu</div>
-          </th>
-          <th colSpan={3}>
-            <div className="cell-center">Data i godzina zwrotu</div>
-          </th>
-        </tr>
-        <tr>
-          <td rowSpan={3}>
-            <div className="car-scheme">
-              [SCHEMAT POJAZDU]<br/>
-              (Zaznacz uszkodzenia)
-            </div>
-          </td>
-          <td colSpan={3}>
-            <div className="cell-center">
-              <div>
-                Data: ....../....../................     Godzina: ......:......     Miejsce: ........................ <br /><br />
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th>
-            <div className="cell-center">Bateria / Zasięg</div>
-          </th>
-          <th>
-            <div className="cell-center">Przebieg</div>
-          </th>
-          <th>
-            <div className="cell-center">Uwagi / Braki</div>
-          </th>
-        </tr>
-        <tr>
-          <td>
-            <div className="cell-center fuel-box">
-              ....... %
-            </div>
-          </td>
-          <td>
-            <div className="cell-center fuel-box">
-              ................ km
-            </div>
-          </td>
-          <td>
-            <div className="cell-left notes-box">
-              
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan={2} className="section-title">
-            <div className="cell-left" style={{ fontSize: '10px' }}>
-              Wynajmujący (podpis)
-            </div>
-          </td>
-          <td colSpan={2} className="section-title">
-            <div className="cell-left" style={{ fontSize: '10px' }}>
-              Najemca (podpis)
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan={2} className="sign-box"></td>
-          <td colSpan={2} className="sign-box"></td>
-        </tr>
-      </tbody>
+        <tbody>
+            <tr>
+                <th className="section-title"><div className="cell-pad">§3 OŚWIADCZENIA I ZOBOWIĄZANIA</div></th>
+            </tr>
+            <tr>
+                <td>
+                    <div className="cell-pad">
+                        1. Najemca zobowiązuje się używać pojazdu zgodnie z jego przeznaczeniem oraz warunkami określonymi w Regulaminie Wypożyczalni.<br/>
+                        2. Najemca ponosi pełną odpowiedzialność za wszelkie szkody powstałe z jego winy oraz za wykroczenia drogowe popełnione w okresie najmu.<br/>
+                        3. W samochodzie obowiązuje całkowity zakaz palenia tytoniu.<br/>
+                        4. Zwrot pojazdu po terminie bez zgody Wynajmującego skutkuje naliczeniem kar umownych zgodnie z Cennikiem.<br/>
+                        5. Wynajmujący oświadcza, że pojazd posiada ważne ubezpieczenie OC/AC/NNW.
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {/* Podpisy */}
+    <table>
+        <colgroup>
+            <col style={{ width: '50%' }} />
+            <col style={{ width: '50%' }} />
+        </colgroup>
+        <tbody>
+            <tr>
+                <td className="sign-box center">
+                    <br/><br/>
+                    ................................................................<br/>
+                    Podpis Wynajmującego
+                </td>
+                <td className="sign-box center">
+                    <br/><br/>
+                    ................................................................<br/>
+                    Podpis Najemcy
+                </td>
+            </tr>
+        </tbody>
     </table>
 
     <div className="footer">

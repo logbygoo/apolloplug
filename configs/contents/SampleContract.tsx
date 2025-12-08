@@ -1,15 +1,13 @@
-
 import React from 'react';
 import { COMPANY_DETAILS } from '../companyDetails';
 
-export const SampleContractContent = (
+export const SampleRentalAgreementContent = (
   <div className="pdf-content">
     <style>{`
       .pdf-content {
         padding: 20px;
         background: white;
         font-size: 12px;
-        font-family: Arial, sans-serif;
         color: #000;
         box-sizing: border-box;
         overflow: hidden;
@@ -24,9 +22,15 @@ export const SampleContractContent = (
       .pdf-content h1 {
         text-align: center;
         font-size: 20px;
-        margin-bottom: 20px;
+        margin-bottom: 4px;
         text-transform: uppercase;
         font-weight: 700;
+      }
+
+      .pdf-content .subtitle {
+        text-align: center;
+        font-size: 11px;
+        margin-bottom: 16px;
       }
 
       .pdf-content table {
@@ -34,22 +38,41 @@ export const SampleContractContent = (
         border-collapse: collapse;
         border-spacing: 0;
         table-layout: fixed;
-        margin-bottom: 20px;
+        margin-bottom: 16px;
       }
 
-      .pdf-content th, 
+      .pdf-content th,
       .pdf-content td {
         border: 1px solid #000;
         padding: 0;
-        vertical-align: top;
+        vertical-align: middle;
         font-size: 12px;
       }
 
-      .pdf-content .cell-pad {
+      .pdf-content .cell-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 6px 8px;
         width: 100%;
         height: 100%;
-        line-height: 1.4;
+        line-height: 1.3;
+      }
+
+      .pdf-content .cell-left {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 6px 8px;
+        width: 100%;
+        height: 100%;
+        line-height: 1.3;
+      }
+
+      .pdf-content .cell-multiline {
+        display: block;
+        padding: 6px 8px;
+        line-height: 1.3;
       }
 
       .pdf-content .section-title {
@@ -57,58 +80,46 @@ export const SampleContractContent = (
         font-weight: 700;
         text-transform: uppercase;
         font-size: 13px;
-        text-align: center;
-        vertical-align: middle;
       }
 
-      .pdf-content .sign-box {
-        height: 80px;
-        vertical-align: bottom;
-        padding: 10px;
-      }
-
-      .pdf-content .footer {
-        margin-top: 20px;
+      .pdf-content .small {
         font-size: 10px;
-        width: 100%;
-        border-top: 1px solid #000;
-        padding-top: 10px;
       }
 
       .pdf-content .no-border {
         border: none !important;
       }
-      
+
       .pdf-content .right {
         text-align: right;
       }
-      
-      .pdf-content .center {
-        text-align: center;
+
+      .pdf-content .footer {
+        margin-top: 16px;
+        font-size: 10px;
+        width: 100%;
+        border-top: 1px solid #000;
+        padding-top: 8px;
       }
 
-      .pdf-content p { margin: 0; margin-bottom: 5px; }
+      .pdf-content p {
+        margin: 0;
+      }
+
+      .pdf-content ol {
+        margin: 4px 0 4px 18px;
+        padding: 0;
+      }
+
+      .pdf-content ol li {
+        margin-bottom: 2px;
+      }
     `}</style>
 
-    <h1>UMOWA NAJMU SAMOCHODU</h1>
-
-    {/* Data i Miejsce */}
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <div className="cell-pad">
-              <strong>Data zawarcia:</strong> .....................................
-            </div>
-          </td>
-          <td>
-            <div className="cell-pad">
-              <strong>Miejsce zawarcia:</strong> .....................................
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <h1>UMOWA NAJMU POJAZDU</h1>
+    <div className="subtitle">
+      Umowa nr: <strong>UM/2025/0001</strong> z dnia <strong>10.12.2025</strong>
+    </div>
 
     {/* Strony umowy */}
     <table>
@@ -118,119 +129,323 @@ export const SampleContractContent = (
       </colgroup>
       <tbody>
         <tr>
-          <th className="section-title"><div className="cell-pad">Wynajmujący</div></th>
-          <th className="section-title"><div className="cell-pad">Najemca</div></th>
+          <th className="section-title">
+            <div className="cell-center">Wynajmujący</div>
+          </th>
+          <th className="section-title">
+            <div className="cell-center">Najemca</div>
+          </th>
         </tr>
         <tr>
           <td>
-            <div className="cell-pad">
-              <strong>{COMPANY_DETAILS.name}</strong><br/>
-              {COMPANY_DETAILS.address}<br/>
-              NIP: {COMPANY_DETAILS.nip}<br/>
-              KRS: {COMPANY_DETAILS.krs}<br/>
-              Tel: {COMPANY_DETAILS.phone}
+            <div className="cell-multiline">
+              <strong>{COMPANY_DETAILS.name}</strong><br />
+              {COMPANY_DETAILS.address}<br />
+              NIP: {COMPANY_DETAILS.nip} &nbsp;|&nbsp; KRS: {COMPANY_DETAILS.krs}<br />
+              REGON: {COMPANY_DETAILS.regon}<br />
+              Tel.: {COMPANY_DETAILS.phone}<br />
+              E-mail: {COMPANY_DETAILS.email}
             </div>
           </td>
           <td>
-            <div className="cell-pad">
-              <strong>Imię i nazwisko / Firma:</strong><br/>
-              Jan Kowalski<br/>
-              <strong>Adres:</strong><br/>
-              ul. Testowa 1, 00-000 Warszawa<br/>
-              <strong>PESEL / NIP:</strong> 00000000000<br/>
-              <strong>Nr dokumentu:</strong> ABC 123456
+            <div className="cell-multiline">
+              <strong>Imię i nazwisko:</strong> Jan Kowalski<br />
+              <strong>Adres zamieszkania:</strong> ul. Testowa 5 m. 12, 01-234 Warszawa<br />
+              <strong>PESEL:</strong> 80010112345<br />
+              <strong>Dokument tożsamości:</strong> DO ABC123456<br />
+              <strong>Prawo jazdy:</strong> B/PL 1234567<br />
+              <strong>Telefon:</strong> +48 600 000 000<br />
+              <strong>E-mail:</strong> jan.kowalski@example.com
             </div>
           </td>
         </tr>
       </tbody>
     </table>
 
-    {/* Przedmiot umowy */}
+    {/* Przedmiot najmu */}
     <table>
-        <tbody>
-            <tr>
-                <th className="section-title" colSpan={2}><div className="cell-pad">§1 PRZEDMIOT NAJMU</div></th>
-            </tr>
-            <tr>
-                <td colSpan={2}>
-                    <div className="cell-pad">
-                        1. Wynajmujący oddaje w najem Najemcy samochód marki <strong>Tesla Model 3</strong>, 
-                        o numerze rejestracyjnym <strong>WX 12345</strong> i numerze VIN <strong>0000000000000000</strong>.<br/>
-                        2. Najemca oświadcza, że zapoznał się ze stanem technicznym pojazdu i nie wnosi do niego zastrzeżeń (szczegóły w Protokole Zdawczo-Odbiorczym).
-                    </div>
-                </td>
-            </tr>
-        </tbody>
+      <tbody>
+        <tr>
+          <th className="section-title" colSpan={4}>
+            <div className="cell-center">Przedmiot najmu</div>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <div className="cell-center">Marka / model</div>
+          </th>
+          <th>
+            <div className="cell-center">Nr rej.</div>
+          </th>
+          <th>
+            <div className="cell-center">VIN</div>
+          </th>
+          <th>
+            <div className="cell-center">Rodzaj paliwa</div>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div className="cell-center">
+              Tesla Model 3
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              WX 12345
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              5YJ3E7EB0MF123456
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              Energia elektryczna
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <div className="cell-center">Kolor</div>
+          </th>
+          <th>
+            <div className="cell-center">Aktualny przebieg</div>
+          </th>
+          <th>
+            <div className="cell-center">Stan baterii / zasięg</div>
+          </th>
+          <th>
+            <div className="cell-center">Uwagi o stanie</div>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div className="cell-center">
+              Biały
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              25&nbsp;350 km
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              85% / ok. 420 km
+            </div>
+          </td>
+          <td>
+            <div className="cell-multiline small">
+              Brak widocznych uszkodzeń nadwozia, wnętrze czyste, komplet kluczyków i dokumentów.
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
-    {/* Czas trwania i warunki */}
+    {/* Okres najmu */}
     <table>
-        <tbody>
-            <tr>
-                <th className="section-title" colSpan={2}><div className="cell-pad">§2 WARUNKI NAJMU</div></th>
-            </tr>
-            <tr>
-                <td>
-                    <div className="cell-pad">
-                        <strong>Okres najmu:</strong><br/>
-                        Od: ..................................... Godz: ..........<br/>
-                        Do: ..................................... Godz: ..........
-                    </div>
-                </td>
-                <td>
-                    <div className="cell-pad">
-                        <strong>Koszty:</strong><br/>
-                        Stawka dobowa: ................. PLN brutto<br/>
-                        Kaucja zwrotna: ................. PLN<br/>
-                        Limit kilometrów: ................. km / doba
-                    </div>
-                </td>
-            </tr>
-        </tbody>
+      <tbody>
+        <tr>
+          <th className="section-title" colSpan={4}>
+            <div className="cell-center">Okres najmu</div>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <div className="cell-center">Data i godzina wydania</div>
+          </th>
+          <th>
+            <div className="cell-center">Data i godzina zwrotu</div>
+          </th>
+          <th>
+            <div className="cell-center">Liczba dób</div>
+          </th>
+          <th>
+            <div className="cell-center">Miejsce wydania / zwrotu</div>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div className="cell-center">
+              10.12.2025 &nbsp;|&nbsp; 09:30
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              13.12.2025 &nbsp;|&nbsp; 18:00
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              3
+            </div>
+          </td>
+          <td>
+            <div className="cell-multiline small">
+              Wydanie: Warszawa, ul. Przykładowa 10<br />
+              Zwrot: Warszawa, ul. Przykładowa 10
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <div className="cell-center">Dobowy limit km</div>
+          </th>
+          <th>
+            <div className="cell-center">Całkowity limit km</div>
+          </th>
+          <th colSpan={2}>
+            <div className="cell-center">Przekroczenie limitu km</div>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div className="cell-center">
+              300 km / doba
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              900 km
+            </div>
+          </td>
+          <td colSpan={2}>
+            <div className="cell-center">
+              1,20 zł / km
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
-    {/* Oświadczenia */}
+    {/* Warunki finansowe */}
     <table>
-        <tbody>
-            <tr>
-                <th className="section-title"><div className="cell-pad">§3 OŚWIADCZENIA I ZOBOWIĄZANIA</div></th>
-            </tr>
-            <tr>
-                <td>
-                    <div className="cell-pad">
-                        1. Najemca zobowiązuje się używać pojazdu zgodnie z jego przeznaczeniem oraz warunkami określonymi w Regulaminie Wypożyczalni.<br/>
-                        2. Najemca ponosi pełną odpowiedzialność za wszelkie szkody powstałe z jego winy oraz za wykroczenia drogowe popełnione w okresie najmu.<br/>
-                        3. W samochodzie obowiązuje całkowity zakaz palenia tytoniu.<br/>
-                        4. Zwrot pojazdu po terminie bez zgody Wynajmującego skutkuje naliczeniem kar umownych zgodnie z Cennikiem.<br/>
-                        5. Wynajmujący oświadcza, że pojazd posiada ważne ubezpieczenie OC/AC/NNW.
-                    </div>
-                </td>
-            </tr>
-        </tbody>
+      <tbody>
+        <tr>
+          <th className="section-title" colSpan={4}>
+            <div className="cell-center">Warunki finansowe</div>
+          </th>
+        </tr>
+        <tr>
+          <th>
+            <div className="cell-center">Cena dobowo</div>
+          </th>
+          <th>
+            <div className="cell-center">Kaucja</div>
+          </th>
+          <th>
+            <div className="cell-center">Udział własny</div>
+          </th>
+          <th>
+            <div className="cell-center">Łączny koszt wynajmu</div>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div className="cell-center">
+              250 zł / doba (brutto)
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              2&nbsp;000 zł
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              5&nbsp;000 zł
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              750 zł
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th colSpan={2}>
+            <div className="cell-center">Wybrane opcje dodatkowe</div>
+          </th>
+          <th>
+            <div className="cell-center">Koszt opcji dodatkowych</div>
+          </th>
+          <th>
+            <div className="cell-center">Łączny koszt do zapłaty</div>
+          </th>
+        </tr>
+        <tr>
+          <td colSpan={2}>
+            <div className="cell-multiline small">
+              Ubezpieczenie OC/AC/NNW – w cenie<br />
+              Możliwość zwrotu brudnego auta – 150 zł<br />
+              Dodatkowy kierowca – 50 zł
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              200 zł
+            </div>
+          </td>
+          <td>
+            <div className="cell-center">
+              950 zł (brutto)
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    {/* Oświadczenia i postanowienia */}
+    <table>
+      <tbody>
+        <tr>
+          <th className="section-title">
+            <div className="cell-center">Oświadczenia i postanowienia</div>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div className="cell-multiline small">
+              <ol>
+                <li>Najemca oświadcza, że posiada ważne prawo jazdy kategorii uprawniającej do kierowania pojazdem stanowiącym przedmiot najmu.</li>
+                <li>Najemca zobowiązuje się użytkować pojazd zgodnie z jego przeznaczeniem, z należytą starannością oraz przestrzegając przepisów ruchu drogowego.</li>
+                <li>Najemca ponosi odpowiedzialność materialną za szkody powstałe z jego winy, zgodnie z regulaminem wypożyczalni oraz warunkami ubezpieczenia.</li>
+                <li>Najemca upoważnia Wynajmującego do obciążenia jego karty płatniczej niezapłaconymi kosztami wynikającymi z niniejszej umowy, w szczególności opłatami za szkody, dopłaty za przekroczenie limitu kilometrów oraz braki w wyposażeniu.</li>
+                <li>Integralną częścią umowy jest Regulamin Wypożyczalni, przekazany Najemcy w formie elektronicznej oraz dostępny na stronie internetowej Wynajmującego. Zawierając umowę Najemca potwierdza zapoznanie się z Regulaminem i jego akceptację.</li>
+                <li>Wszelkie zmiany niniejszej umowy wymagają formy pisemnej pod rygorem nieważności.</li>
+              </ol>
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
     {/* Podpisy */}
     <table>
-        <colgroup>
-            <col style={{ width: '50%' }} />
-            <col style={{ width: '50%' }} />
-        </colgroup>
-        <tbody>
-            <tr>
-                <td className="sign-box center">
-                    <br/><br/>
-                    ................................................................<br/>
-                    Podpis Wynajmującego
-                </td>
-                <td className="sign-box center">
-                    <br/><br/>
-                    ................................................................<br/>
-                    Podpis Najemcy
-                </td>
-            </tr>
-        </tbody>
+      <tbody>
+        <tr>
+          <th className="section-title">
+            <div className="cell-center">Podpisy stron</div>
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div className="cell-multiline small">
+              Wynajmujący:<br />
+              ......................................................................................
+              <br /><br />
+              Najemca:<br />
+              ......................................................................................
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
+    {/* Stopka */}
     <div className="footer">
       <table style={{ border: 'none', margin: 0 }}>
         <tbody>
@@ -245,6 +460,5 @@ export const SampleContractContent = (
         </tbody>
       </table>
     </div>
-
   </div>
 );

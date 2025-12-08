@@ -50,10 +50,10 @@ const PdfViewerPage: React.FC = () => {
           x: 0,
           y: 0,
           html2canvas: {
-            scale: 2, // 2x scale for sharper text
+            scale: 0.5, // 2x scale for sharper text
             useCORS: true,
             logging: false,
-            windowWidth: 794, // Ensure canvas thinks window is 794px wide
+            windowWidth: 79, // Ensure canvas thinks window is 794px wide
           }
         };
 

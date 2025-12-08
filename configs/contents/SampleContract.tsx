@@ -204,7 +204,7 @@ export const SampleContractContent = (
           <td colSpan={3}>
             <div className="cell-center">
               <div>
-                Data: ....../....../................     Godzina: ......:......     Miejsce: ........................
+                Data: ....../....../................     Godzina: ......:......     Miejsce: ........................ <br />
               </div>
             </div>
           </td>
@@ -288,9 +288,7 @@ export const SampleContractContent = (
           <td colSpan={3}>
             <div className="cell-left">
               <div>
-                Data: ...........................<br />
-                Godzina: ........................<br/>
-                Miejsce: ........................
+                Data: ....../....../................     Godzina: ......:......     Miejsce: ........................ <br />
               </div>
             </div>
           </td>

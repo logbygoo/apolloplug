@@ -191,22 +191,22 @@ export const SampleContractContent = (
             <div className="cell-center">Stan pojazdu</div>
           </th>
           <th colSpan={3}>
-            <div className="cell-center">Data i godzina zwrotu</div>
+            <div className="cell-center">Data i godzina wydania</div>
           </th>
         </tr>
         <tr>
           <td rowSpan={3}>
             <div className="car-scheme">
               [SCHEMAT POJAZDU]<br/>
-              (Zaznacz uszkodzenia)
+              (Brak uszkodzeń)
             </div>
           </td>
           <td colSpan={3}>
             <div className="cell-left">
               <div>
-                Data: ...........................<br />
-                Godzina: ........................<br/>
-                Miejsce: ........................
+                Data: <strong>10.12.2025</strong><br />
+                Godzina: <strong>09:30</strong><br/>
+                Miejsce: <strong>Warszawa</strong>
               </div>
             </div>
           </td>
@@ -219,23 +219,25 @@ export const SampleContractContent = (
             <div className="cell-center">Przebieg</div>
           </th>
           <th>
-            <div className="cell-center">Uwagi / Braki</div>
+            <div className="cell-center">Uwagi / Wyposażenie</div>
           </th>
         </tr>
         <tr>
           <td>
             <div className="cell-center fuel-box">
-              ....... %
+              85% / 420 km
             </div>
           </td>
           <td>
             <div className="cell-center fuel-box">
-              ................ km
+              25 350 km
             </div>
           </td>
           <td>
             <div className="cell-left notes-box">
-              
+              Kabel Typ 2: TAK<br/>
+              Ładowarka mobilna: TAK<br/>
+              Trójkąt/Gaśnica: TAK
             </div>
           </td>
         </tr>

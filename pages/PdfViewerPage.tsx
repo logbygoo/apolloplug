@@ -45,7 +45,7 @@ const PdfViewerPage: React.FC = () => {
           html2canvas: {
             useCORS: true,
             logging: false,
-            scale: 0.4, // Reset scale to 1, let jsPDF handle the fitting via 'width' parameter
+            scale: 0.35, // Reset scale to 1, let jsPDF handle the fitting via 'width' parameter
           }
         });
 

@@ -5,6 +5,27 @@ import { COMPANY_DETAILS } from '../companyDetails';
 export const SampleContractContent = (
   <div className="pdf-content">
     <style>{`
+@page {
+    size: A4 portrait;
+    margin: 20mm;
+}
+
+body {
+    width: 100%;
+    max-width: 190mm; /* bezpieczna szerokość wewnątrz marginesów */
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+table {
+    table-layout: fixed; /* zapobiega rozpychaniu tabel */
+    width: 100%;
+    word-wrap: break-word;
+}
+
+td, th {
+    word-break: break-word;
+}
         .pdf-content {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;

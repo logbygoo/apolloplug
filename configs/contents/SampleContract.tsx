@@ -140,7 +140,7 @@ export const SampleContractContent = (
         <tr>
           <td>
             <div className="cell-multiline">
-              <strong>{COMPANY_DETAILS.name}, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip} &nbsp;|&nbsp; KRS: {COMPANY_DETAILS.krs}, REGON: {COMPANY_DETAILS.regon}, Tel.: {COMPANY_DETAILS.phone}, E-mail: {COMPANY_DETAILS.email}
+              <strong>{COMPANY_DETAILS.name}</strong>, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip} &nbsp;|&nbsp; KRS: {COMPANY_DETAILS.krs}, REGON: {COMPANY_DETAILS.regon}, Tel.: {COMPANY_DETAILS.phone}, E-mail: {COMPANY_DETAILS.email}
             </div>
           </td>
           <td>

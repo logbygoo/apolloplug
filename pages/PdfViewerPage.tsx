@@ -35,16 +35,20 @@ const PdfViewerPage: React.FC = () => {
         // Create PDF with A4 format (pt units)
         const doc = new jsPDF('p', 'pt', 'a4');
         
-        // Options for html2canvas to ensure clean capture
+        // A4 width at 96 DPI is approximately 794px
+        // In points (1/72 inch), A4 is 595.28 pt
+        const a4WidthPx = 794;
+        const a4WidthPt = 595.28;
+
         const options = {
           html2canvas: {
             scale: 2, // Higher scale for better quality
             logging: false,
             useCORS: true,
-            windowWidth: 794 // A4 width in px at 96dpi approx
+            windowWidth: a4WidthPx,
+            width: a4WidthPx
           },
           callback: (doc: jsPDF) => {
-            // Use datauristring for storage compatibility (bloburl expires)
             const dataUri = doc.output('datauristring');
             
             try {
@@ -58,8 +62,8 @@ const PdfViewerPage: React.FC = () => {
           },
           x: 0,
           y: 0,
-          width: 595.28, // A4 width in pt
-          windowWidth: 794,
+          width: a4WidthPt,
+          windowWidth: a4WidthPx,
           autoPaging: 'text' as const
         };
 
@@ -99,8 +103,11 @@ const PdfViewerPage: React.FC = () => {
             title={documentData.title}
         />
       ) : (
-        /* Hidden rendering container for PDF generation. Pure blank canvas. */
-        <div className="fixed top-0 left-0 w-[794px] invisible z-[-1]" style={{ pointerEvents: 'none' }}>
+        /* 
+           Hidden rendering container. 
+           We fix the width to 794px (approx A4 @ 96 DPI) to match the html2canvas windowWidth.
+        */
+        <div className="fixed top-0 left-0 w-[794px] h-0 overflow-hidden invisible z-[-1]">
             <div ref={contentRef} className="bg-white w-[794px] min-h-[1123px] text-black box-border relative">
                 {documentData.content}
             </div>

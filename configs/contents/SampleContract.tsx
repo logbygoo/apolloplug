@@ -5,52 +5,35 @@ import { COMPANY_DETAILS } from '../companyDetails';
 export const SampleContractContent = (
   <div className="pdf-content">
     <style>{`
-@page {
-    size: A4 portrait;
-    margin: 20mm;
-}
-
-body {
-    width: 100%;
-    max-width: 190mm; /* bezpieczna szerokość wewnątrz marginesów */
-    margin: 0 auto;
-    box-sizing: border-box;
-}
-
-table {
-    table-layout: fixed; /* zapobiega rozpychaniu tabel */
-    width: 100%;
-    word-wrap: break-word;
-}
-
-td, th {
-    word-break: break-word;
-}
         .pdf-content {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
-            margin: 20px;
-            padding: 20px; /* Added padding to wrapper to simulate body margin on A4 */
-            max-width:1000px;
-            background: red;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 40px; /* Simulates document margins inside the container */
+            background-color: #ffffff;
+            color: #000000;
         }
 
         .pdf-content h1 {
             text-align: center;
             font-size: 18px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             text-transform: uppercase;
+            color: #000000;
         }
 
         .pdf-content table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed; /* Ensures table stays within 100% width */
         }
 
         .pdf-content th, .pdf-content td {
-            border: 1px solid #555;
-            padding: 4px 6px;
+            border: 1px solid #000;
+            padding: 5px;
             vertical-align: top;
+            word-wrap: break-word; /* Forces long text to wrap */
         }
 
         .pdf-content .no-border {
@@ -77,6 +60,12 @@ td, th {
             height: 110px;
             text-align: center;
             font-size: 9px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
         }
 
         .pdf-content .fuel-box {
@@ -94,8 +83,10 @@ td, th {
         }
 
         .pdf-content .footer {
-            margin-top: 15px;
+            margin-top: 20px;
             font-size: 9px;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
         }
 
         .pdf-content .right {
@@ -162,19 +153,17 @@ td, th {
             <th className="section-title" colSpan={4}>WYDANIE POJAZDU</th>
         </tr>
         <tr>
-            <th>Stan pojazdu</th>
+            <th style={{width: '35%'}}>Stan pojazdu</th>
             <th colSpan={3}>Data i godzina wydania</th>
         </tr>
         <tr>
-            <td rowSpan={3} style={{ width: '35%' }}>
+            <td rowSpan={3}>
                 <div className="car-scheme">
-                    Schemat pojazdu (rysunek poglądowy)<br /><br />
+                    <strong>Schemat pojazdu</strong><br/>
+                    (rysunek poglądowy)<br /><br />
                     LEGENDA:<br />
-                    R - rysa<br />
-                    O - odprysk<br />
-                    W - wgniecenie<br />
-                    P - pęknięcie<br />
-                    B - brak uszkodzeń
+                    R-rysa, O-odprysk, W-wgniecenie<br />
+                    P-pęknięcie, B-brak uszkodzeń
                 </div>
             </td>
             <td colSpan={3}>
@@ -189,29 +178,27 @@ td, th {
         </tr>
         <tr>
             <td className="fuel-box">
-                Poziom paliwa: 3/4 zbiornika
+                Poziom paliwa: 3/4
             </td>
             <td className="fuel-box">
                 25 350 km
             </td>
             <td className="notes-box">
                 Brak widocznych uszkodzeń nadwozia.<br />
-                Wnętrze czyste, komplet dokumentów i kluczyków.
+                Wnętrze czyste, komplet dokumentów.
             </td>
         </tr>
         <tr>
             <td colSpan={2} className="small">
-                Wynajmujący (potwierdzam zgodność z powyższym opisem samochodu oraz danymi wydania)
+                Wynajmujący (potwierdzam zgodność)
             </td>
             <td colSpan={2} className="small">
-                Najemca (zgadzam się z powyższymi szczegółami wydania oraz opisem samochodu)
+                Najemca (zgadzam się z opisem)
             </td>
         </tr>
         <tr>
-            <td className="sign-box"></td>
-            <td className="sign-box"></td>
-            <td className="sign-box"></td>
-            <td className="sign-box"></td>
+            <td colSpan={2} className="sign-box"></td>
+            <td colSpan={2} className="sign-box"></td>
         </tr>
         </tbody>
     </table>
@@ -225,19 +212,17 @@ td, th {
             <th className="section-title" colSpan={4}>ZWROT POJAZDU</th>
         </tr>
         <tr>
-            <th>Stan pojazdu</th>
+            <th style={{width: '35%'}}>Stan pojazdu</th>
             <th colSpan={3}>Data i godzina zwrotu</th>
         </tr>
         <tr>
-            <td rowSpan={3} style={{ width: '35%' }}>
+            <td rowSpan={3}>
                 <div className="car-scheme">
-                    Schemat pojazdu (rysunek poglądowy)<br /><br />
+                     <strong>Schemat pojazdu</strong><br/>
+                    (rysunek poglądowy)<br /><br />
                     LEGENDA:<br />
-                    R - rysa<br />
-                    O - odprysk<br />
-                    W - wgniecenie<br />
-                    P - pęknięcie<br />
-                    B - brak uszkodzeń
+                    R-rysa, O-odprysk, W-wgniecenie<br />
+                    P-pęknięcie, B-brak uszkodzeń
                 </div>
             </td>
             <td colSpan={3}>
@@ -252,29 +237,27 @@ td, th {
         </tr>
         <tr>
             <td className="fuel-box">
-                Poziom paliwa: 1/2 zbiornika
+                Poziom paliwa: 1/2
             </td>
             <td className="fuel-box">
                 27 980 km
             </td>
             <td className="notes-box">
-                Niewielka rysa na tylnym zderzaku lewa strona.<br />
-                Wnętrze wymaga podstawowego sprzątania.
+                Niewielka rysa na tylnym zderzaku.<br />
+                Wnętrze wymaga sprzątania.
             </td>
         </tr>
         <tr>
             <td colSpan={2} className="small">
-                Wynajmujący (zgadzam się z powyższymi szczegółami zwrotu oraz opisem samochodu)
+                Wynajmujący (potwierdzam zgodność)
             </td>
             <td colSpan={2} className="small">
-                Najemca (zgadzam się z powyższymi szczegółami zwrotu oraz opisem samochodu)
+                Najemca (zgadzam się z opisem)
             </td>
         </tr>
         <tr>
-            <td className="sign-box"></td>
-            <td className="sign-box"></td>
-            <td className="sign-box"></td>
-            <td className="sign-box"></td>
+            <td colSpan={2} className="sign-box"></td>
+            <td colSpan={2} className="sign-box"></td>
         </tr>
         </tbody>
     </table>
@@ -285,7 +268,7 @@ td, th {
             <tbody>
             <tr>
                 <td className="no-border small">
-                    {COMPANY_DETAILS.website} &nbsp;&nbsp; {COMPANY_DETAILS.email} &nbsp;&nbsp; {COMPANY_DETAILS.phone}
+                    {COMPANY_DETAILS.website} | {COMPANY_DETAILS.email} | {COMPANY_DETAILS.phone}
                 </td>
                 <td className="no-border small right">
                     Strona 1 z 1

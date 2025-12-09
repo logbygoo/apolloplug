@@ -2,54 +2,7 @@
 import React from 'react';
 
 export const TermsOfServiceContent = (
-    <style>{`
-      .privacy-content {
-        padding: 50px;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 12px;
-        line-height: 1.5;
-        color: #000;
-        background: #fff;
-        box-sizing: border-box;
-        word-break: break-word;
-      }
 
-      .privacy-content h1 {
-        font-size: 20px;
-        text-align: center;
-        margin-bottom: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-
-      .privacy-content h2 {
-        font-size: 16px;
-        margin-top: 22px;
-        margin-bottom: 8px;
-        font-weight: 700;
-      }
-
-      .privacy-content h3 {
-        font-size: 14px;
-        margin-top: 18px;
-        margin-bottom: 6px;
-        font-weight: 700;
-      }
-
-      .privacy-content p {
-        margin: 6px 0;
-      }
-
-      .privacy-content ol {
-        margin: 6px 0 6px 16px;
-        padding: 0;
-      }
-
-      .privacy-content ol li {
-        margin: 4px 0;
-      }
-    `}</style>
-    
 <h1>Regulamin serwisu internetowego apolloplug.com</h1>
 
 <p><strong>obowiązujący od dnia: 09.12.2025 r.</strong></p>

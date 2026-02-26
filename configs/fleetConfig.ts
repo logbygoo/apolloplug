@@ -8,7 +8,7 @@ export const CAR_FLEET: Car[] = [
     imageUrl: [
       'https://img.apolloplug.com/tesla-3/main-cards-tesla-3.jpg',
     ],
-    pricePerDay: 790,
+    pricePerDay: 330,
     costPerKmOverLimit: 3,
     specs: {
       range: '629 km',

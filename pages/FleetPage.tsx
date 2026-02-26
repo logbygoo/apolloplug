@@ -42,7 +42,7 @@ const FleetPage: React.FC = () => {
                         <p className="text-xs text-muted-foreground">0-100 km/h</p>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold">{car.pricePerDay} zł</p>
+                        <p className="text-2xl font-semibold">od {car.pricePerDay} zł</p>
                         <p className="text-xs text-muted-foreground">Cena / dzień</p>
                     </div>
                   </div>

@@ -20,10 +20,10 @@ export const RENTAL_CARS: Car[] = [
     costPerKmOverLimit: 3,
     priceTiers: [
         { days: '1 dzień', pricePerDay: 790, kmLimitPerDay: 250 },
-        { days: '2-3 dni', pricePerDay: 640, kmLimitPerDay: 200 },
-        { days: '4-7 dni', pricePerDay: 560, kmLimitPerDay: 150 },
-        { days: '8-30 dni', pricePerDay: 460, kmLimitPerDay: 110 },
-        { days: '31+ dni', pricePerDay: 390, kmLimitPerDay: 90 },
+        { days: '2-3 dni', pricePerDay: 590, kmLimitPerDay: 200 },
+        { days: '4-7 dni', pricePerDay: 490, kmLimitPerDay: 150 },
+        { days: '8-30 dni', pricePerDay: 420, kmLimitPerDay: 110 },
+        { days: '31+ dni', pricePerDay: 330, kmLimitPerDay: 90 },
     ],
     specs: {
       version: 'Longrange',

@@ -15,6 +15,7 @@ import InsurancePage from './pages/InsurancePage';
 import DocumentationPage from './pages/DocumentationPage';
 import RentalCarLandingPage from './pages/RentalCarLandingPage'; // Import new page
 import PdfViewerPage from './pages/PdfViewerPage'; // Import new PDF viewer page
+import CookieBanner from './components/CookieBanner';
 import { ApolloPlugLogo } from './constants';
 import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './icons';
 import { CONFIG } from './config';
@@ -197,6 +198,7 @@ const App: React.FC = () => {
                   </Routes>
                 </main>
                 <Footer />
+                <CookieBanner />
              </>
            } />
         </Routes>

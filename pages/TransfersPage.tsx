@@ -471,7 +471,20 @@ const TransfersPage: React.FC = () => {
                                     <div>
                                         <Label htmlFor="pickupDate">Kiedy</Label>
                                         <div className="grid sm:grid-cols-2 gap-4 mt-1">
-                                            <div className="relative"><Input id="pickupDate" type="date" value={formData.pickupDate} onChange={e => setFormValue('pickupDate', e.target.value)} min={today} required className="pr-10" /><div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"><CalendarDaysIcon className="h-5 w-5 text-muted-foreground" /></div></div>
+                                            <div className="relative">
+                                                <Input
+                                                    id="pickupDate"
+                                                    type="date"
+                                                    value={formData.pickupDate}
+                                                    onChange={e => setFormValue('pickupDate', e.target.value)}
+                                                    min={today}
+                                                    required
+                                                    className="pr-10 h-10"
+                                                />
+                                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                    <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                                                </div>
+                                            </div>
                                             <div className="relative"><select id="pickupTime" value={formData.pickupTime} onChange={e => setFormValue('pickupTime', e.target.value)} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none" required>{availableTimeOptions.length > 0 ? availableTimeOptions.map(t => <option key={t} value={t}>{t}</option>) : <option disabled>Brak dostępnych godzin</option>}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div>
                                         </div>
                                     </div>

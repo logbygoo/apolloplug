@@ -9,13 +9,14 @@ import type { SeoData, BlogPost } from '../types';
 
 const BlogArticlePage: React.FC = () => {
     const { articleSlug } = useParams<{ articleSlug: string }>();
+    const isNonArticlePath = articleSlug === 'robots.txt';
     const [article, setArticle] = useState<BlogPost | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
     useEffect(() => {
         const fetchArticle = async () => {
-            if (!articleSlug) return;
+            if (!articleSlug || isNonArticlePath) return;
             setLoading(true);
             try {
                 const controller = new AbortController();
@@ -69,7 +70,13 @@ const BlogArticlePage: React.FC = () => {
         };
 
         fetchArticle();
-    }, [articleSlug]);
+    }, [articleSlug, isNonArticlePath]);
+
+    if (isNonArticlePath) {
+        // Pozwól serwerowi obsłużyć /robots.txt (plik statyczny),
+        // nie próbuj ładować go jako wpis blogowy po slug-u.
+        return <Navigate to="/" replace />;
+    }
 
     if (loading) {
         return (

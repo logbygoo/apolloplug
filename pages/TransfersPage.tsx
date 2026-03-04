@@ -308,11 +308,43 @@ const TransfersPage: React.FC = () => {
     if (map) {
         mapMarkers.pickup?.setMap(null);
         mapMarkers.destination?.setMap(null);
+
+        const { AdvancedMarkerElement } = google.maps.marker;
         const newMarkers: { pickup: any | null, destination: any | null } = { pickup: null, destination: null };
-        const pickupIcon = { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: '#6b7280', fillOpacity: 1, strokeWeight: 0 };
-        const destinationIcon = { path: 'M-4 -4 H 4 V 4 H -4 Z', scale: 2, fillColor: '#111827', fillOpacity: 1, strokeWeight: 0, anchor: new google.maps.Point(0, 0) };
-        if(formData.pickupAddress?.geometry?.location) newMarkers.pickup = new google.maps.Marker({ position: formData.pickupAddress.geometry.location, map: map, title: "Odbiór", icon: pickupIcon });
-        if(formData.destinationAddress?.geometry?.location) newMarkers.destination = new google.maps.Marker({ position: formData.destinationAddress.geometry.location, map: map, title: "Cel", icon: destinationIcon });
+
+        if (formData.pickupAddress?.geometry?.location) {
+          const pickupDot = document.createElement('div');
+          pickupDot.style.width = '14px';
+          pickupDot.style.height = '14px';
+          pickupDot.style.borderRadius = '9999px';
+          pickupDot.style.backgroundColor = '#6b7280';
+          pickupDot.style.border = '2px solid white';
+          pickupDot.style.boxShadow = '0 0 4px rgba(0,0,0,0.3)';
+
+          newMarkers.pickup = new AdvancedMarkerElement({
+            map,
+            position: formData.pickupAddress.geometry.location,
+            title: 'Odbiór',
+            content: pickupDot,
+          });
+        }
+
+        if (formData.destinationAddress?.geometry?.location) {
+          const destinationSquare = document.createElement('div');
+          destinationSquare.style.width = '14px';
+          destinationSquare.style.height = '14px';
+          destinationSquare.style.backgroundColor = '#111827';
+          destinationSquare.style.border = '2px solid white';
+          destinationSquare.style.boxShadow = '0 0 4px rgba(0,0,0,0.3)';
+
+          newMarkers.destination = new AdvancedMarkerElement({
+            map,
+            position: formData.destinationAddress.geometry.location,
+            title: 'Cel',
+            content: destinationSquare,
+          });
+        }
+
         setMapMarkers(newMarkers);
     }
     calculateRoute();

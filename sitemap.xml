@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Główne strony -->
+  <url>
+    <loc>https://apolloplug.com/</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/flota</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/wypozyczalnia</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/transfery</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/zakup</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/ubezpieczenia</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/finansowanie</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/kontakt</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/blog</loc>
+  </url>
+
+  <!-- Strony floty -->
+  <url>
+    <loc>https://apolloplug.com/flota/tesla-3-highland</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/flota/tesla-y-juniper</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/flota/tesla-x</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/flota/tesla-s</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/flota/tesla-cybertruck</loc>
+  </url>
+
+  <!-- Landing pages wynajmu konkretnych aut -->
+  <url>
+    <loc>https://apolloplug.com/wypozycz/tesla-3-highland</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/wypozycz/tesla-y-juniper</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/wypozycz/tesla-x</loc>
+  </url>
+  <url>
+    <loc>https://apolloplug.com/wypozycz/tesla-cybertruck</loc>
+  </url>
+</urlset>
+

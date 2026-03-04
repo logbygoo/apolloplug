@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /kontakt
 Disallow: /dokumentacja
+
+Sitemap: https://apolloplug.com/sitemap.xml

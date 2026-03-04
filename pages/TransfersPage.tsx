@@ -507,7 +507,33 @@ const TransfersPage: React.FC = () => {
                                 </div>
                             </section>
                             {formData.transferType !== 'hourly' && (
-                                <section><h2 className="text-2xl font-bold tracking-tight mb-6">Statystyki trasy</h2><div className="grid sm:grid-cols-3 gap-4"><StatCard icon={<ArrowRightIcon className="w-6 h-6" />} title="Dystans" value={routeStats?.distance || '---'} /><StatCard icon={<ClockIcon className="w-6 h-6" />} title="Czas podróży" value={routeStats?.duration || '---'} /><StatCard icon={<CurrencyDollarIcon className="w-6 h-6" />} title="Szacowana cena" value={routeStats?.price ? `${routeStats.price.toFixed(2)} zł` : '---'} /></div></section>
+                                <section>
+                                    <h2 className="text-2xl font-bold tracking-tight mb-6">Statystyki trasy</h2>
+                                    <div className="grid sm:grid-cols-3 gap-4">
+                                        <StatCard
+                                            icon={<ArrowRightIcon className="w-6 h-6" />}
+                                            title="Dystans"
+                                            value={routeStats?.distance || '---'}
+                                        />
+                                        <StatCard
+                                            icon={<ClockIcon className="w-6 h-6" />}
+                                            title="Czas podróży"
+                                            value={routeStats?.duration || '---'}
+                                        />
+                                        <StatCard
+                                            icon={<CurrencyDollarIcon className="w-6 h-6" />}
+                                            title="Gwarantowana cena"
+                                            value={
+                                                routeStats?.price
+                                                    ? `${routeStats.price.toLocaleString('pl-PL', {
+                                                          minimumFractionDigits: 2,
+                                                          maximumFractionDigits: 2,
+                                                      })} zł`
+                                                    : '---'
+                                            }
+                                        />
+                                    </div>
+                                </section>
                             )}
                             <section><h2 className="text-2xl font-bold tracking-tight mb-6">Wybór auta</h2><div className="grid grid-cols-2 sm:grid-cols-4 gap-4">{RENTAL_CARS.filter(c => c.available).map(car => (<ModelCard key={car.id} car={car} isSelected={formData.selectedCar?.id === car.id} onSelect={() => setFormValue('selectedCar', car)} />))}</div></section>
                         </>

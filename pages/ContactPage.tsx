@@ -157,9 +157,9 @@ const ContactPage: React.FC = () => {
                 </div>
             </section>
             <section>
-                <h2 className="text-2xl font-bold tracking-tight mb-4">Licencja Taxi Premium</h2>
+                <h2 className="text-2xl font-bold tracking-tight mb-4">Obszar działania</h2>
                   <div className="bg-secondary p-6 rounded-lg text-center">
-                    <p className="text-lg font-semibold text-foreground">Warszawa</p>
+                    <p className="text-lg font-semibold text-foreground">Warszawa + dostawa aut w całym kraju</p>
                     <p className="text-sm text-muted-foreground"></p>
                 </div>
             </section>

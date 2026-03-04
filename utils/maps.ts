@@ -25,7 +25,7 @@ export const loadGoogleMapsScript = (callback: () => void, libraries: string = '
 
   if (!existingScript) {
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=${libraries}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&libraries=${libraries}&loading=async`;
     script.id = scriptId;
     script.async = true;
     script.defer = true;

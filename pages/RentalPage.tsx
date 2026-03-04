@@ -526,7 +526,7 @@ const RentalPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            <Seo {...SEO_CONFIG['/wynajem']} />
+            <Seo {...SEO_CONFIG['/wypozyczalnia']} />
             <PageHeader
                 title="Wynajem Auta EV"
                 subtitle="Zarezerwuj swój wymarzony samochód elektryczny w kilku prostych krokach."

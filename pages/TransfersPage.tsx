@@ -479,7 +479,8 @@ const TransfersPage: React.FC = () => {
                                                     onChange={e => setFormValue('pickupDate', e.target.value)}
                                                     min={today}
                                                     required
-                                                    className="pr-10 h-10"
+                                                    className="pr-10 h-auto"
+                                                    style={{ padding: '11px' }}
                                                 />
                                                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                                     <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />

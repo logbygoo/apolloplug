@@ -360,22 +360,13 @@ const GoogleMap = () => {
         disableDefaultUI: true,
         styles: [{ stylers: [{ saturation: -100 }] }],
       });
-
-      const { AdvancedMarkerElement } = google.maps.marker;
-
+      
       LOCATIONS.forEach(loc => {
-        const iconUrl = getMapIcon(loc.type);
-        const img = document.createElement('img');
-        img.src = iconUrl;
-        img.alt = loc.title;
-        img.style.width = '32px';
-        img.style.height = '32px';
-
-        new AdvancedMarkerElement({
-          map,
+        new google.maps.Marker({
           position: { lat: loc.lat, lng: loc.lng },
+          map: map,
           title: loc.title,
-          content: img,
+          icon: getMapIcon(loc.type),
         });
       });
     });

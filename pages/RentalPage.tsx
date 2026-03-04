@@ -608,7 +608,16 @@ const RentalPage: React.FC = () => {
                                             <div>
                                                 <Label htmlFor="pickupDate">Odbiór</Label>
                                                 <div className="relative mt-1">
-                                                    <Input id="pickupDate" type="date" value={formData.pickupDate} min={today} onChange={handleInputChange} required className="h-12 pr-10" />
+                                                    <Input
+                                                        id="pickupDate"
+                                                        type="date"
+                                                        value={formData.pickupDate}
+                                                        min={today}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        className="h-auto pr-10"
+                                                        style={{ padding: '11px' }}
+                                                    />
                                                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                                         <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
                                                     </div>
@@ -621,7 +630,16 @@ const RentalPage: React.FC = () => {
                                             <div>
                                                 <Label htmlFor="returnDate">Zwrot</Label>
                                                 <div className="relative mt-1">
-                                                    <Input id="returnDate" type="date" value={formData.returnDate} min={formData.pickupDate || today} onChange={handleInputChange} required className="h-12 pr-10" />
+                                                    <Input
+                                                        id="returnDate"
+                                                        type="date"
+                                                        value={formData.returnDate}
+                                                        min={formData.pickupDate || today}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        className="h-auto pr-10"
+                                                        style={{ padding: '11px' }}
+                                                    />
                                                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                                         <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
                                                     </div>

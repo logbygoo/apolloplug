@@ -341,7 +341,7 @@ export const RentalRulesContent = (
       <section className="section">
         <h2 className="section__title">21. Postanowienia końcowe</h2>
         <ol className="legal">
-          <li>Regulamin obowiązuje od dnia 1.10.2025.</li>
+          <li>Regulamin obowiązuje od dnia {'{{effective_date}}'}.</li>
           <li>Kontakt: apolloplug.com/kontakt.</li>
         </ol>
       </section>

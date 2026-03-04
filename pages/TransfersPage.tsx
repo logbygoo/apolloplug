@@ -27,7 +27,7 @@ interface HourlyPackage {
 }
 
 const hourlyPackages: HourlyPackage[] = [
-  { id: '1h', label: '1h - 290zl', price: 290 },
+  { id: '1h', label: '1h - 490 zł', price: 490 },
   { id: '3h', label: '3h - 790 zł', price: 790 },
   { id: '6h', label: '6h - 1490 zł', price: 1490 },
   { id: '10h', label: '10h - 2390 zł', price: 2390 },
@@ -445,10 +445,27 @@ const TransfersPage: React.FC = () => {
                         <>
                             <section>
                                 <div className="flex flex-wrap items-center gap-4 mb-8">
-                                    <span className='font-medium text-sm text-muted-foreground'>Wybierz rodzaj podróży</span>
-                                    <button type="button" onClick={() => setFormValue('transferType', 'someone')} className={pillButtonClasses(formData.transferType === 'someone')}>Dla kogoś</button>
-                                    <button type="button" onClick={() => setFormValue('transferType', 'package')} className={pillButtonClasses(formData.transferType === 'package')}>Paczka</button>
-                                    <button type="button" onClick={() => setFormValue('transferType', 'hourly')} className={pillButtonClasses(formData.transferType === 'hourly')}>Kierowca na godziny</button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormValue('transferType', 'someone')}
+                                        className={pillButtonClasses(formData.transferType === 'someone')}
+                                    >
+                                        Auto z kierowcą
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormValue('transferType', 'package')}
+                                        className={pillButtonClasses(formData.transferType === 'package')}
+                                    >
+                                        Przewóz dokumentów/paczka
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormValue('transferType', 'hourly')}
+                                        className={pillButtonClasses(formData.transferType === 'hourly')}
+                                    >
+                                        Kierowca na godziny
+                                    </button>
                                 </div>
                                 <div className="space-y-6">
                                     <div>

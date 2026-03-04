@@ -25,7 +25,7 @@ import ScrollToTop from './components/ScrollToTop';
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
   { path: '/wypozyczalnia', name: 'Wypożyczalnia' },
-  { path: '/transfery', name: 'Transfery' },
+  { path: '/transfery', name: 'Auto z kierowcą' },
   { path: '/zakup', name: 'Zakup' },
   { path: '/ubezpieczenia', name: 'Ubezpieczenia' },
   { path: '/finansowanie', name: 'Finansowanie' },

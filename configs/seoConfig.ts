@@ -30,8 +30,9 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     ogImage: 'https://img.apolloplug.com/img/tesla-3-low-600x400.jpg',
   },
   '/transfery': {
-    title: 'Transfery VIP Tesla',
-    description: 'Zamów profesjonalny i dyskretny transfer VIP naszą luksusową flotą Tesli. Idealne na lotnisko, spotkania biznesowe i specjalne okazje.',
+    title: 'Auto z kierowcą',
+    description:
+      'Zamów auto z kierowcą w Warszawie – kierowca do zadań specjalnych.',
     ogImage: 'https://img.apolloplug.com/tesla-y/tesla-y-01.jpg',
   },
   '/zakup': {

@@ -19,7 +19,7 @@ export const HERO_CARS: HeroCar[] = [
     primaryBtnLink: '/wypozyczalnia',
     secondaryBtnText: 'Zobacz flotę',
     secondaryBtnLink: '/flota',
-    theme: 'light',
+    theme: 'dark',
   },
   {
     id: '3',
@@ -30,6 +30,6 @@ export const HERO_CARS: HeroCar[] = [
     primaryBtnLink: '/transfery',
     secondaryBtnText: 'Zobacz flotę',
     secondaryBtnLink: '/flota',
-    theme: 'light',
+    theme: 'dark',
   }
 ];

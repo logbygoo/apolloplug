@@ -101,7 +101,7 @@ const ExitIntentModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-background text-foreground max-w-xl w-full mx-4 rounded-2xl shadow-2xl border border-border p-6 md:p-8">
+      <div className="bg-background text-foreground max-w-xl w-full mx-4 rounded-2xl shadow-2xl border border-border p-6 md:p-8 max-h-[80vh] overflow-y-auto">
         {sent ? (
           <div className="text-center space-y-3">
             <h2 className="text-2xl font-semibold">Dziękujemy za opinię!</h2>

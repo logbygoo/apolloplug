@@ -430,3 +430,41 @@ export const createContactCustomerEmailPayload = (name: string, email: string, m
         reply_to: "office@apolloplug.com",
     };
 };
+
+// ============================================================================
+// === WYJŚCIE ZE STRONY (EXIT-INTENT)
+// ============================================================================
+
+export const createExitIntentFeedbackEmailPayload = (data: {
+  reasons: string[];
+  message: string;
+  contactEmail: string;
+  contactPhone: string;
+  path: string;
+}): EmailPayload => {
+  const reasonsText = data.reasons.length ? data.reasons.join(', ') : 'Brak zaznaczonych powodów';
+
+  const content = `
+    <p><b>Adres strony:</b> ${data.path}</p>
+    <p><b>Powody odejścia:</b> ${reasonsText}</p>
+    <p><b>Opis / komentarz użytkownika:</b></p>
+    <div style="background-color: #f4f4f4; border-radius: 4px; padding: 15px; border-left: 3px solid #ccc; margin-bottom: 16px;">
+      <p style="margin:0;">${(data.message || '').trim().replace(/\n/g, "<br>") || '—'}</p>
+    </div>
+    <p><b>Dane kontaktowe (opcjonalne):</b></p>
+    <ul>
+      <li><b>E-mail:</b> ${data.contactEmail || '—'}</li>
+      <li><b>Telefon:</b> ${data.contactPhone || '—'}</li>
+    </ul>
+  `;
+
+  const html = createSimpleLayout('Użytkownik chciał opuścić stronę', content);
+
+  return {
+    to: "office@apolloplug.com",
+    from: "Apollo Plug <office@apolloplug.com>",
+    subject: "Exit-intent: użytkownik wychodzi ze strony",
+    html,
+    reply_to: data.contactEmail || "office@apolloplug.com",
+  };
+};

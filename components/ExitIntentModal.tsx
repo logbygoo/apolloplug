@@ -6,6 +6,7 @@ const STORAGE_KEY = 'apolloplug_exit_intent_shown';
 
 const ExitIntentModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEligible, setIsEligible] = useState(false);
   const [reasons, setReasons] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [contactEmail, setContactEmail] = useState('');
@@ -13,7 +14,15 @@ const ExitIntentModal: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
 
+  // Włącz wyświetlanie dopiero po kilku sekundach obecności na stronie
   useEffect(() => {
+    const timer = setTimeout(() => setIsEligible(true), 8000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!isEligible) return;
+
     const handler = (e: MouseEvent) => {
       const alreadyShown = sessionStorage.getItem(STORAGE_KEY);
       if (alreadyShown === 'true' || isOpen) return;
@@ -33,14 +42,25 @@ const ExitIntentModal: React.FC = () => {
       }
     };
 
+    const visibilityHandler = () => {
+      const alreadyShown = sessionStorage.getItem(STORAGE_KEY);
+      if (alreadyShown === 'true' || isOpen) return;
+      if (document.visibilityState === 'hidden') {
+        setIsOpen(true);
+        sessionStorage.setItem(STORAGE_KEY, 'true');
+      }
+    };
+
     document.addEventListener('mouseleave', handler);
     window.addEventListener('mouseout', handler);
+    document.addEventListener('visibilitychange', visibilityHandler);
 
     return () => {
       document.removeEventListener('mouseleave', handler);
       window.removeEventListener('mouseout', handler);
+      document.removeEventListener('visibilitychange', visibilityHandler);
     };
-  }, [isOpen]);
+  }, [isOpen, isEligible]);
 
   const toggleReason = (value: string) => {
     setReasons(prev =>

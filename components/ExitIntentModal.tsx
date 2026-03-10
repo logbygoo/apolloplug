@@ -17,14 +17,29 @@ const ExitIntentModal: React.FC = () => {
     const handler = (e: MouseEvent) => {
       const alreadyShown = sessionStorage.getItem(STORAGE_KEY);
       if (alreadyShown === 'true' || isOpen) return;
-      if (e.clientY <= 0) {
+
+      const y = e.clientY;
+      const from = e.relatedTarget as HTMLElement | null;
+
+      // Safari/Firefox często nie wywołują document.mouseleave.
+      // Warunek poniżej łapie klasyczne "wyjście górą" dla różnych przeglądarek.
+      const isLeavingWindowTop =
+        y <= 0 ||
+        (from === null && e.type === 'mouseout' && y < 50);
+
+      if (isLeavingWindowTop) {
         setIsOpen(true);
         sessionStorage.setItem(STORAGE_KEY, 'true');
       }
     };
 
     document.addEventListener('mouseleave', handler);
-    return () => document.removeEventListener('mouseleave', handler);
+    window.addEventListener('mouseout', handler);
+
+    return () => {
+      document.removeEventListener('mouseleave', handler);
+      window.removeEventListener('mouseout', handler);
+    };
   }, [isOpen]);
 
   const toggleReason = (value: string) => {

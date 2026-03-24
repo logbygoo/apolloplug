@@ -4,7 +4,7 @@ import { Button, Input, Label, PageHeader } from '../components/ui';
 import { RENTAL_CARS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
 import { LOCATIONS, Location } from '../configs/locationsConfig';
 import { BRANDS } from '../constants';
-import { CreditCardIcon, ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, BuildingLibraryIcon, BanknotesIcon, CalendarDaysIcon, PayUIcon, RevolutPayIcon } from '../icons';
+import { ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, CalendarDaysIcon } from '../icons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentConfirmationAdminEmailPayload } from '../configs/notifications/emailTemplates';
@@ -280,7 +280,8 @@ const RentalPage: React.FC = () => {
     
     const [submitted, setSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
+    const [selectedPaymentMethod] = useState('payu');
+    const [reservationNumber, setReservationNumber] = useState(() => sessionStorage.getItem('rentalReservationNumber') || '');
     
     const [agreements, setAgreements] = useState({
         terms: false,
@@ -295,6 +296,12 @@ const RentalPage: React.FC = () => {
     useEffect(() => {
         sessionStorage.setItem('rentalFormData', JSON.stringify(formData));
     }, [formData]);
+
+    useEffect(() => {
+        if (reservationNumber) {
+            sessionStorage.setItem('rentalReservationNumber', reservationNumber);
+        }
+    }, [reservationNumber]);
 
     useEffect(() => {
         if (step === 'details') {
@@ -436,6 +443,11 @@ const RentalPage: React.FC = () => {
                 });
             }
 
+            if (!reservationNumber) {
+                const generatedReservationNumber = `AP-${Date.now()}`;
+                setReservationNumber(generatedReservationNumber);
+            }
+
             setStep('payment');
         } catch (error) {
             console.error("Failed to send reservation email:", error);
@@ -489,23 +501,23 @@ const RentalPage: React.FC = () => {
         return crumbs;
     }, [formData.model]);
 
-    const paymentMethods = [
-      { id: 'card', name: 'Karta płatnicza', icon: CreditCardIcon },
-      { id: 'payu', name: 'PayU', icon: PayUIcon },
-      { id: 'revolut', name: 'RevolutPay', icon: RevolutPayIcon },
-      { id: 'transfer', name: 'Przelew', icon: BuildingLibraryIcon },
-      { id: 'cash', name: 'Płatność przy odbiorze', icon: BanknotesIcon },
-    ];
+    const paymentMethods = [{ id: 'payu', name: 'PayU' }];
+
+    const paymentAmount = summary.totalWithDeposit > 0 ? summary.totalWithDeposit.toFixed(2) : '0.00';
+    const paymentName = reservationNumber || `AP-${Date.now()}`;
+    const payuPaymentUrl = `https://rent.ffgroup.pl/pay/?name=${encodeURIComponent(paymentName)}&amount=${encodeURIComponent(paymentAmount)}`;
     
     const startNewReservation = () => {
         sessionStorage.removeItem('rentalStep');
         sessionStorage.removeItem('rentalFormData');
+        sessionStorage.removeItem('rentalReservationNumber');
         setFormData(getInitialFormData(null));
         setAgreements({
             terms: false,
             marketing: false,
             commercial: false,
         });
+        setReservationNumber('');
         setSubmitted(false);
         setStep('details');
     };
@@ -776,77 +788,17 @@ const RentalPage: React.FC = () => {
                       <div className="lg:col-span-2">
                         <FormSection title="Metoda płatności">
                            <div className="space-y-3">
-                                {paymentMethods.map(method => {
-                                    const isSelected = selectedPaymentMethod === method.id;
-                                    return (
-                                        <div key={method.id} className={`border rounded-lg transition-colors duration-300 ${isSelected ? 'border-sky-300' : 'border-border'}`}>
-                                            <div
-                                                onClick={() => setSelectedPaymentMethod(method.id)}
-                                                className={`flex items-center gap-4 p-4 cursor-pointer transition-colors ${
-                                                    isSelected ? 'bg-secondary/50 rounded-t-lg' : 'bg-card hover:bg-secondary/25 rounded-lg'
-                                                }`}
-                                            >
-                                                <method.icon className="w-8 h-8 text-foreground" />
-                                                <span className="font-medium">{method.name}</span>
-                                                <div className="ml-auto">
-                                                    <div className={`h-6 w-6 rounded-full flex items-center justify-center border-2 transition-all ${isSelected ? 'border-foreground bg-foreground' : 'border-border'}`}>
-                                                        {isSelected && <CheckIcon className="w-3.5 h-3.5 text-background" strokeWidth={4} />}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                                                    isSelected ? 'max-h-[500px]' : 'max-h-0'
-                                                }`}
-                                            >
-                                                <div className="p-6 bg-sky-50 border-t border-sky-300">
-                                                    {method.id === 'card' ? (
-                                                    <div>
-                                                        <h3 className="text-lg font-semibold mb-4">Dane karty płatniczej</h3>
-                                                        <div className="grid gap-4">
-                                                            <div className="relative">
-                                                                <Label htmlFor="cardNumber">Numer karty</Label>
-                                                                <Input id="cardNumber" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
-                                                                <CreditCardIcon className="absolute right-3 top-9 w-5 h-5 text-muted-foreground" />
-                                                            </div>
-                                                            <div className="grid grid-cols-2 gap-4">
-                                                                <div>
-                                                                    <Label htmlFor="cardExpiry">Data ważności (MM/RR)</Label>
-                                                                    <Input id="cardExpiry" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
-                                                                </div>
-                                                                <div>
-                                                                    <Label htmlFor="cardCVC">Kod CVC</Label>
-                                                                    <Input id="cardCVC" required={selectedPaymentMethod === 'card'} className="mt-1 bg-white" />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    ) : method.id === 'payu' ? (
-                                                    <div>
-                                                        <h3 className="text-lg font-semibold mb-2">Płatność PayU</h3>
-                                                        <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany na stronę operatora płatności PayU, aby bezpiecznie dokończyć transakcję.</p>
-                                                    </div>
-                                                    ) : method.id === 'revolut' ? (
-                                                    <div>
-                                                        <h3 className="text-lg font-semibold mb-2">Płatność RevolutPay</h3>
-                                                        <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany do aplikacji Revolut lub na stronę RevolutPay w celu autoryzacji płatności.</p>
-                                                    </div>
-                                                    ) : method.id === 'transfer' ? (
-                                                    <div>
-                                                        <h3 className="text-lg font-semibold mb-2">Przelew bankowy</h3>
-                                                        <p className="text-muted-foreground">Wszystkie niezbędne dane do wykonania przelewu tradycyjnego otrzymasz w wiadomości e-mail z potwierdzeniem rezerwacji.</p>
-                                                    </div>
-                                                    ) : method.id === 'cash' ? (
-                                                    <div>
-                                                        <h3 className="text-lg font-semibold mb-2">Płatność przy odbiorze</h3>
-                                                        <p className="text-muted-foreground">Zapłacisz za rezerwację gotówką lub kartą bezpośrednio w naszym punkcie podczas odbioru pojazdu.</p>
-                                                    </div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
+                                {paymentMethods.map(method => (
+                                    <div key={method.id} className="border rounded-lg border-sky-300">
+                                        <div className="flex items-center p-4 bg-secondary/50 rounded-t-lg">
+                                            <span className="font-medium">{method.name}</span>
                                         </div>
-                                    );
-                                })}
+                                        <div className="p-6 bg-sky-50 border-t border-sky-300">
+                                            <h3 className="text-lg font-semibold mb-2">Płatność PayU</h3>
+                                            <p className="text-muted-foreground">Po kliknięciu przycisku "Opłać rezerwację" zostaniesz przekierowany na stronę operatora płatności PayU, aby bezpiecznie dokończyć transakcję.</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </FormSection>
                       </div>
@@ -864,12 +816,20 @@ const RentalPage: React.FC = () => {
                                           <div className="flex justify-between text-sm"><span className="text-muted-foreground">Odbiór auta</span><span className="font-medium">{`${summary.returnFee.toLocaleString('pl-PL')} zł`}</span></div>
                                       )}
                                       <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
-                                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
+                                      <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja (płatna przy odbiorze)</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
                                       <div className="flex justify-between font-bold pt-2 mt-2"><span className="text-muted-foreground">Do zapłaty łącznie</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                   </div>
                                   <div className="flex flex-col gap-3">
-                                      <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-                                        {isLoading ? 'Przetwarzanie...' : 'Opłać rezerwację'}
+                                      <Button
+                                        type="button"
+                                        size="lg"
+                                        className="w-full"
+                                        disabled={isLoading || summary.totalWithDeposit <= 0}
+                                        onClick={() => {
+                                          window.location.href = payuPaymentUrl;
+                                        }}
+                                      >
+                                        Opłać rezerwację
                                       </Button>
                                       <Button onClick={() => setStep('details')} variant="secondary" className="w-full" type="button" disabled={isLoading}>Wypełnij formularz rezerwacyjny ponownie</Button>
                                   </div>

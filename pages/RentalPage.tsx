@@ -503,7 +503,7 @@ const RentalPage: React.FC = () => {
 
     const paymentMethods = [{ id: 'payu', name: 'PayU' }];
 
-    const paymentAmount = summary.totalWithDeposit > 0 ? summary.totalWithDeposit.toFixed(2) : '0.00';
+    const paymentAmount = summary.totalPrice > 0 ? summary.totalPrice.toFixed(2) : '0.00';
     const paymentName = reservationNumber || `AP-${Date.now()}`;
     const payuPaymentUrl = `https://rent.ffgroup.pl/pay/?name=${encodeURIComponent(paymentName)}&amount=${encodeURIComponent(paymentAmount)}`;
     
@@ -760,7 +760,7 @@ const RentalPage: React.FC = () => {
                                                 <div className="flex justify-between"><span className="text-muted-foreground">Opcje dodatkowe</span><span className="font-medium">{summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}</span></div>
                                                 <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                                 <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
-                                                <div className="flex justify-between text-sm pt-2"><span className="text-muted-foreground">Do zapłaty (z kaucją)</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                                <div className="flex justify-between text-sm pt-2"><span className="text-muted-foreground">Do zapłaty (za wynajem)</span><span className="font-medium">{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                             </div>
                                             <Button type="submit" size="lg" className="w-full" disabled={!canProceed || isLoading}>
                                                 {isLoading ? 'Przetwarzanie...' : 'Przejdź do płatności'}
@@ -817,14 +817,14 @@ const RentalPage: React.FC = () => {
                                       )}
                                       <div className="flex justify-between text-xl font-bold text-primary border-t border-border pt-2 mt-2"><span >Cena łącznie</span><span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                       <div className="flex justify-between text-sm"><span className="text-muted-foreground">Kaucja (płatna przy odbiorze)</span><span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span></div>
-                                      <div className="flex justify-between font-bold pt-2 mt-2"><span className="text-muted-foreground">Do zapłaty łącznie</span><span className="font-medium">{summary.totalWithDeposit > 0 ? `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł` : '-'}</span></div>
+                                      <div className="flex justify-between font-bold pt-2 mt-2"><span className="text-muted-foreground">Do zapłaty (za wynajem)</span><span className="font-medium">{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span></div>
                                   </div>
                                   <div className="flex flex-col gap-3">
                                       <Button
                                         type="button"
                                         size="lg"
                                         className="w-full"
-                                        disabled={isLoading || summary.totalWithDeposit <= 0}
+                                        disabled={isLoading || summary.totalPrice <= 0}
                                         onClick={() => {
                                           window.location.href = payuPaymentUrl;
                                         }}

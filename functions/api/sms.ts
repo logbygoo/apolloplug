@@ -1,6 +1,7 @@
 /**
  * Wysyłka SMS przez SMSAPI (OAuth Bearer). W starym workerze był osobny endpoint;
- * oczekiwany payload z frontu: { to, message, from } (from = nadawca alfanum., np. apolloplug).
+ * oczekiwany payload z frontu: { to, message, from } (from = nadawca alfanum., max 11 znaków).
+ * SMSAPI domyślnie traktuje treść jako windows-1250 — bez encoding=utf-8 polskie znaki się psują.
  */
 interface Env {
   SMSAPI_TOKEN: string;
@@ -73,6 +74,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     message,
     from: String(from).slice(0, 11),
     format: 'json',
+    // Domyślnie SMSAPI używa windows-1250 — UTF-8 z frontu musi być jawnie zadeklarowany.
+    encoding: 'utf-8',
+    // Zastąpienie polskich znaków zwykłymi (ą→a itd.) — zgodnie z dokumentacją SMSAPI.
+    normalize: '1',
   });
 
   const res = await fetch('https://api.smsapi.pl/sms.do', {

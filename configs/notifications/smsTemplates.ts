@@ -17,6 +17,8 @@ interface SmsPayload {
   from: string;
 }
 
+const SMS_SENDER = 'Apollo';
+
 // ============================================================================
 // === POWIADOMIENIA SMS Z WYNAJMU (RENTAL)
 // ============================================================================
@@ -34,7 +36,7 @@ export const createReservationAdminSmsPayload = (formData: FormData, summary: Su
     return {
         to: "720100600",
         message,
-        from: "apolloplug"
+        from: SMS_SENDER
     };
 };
 
@@ -49,7 +51,7 @@ export const createReservationCustomerSmsPayload = (formData: FormData): SmsPayl
     return {
         to: formData.phone,
         message,
-        from: "apolloplug"
+        from: SMS_SENDER
     };
 };
 
@@ -71,7 +73,7 @@ export const createTransferAdminSmsPayload = (formData: TransferFormData, summar
     return {
         to: "720100600",
         message,
-        from: "apolloplug"
+        from: SMS_SENDER
     };
 };
 
@@ -86,6 +88,6 @@ export const createTransferCustomerSmsPayload = (formData: TransferFormData): Sm
     return {
         to: formData.customerPhone,
         message,
-        from: "apolloplug"
+        from: SMS_SENDER
     };
 };

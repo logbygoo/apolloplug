@@ -1,10 +1,17 @@
 import React from 'react';
 
-export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => (
-    <div className="flex items-center text-xl tracking-tight" {...props}>
-        <span className="font-zen-dots">apollo</span>
-        <span className="bg-black text-white px-2 py-0.5 rounded-sm ml-1 font-zen-dots">plug</span>
-    </div>
+export const APOLLO_IDEA_LOGO_SRC = 'https://img.apolloidea.com/img/apolloidea-logo.svg';
+
+export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...rest }) => (
+  <div className={['flex items-center', className].filter(Boolean).join(' ')} {...rest}>
+    <img
+      src={APOLLO_IDEA_LOGO_SRC}
+      alt="Apollo Idea"
+      width={140}
+      className="h-auto w-[140px] max-w-[140px] shrink-0 object-contain object-left"
+      decoding="async"
+    />
+  </div>
 );
 
 export const BRANDS = [

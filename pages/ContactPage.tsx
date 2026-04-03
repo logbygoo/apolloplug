@@ -102,8 +102,8 @@ const ContactPage: React.FC = () => {
     { name: 'WhatsApp', icon: WhatsAppIcon, href: 'https://wa.me/48500308400' },
     { name: 'Telegram', icon: TelegramIcon, href: 'https://t.me/apolloplugcom' },
     { name: 'Messenger', icon: MessengerIcon, href: 'https://m.me/apolloplug' },
-    { name: 'Instagram', icon: InstagramIcon, href: 'https://instagram.com/apolloplugcom' },
-    { name: 'TikTok', icon: TikTokIcon, href: 'https://tiktok.com/@apolloplug.com' },
+    { name: 'Instagram', icon: InstagramIcon, href: 'https://instagram.com/apolloidea' },
+    { name: 'TikTok', icon: TikTokIcon, href: 'https://tiktok.com/@apolloidea' },
   ];
 
   return (

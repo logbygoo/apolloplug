@@ -8,7 +8,7 @@ export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = (p
 );
 
 export const BRANDS = [
-  { id: 'tesla', name: 'Tesla', logoUrl: 'https://img.apolloplug.com/img/logo-tesla-black.png', available: true },
-  { id: 'mercedes', name: 'Porsche', logoUrl: 'https://img.apolloplug.com/img/logo-mercedes-black.png', available: false },
-  { id: 'bud', name: 'BMW', logoUrl: 'https://img.apolloplug.com/img/logo-byd-black.png', available: false },
+  { id: 'tesla', name: 'Tesla', logoUrl: 'https://img.apolloidea.com/img/logo-tesla-black.png', available: true },
+  { id: 'mercedes', name: 'Porsche', logoUrl: 'https://img.apolloidea.com/img/logo-mercedes-black.png', available: false },
+  { id: 'bud', name: 'BMW', logoUrl: 'https://img.apolloidea.com/img/logo-byd-black.png', available: false },
 ];

@@ -136,7 +136,7 @@ const BlogArticlePage: React.FC = () => {
                         className="w-full h-auto object-cover max-h-[500px]"
                         onError={(e) => {
                             // Fallback if main image fails
-                            (e.target as HTMLImageElement).src = 'https://img.apolloplug.com/og/default.jpg';
+                            (e.target as HTMLImageElement).src = 'https://img.apolloidea.com/og/default.jpg';
                         }}
                     />
                 </div>

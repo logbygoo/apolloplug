@@ -132,12 +132,12 @@ const Footer: React.FC = () => {
         
         {/* Payment Icons */}
         <div className="mt-[100px] mb-8 flex flex-wrap justify-center items-center gap-4 opacity-70 grayscale hover:grayscale-0 transition-all duration-300">
-            <img src="https://img.apolloplug.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
-            <img src="https://img.apolloplug.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
-            <img src="https://img.apolloplug.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
-            <img src="https://img.apolloplug.com/img/pay-visa.svg" alt="Visa" className="h-6" />
-            <img src="https://img.apolloplug.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
-            <img src="https://img.apolloplug.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
+            <img src="https://img.apolloidea.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
+            <img src="https://img.apolloidea.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
+            <img src="https://img.apolloidea.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
+            <img src="https://img.apolloidea.com/img/pay-visa.svg" alt="Visa" className="h-6" />
+            <img src="https://img.apolloidea.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
+            <img src="https://img.apolloidea.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
         </div>
 
         <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-4">

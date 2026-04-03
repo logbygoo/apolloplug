@@ -382,7 +382,7 @@ const HomePage: React.FC = () => {
 
   const vehicleCarouselItems: CarouselItem[] = [
     {
-      image: "https://img.apolloplug.com/tesla-3/main-cards-tesla-3.jpg",
+      image: "https://img.apolloidea.com/tesla-3/main-cards-tesla-3.jpg",
       category: 'Sportowy sedan',
       title: 'Model 3',
       subtitle: 'Już za 194 990 zł',
@@ -390,7 +390,7 @@ const HomePage: React.FC = () => {
       secondaryBtnText: 'Auto z kierowcą',
     },
     {
-      image: "https://img.apolloplug.com/tesla-y/main-cards-tesla-y.jpg",
+      image: "https://img.apolloidea.com/tesla-y/main-cards-tesla-y.jpg",
       category: 'Średniej wielkości SUV',
       title: 'Model Y',
       subtitle: 'Już za 219 990 zł',
@@ -398,7 +398,7 @@ const HomePage: React.FC = () => {
       secondaryBtnText: 'Auto z kierowcą',
     },
     {
-      image: "https://img.apolloplug.com/tesla-x/main-cards-tesla-x.jpg",
+      image: "https://img.apolloidea.com/tesla-x/main-cards-tesla-x.jpg",
       category: 'Luksusowy SUV',
       title: 'Model X',
       subtitle: 'Niedoścignione osiągi',
@@ -406,7 +406,7 @@ const HomePage: React.FC = () => {
       secondaryBtnText: 'Auto z kierowcą',
     },
     {
-      image: "https://img.apolloplug.com/tesla-s/main-cards-tesla-s.jpg",
+      image: "https://img.apolloidea.com/tesla-s/main-cards-tesla-s.jpg",
       category: 'Luksusowy sedan',
       title: 'Model S',
       subtitle: 'Najwyższe przyśpieszenie',
@@ -414,7 +414,7 @@ const HomePage: React.FC = () => {
       secondaryBtnText: 'Auto z kierowcą',
     },
     {
-      image: "https://img.apolloplug.com/cybertruck/main-cards-tesla-cybertruck.jpg",
+      image: "https://img.apolloidea.com/cybertruck/main-cards-tesla-cybertruck.jpg",
       category: 'Nie z tej planety',
       title: 'Tesla Cybertruck',
       subtitle: 'Tak bardzo inny',
@@ -488,7 +488,7 @@ const HomePage: React.FC = () => {
               <Button variant="secondary" className="mt-6 bg-white hover:bg-zinc-200 text-secondary-foreground shadow-sm">Umów się na jazdę próbną</Button>
             </div>
             <img 
-              src="https://img.apolloplug.com/img/tesla-3-low-600x400.jpg"
+              src="https://img.apolloidea.com/img/tesla-3-low-600x400.jpg"
               alt="Koło Tesli"
               className="absolute w-[350px] h-auto -right-12 -bottom-16 transition-transform duration-300 group-hover:scale-105"
             />
@@ -500,7 +500,7 @@ const HomePage: React.FC = () => {
               <Button variant="secondary" className="mt-6 bg-white hover:bg-zinc-200 text-secondary-foreground shadow-sm">Kup teraz</Button>
             </div>
             <img 
-              src="https://img.apolloplug.com/img/tesla-cybertruck-low-600x400.jpg" 
+              src="https://img.apolloidea.com/img/tesla-cybertruck-low-600x400.jpg" 
               alt="Bagażnik dachowy Tesli"
               className="absolute w-[450px] h-auto -right-16 bottom-0 transition-transform duration-300 group-hover:scale-105"
             />

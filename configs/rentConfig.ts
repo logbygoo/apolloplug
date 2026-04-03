@@ -6,11 +6,11 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-3-highland',
     name: 'Model 3 Highland',
     imageUrl: [
-      'https://img.apolloplug.com/img/tesla-3-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-3-low-600x400.jpg',
     ],
     // Zdjęcia wyświetlane w Sliderze na stronie /wypozycz/tesla-3-highland
     landingPageImages: [
-        'https://img.apolloplug.com/tesla-3/main-cards-tesla-3.jpg',
+        'https://img.apolloidea.com/tesla-3/main-cards-tesla-3.jpg',
         'https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Model-3-Performance-Hero-Desktop-LHD',
         'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Model-3-Interior-Desktop-LHD'
     ],
@@ -39,7 +39,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-y-juniper',
     name: 'Model Y Juniper',
     imageUrl: [
-      'https://img.apolloplug.com/img/tesla-y-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-y-low-600x400.jpg',
     ],
     pricePerDay: 890,
     available: true,
@@ -66,7 +66,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-x',
     name: 'Model X',
     imageUrl: [
-      'https://img.apolloplug.com/img/tesla-x-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-x-low-600x400.jpg',
     ],
     pricePerDay: 450,
     available: false,
@@ -92,7 +92,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-cybertruck',
     name: 'Cybertruck',
     imageUrl: [
-      'https://img.apolloplug.com/img/tesla-cybertruck-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-cybertruck-low-600x400.jpg',
     ],
     pricePerDay: 600,
     available: false,

@@ -6,7 +6,7 @@ export const CAR_FLEET: Car[] = [
     name: 'Tesla Model 3',
     description: 'Najnowsza odsłona bestsellera. Cichsza kabina, lepsze zawieszenie i jeszcze większy zasięg. Idealny sedan do miasta i w trasę.',
     imageUrl: [
-      'https://img.apolloplug.com/tesla-3/main-cards-tesla-3.jpg',
+      'https://img.apolloidea.com/tesla-3/main-cards-tesla-3.jpg',
     ],
     pricePerDay: 330,
     costPerKmOverLimit: 3,
@@ -21,7 +21,7 @@ export const CAR_FLEET: Car[] = [
     name: 'Tesla Model Y',
     description: 'Najpopularniejszy elektryczny SUV na świecie w nowej wersji Juniper. Przestronne wnętrze, ogromny bagażnik i wszechstronność.',
     imageUrl: [
-      'https://img.apolloplug.com/tesla-y/tesla-y-02.jpg',
+      'https://img.apolloidea.com/tesla-y/tesla-y-02.jpg',
     ],
     pricePerDay: 890,
     costPerKmOverLimit: 3.5,
@@ -36,7 +36,7 @@ export const CAR_FLEET: Car[] = [
     name: 'Tesla Model X',
     description: 'Bezkompromisowy luksus. Drzwi Falcon Wing, panoramiczna szyba i osiągi samochodu sportowego w nadwoziu dużego SUV-a.',
     imageUrl: [
-      'https://img.apolloplug.com/tesla-x/main-cards-tesla-x.jpg',
+      'https://img.apolloidea.com/tesla-x/main-cards-tesla-x.jpg',
     ],
     pricePerDay: 1490,
     costPerKmOverLimit: 5,
@@ -51,7 +51,7 @@ export const CAR_FLEET: Car[] = [
     name: 'Tesla Model S',
     description: 'Ikona elektromobilności w wersji Plaid. Niesamowite przyspieszenie, wolant zamiast kierownicy i komfort limuzyny.',
     imageUrl: [
-      'https://img.apolloplug.com/tesla-s/main-cards-tesla-s.jpg',
+      'https://img.apolloidea.com/tesla-s/main-cards-tesla-s.jpg',
     ],
     pricePerDay: 1290,
     costPerKmOverLimit: 4,
@@ -66,7 +66,7 @@ export const CAR_FLEET: Car[] = [
     name: 'Tesla Cybertruck',
     description: 'Pojazd nie z tej ziemi. Kuloodporna stal, futurystyczny design i możliwości terenowe, które zawstydzają konkurencję.',
     imageUrl: [
-      'https://img.apolloplug.com/cybertruck/main-cards-tesla-cybertruck.jpg',
+      'https://img.apolloidea.com/cybertruck/main-cards-tesla-cybertruck.jpg',
     ],
     pricePerDay: 2990,
     costPerKmOverLimit: 10,

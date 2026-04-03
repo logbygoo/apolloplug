@@ -80,7 +80,7 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
                     <!-- Footer -->
                     <tr>
                         <td align="center" style="padding: 24px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
-                            <p style="margin: 0 0 8px 0;">Masz pytania? Skontaktuj się z nami pod adresem <a href="mailto:office@apolloplug.com" style="color: #111827; text-decoration: none;">office@apolloplug.com</a></p>
+                            <p style="margin: 0 0 8px 0;">Masz pytania? Skontaktuj się z nami pod adresem <a href="mailto:office@apolloidea.com" style="color: #111827; text-decoration: none;">office@apolloidea.com</a></p>
                             <p style="margin: 0;">apolloplug.com &copy; ${new Date().getFullYear()}</p>
                         </td>
                     </tr>
@@ -199,8 +199,8 @@ export const createReservationAdminEmailPayload = (
 
     // --- Konfiguracja i zwrot payloadu ---
     return {
-        to: "office@apolloplug.com",
-        from: "apolloplug.com <office@apolloplug.com>",
+        to: "office@apolloidea.com",
+        from: "apolloplug.com <office@apolloidea.com>",
         subject: `WYNAJEM: ${data.model.name} (${data.fullName})`,
         html,
         reply_to: data.email,
@@ -237,10 +237,10 @@ export const createReservationCustomerEmailPayload = (data: FormData, summary: a
     // --- Konfiguracja i zwrot payloadu ---
     return {
         to: data.email,
-        from: "apolloplug.com <office@apolloplug.com>",
+        from: "apolloplug.com <office@apolloidea.com>",
         subject: `Podsumowanie rezerwacji: ${data.model.name}`,
         html,
-        reply_to: "office@apolloplug.com",
+        reply_to: "office@apolloidea.com",
     };
 };
 
@@ -275,8 +275,8 @@ export const createPaymentConfirmationAdminEmailPayload = (
     );
 
     return {
-        to: "office@apolloplug.com",
-        from: "apolloplug.com <office@apolloplug.com>",
+        to: "office@apolloidea.com",
+        from: "apolloplug.com <office@apolloidea.com>",
         subject: `PŁATNOŚĆ: ${data.model.name} (${data.fullName})`,
         html,
         reply_to: data.email,
@@ -327,8 +327,8 @@ export const createTransferAdminEmailPayload = (data: TransferFormData, summary:
     
     // --- Konfiguracja i zwrot payloadu ---
     return {
-        to: "office@apolloplug.com",
-        from: "apolloplug.com <office@apolloplug.com>",
+        to: "office@apolloidea.com",
+        from: "apolloplug.com <office@apolloidea.com>",
         subject: `TRANSFER: ${data.selectedCar?.name} (${data.customerName})`,
         html,
         reply_to: data.customerEmail,
@@ -370,10 +370,10 @@ export const createTransferCustomerEmailPayload = (data: TransferFormData, summa
     // --- Konfiguracja i zwrot payloadu ---
     return {
         to: data.customerEmail,
-        from: "apolloplug.com <office@apolloplug.com>",
+        from: "apolloplug.com <office@apolloidea.com>",
         subject: `Podsumowanie zamówienia transferu: ${data.selectedCar?.name}`,
         html,
-        reply_to: "office@apolloplug.com",
+        reply_to: "office@apolloidea.com",
     };
 };
 
@@ -398,8 +398,8 @@ export const createContactAdminEmailPayload = (name: string, email: string, mess
     
     // --- Konfiguracja i zwrot payloadu ---
     return {
-        to: "office@apolloplug.com",
-        from: "Apollo Plug <office@apolloplug.com>",
+        to: "office@apolloidea.com",
+        from: "Apollo Plug <office@apolloidea.com>",
         subject: `Nowe zapytanie ze strony: ${name}`,
         html,
         reply_to: email,
@@ -424,10 +424,10 @@ export const createContactCustomerEmailPayload = (name: string, email: string, m
     // --- Konfiguracja i zwrot payloadu ---
     return {
         to: email,
-        from: "Apollo Plug <no-reply@mail.apolloplug.com>",
+        from: "Apollo Plug <office@apolloidea.com>",
         subject: "Potwierdzenie otrzymania wiadomości | ApolloPlug.com",
         html,
-        reply_to: "office@apolloplug.com",
+        reply_to: "office@apolloidea.com",
     };
 };
 
@@ -461,10 +461,10 @@ export const createExitIntentFeedbackEmailPayload = (data: {
   const html = createSimpleLayout('Użytkownik chciał opuścić stronę', content);
 
   return {
-    to: "office@apolloplug.com",
-    from: "Apollo Plug <office@apolloplug.com>",
+    to: "office@apolloidea.com",
+    from: "Apollo Plug <office@apolloidea.com>",
     subject: "Exit-intent: użytkownik wychodzi ze strony",
     html,
-    reply_to: data.contactEmail || "office@apolloplug.com",
+    reply_to: data.contactEmail || "office@apolloidea.com",
   };
 };

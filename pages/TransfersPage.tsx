@@ -7,6 +7,7 @@ import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createTransferAdminEmailPayload, createTransferCustomerEmailPayload } from '../configs/notifications/emailTemplates';
 import { createTransferAdminSmsPayload, createTransferCustomerSmsPayload } from '../configs/notifications/smsTemplates';
+import { mailApiUrl, smsApiUrl } from '../configs/notifications/apiEndpoints';
 import { loadGoogleMapsScript } from '../utils/maps';
 import { SEO_CONFIG } from '../configs/seoConfig';
 
@@ -365,7 +366,7 @@ const TransfersPage: React.FC = () => {
     setIsLoading(true);
     try {
         const adminEmailPayload = createTransferAdminEmailPayload(formData, summary);
-        const adminEmailResponse = await fetch("https://mail.apolloplug.com", {
+        const adminEmailResponse = await fetch(mailApiUrl(), {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify(adminEmailPayload),
         });
@@ -373,16 +374,16 @@ const TransfersPage: React.FC = () => {
 
         // Fire and forget customer/sms notifications
         const customerEmailPayload = createTransferCustomerEmailPayload(formData, summary);
-        fetch("https://mail.apolloplug.com", {
+        fetch(mailApiUrl(), {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify(customerEmailPayload),
         }).catch(e => console.warn("Customer email failed", e));
         
         const adminSmsPayload = createTransferAdminSmsPayload(formData, summary);
-        fetch("https://apollosms.spam01.workers.dev/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(adminSmsPayload) }).catch(e => console.warn("Admin SMS failed", e));
+        fetch(smsApiUrl(), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(adminSmsPayload) }).catch(e => console.warn("Admin SMS failed", e));
         
         const customerSmsPayload = createTransferCustomerSmsPayload(formData);
-        fetch("https://apollosms.spam01.workers.dev/", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(customerSmsPayload) }).catch(e => console.warn("Customer SMS failed", e));
+        fetch(smsApiUrl(), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(customerSmsPayload) }).catch(e => console.warn("Customer SMS failed", e));
 
         setStep('submitted');
     } catch (error) {

@@ -112,7 +112,7 @@ export const RentalRulesContent = (
       <section className="section">
         <h2 className="section__title">1. Postanowienia ogólne</h2>
         <ol className="legal">
-          <li>Niniejszy Regulamin określa zasady świadczenia usług najmu pojazdów (dalej: „Usługa” lub „Najem”) przez <strong>forfinance sp. z o.o.</strong> z siedzibą w Warszawie (00-844), ul. Grzybowska 87, NIP 527-283-91-27, REGON 369507931, KRS 0000719398, e-mail: office@apolloplug.com, tel.: +48 500 308 400 (dalej: „Wynajmujący”).</li>
+          <li>Niniejszy Regulamin określa zasady świadczenia usług najmu pojazdów (dalej: „Usługa” lub „Najem”) przez <strong>forfinance sp. z o.o.</strong> z siedzibą w Warszawie (00-844), ul. Grzybowska 87, NIP 527-283-91-27, REGON 369507931, KRS 0000719398, e-mail: office@apolloidea.com, tel.: +48 500 308 400 (dalej: „Wynajmujący”).</li>
           <li>Regulamin jest dostępny na stronie internetowej <strong>apolloplug.com</strong> i może być utrwalony przez Najemcę w dowolny sposób (np. pobranie, wydruk).</li>
           <li>Regulamin stanowi integralną część umowy najmu pojazdu zawieranej pomiędzy Wynajmującym a Najemcą (dalej: „Umowa”). W razie rozbieżności pierwszeństwo mają postanowienia Umowy.</li>
           <li>Najem może być zawierany zarówno z konsumentami, jak i przedsiębiorcami (w tym osobami fizycznymi prowadzącymi działalność gospodarczą).</li>

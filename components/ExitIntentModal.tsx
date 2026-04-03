@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Label } from './ui';
 import { createExitIntentFeedbackEmailPayload } from '../configs/notifications/emailTemplates';
+import { mailApiUrl } from '../configs/notifications/apiEndpoints';
 
 const STORAGE_KEY = 'apolloplug_exit_intent_shown';
 
@@ -81,7 +82,7 @@ const ExitIntentModal: React.FC = () => {
         path: window.location.pathname + window.location.search,
       });
 
-      await fetch('https://mail.apolloplug.com', {
+      await fetch(mailApiUrl(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

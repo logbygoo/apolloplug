@@ -78,7 +78,7 @@ export const TermsOfServiceContent = (
     </p>
     <p>
       1.3. Kontakt z Usługodawcą jest możliwy w szczególności pod następującymi danymi kontaktowymi:
-      adres e-mail: <a href="mailto:office@apolloplug.com">office@apolloplug.com</a>, numer telefonu: +48 500 308 400,
+      adres e-mail: <a href="mailto:office@apolloidea.com">office@apolloidea.com</a>, numer telefonu: +48 500 308 400,
       aktualne dane kontaktowe są każdorazowo dostępne w zakładce <strong>„Kontakt”</strong> Serwisu.
     </p>
     <p>

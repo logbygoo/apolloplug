@@ -122,8 +122,8 @@ const ContactPage: React.FC = () => {
                     500 308 400
                 </a>
             </div>
-            <a href="mailto:office@apolloplug.com" className="mt-4 text-xl md:text-2xl text-muted-foreground hover:text-primary transition-colors block">
-                office@apolloplug.com
+            <a href="mailto:office@apolloidea.com" className="mt-4 text-xl md:text-2xl text-muted-foreground hover:text-primary transition-colors block">
+                office@apolloidea.com
             </a>
         </div>
 
@@ -144,7 +144,7 @@ const ContactPage: React.FC = () => {
             <section>
                 <h2 className="text-2xl font-bold tracking-tight mb-4">Podmiot odpowiedzialny</h2>
                 <div className="text-muted-foreground space-y-1">
-                    <p>apolloplug.com należy do forfinance sp. z o.o., ul. grzybowska 87, 00-844 warszawa, nip: 527-283-91-27, tel. 500-308-400, mail. office@apolloplug.com</p>
+                    <p>apolloplug.com należy do forfinance sp. z o.o., ul. grzybowska 87, 00-844 warszawa, nip: 527-283-91-27, tel. 500-308-400, mail. office@apolloidea.com</p>
                 </div>
             </section>
             <section>

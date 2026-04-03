@@ -9,6 +9,7 @@ import type { Car } from '../types';
 import Seo from '../components/Seo';
 import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentConfirmationAdminEmailPayload } from '../configs/notifications/emailTemplates';
 import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
+import { mailApiUrl, smsApiUrl } from '../configs/notifications/apiEndpoints';
 import { SEO_CONFIG } from '../configs/seoConfig';
 
 // Declare gtag for TypeScript
@@ -402,7 +403,7 @@ const RentalPage: React.FC = () => {
 
         try {
             const adminEmailPayload = createReservationAdminEmailPayload(formData, summary, agreements);
-            const adminResponse = await fetch("https://mail.apolloplug.com", {
+            const adminResponse = await fetch(mailApiUrl(), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(adminEmailPayload),
@@ -410,7 +411,7 @@ const RentalPage: React.FC = () => {
             if (!adminResponse.ok) throw new Error("Network response for admin email was not ok");
             
             const customerEmailPayload = createReservationCustomerEmailPayload(formData, summary);
-            const customerResponse = await fetch("https://mail.apolloplug.com", {
+            const customerResponse = await fetch(mailApiUrl(), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(customerEmailPayload),
@@ -421,14 +422,14 @@ const RentalPage: React.FC = () => {
             
             // Send SMS notifications (fire and forget)
             const adminSmsPayload = createReservationAdminSmsPayload(formData, summary);
-            fetch("https://apollosms.spam01.workers.dev/", {
+            fetch(smsApiUrl(), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(adminSmsPayload),
             }).catch(err => console.warn("Failed to send admin SMS", err));
 
             const customerSmsPayload = createReservationCustomerSmsPayload(formData);
-            fetch("https://apollosms.spam01.workers.dev/", {
+            fetch(smsApiUrl(), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(customerSmsPayload),
@@ -469,7 +470,7 @@ const RentalPage: React.FC = () => {
             const paymentMethodName = paymentMethods.find(p => p.id === selectedPaymentMethod)?.name || 'Nieznana';
             const paymentConfirmationPayload = createPaymentConfirmationAdminEmailPayload(formData, summary, paymentMethodName);
             
-            const response = await fetch("https://mail.apolloplug.com", {
+            const response = await fetch(mailApiUrl(), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(paymentConfirmationPayload),

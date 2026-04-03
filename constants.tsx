@@ -1,6 +1,7 @@
 import React from 'react';
+import { SITE_LOGO_URL } from './configs/site';
 
-export const APOLLO_IDEA_LOGO_SRC = 'https://img.apolloidea.com/img/apolloidea-logo.svg';
+export const APOLLO_IDEA_LOGO_SRC = SITE_LOGO_URL;
 
 export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ className, ...rest }) => (
   <div className={['flex items-center', className].filter(Boolean).join(' ')} {...rest}>

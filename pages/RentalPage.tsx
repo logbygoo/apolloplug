@@ -717,7 +717,7 @@ const RentalPage: React.FC = () => {
                                             <div className="space-y-4">
                                                 <AgreementCheckbox
                                                     id="terms"
-                                                    label={<>Akceptuję{' '}<Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">regulamin</Link>{' '}oraz{' '}<Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">politykę prywatności</Link>{' '}apolloplug.com <span className="text-destructive">*</span></>}
+                                                    label={<>Akceptuję{' '}<Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">regulamin</Link>{' '}oraz{' '}<Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">politykę prywatności</Link>{' '}apolloidea.com <span className="text-destructive">*</span></>}
                                                     isChecked={agreements.terms}
                                                     onToggle={() => handleAgreementToggle('terms')}
                                                 />
@@ -769,12 +769,12 @@ const RentalPage: React.FC = () => {
                                         </div>
                                         <div className="mt-4">
                                             <div className="flex justify-center items-center gap-4">
-                                                <img src="https://img.apolloplug.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
-                                                <img src="https://img.apolloplug.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
-                                                <img src="https://img.apolloplug.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
-                                                <img src="https://img.apolloplug.com/img/pay-visa.svg" alt="Visa" className="h-6" />
-                                                <img src="https://img.apolloplug.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
-                                                <img src="https://img.apolloplug.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
+                                                <img src="https://img.apolloidea.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
+                                                <img src="https://img.apolloidea.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
+                                                <img src="https://img.apolloidea.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
+                                                <img src="https://img.apolloidea.com/img/pay-visa.svg" alt="Visa" className="h-6" />
+                                                <img src="https://img.apolloidea.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
+                                                <img src="https://img.apolloidea.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
                                             </div>
                                         </div>
                                     </div>

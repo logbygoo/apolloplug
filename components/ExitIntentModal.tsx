@@ -3,7 +3,7 @@ import { Button, Input, Label } from './ui';
 import { createExitIntentFeedbackEmailPayload } from '../configs/notifications/emailTemplates';
 import { mailApiUrl } from '../configs/notifications/apiEndpoints';
 
-const STORAGE_KEY = 'apolloplug_exit_intent_shown';
+const STORAGE_KEY = 'apolloidea_exit_intent_shown';
 
 const ExitIntentModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,7 +107,7 @@ const ExitIntentModal: React.FC = () => {
           <div className="text-center space-y-3">
             <h2 className="text-2xl font-semibold">Dziękujemy za opinię!</h2>
             <p className="text-sm text-muted-foreground">
-              Twoja odpowiedź pomaga nam poprawiać apolloplug.com.
+              Twoja odpowiedź pomaga nam poprawiać apolloidea.com.
             </p>
           </div>
         ) : (

@@ -8,5 +8,5 @@ export const COMPANY_DETAILS = {
   capital: '5 000,00 PLN',
   email: 'office@apolloidea.com',
   phone: '+48 500 308 400',
-  website: 'apolloplug.com'
+  website: 'apolloidea.com'
 };

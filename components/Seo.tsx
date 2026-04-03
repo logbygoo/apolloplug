@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import type { SeoData } from '../types';
+import { SITE_DOMAIN } from '../configs/site';
 
 const Seo: React.FC<SeoData> = ({
   title,
@@ -10,7 +11,7 @@ const Seo: React.FC<SeoData> = ({
   ogType = 'website',
 }) => {
   useEffect(() => {
-    const fullTitle = `${title} | ApolloPlug.com`;
+    const fullTitle = `${title} | ${SITE_DOMAIN}`;
     if (document.title !== fullTitle) {
       document.title = fullTitle;
     }
@@ -34,7 +35,7 @@ const Seo: React.FC<SeoData> = ({
     if (ogImage) setMeta('property', 'og:image', ogImage);
     setMeta('property', 'og:type', ogType);
     setMeta('property', 'og:url', window.location.href);
-    setMeta('property', 'og:site_name', 'ApolloPlug.com');
+    setMeta('property', 'og:site_name', SITE_DOMAIN);
 
   }, [title, description, ogTitle, ogDescription, ogImage, ogType]);
 

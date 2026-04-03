@@ -211,7 +211,7 @@ const AnimatedTimeline = () => {
             title: "Zamówienie",
             description: "Kiedy wybór jest już pewny, bierzemy na siebie cały proces zamawiania auta. Pilnujemy formalności i sprawdzamy kolejne etapy realizacji. Masz stały kontakt i wiesz, co dzieje się z Twoim zamówieniem, ale nie musisz zajmować się papierologią.",
             buttons: [
-                { text: "Kup z ApolloPlug", url: "/zakup" }
+                { text: "Kup z Apollo Idea", url: "/zakup" }
             ]
         },
         {

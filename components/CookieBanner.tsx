@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from './ui';
 
-const COOKIE_STORAGE_KEY = 'apolloplug_cookie_consent';
+const COOKIE_STORAGE_KEY = 'apolloidea_cookie_consent';
 
 type ConsentValue = 'all' | 'necessary';
 

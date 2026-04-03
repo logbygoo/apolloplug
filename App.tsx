@@ -22,6 +22,7 @@ import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './icons
 import { CONFIG } from './config';
 import UnderConstructionPage from './pages/UnderConstructionPage';
 import ScrollToTop from './components/ScrollToTop';
+import { SITE_DOMAIN } from './configs/site';
 
 const mainNavLinks = [
   { path: '/flota', name: 'Pojazdy' },
@@ -147,7 +148,7 @@ const Footer: React.FC = () => {
             </NavLink>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">apolloplug.com © {new Date().getFullYear()} all rights reserved</p>
+        <p className="text-xs text-muted-foreground">{SITE_DOMAIN} © {new Date().getFullYear()} all rights reserved</p>
       </div>
     </footer>
   );

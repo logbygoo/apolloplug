@@ -2,62 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Główne strony -->
   <url>
-    <loc>https://apolloplug.com/</loc>
+    <loc>https://apolloidea.com/</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/flota</loc>
+    <loc>https://apolloidea.com/flota</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/wypozyczalnia</loc>
+    <loc>https://apolloidea.com/wypozyczalnia</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/transfery</loc>
+    <loc>https://apolloidea.com/transfery</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/zakup</loc>
+    <loc>https://apolloidea.com/zakup</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/ubezpieczenia</loc>
+    <loc>https://apolloidea.com/ubezpieczenia</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/finansowanie</loc>
+    <loc>https://apolloidea.com/finansowanie</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/kontakt</loc>
+    <loc>https://apolloidea.com/kontakt</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/blog</loc>
+    <loc>https://apolloidea.com/blog</loc>
   </url>
 
   <!-- Strony floty -->
   <url>
-    <loc>https://apolloplug.com/flota/tesla-3-highland</loc>
+    <loc>https://apolloidea.com/flota/tesla-3-highland</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/flota/tesla-y-juniper</loc>
+    <loc>https://apolloidea.com/flota/tesla-y-juniper</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/flota/tesla-x</loc>
+    <loc>https://apolloidea.com/flota/tesla-x</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/flota/tesla-s</loc>
+    <loc>https://apolloidea.com/flota/tesla-s</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/flota/tesla-cybertruck</loc>
+    <loc>https://apolloidea.com/flota/tesla-cybertruck</loc>
   </url>
 
   <!-- Landing pages wynajmu konkretnych aut -->
   <url>
-    <loc>https://apolloplug.com/wypozycz/tesla-3-highland</loc>
+    <loc>https://apolloidea.com/wypozycz/tesla-3-highland</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/wypozycz/tesla-y-juniper</loc>
+    <loc>https://apolloidea.com/wypozycz/tesla-y-juniper</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/wypozycz/tesla-x</loc>
+    <loc>https://apolloidea.com/wypozycz/tesla-x</loc>
   </url>
   <url>
-    <loc>https://apolloplug.com/wypozycz/tesla-cybertruck</loc>
+    <loc>https://apolloidea.com/wypozycz/tesla-cybertruck</loc>
   </url>
 </urlset>
 

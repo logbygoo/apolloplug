@@ -3,8 +3,8 @@ import type { SeoData } from '../types';
 export const SEO_CONFIG: Record<string, SeoData> = {
   '/': {
     title: 'Wynajem i transfery autami Tesla',
-    description: 'Doświadcz przyszłości motoryzacji. Wynajmuj Tesle, korzystaj z transferów VIP i inwestuj w elektromobilność. ApolloPlug - Twoje centrum EV.',
-    ogTitle: 'ApolloPlug - Przyszłość Motoryzacji Już Dziś',
+    description: 'Doświadcz przyszłości motoryzacji. Wynajmuj Tesle, korzystaj z transferów VIP i inwestuj w elektromobilność. Apollo Idea – Twoje centrum EV.',
+    ogTitle: 'Apollo Idea – przyszłość motoryzacji już dziś',
     ogDescription: 'Wynajem, transfery i kompleksowe wsparcie w zakupie aut elektrycznych Tesla.',
     ogImage: 'https://img.apolloidea.com/cybertruck/tesla-cybertruck-01.jpg',
     ogType: 'website',
@@ -16,7 +16,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
   },
   '/flota/:carId': {
     title: '{carName} - Dane techniczne i wynajem',
-    description: 'Wynajmij Teslę {carName}. Sprawdź specyfikację, osiągi, zasięg i cennik. Zarezerwuj online w ApolloPlug.',
+    description: 'Wynajmij Teslę {carName}. Sprawdź specyfikację, osiągi, zasięg i cennik. Zarezerwuj online w Apollo Idea.',
   },
   '/wypozycz/:carId': {
     title: 'Wynajem {carName} Warszawa | Wypożyczalnia Tesla',
@@ -57,7 +57,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
   },
   '/blog': {
     title: 'Blog o Elektromobilności',
-    description: 'Najnowsze wiadomości, porady i artykuły ze świata samochodów elektrycznych. Bądź na bieżąco z trendami dzięki blogowi ApolloPlug.',
+    description: 'Najnowsze wiadomości, porady i artykuły ze świata samochodów elektrycznych. Bądź na bieżąco z trendami dzięki blogowi Apollo Idea.',
     ogImage: 'https://img.apolloidea.com/blog/wypozyczalnia-aut-elektrycznych-miniatura.jpg',
   },
   '/blog/:articleSlug': {
@@ -67,7 +67,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
   },
   '/dokumentacja': {
     title: 'Dokumentacja',
-    description: 'Zapoznaj się z regulaminami, polityką prywatności i innymi ważnymi dokumentami dotyczącymi usług ApolloPlug.',
+    description: 'Zapoznaj się z regulaminami, polityką prywatności i innymi ważnymi dokumentami dotyczącymi usług Apollo Idea.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
 };

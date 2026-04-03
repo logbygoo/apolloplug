@@ -1,6 +1,7 @@
 import type { FormData } from '../../pages/RentalPage';
 import type { TransferFormData } from '../../pages/TransfersPage';
 import { ADDITIONAL_OPTIONS } from '../rentConfig';
+import { SITE_LOGO_URL } from '../site';
 
 // Define a common type for the email payload
 interface EmailPayload {
@@ -44,9 +45,7 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
                     <!-- Header with Logo -->
                     <tr>
                         <td align="center" style="padding: 24px; border-bottom: 1px solid #e5e7eb;">
-                            <div style="font-family: 'Zen Dots', sans-serif; font-size: 24px; letter-spacing: -1px;">
-                                apollo<span style="background-color: #111827; color: #ffffff; padding: 2px 8px; border-radius: 4px; margin-left: 4px;">plug</span>
-                            </div>
+                            <img src="${SITE_LOGO_URL}" alt="Apollo Idea" width="160" style="max-width:160px;height:auto;display:block;margin:0 auto;" />
                         </td>
                     </tr>
                     <!-- Main Content -->
@@ -81,7 +80,7 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
                     <tr>
                         <td align="center" style="padding: 24px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
                             <p style="margin: 0 0 8px 0;">Masz pytania? Skontaktuj się z nami pod adresem <a href="mailto:office@apolloidea.com" style="color: #111827; text-decoration: none;">office@apolloidea.com</a></p>
-                            <p style="margin: 0;">apolloplug.com &copy; ${new Date().getFullYear()}</p>
+                            <p style="margin: 0;">apolloidea.com &copy; ${new Date().getFullYear()}</p>
                         </td>
                     </tr>
                 </table>
@@ -103,15 +102,15 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
  */
 const createSimpleLayout = (title: string, content: string) => `
   <div style="font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 20px auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
-    <div style="background-color: #000; color: #fff; padding: 20px; text-align: center; font-family: 'Zen Dots', sans-serif;">
-      <h1 style="margin: 0;">apollo<span style="background-color: #fff; color: #000; padding: 2px 6px; border-radius: 3px; margin-left: 4px;">plug</span></h1>
+    <div style="background-color: #f4f4f4; padding: 20px; text-align: center; border-bottom: 1px solid #e5e7eb;">
+      <img src="${SITE_LOGO_URL}" alt="Apollo Idea" width="160" style="max-width:160px;height:auto;display:block;margin:0 auto;" />
     </div>
     <div style="padding: 20px;">
       <h2 style="color: #000;">${title}</h2>
       ${content}
     </div>
     <div style="background-color: #f4f4f4; color: #888; padding: 15px; text-align: center; font-size: 12px;">
-      <p>ApolloPlug.com &copy; ${new Date().getFullYear()}</p>
+      <p>apolloidea.com &copy; ${new Date().getFullYear()}</p>
     </div>
   </div>
 `;
@@ -200,7 +199,7 @@ export const createReservationAdminEmailPayload = (
     // --- Konfiguracja i zwrot payloadu ---
     return {
         to: "office@apolloidea.com",
-        from: "apolloplug.com <office@apolloidea.com>",
+        from: "apolloidea.com <office@apolloidea.com>",
         subject: `WYNAJEM: ${data.model.name} (${data.fullName})`,
         html,
         reply_to: data.email,
@@ -223,7 +222,7 @@ export const createReservationCustomerEmailPayload = (data: FormData, summary: a
     ]);
 
     const fullContent = `
-      <p style="font-size: 16px; color: #4b5563; margin: 0 0 24px 0; text-align: center;">Dziękujemy za złożenie rezerwacji w ApolloPlug.com. Otrzymaliśmy Twoje zgłoszenie i wkrótce je potwierdzimy.</p>
+      <p style="font-size: 16px; color: #4b5563; margin: 0 0 24px 0; text-align: center;">Dziękujemy za złożenie rezerwacji w apolloidea.com. Otrzymaliśmy Twoje zgłoszenie i wkrótce je potwierdzimy.</p>
       ${content}
       <p style="font-size: 14px; color: #4b5563; margin: 24px 0 0 0; text-align: center;">W kolejnym kroku zostaniesz poproszony o dokonanie płatności. Jeśli masz jakiekolwiek pytania, skontaktuj się z nami.</p>
     `;
@@ -237,7 +236,7 @@ export const createReservationCustomerEmailPayload = (data: FormData, summary: a
     // --- Konfiguracja i zwrot payloadu ---
     return {
         to: data.email,
-        from: "apolloplug.com <office@apolloidea.com>",
+        from: "apolloidea.com <office@apolloidea.com>",
         subject: `Podsumowanie rezerwacji: ${data.model.name}`,
         html,
         reply_to: "office@apolloidea.com",
@@ -276,7 +275,7 @@ export const createPaymentConfirmationAdminEmailPayload = (
 
     return {
         to: "office@apolloidea.com",
-        from: "apolloplug.com <office@apolloidea.com>",
+        from: "apolloidea.com <office@apolloidea.com>",
         subject: `PŁATNOŚĆ: ${data.model.name} (${data.fullName})`,
         html,
         reply_to: data.email,
@@ -328,7 +327,7 @@ export const createTransferAdminEmailPayload = (data: TransferFormData, summary:
     // --- Konfiguracja i zwrot payloadu ---
     return {
         to: "office@apolloidea.com",
-        from: "apolloplug.com <office@apolloidea.com>",
+        from: "apolloidea.com <office@apolloidea.com>",
         subject: `TRANSFER: ${data.selectedCar?.name} (${data.customerName})`,
         html,
         reply_to: data.customerEmail,
@@ -370,7 +369,7 @@ export const createTransferCustomerEmailPayload = (data: TransferFormData, summa
     // --- Konfiguracja i zwrot payloadu ---
     return {
         to: data.customerEmail,
-        from: "apolloplug.com <office@apolloidea.com>",
+        from: "apolloidea.com <office@apolloidea.com>",
         subject: `Podsumowanie zamówienia transferu: ${data.selectedCar?.name}`,
         html,
         reply_to: "office@apolloidea.com",
@@ -425,7 +424,7 @@ export const createContactCustomerEmailPayload = (name: string, email: string, m
     return {
         to: email,
         from: "Apollo Plug <office@apolloidea.com>",
-        subject: "Potwierdzenie otrzymania wiadomości | ApolloPlug.com",
+        subject: "Potwierdzenie otrzymania wiadomości | apolloidea.com",
         html,
         reply_to: "office@apolloidea.com",
     };

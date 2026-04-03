@@ -12,7 +12,7 @@ const UnderConstructionPage: React.FC<UnderConstructionPageProps> = ({ onAuthent
   const [error, setError] = useState('');
 
   useEffect(() => {
-    document.title = 'ApolloPlug.com | Wkrótce Otwarcie';
+    document.title = 'apolloidea.com | Wkrótce otwarcie';
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {

@@ -144,7 +144,7 @@ const ContactPage: React.FC = () => {
             <section>
                 <h2 className="text-2xl font-bold tracking-tight mb-4">Podmiot odpowiedzialny</h2>
                 <div className="text-muted-foreground space-y-1">
-                    <p>apolloplug.com należy do forfinance sp. z o.o., ul. grzybowska 87, 00-844 warszawa, nip: 527-283-91-27, tel. 500-308-400, mail. office@apolloidea.com</p>
+                    <p>apolloidea.com należy do forfinance sp. z o.o., ul. grzybowska 87, 00-844 warszawa, nip: 527-283-91-27, tel. 500-308-400, mail. office@apolloidea.com</p>
                 </div>
             </section>
             <section>

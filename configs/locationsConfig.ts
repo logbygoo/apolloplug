@@ -15,5 +15,5 @@ export const LOCATIONS: Location[] = [
   { lat: 52.1657, lng: 20.9671, type: 'pickup_point', title: 'Lotnisko Chopina', address: 'Żwirki i Wigury 1, Warszawa', price: 99 },
   { lat: 52.2619, lng: 20.9100, type: 'pickup_point', title: 'Lotnisko Babice', address: 'gen. S. Kaliskiego 57, Warszawa', price: 99 },
   { lat: 52.4511, lng: 20.6518, type: 'pickup_point', title: 'Lotnisko Modlin', address: 'Generała Wiktora Thommée 1a, Nowy Dwór Mazowiecki', price: 390 },
-  { lat: 52.2330, lng: 20.9818, type: 'building_company', title: 'main office apolloplug.com', address: 'Grzybowska 87, Warszawa', price: null },
+  { lat: 52.2330, lng: 20.9818, type: 'building_company', title: 'Biuro apolloidea.com', address: 'Grzybowska 87, Warszawa', price: null },
 ];

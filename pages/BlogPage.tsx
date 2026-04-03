@@ -76,7 +76,7 @@ const BlogPage: React.FC = () => {
                                             alt={article.name} 
                                             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                                             onError={(e) => {
-                                                (e.target as HTMLImageElement).src = 'https://img.apolloplug.com/og/default.jpg';
+                                                (e.target as HTMLImageElement).src = 'https://img.apolloidea.com/og/default.jpg';
                                             }}
                                         />
                                     </div>

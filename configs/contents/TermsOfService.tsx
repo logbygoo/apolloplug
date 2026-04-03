@@ -60,13 +60,13 @@ export const TermsOfServiceContent = (
       }
     `}</style>
 
-    <h1>Regulamin serwisu internetowego apolloplug.com</h1>
+    <h1>Regulamin serwisu internetowego apolloidea.com</h1>
     <p><strong>obowiązujący od dnia: 09.12.2025 r.</strong></p>
 
     <h2>1. Postanowienia ogólne</h2>
     <p>
       1.1. Niniejszy regulamin (dalej: „Regulamin”) określa zasady korzystania z serwisu internetowego
-      dostępnego pod adresem <strong>apolloplug.com</strong> (dalej: „Serwis”), w szczególności zasady przeglądania
+      dostępnego pod adresem <strong>apolloidea.com</strong> (dalej: „Serwis”), w szczególności zasady przeglądania
       treści Serwisu, wysyłania zapytań oraz formularzy rezerwacyjnych dotyczących usług oferowanych przez
       Forfinance sp. z o.o.
     </p>
@@ -105,7 +105,7 @@ export const TermsOfServiceContent = (
       2.1.1. „Usługodawca” – forfinance sp. z o.o. z siedzibą w Warszawie, wskazana w pkt 1.2 Regulaminu.
     </p>
     <p>
-      2.1.2. „Serwis” – serwis internetowy apolloplug.com, w ramach którego Usługodawca udostępnia Użytkownikom
+      2.1.2. „Serwis” – serwis internetowy apolloidea.com, w ramach którego Usługodawca udostępnia Użytkownikom
       treści i funkcjonalności opisane w Regulaminie.
     </p>
     <p>

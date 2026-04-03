@@ -113,7 +113,7 @@ export const RentalRulesContent = (
         <h2 className="section__title">1. Postanowienia ogólne</h2>
         <ol className="legal">
           <li>Niniejszy Regulamin określa zasady świadczenia usług najmu pojazdów (dalej: „Usługa” lub „Najem”) przez <strong>forfinance sp. z o.o.</strong> z siedzibą w Warszawie (00-844), ul. Grzybowska 87, NIP 527-283-91-27, REGON 369507931, KRS 0000719398, e-mail: office@apolloidea.com, tel.: +48 500 308 400 (dalej: „Wynajmujący”).</li>
-          <li>Regulamin jest dostępny na stronie internetowej <strong>apolloplug.com</strong> i może być utrwalony przez Najemcę w dowolny sposób (np. pobranie, wydruk).</li>
+          <li>Regulamin jest dostępny na stronie internetowej <strong>apolloidea.com</strong> i może być utrwalony przez Najemcę w dowolny sposób (np. pobranie, wydruk).</li>
           <li>Regulamin stanowi integralną część umowy najmu pojazdu zawieranej pomiędzy Wynajmującym a Najemcą (dalej: „Umowa”). W razie rozbieżności pierwszeństwo mają postanowienia Umowy.</li>
           <li>Najem może być zawierany zarówno z konsumentami, jak i przedsiębiorcami (w tym osobami fizycznymi prowadzącymi działalność gospodarczą).</li>
           <li>Do Umowy i Regulaminu stosuje się prawo polskie. Postanowienia Regulaminu nie wyłączają ani nie ograniczają praw konsumenta wynikających z bezwzględnie obowiązujących przepisów prawa.</li>
@@ -132,7 +132,7 @@ export const RentalRulesContent = (
           <li><strong>Udział własny</strong> – maksymalna kwota odpowiedzialności Najemcy za pojedyncze zdarzenie szkodowe w zakresie objętym ubezpieczeniem AC/kradzież, określona w Umowie albo w Cenniku dla danego Pojazdu.</li>
           <li><strong>Opcja redukcji udziału własnego</strong> – odpłatna usługa obniżająca udział własny (np. z 10 000 zł do 3 000 zł) zgodnie z ofertą przedstawioną w procesie Rezerwacji.</li>
           <li><strong>Opłaty dodatkowe</strong> – opłaty i kary umowne należne zgodnie z Regulaminem, Umową i tabelą opłat w pkt 18.</li>
-          <li><strong>Rezerwacja</strong> – zgłoszenie Najemcy złożone za pośrednictwem formularza na stronie apolloplug.com (lub innym kanałem wskazanym przez Wynajmującego) w celu zawarcia Umowy.</li>
+          <li><strong>Rezerwacja</strong> – zgłoszenie Najemcy złożone za pośrednictwem formularza na stronie apolloidea.com (lub innym kanałem wskazanym przez Wynajmującego) w celu zawarcia Umowy.</li>
         </ol>
       </section>
 
@@ -334,7 +334,7 @@ export const RentalRulesContent = (
       <section className="section">
         <h2 className="section__title">20. Dane osobowe</h2>
         <ol className="legal">
-          <li>Administratorem danych jest forfinance sp. z o.o. Szczegóły przetwarzania danych, w tym GPS, opisuje Polityka Prywatności dostępna na apolloplug.com.</li>
+          <li>Administratorem danych jest forfinance sp. z o.o. Szczegóły przetwarzania danych, w tym GPS, opisuje Polityka Prywatności dostępna na apolloidea.com.</li>
         </ol>
       </section>
 
@@ -342,7 +342,7 @@ export const RentalRulesContent = (
         <h2 className="section__title">21. Postanowienia końcowe</h2>
         <ol className="legal">
           <li>Regulamin obowiązuje od dnia {'{{effective_date}}'}.</li>
-          <li>Kontakt: apolloplug.com/kontakt.</li>
+          <li>Kontakt: apolloidea.com/kontakt.</li>
         </ol>
       </section>
     </main>

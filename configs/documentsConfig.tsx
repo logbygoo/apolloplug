@@ -18,8 +18,8 @@ export interface DocumentContent {
 
 export const DOCUMENTS_DATA: DocumentContent[] = [
   {
-    title: 'Regulamin apolloplug',
-    slug: 'regulamin-apolloplug',
+    title: 'Regulamin apolloidea.com',
+    slug: 'regulamin-apolloidea',
     content: TermsOfServiceContent
   },
   {

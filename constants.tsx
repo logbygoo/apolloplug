@@ -7,8 +7,8 @@ export const ApolloPlugLogo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
     <img
       src={APOLLO_IDEA_LOGO_SRC}
       alt="Apollo Idea"
-      width={140}
-      className="h-auto w-[140px] max-w-[140px] shrink-0 object-contain object-left"
+      width={160}
+      className="block h-auto w-[160px] max-w-[160px] shrink-0 object-contain object-center"
       decoding="async"
     />
   </div>

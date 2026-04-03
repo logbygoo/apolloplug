@@ -42,7 +42,7 @@ const Header: React.FC = () => {
     <>
       <header className="fixed top-0 z-50 w-full bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-14 max-w-screen-2xl items-center px-4 md:px-6">
-          <a href="/" className="flex items-center mr-6">
+          <a href="/" className="mr-6 flex h-14 shrink-0 items-center">
             <ApolloPlugLogo />
           </a>
           

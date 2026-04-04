@@ -4,6 +4,8 @@ import { PageHeader, Button } from '../components/ui';
 import Seo from '../components/Seo';
 import { DocumentTextIcon, KeyIcon, BanknotesIcon, ShieldCheckIcon, SparklesIcon, HomeIcon } from '../icons';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { TESLA_REFERRAL_LINK, purchaseReferralBanner } from '../configs/purchaseConfig';
+import { CheckIcon } from '../icons';
 
 const features = [
   {
@@ -53,6 +55,56 @@ const PurchasePage: React.FC = () => {
       />
       
       <div className="container mx-auto max-w-5xl px-4 md:px-6 pb-16 md:pb-24">
+        <section className="pt-8 md:pt-10" aria-labelledby="tesla-referral-heading">
+          <div className="rounded-2xl border border-white/10 bg-black text-white shadow-2xl shadow-black/25">
+            <div className="flex flex-col gap-8 px-6 py-8 md:flex-row md:items-stretch md:gap-10 md:px-10 md:py-10">
+              <div className="min-w-0 flex-1 space-y-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/55">
+                  {purchaseReferralBanner.eyebrow}
+                </p>
+                <h2
+                  id="tesla-referral-heading"
+                  className="text-2xl font-bold tracking-tight text-white md:text-3xl"
+                >
+                  {purchaseReferralBanner.headline}
+                </h2>
+                <p className="text-sm leading-relaxed text-white/75 md:text-base">
+                  {purchaseReferralBanner.description}
+                </p>
+                <ul className="mt-6 space-y-4 border-t border-white/10 pt-6">
+                  {purchaseReferralBanner.benefits.map((item) => (
+                    <li key={item.title} className="flex gap-3">
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white text-black">
+                        <CheckIcon className="h-3.5 w-3.5" strokeWidth={2.5} />
+                      </span>
+                      <div>
+                        <p className="font-semibold text-white">{item.title}</p>
+                        <p className="mt-1 text-sm text-white/65 leading-relaxed">{item.detail}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex flex-col justify-center gap-4 border-t border-white/10 pt-6 md:w-[min(100%,280px)] md:shrink-0 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+                <a
+                  href={TESLA_REFERRAL_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-white px-5 py-3.5 text-center text-sm font-semibold text-black transition hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  {purchaseReferralBanner.ctaLabel}
+                </a>
+                <p className="text-center text-xs leading-relaxed text-white/45 md:text-left">
+                  {purchaseReferralBanner.footnote}
+                </p>
+                <p className="rounded-lg bg-white/5 px-3 py-2 text-center font-mono text-[11px] text-white/50 break-all md:text-left">
+                  {TESLA_REFERRAL_LINK.replace(/^https?:\/\//, '')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-12">
             <div className="space-y-24">

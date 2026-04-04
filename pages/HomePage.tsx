@@ -160,27 +160,20 @@ const HomeReferralSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-start justify-center gap-8 sm:gap-12 md:justify-end">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-3">
-                <p className="text-3xl font-bold tracking-tight sm:text-4xl">{perks[0].stat}</p>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-md">
-                  <KeyIcon className="h-5 w-5" />
+          <div className="flex flex-wrap items-start justify-center md:justify-end">
+            {perks.map((perk) => (
+              <div key={perk.stat} className="text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <p className="max-w-[11rem] text-3xl font-bold leading-tight tracking-tight sm:max-w-none sm:text-4xl">
+                    {perk.stat}
+                  </p>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 text-white shadow-md">
+                    <BoltIcon className="h-5 w-5" />
+                  </div>
                 </div>
+                <p className="mt-2 text-sm text-muted-foreground">{perk.subline}</p>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">{perks[0].subline}</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-3">
-                <p className="max-w-[11rem] text-3xl font-bold leading-tight tracking-tight sm:max-w-none sm:text-4xl">
-                  {perks[1].stat}
-                </p>
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 text-white shadow-md">
-                  <BoltIcon className="h-5 w-5" />
-                </div>
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">{perks[1].subline}</p>
-            </div>
+            ))}
           </div>
         </div>
       </div>

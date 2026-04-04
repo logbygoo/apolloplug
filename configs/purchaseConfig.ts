@@ -31,15 +31,10 @@ export const purchaseReferralBanner = {
 /** Sekcja pod sliderem na stronie głównej (jak blok „Punkty w całym mieście” nad stopką). */
 export const purchaseHomeReferralSection = {
   title: '1 doba naszą Teslą GRATIS',
-  description:
-    'Wystarczy, że zamówisz swoją Teslę z naszego linku polecającego. Kliknij poniżej.',
-  ctaTesla: 'Idź do tesla.com',
+  description: 'Wystarczy, że zamówisz swoją Teslę z naszego linku polecającego.',
+  ctaTesla: 'Zamów na tesla.com',
   ctaReadMore: 'Czytaj więcej',
   perks: [
-    {
-      stat: '1 doba GRATIS',
-      subline: 'Prezent od Apollo',
-    },
     {
       stat: '1000 km ładowania',
       subline: 'Prezent od Tesla',

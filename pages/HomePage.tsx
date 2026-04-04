@@ -138,7 +138,7 @@ const HeroSlider: React.FC = () => {
 const HomeReferralSection: React.FC = () => {
   const { title, description, ctaTesla, ctaReadMore, perks } = purchaseHomeReferralSection;
   return (
-    <section className="border-b border-border/60 bg-background py-16" aria-labelledby="home-referral-heading">
+    <section className="bg-background py-16" aria-labelledby="home-referral-heading">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-between gap-12 md:flex-row">
           <div className="w-full max-w-lg flex-1 text-center md:text-left">
@@ -216,7 +216,7 @@ const HorizontalCarousel: React.FC<{ items: CarouselItem[] }> = ({ items }) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     
   return (
-    <section className="py-12 md:py-20 w-full">
+    <section className="pt-0 pb-12 md:pb-20 w-full">
       <div 
         ref={scrollContainerRef}
         className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar px-4 md:px-6 scroll-pl-4 md:scroll-pl-6"

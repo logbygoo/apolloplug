@@ -8,6 +8,7 @@ import Seo from '../components/Seo';
 import { LOCATIONS } from '../configs/locationsConfig';
 import { loadGoogleMapsScript } from '../utils/maps';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { TESLA_REFERRAL_LINK, purchaseHomeReferralSection } from '../configs/purchaseConfig';
 
 // Declare google for TypeScript
 declare const google: any;
@@ -130,6 +131,59 @@ const HeroSlider: React.FC = () => {
       <button onClick={goToNext} className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
       </button>
+    </section>
+  );
+};
+
+const HomeReferralSection: React.FC = () => {
+  const { title, description, ctaTesla, ctaReadMore, perks } = purchaseHomeReferralSection;
+  return (
+    <section className="border-b border-border/60 bg-background py-16" aria-labelledby="home-referral-heading">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center justify-between gap-12 md:flex-row">
+          <div className="w-full max-w-lg flex-1 text-center md:text-left">
+            <h2 id="home-referral-heading" className="text-4xl font-semibold tracking-tight">
+              {title}
+            </h2>
+            <p className="mt-3 text-foreground/70">{description}</p>
+            <div className="mt-6 flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
+              <a href={TESLA_REFERRAL_LINK} target="_blank" rel="noopener noreferrer" className="inline-flex">
+                <Button size="lg" variant="primary" className="w-full sm:w-64">
+                  {ctaTesla}
+                </Button>
+              </a>
+              <Link to="/zakup" className="inline-flex">
+                <Button size="lg" variant="secondary" className="w-full sm:w-64">
+                  {ctaReadMore}
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-start justify-center gap-8 sm:gap-12 md:justify-end">
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-3">
+                <p className="text-3xl font-bold tracking-tight sm:text-4xl">{perks[0].stat}</p>
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white shadow-md">
+                  <KeyIcon className="h-5 w-5" />
+                </div>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">{perks[0].subline}</p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-3">
+                <p className="max-w-[11rem] text-3xl font-bold leading-tight tracking-tight sm:max-w-none sm:text-4xl">
+                  {perks[1].stat}
+                </p>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-600 text-white shadow-md">
+                  <BoltIcon className="h-5 w-5" />
+                </div>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">{perks[1].subline}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };
@@ -427,7 +481,7 @@ const HomePage: React.FC = () => {
     <div className="bg-background">
       <Seo {...SEO_CONFIG['/']} />
       <HeroSlider />
-      
+      <HomeReferralSection />
       <HorizontalCarousel items={vehicleCarouselItems} />
 
       <AnimatedTimeline />

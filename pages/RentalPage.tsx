@@ -45,21 +45,21 @@ const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ t
 const BrandCard: React.FC<{ brand: typeof BRANDS[number], isSelected: boolean, onSelect: () => void }> = ({ brand, isSelected, onSelect }) => (
     <div
         onClick={brand.available ? onSelect : undefined}
-        className={`relative flex flex-col justify-center items-center cursor-pointer rounded-lg border p-4 h-32 transition-all ${
+        className={`relative flex h-16 flex-col items-center justify-center cursor-pointer rounded-lg border p-2 transition-all ${
             isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
         } ${
             brand.available ? 'hover:border-foreground/50' : 'opacity-50 cursor-not-allowed'
         }`}
     >
-        <div className={`absolute top-3 right-3 h-5 w-5 rounded-sm flex items-center justify-center transition-all ${isSelected ? 'bg-foreground text-background' : 'bg-secondary'}`}>
-            {isSelected && <CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />}
+        <div className={`absolute top-1.5 right-1.5 h-4 w-4 rounded-sm flex items-center justify-center transition-all ${isSelected ? 'bg-foreground text-background' : 'bg-secondary'}`}>
+            {isSelected && <CheckIcon className="w-3 h-3" strokeWidth={3} />}
         </div>
         {!brand.available && (
-            <div className="absolute top-2 left-2 bg-muted text-muted-foreground text-xs font-bold px-2 py-1 rounded">
+            <div className="absolute top-1 left-1 bg-muted text-muted-foreground text-[10px] font-bold px-1.5 py-0.5 rounded">
                 Wkrótce
             </div>
         )}
-        <img src={brand.logoUrl} alt={`${brand.name} logo`} className="h-12 w-auto object-contain" />
+        <img src={brand.logoUrl} alt={`${brand.name} logo`} className="h-8 w-auto max-h-8 object-contain" />
         {/* <h3 className="font-semibold text-center mt-2">{brand.name}</h3> */}
     </div>
 );

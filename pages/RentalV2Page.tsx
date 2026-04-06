@@ -1,17 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Seo from '../components/Seo';
+import { PageHeader } from '../components/ui';
+import { RENTAL_CARS } from '../configs/rentConfig';
+import { CheckIcon } from '../icons';
+import type { Car } from '../types';
 
-/** Strona testowa — nie linkowana, noindex. Izolowany CSS (prefiks .rental-v2), żeby nie kolidować z globalnym .e2e-slider. */
+/** Strona testowa — noindex. Izolowany CSS (.rental-v2) dla e2e slidera. */
 const RENTAL_V2_STYLES = `
   .rental-v2 {
     --container-width: 80rem;
-    --slider-gap: 1.25rem;
-    box-sizing: border-box;
-  }
-  .rental-v2 *,
-  .rental-v2 *::before,
-  .rental-v2 *::after {
-    box-sizing: border-box;
   }
   .rental-v2 .e2e-slider {
     width: 100%;
@@ -29,44 +26,62 @@ const RENTAL_V2_STYLES = `
   .rental-v2 .e2e-track {
     display: inline-flex;
     width: max-content;
-    gap: var(--slider-gap, 20px);
-    padding-top: 24px;
-    padding-bottom: 24px;
+    gap: var(--slider-gap, 1rem);
+    padding-top: 16px;
+    padding-bottom: 16px;
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
   }
-  .rental-v2 .slide {
-    flex-shrink: 0;
-    width: min(280px, 75vw);
-    min-height: 180px;
-    padding: 1.25rem;
-    border-radius: 1rem;
-    background: #252525;
-    border: 1px solid #333;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-  }
-  .rental-v2 .slide span {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: #888;
-    margin-top: 0.5rem;
-  }
-  .rental-v2 .hint {
-    max-width: var(--container-width);
-    margin: 0 auto;
-    padding: 1rem 1rem 0;
-    font-size: 0.875rem;
-    color: #888;
-  }
 `;
 
-const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
+const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
+
+const sliderGapStyle = { '--slider-gap': '1rem' } as React.CSSProperties;
+
+const V2ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void }> = ({ car, isSelected, onSelect }) => {
+  const isAvailable = car.available !== false;
+  const minPrice = useMemo(() => {
+    if (car.priceTiers && car.priceTiers.length > 0) {
+      return Math.min(...car.priceTiers.map((t) => t.pricePerDay));
+    }
+    return car.pricePerDay;
+  }, [car]);
+
+  return (
+    <div
+      onClick={isAvailable ? onSelect : undefined}
+      className={`relative flex h-full min-h-[12rem] w-[min(88vw,20rem)] shrink-0 cursor-pointer flex-col rounded-lg border p-4 transition-all sm:w-80 ${
+        isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
+      } ${isAvailable ? 'hover:border-foreground/50' : 'cursor-not-allowed opacity-50'}`}
+    >
+      <div
+        className={`absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-sm transition-all ${
+          isSelected ? 'bg-foreground text-background' : 'bg-secondary'
+        }`}
+      >
+        {isSelected && <CheckIcon className="h-3.5 w-3.5" strokeWidth={3} />}
+      </div>
+      {!isAvailable && (
+        <div className="absolute left-2 top-2 rounded bg-muted px-2 py-1 text-xs font-bold text-muted-foreground">
+          Wkrótce
+        </div>
+      )}
+      <img src={car.imageUrl[0]} alt={car.name} className="mb-4 h-32 w-full object-contain" />
+      <div className="mt-auto text-center">
+        <h3 className="font-semibold">{car.name}</h3>
+        {isAvailable ? (
+          <p className="text-sm text-muted-foreground">od {minPrice} zł/dzień</p>
+        ) : (
+          <p className="text-sm text-muted-foreground">&nbsp;</p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const RentalV2Page: React.FC = () => {
+  const [selectedId, setSelectedId] = useState<string>(RENTAL_CARS[0]?.id ?? '');
+
   useEffect(() => {
     const setMeta = (name: string, content: string) => {
       let el = document.querySelector(`meta[name="${name}"]`);
@@ -86,40 +101,58 @@ const RentalV2Page: React.FC = () => {
     };
   }, []);
 
+  const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
+
   return (
     <>
       <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
       <style>{RENTAL_V2_STYLES}</style>
-      <div className="rental-v2 min-h-screen bg-[#171717] font-sans text-[#e3e3e3]">
-        <p className="hint">
-          Przewiń poziomo (mysz, touchpad lub palcem na telefonie). Pierwsza i ostatnia karta wyrównują się do
-          szerokości <code className="text-[#ccc]">--container-width</code>.
-        </p>
+      <div className="rental-v2 min-h-screen bg-background text-foreground">
+        <div className="mb-8 w-full border-b border-border bg-secondary">
+          <PageHeader
+            title="Wypożyczalnia EV"
+            subtitle="Nowy układ (test) — wybór pojazdu"
+            breadcrumbs={breadcrumbs}
+          />
+        </div>
 
-        <section className="e2e-slider" style={sliderGapStyle}>
-          <div className="e2e-track">
-            <div className="slide">
-              Slajd 1
-              <span>shrink-0 + stała szerokość</span>
+        <div className="container mx-auto min-w-0 px-4 pb-16 md:px-6">
+          <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
+            {/* Lewa kolumna: wybór modelu */}
+            <div className="min-w-0 overflow-x-visible lg:col-span-2">
+              <section>
+                <h2 className="text-2xl font-bold tracking-tight">Wybierz model</h2>
+                <div className="mt-4">
+                  <section className="e2e-slider" style={sliderGapStyle}>
+                    <div className="e2e-track">
+                      {RENTAL_CARS.map((car) => (
+                        <V2ModelCard
+                          key={car.id}
+                          car={car}
+                          isSelected={selectedId === car.id}
+                          onSelect={() => setSelectedId(car.id)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                </div>
+              </section>
             </div>
-            <div className="slide">
-              Slajd 2
-              <span>kolejna karta</span>
-            </div>
-            <div className="slide">
-              Slajd 3
-              <span>…</span>
-            </div>
-            <div className="slide">
-              Slajd 4
-              <span>…</span>
-            </div>
-            <div className="slide">
-              Slajd 5
-              <span>ostatnia</span>
-            </div>
+
+            {/* Prawa kolumna: podsumowanie (szkielet) */}
+            <aside className="min-w-0 lg:col-span-1">
+              <div className="rounded-lg border border-border bg-secondary p-6 lg:sticky lg:top-24">
+                <h2 className="text-2xl font-bold">Podsumowanie</h2>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Wybrany pojazd: <span className="font-medium text-foreground">{selected?.name ?? '—'}</span>
+                </p>
+                <p className="mt-6 text-sm text-muted-foreground">
+                  Tutaj trafi pełny formularz rezerwacji (w budowie).
+                </p>
+              </div>
+            </aside>
           </div>
-        </section>
+        </div>
       </div>
     </>
   );

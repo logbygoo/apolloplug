@@ -181,7 +181,7 @@ const App: React.FC = () => {
            <Route path="*" element={
              <>
                 <Header />
-                <main className="flex-grow pt-14">
+                <main className="min-w-0 flex-grow overflow-x-visible pt-14">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/transfery" element={<TransfersPage />} />

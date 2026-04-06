@@ -112,7 +112,7 @@
 }
 </script>
 <style>
-  /* Jak esoteric.pl: overflow na poziomie viewportu — nie na .container, bo inaczej tną się slidery „end-to-end”. */
+  /* Tylko html — overflow-x na body obcina breakout sliderów (100vw + ujemny margin) i „tnie” tor przy scrollu. */
   html {
     overflow-x: hidden;
   }
@@ -120,7 +120,7 @@
     background-color: #fff;
     color: #171a20;
     font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
+    overflow-x: visible;
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;

@@ -208,7 +208,7 @@ const rentalE2eSliderStyle = { '--slider-gap': '1rem' } as React.CSSProperties;
 
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
   <div
-    className={`relative shrink-0 lg:hidden w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)] md:w-full md:max-w-none md:ml-0 ${className ?? ''}`}
+    className={`relative shrink-0 overflow-x-visible lg:hidden w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)] md:w-full md:max-w-none md:ml-0 ${className ?? ''}`}
   >
     <div className="e2e-slider touch-pan-x" style={rentalE2eSliderStyle}>
       <div className="e2e-track">{children}</div>
@@ -577,9 +577,9 @@ const RentalPage: React.FC = () => {
             <div className="container mx-auto min-w-0 px-4 md:px-6 pb-16 md:pb-16">
                 {step === 'details' && (
                     <>
-                        <form onSubmit={handleProceedToPayment}>
-                            <div className="grid min-w-0 gap-8 lg:grid-cols-3 xl:gap-12">
-                                <div className="min-w-0 lg:col-span-2">
+                        <form className="min-w-0 overflow-x-visible" onSubmit={handleProceedToPayment}>
+                            <div className="grid min-w-0 gap-8 overflow-x-visible lg:grid-cols-3 xl:gap-12">
+                                <div className="min-w-0 overflow-x-visible lg:col-span-2">
                                     <FormSection title="Wybierz Markę">
                                         <RentalEdgeScroller>
                                             {BRANDS.map((brand) => (

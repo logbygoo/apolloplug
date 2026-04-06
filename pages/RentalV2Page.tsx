@@ -104,9 +104,11 @@ const RentalV2EdgeScroller: React.FC<{ children: React.ReactNode }> = ({ childre
   </div>
 );
 
-/** Ten sam tor co modele: pełna szerokość viewportu + .e2e-slider / .e2e-track */
+/** Ten sam tor co modele: pełna szerokość viewportu + .e2e-slider / .e2e-track.
+ *  Bez mt-6 nad torem tylko gdy --container-width to jeszcze 100% lub 40rem (< md);
+ *  od 48rem (md+) zostaje odstęp jak wcześniej. */
 const RentalV2E2ESlider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="mt-6 lg:hidden">
+  <div className="mt-0 md:mt-6 lg:hidden">
     <RentalV2EdgeScroller>
       <section className="e2e-slider touch-pan-x" style={sliderGapStyle}>
         <div className="e2e-track">{children}</div>

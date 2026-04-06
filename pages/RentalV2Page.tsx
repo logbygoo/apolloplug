@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Seo from '../components/Seo';
 import { Input, Label, PageHeader } from '../components/ui';
 import {
+  ADDITIONAL_OPTIONS,
   RENTAL_CARS,
   RENTAL_PERIOD_DATE_INPUT_CLASSNAME,
   RENTAL_PERIOD_DATETIME_GRID,
@@ -28,6 +29,20 @@ tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 const formatDate = (date: Date) => date.toISOString().split('T')[0];
 const today = formatDate(todayDate);
 const tomorrow = formatDate(tomorrowDate);
+
+const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
+  if (typeof price === 'number') {
+    return price;
+  }
+  return price[carId] ?? 0;
+};
+
+type AdditionalOptionsState = Record<(typeof ADDITIONAL_OPTIONS)[number]['id'], boolean>;
+
+const getDefaultOptionsForCar = (carId: string): AdditionalOptionsState =>
+  Object.fromEntries(
+    ADDITIONAL_OPTIONS.map((o) => [o.id, getPriceForCar(o.price, carId) === 0])
+  ) as AdditionalOptionsState;
 
 type RentalPeriodState = {
   pickupDate: string;
@@ -234,6 +249,52 @@ const V2ModelCard: React.FC<{
   );
 };
 
+const CheckboxOption: React.FC<{
+  car: Car;
+  option: (typeof ADDITIONAL_OPTIONS)[number];
+  isChecked: boolean;
+  onToggle: () => void;
+}> = ({ car, option, isChecked, onToggle }) => {
+  const price = getPriceForCar(option.price, car.id);
+  const isFree = price === 0;
+
+  return (
+    <label
+      htmlFor={`v2-${option.id}`}
+      className={`flex items-center justify-between rounded-lg border p-4 transition-all ${
+        isChecked ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
+      } ${isFree ? 'cursor-default' : 'cursor-pointer'}`}
+    >
+      <input
+        id={`v2-${option.id}`}
+        type="checkbox"
+        checked={isChecked}
+        onChange={onToggle}
+        className="absolute h-0 w-0 opacity-0"
+        disabled={isFree}
+      />
+      <div className="flex items-center gap-4">
+        <div
+          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-sm transition-all ${
+            isChecked ? 'bg-foreground text-background' : 'bg-secondary'
+          }`}
+        >
+          {isChecked && <CheckIcon className="h-3.5 w-3.5" strokeWidth={3} />}
+        </div>
+        <div>
+          <p className="font-medium">{option.name}</p>
+          <p className="text-sm text-muted-foreground">{option.description}</p>
+        </div>
+      </div>
+      <div className="text-right">
+        <span className="text-sm font-semibold">
+          {isFree ? 'Wliczone w cenę' : `${price} zł ${option.type === 'per_day' ? '/ dzień' : ''}`}
+        </span>
+      </div>
+    </label>
+  );
+};
+
 const RentalV2Page: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>(RENTAL_CARS[0]?.id ?? '');
   const [selectedBrandId, setSelectedBrandId] = useState<string>(() => {
@@ -248,6 +309,9 @@ const RentalV2Page: React.FC = () => {
     returnTime: '10:00',
     returnLocation: LOCATIONS[0]?.title ?? '',
   }));
+  const [additionalOptions, setAdditionalOptions] = useState<AdditionalOptionsState>(() =>
+    getDefaultOptionsForCar(RENTAL_CARS[0]?.id ?? '')
+  );
   const rentalRootRef = useRef<HTMLDivElement>(null);
   const [debugLine, setDebugLine] = useState('');
 
@@ -266,6 +330,10 @@ const RentalV2Page: React.FC = () => {
     setSelectedId(carId);
     const b = BRANDS.find((br) => carId.includes(br.id));
     if (b) setSelectedBrandId(b.id);
+  };
+
+  const handleOptionToggle = (optionId: (typeof ADDITIONAL_OPTIONS)[number]['id']) => {
+    setAdditionalOptions((prev) => ({ ...prev, [optionId]: !prev[optionId] }));
   };
 
   const handleSelectBrand = (brandId: string) => {
@@ -521,6 +589,21 @@ const RentalV2Page: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                </div>
+              </section>
+
+              <section className="mt-8 min-w-0 max-w-full overflow-x-hidden">
+                <h2 className="text-2xl font-bold tracking-tight">Opcje dodatkowe</h2>
+                <div className="mt-3 space-y-3">
+                  {ADDITIONAL_OPTIONS.map((opt) => (
+                    <CheckboxOption
+                      key={opt.id}
+                      option={opt}
+                      car={selected}
+                      isChecked={additionalOptions[opt.id]}
+                      onToggle={() => handleOptionToggle(opt.id)}
+                    />
+                  ))}
                 </div>
               </section>
             </div>

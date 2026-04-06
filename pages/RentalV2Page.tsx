@@ -95,8 +95,6 @@ const RENTAL_V2_E2E_STYLES = `
   }
 `;
 
-const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
-
 const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
 
 /**
@@ -199,6 +197,14 @@ const RentalV2Page: React.FC = () => {
 
   const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
 
+  const breadcrumbs = useMemo(() => {
+    const crumbs: { name: string; path?: string }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
+    if (selected) {
+      crumbs.push({ name: selected.name });
+    }
+    return crumbs;
+  }, [selected]);
+
   return (
     <>
       <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
@@ -210,7 +216,7 @@ const RentalV2Page: React.FC = () => {
           <div className="rental-v2-page-header">
             <PageHeader
               title="Wypożyczalnia EV"
-              subtitle="Nowy układ (test) — wybór pojazdu"
+              subtitle="Wypożycz Auto Elektryczne wypełniając poniższy formularz"
               breadcrumbs={breadcrumbs}
             />
           </div>

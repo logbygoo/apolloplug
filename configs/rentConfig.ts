@@ -134,7 +134,28 @@ export const RENTAL_TIME_OPTIONS: string[] = Array.from({ length: 48 }, (_, i) =
 
 /** Wspólna klasa dla `<select>` okresu najmu (wąska kolumna, bez poziomego rozpychania strony). */
 export const RENTAL_PERIOD_SELECT_CLASSNAME =
-  'block h-12 w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+  'block h-12 min-h-[48px] w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 py-0 text-left text-sm leading-none ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+
+/** Ta sama wysokość co `<select>`; `text-left` + style poniżej pod iOS/Safari. */
+export const RENTAL_PERIOD_DATE_INPUT_CLASSNAME =
+  'box-border h-12 min-h-[48px] w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 py-0 pr-10 text-left text-sm leading-none ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+
+/** Grupa: data + godzina + miejsce (odbiór lub zwrot). */
+export const RENTAL_PERIOD_GROUP_BOX = 'border-l-4 border-black pl-[10px] min-w-0 max-w-full';
+
+/** Scope dla wyrównania daty do lewej na telefonach (WebKit). */
+export const RENTAL_PERIOD_FIELD_STYLES = `
+  .rental-period input[type="date"] {
+    text-align: left !important;
+  }
+  .rental-period input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+  }
+  .rental-period input[type="date"]::-webkit-datetime-edit,
+  .rental-period input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+    text-align: left;
+  }
+`;
 
 /**
  * Okres najmu: tylko data + godzina obok (65/35 od 350px); miejsce w osobnym wierszu pod spodem.

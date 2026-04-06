@@ -4,8 +4,11 @@ import { Button, Input, Label, PageHeader } from '../components/ui';
 import {
   RENTAL_CARS,
   ADDITIONAL_OPTIONS,
+  RENTAL_PERIOD_DATE_INPUT_CLASSNAME,
   RENTAL_PERIOD_DATETIME_GRID,
   RENTAL_PERIOD_FIELD_CELL,
+  RENTAL_PERIOD_FIELD_STYLES,
+  RENTAL_PERIOD_GROUP_BOX,
   RENTAL_PERIOD_LOCATION_ROW,
   RENTAL_PERIOD_SELECT_CLASSNAME,
   RENTAL_TIME_OPTIONS,
@@ -565,6 +568,7 @@ const RentalPage: React.FC = () => {
     return (
         <div className="min-h-screen min-w-0 bg-background">
             <Seo {...SEO_CONFIG['/wypozyczalnia']} />
+            <style>{RENTAL_PERIOD_FIELD_STYLES}</style>
             <div className="mb-10 w-full bg-secondary">
                 <PageHeader
                     title="Wypożyczalnia EV"
@@ -681,10 +685,10 @@ const RentalPage: React.FC = () => {
                                     <FormSection title="Okres najmu">
                                         <div className="min-w-0 max-w-full overflow-x-hidden">
                                             <div className="flex min-w-0 max-w-full flex-col gap-8">
-                                                <div className="min-w-0 max-w-full space-y-4">
+                                                <div className={`rental-period ${RENTAL_PERIOD_GROUP_BOX} space-y-4`}>
                                                     <div className={RENTAL_PERIOD_DATETIME_GRID}>
                                                         <div className={RENTAL_PERIOD_FIELD_CELL}>
-                                                            <Label htmlFor="pickupDate">Odbiór</Label>
+                                                            <Label htmlFor="pickupDate">Data odbioru</Label>
                                                             <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                                                                 <Input
                                                                     id="pickupDate"
@@ -693,8 +697,7 @@ const RentalPage: React.FC = () => {
                                                                     min={today}
                                                                     onChange={handleInputChange}
                                                                     required
-                                                                    className="box-border h-auto min-w-0 max-w-full pr-10"
-                                                                    style={{ padding: '11px' }}
+                                                                    className={RENTAL_PERIOD_DATE_INPUT_CLASSNAME}
                                                                 />
                                                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                                     <CalendarDaysIcon className="h-5 w-5 shrink-0 text-muted-foreground" />
@@ -702,7 +705,7 @@ const RentalPage: React.FC = () => {
                                                             </div>
                                                         </div>
                                                         <div className={RENTAL_PERIOD_FIELD_CELL}>
-                                                            <Label htmlFor="pickupTime">Godzina</Label>
+                                                            <Label htmlFor="pickupTime">Godzina odbioru</Label>
                                                             <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                                                                 <select
                                                                     id="pickupTime"
@@ -722,7 +725,7 @@ const RentalPage: React.FC = () => {
                                                         </div>
                                                     </div>
                                                     <div className={RENTAL_PERIOD_LOCATION_ROW}>
-                                                        <Label htmlFor="pickupLocation">Miejsce</Label>
+                                                        <Label htmlFor="pickupLocation">Miejsce odbioru</Label>
                                                         <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                                                             <select
                                                                 id="pickupLocation"
@@ -743,10 +746,10 @@ const RentalPage: React.FC = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="min-w-0 max-w-full space-y-4">
+                                                <div className={`rental-period ${RENTAL_PERIOD_GROUP_BOX} space-y-4`}>
                                                     <div className={RENTAL_PERIOD_DATETIME_GRID}>
                                                         <div className={RENTAL_PERIOD_FIELD_CELL}>
-                                                            <Label htmlFor="returnDate">Zwrot</Label>
+                                                            <Label htmlFor="returnDate">Data zwrotu</Label>
                                                             <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                                                                 <Input
                                                                     id="returnDate"
@@ -755,8 +758,7 @@ const RentalPage: React.FC = () => {
                                                                     min={formData.pickupDate || today}
                                                                     onChange={handleInputChange}
                                                                     required
-                                                                    className="box-border h-auto min-w-0 max-w-full pr-10"
-                                                                    style={{ padding: '11px' }}
+                                                                    className={RENTAL_PERIOD_DATE_INPUT_CLASSNAME}
                                                                 />
                                                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                                     <CalendarDaysIcon className="h-5 w-5 shrink-0 text-muted-foreground" />
@@ -764,7 +766,7 @@ const RentalPage: React.FC = () => {
                                                             </div>
                                                         </div>
                                                         <div className={RENTAL_PERIOD_FIELD_CELL}>
-                                                            <Label htmlFor="returnTime">Godzina</Label>
+                                                            <Label htmlFor="returnTime">Godzina zwrotu</Label>
                                                             <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                                                                 <select
                                                                     id="returnTime"
@@ -784,7 +786,7 @@ const RentalPage: React.FC = () => {
                                                         </div>
                                                     </div>
                                                     <div className={RENTAL_PERIOD_LOCATION_ROW}>
-                                                        <Label htmlFor="returnLocation">Miejsce</Label>
+                                                        <Label htmlFor="returnLocation">Miejsce zwrotu</Label>
                                                         <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                                                             <select
                                                                 id="returnLocation"

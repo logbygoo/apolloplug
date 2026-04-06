@@ -163,25 +163,6 @@
       padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 280px));
     }
   }
-  /*
-   * .rental-v2: style z komponentu muszą wygrywać kaskadą — NIE ustawiaj padding-left w jednej bazowej regule,
-   * tylko w media (inaczej baza .rental-v2 .e2e-track znosi +280 z globalnego @media .e2e-track).
-   */
-  .rental-v2 .e2e-track {
-    padding-top: 24px;
-    padding-bottom: 24px;
-    padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
-  }
-  @media (min-width: 769px) {
-    .rental-v2 .e2e-track {
-      padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
-    }
-  }
-  @media (max-width: 768px) {
-    .rental-v2 .e2e-track {
-      padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 280px));
-    }
-  }
   input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;

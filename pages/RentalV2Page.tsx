@@ -1,11 +1,78 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Seo from '../components/Seo';
 import { PageHeader } from '../components/ui';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { CheckIcon } from '../icons';
 import type { Car } from '../types';
 
-/** Strona testowa — noindex. .rental-v2 .e2e-track: index.html (padding-left tylko w @media, żeby kaskada działała). */
+/**
+ * Slider end-to-end z responsywnym --container-width (jak w dostarczonym HTML).
+ * Wszystko pod .rental-v2 — bez kolizji z globalnym .e2e-track w index.html.
+ */
+const RENTAL_V2_E2E_STYLES = `
+  .rental-v2 {
+    --container-width: 100%;
+    --slider-gap: 1rem;
+    --e2e-edge-fuzz: 15px;
+  }
+  @media (min-width: 640px) {
+    .rental-v2 { --container-width: 40rem; }
+  }
+  @media (min-width: 768px) {
+    .rental-v2 { --container-width: 48rem; }
+  }
+  @media (min-width: 1024px) {
+    .rental-v2 { --container-width: 64rem; }
+  }
+  @media (min-width: 1280px) {
+    .rental-v2 { --container-width: 80rem; }
+  }
+  @media (min-width: 1536px) {
+    .rental-v2 { --container-width: 96rem; }
+  }
+
+  .rental-v2 .e2e-v2-hint {
+    max-width: min(100% - 2rem, var(--container-width));
+    margin: 0 auto;
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: hsl(0 0% 45%);
+  }
+  .rental-v2 .e2e-v2-debug {
+    position: sticky;
+    top: 3.5rem;
+    z-index: 10;
+    border-bottom: 1px solid hsl(0 0% 90%);
+    background: hsl(0 0% 96%);
+    padding: 0.5rem 1rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    color: hsl(0 0% 45%);
+  }
+
+  .rental-v2 .e2e-slider {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .rental-v2 .e2e-slider::-webkit-scrollbar {
+    height: 0;
+    display: none;
+  }
+  .rental-v2 .e2e-track {
+    display: inline-flex;
+    width: max-content;
+    gap: var(--slider-gap, 20px);
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
+    padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
+  }
+`;
 
 const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
 
@@ -54,6 +121,8 @@ const V2ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => voi
 
 const RentalV2Page: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>(RENTAL_CARS[0]?.id ?? '');
+  const rentalRootRef = useRef<HTMLDivElement>(null);
+  const [debugLine, setDebugLine] = useState('');
 
   useEffect(() => {
     const setMeta = (name: string, content: string) => {
@@ -74,12 +143,27 @@ const RentalV2Page: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const tick = () => {
+      const root = rentalRootRef.current;
+      if (!root) return;
+      const cw = getComputedStyle(root).getPropertyValue('--container-width').trim();
+      setDebugLine(`viewport: ${window.innerWidth}px  |  --container-width: ${cw}`);
+    };
+    tick();
+    window.addEventListener('resize', tick);
+    return () => window.removeEventListener('resize', tick);
+  }, []);
+
   const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
 
   return (
     <>
       <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
-      <div className="rental-v2 min-h-screen bg-background pb-16 text-foreground">
+      <style>{RENTAL_V2_E2E_STYLES}</style>
+      <div ref={rentalRootRef} className="rental-v2 min-h-screen bg-background pb-16 text-foreground">
+        <div className="e2e-v2-debug">{debugLine}</div>
+
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <PageHeader
             title="Wypożyczalnia EV"
@@ -88,7 +172,6 @@ const RentalV2Page: React.FC = () => {
           />
         </div>
 
-        {/* Dwie kolumny (stack na małym ekranie) — bez slidera w środku; PageHeader nav ma własny overflow-hidden tylko na breadcrumb */}
         <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">
           <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
             <div className="min-w-0 lg:col-span-2">
@@ -108,7 +191,11 @@ const RentalV2Page: React.FC = () => {
           </div>
         </div>
 
-        {/* Slider jak w pierwotnym demo: tylko section > .e2e-track, pełna szerokość, bez dodatkowego diva */}
+        <p className="e2e-v2-hint">
+          Przewiń poziomo. Lewy/prawy padding toru liczy się od <code className="text-foreground">--container-width</code> (zmienia się przy
+          sm/md/lg/xl/2xl). Otwórz DevTools i zmieniaj szerokość okna.
+        </p>
+
         <section className="e2e-slider" style={sliderGapStyle}>
           <div className="e2e-track">
             {RENTAL_CARS.map((car) => (
@@ -121,7 +208,6 @@ const RentalV2Page: React.FC = () => {
             ))}
           </div>
         </section>
-
       </div>
     </>
   );

@@ -338,7 +338,7 @@ const RENTAL_V2_SZKIC_UMOWY_DOCS = [
   { title: 'Regulamin Wypożyczalni', docSlug: 'regulamin-wypozyczalni' },
 ] as const;
 
-/** Te same szerokości / wysokość slajdu co `V2ModelCard` (layout slider vs grid). */
+/** Te same szerokości slajdu co `V2ModelCard`; wysokość z treści (bez min-h jak przy kartach modeli). */
 const V2LegalDocTile: React.FC<{ title: string; docSlug: string; layout?: 'slider' | 'grid' }> = ({
   title,
   docSlug,
@@ -346,20 +346,18 @@ const V2LegalDocTile: React.FC<{ title: string; docSlug: string; layout?: 'slide
 }) => {
   const widthClass =
     layout === 'grid'
-      ? 'min-h-[12rem] w-full min-w-0'
-      : 'min-h-[12rem] w-[min(88vw,20rem)] shrink-0 sm:w-80';
+      ? 'w-full min-w-0'
+      : 'w-[min(88vw,20rem)] shrink-0 sm:w-80';
 
   return (
     <Link
       to={`/dokumentacja?doc=${encodeURIComponent(docSlug)}`}
-      className={`group flex flex-col rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary ${widthClass}`}
+      className={`group flex items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary ${widthClass}`}
     >
-      <div className="flex min-h-0 flex-1 items-center gap-4">
-        <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
-        <div className="min-w-0">
-          <p className="font-medium text-foreground">{title}</p>
-          <p className="text-sm text-muted-foreground">Otwórz w dokumentacji</p>
-        </div>
+      <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
+      <div className="min-w-0">
+        <p className="font-medium text-foreground">{title}</p>
+        <p className="text-sm text-muted-foreground">Otwórz w dokumentacji</p>
       </div>
     </Link>
   );

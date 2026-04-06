@@ -5,7 +5,7 @@ import { RENTAL_CARS } from '../configs/rentConfig';
 import { CheckIcon } from '../icons';
 import type { Car } from '../types';
 
-/** Strona testowa — noindex. Izolowany CSS (.rental-v2) dla e2e slidera. */
+/** Strona testowa — noindex. Ten sam mechanizm co wcześniej: .rental-v2 .e2e-slider / .e2e-track (bez opakowań z overflow). */
 const RENTAL_V2_STYLES = `
   .rental-v2 {
     --container-width: 80rem;
@@ -26,9 +26,9 @@ const RENTAL_V2_STYLES = `
   .rental-v2 .e2e-track {
     display: inline-flex;
     width: max-content;
-    gap: var(--slider-gap, 1rem);
-    padding-top: 16px;
-    padding-bottom: 16px;
+    gap: var(--slider-gap, 20px);
+    padding-top: 24px;
+    padding-bottom: 24px;
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
   }
@@ -36,7 +36,7 @@ const RENTAL_V2_STYLES = `
 
 const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
 
-const sliderGapStyle = { '--slider-gap': '1rem' } as React.CSSProperties;
+const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
 
 const V2ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void }> = ({ car, isSelected, onSelect }) => {
   const isAvailable = car.available !== false;
@@ -107,7 +107,7 @@ const RentalV2Page: React.FC = () => {
     <>
       <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
       <style>{RENTAL_V2_STYLES}</style>
-      <div className="rental-v2 min-h-screen bg-background text-foreground">
+      <div className="rental-v2 min-h-screen bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <PageHeader
             title="Wypożyczalnia EV"
@@ -116,30 +116,12 @@ const RentalV2Page: React.FC = () => {
           />
         </div>
 
-        <div className="container mx-auto min-w-0 px-4 pb-16 md:px-6">
-          <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
-            {/* Lewa kolumna: wybór modelu */}
-            <div className="min-w-0 overflow-x-visible lg:col-span-2">
-              <section>
-                <h2 className="text-2xl font-bold tracking-tight">Wybierz model</h2>
-                <div className="mt-4">
-                  <section className="e2e-slider" style={sliderGapStyle}>
-                    <div className="e2e-track">
-                      {RENTAL_CARS.map((car) => (
-                        <V2ModelCard
-                          key={car.id}
-                          car={car}
-                          isSelected={selectedId === car.id}
-                          onSelect={() => setSelectedId(car.id)}
-                        />
-                      ))}
-                    </div>
-                  </section>
-                </div>
-              </section>
+        {/* Dwie kolumny (stack na małym ekranie) — bez slidera w środku; PageHeader nav ma własny overflow-hidden tylko na breadcrumb */}
+        <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">
+          <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
+            <div className="min-w-0 lg:col-span-2">
+              <h2 className="text-2xl font-bold tracking-tight">Wybierz model</h2>
             </div>
-
-            {/* Prawa kolumna: podsumowanie (szkielet) */}
             <aside className="min-w-0 lg:col-span-1">
               <div className="rounded-lg border border-border bg-secondary p-6 lg:sticky lg:top-24">
                 <h2 className="text-2xl font-bold">Podsumowanie</h2>
@@ -153,6 +135,21 @@ const RentalV2Page: React.FC = () => {
             </aside>
           </div>
         </div>
+
+        {/* Slider jak w pierwotnym demo: tylko section > .e2e-track, pełna szerokość, bez dodatkowego diva */}
+        <section className="e2e-slider" style={sliderGapStyle}>
+          <div className="e2e-track">
+            {RENTAL_CARS.map((car) => (
+              <V2ModelCard
+                key={car.id}
+                car={car}
+                isSelected={selectedId === car.id}
+                onSelect={() => setSelectedId(car.id)}
+              />
+            ))}
+          </div>
+        </section>
+
       </div>
     </>
   );

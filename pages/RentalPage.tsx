@@ -542,8 +542,8 @@ const RentalPage: React.FC = () => {
             <Seo {...SEO_CONFIG['/wypozyczalnia']} />
             <div className="mb-10 w-full bg-secondary">
                 <PageHeader
-                    title="Wynajem Auta EV"
-                    subtitle="Zarezerwuj swój wymarzony samochód elektryczny w kilku prostych krokach."
+                    title="Wypożyczalnia EV"
+                    subtitle="Wypożycz Auto Elektryczne wypełniając poniższy formularz"
                     breadcrumbs={breadcrumbs}
                 />
             </div>

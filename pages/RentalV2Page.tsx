@@ -5,40 +5,7 @@ import { RENTAL_CARS } from '../configs/rentConfig';
 import { CheckIcon } from '../icons';
 import type { Car } from '../types';
 
-/** Strona testowa — noindex. Ten sam mechanizm co wcześniej: .rental-v2 .e2e-slider / .e2e-track (bez opakowań z overflow). */
-const RENTAL_V2_STYLES = `
-  .rental-v2 {
-    --container-width: 80rem;
-  }
-  .rental-v2 .e2e-slider {
-    width: 100%;
-    position: relative;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  .rental-v2 .e2e-slider::-webkit-scrollbar {
-    height: 0;
-    display: none;
-  }
-  .rental-v2 .e2e-track {
-    display: inline-flex;
-    width: max-content;
-    gap: var(--slider-gap, 20px);
-    padding-top: 24px;
-    padding-bottom: 24px;
-    padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
-    padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
-  }
-  /* ≤768px (max-md i wężej) */
-  @media (max-width: 768px) {
-    .rental-v2 .e2e-track {
-      padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 280px));
-    }
-  }
-`;
+/** Strona testowa — noindex. .rental-v2 .e2e-track: index.html (padding-left tylko w @media, żeby kaskada działała). */
 
 const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
 
@@ -112,7 +79,6 @@ const RentalV2Page: React.FC = () => {
   return (
     <>
       <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
-      <style>{RENTAL_V2_STYLES}</style>
       <div className="rental-v2 min-h-screen bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <PageHeader

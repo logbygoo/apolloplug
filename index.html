@@ -112,10 +112,15 @@
 }
 </script>
 <style>
+  /* Jak esoteric.pl: overflow na poziomie viewportu — nie na .container, bo inaczej tną się slidery „end-to-end”. */
+  html {
+    overflow-x: hidden;
+  }
   body {
     background-color: #fff;
     color: #171a20;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none;

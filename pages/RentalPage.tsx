@@ -563,7 +563,7 @@ const RentalPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen min-w-0 overflow-x-hidden bg-background">
+        <div className="min-h-screen min-w-0 bg-background">
             <Seo {...SEO_CONFIG['/wypozyczalnia']} />
             <div className="mb-10 w-full bg-secondary">
                 <PageHeader
@@ -572,7 +572,7 @@ const RentalPage: React.FC = () => {
                     breadcrumbs={breadcrumbs}
                 />
             </div>
-            <div className="container mx-auto min-w-0 overflow-x-hidden px-4 md:px-6 pb-16 md:pb-16">
+            <div className="container mx-auto min-w-0 px-4 md:px-6 pb-16 md:pb-16">
                 {step === 'details' && (
                     <>
                         <form onSubmit={handleProceedToPayment}>

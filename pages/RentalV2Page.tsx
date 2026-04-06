@@ -65,7 +65,7 @@ const RENTAL_V2_E2E_STYLES = `
     gap: var(--slider-gap, 20px);
     /* Odstęp od h2 daje wrapper (mt-3), nie padding toru — bez podwajania */
     padding-top: 0;
-    padding-bottom: 24px;
+    padding-bottom: 0;
     /* px-4: wewnętrzny gutter jak treść w .container poniżej md */
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));

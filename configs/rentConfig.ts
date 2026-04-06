@@ -138,15 +138,18 @@ export const RENTAL_PERIOD_SELECT_CLASSNAME =
 
 /** Ta sama wysokość co `<select>`; `text-left` + style poniżej pod iOS/Safari. */
 export const RENTAL_PERIOD_DATE_INPUT_CLASSNAME =
-  'box-border h-12 min-h-[48px] w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 py-0 pr-10 text-left text-sm leading-none ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+  '!flex !items-center box-border h-12 min-h-[48px] w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 py-0 pr-10 text-left text-sm leading-normal ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
 
 /** Grupa: data + godzina + miejsce (odbiór lub zwrot). */
-export const RENTAL_PERIOD_GROUP_BOX = 'border-l-4 border-black pl-[10px] min-w-0 max-w-full';
+export const RENTAL_PERIOD_GROUP_BOX = 'border-l-4 border-foreground pl-[10px] min-w-0 max-w-full';
 
-/** Scope dla wyrównania daty do lewej na telefonach (WebKit). */
+/** Scope dla wyrównania daty do lewej i w pionie na telefonach (WebKit). */
 export const RENTAL_PERIOD_FIELD_STYLES = `
   .rental-period input[type="date"] {
     text-align: left !important;
+    display: flex !important;
+    align-items: center;
+    line-height: 1.25rem;
   }
   .rental-period input[type="date"]::-webkit-date-and-time-value {
     text-align: left;
@@ -154,6 +157,21 @@ export const RENTAL_PERIOD_FIELD_STYLES = `
   .rental-period input[type="date"]::-webkit-datetime-edit,
   .rental-period input[type="date"]::-webkit-datetime-edit-fields-wrapper {
     text-align: left;
+  }
+  .rental-period input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    min-height: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  .rental-period input[type="date"]::-webkit-datetime-edit {
+    padding: 0;
+    margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 `;
 

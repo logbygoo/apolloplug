@@ -378,6 +378,101 @@ const RentalV2Page: React.FC = () => {
   const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
   const selectedBrand = BRANDS.find((b) => b.id === selectedBrandId);
 
+  /** Ta sama logika co `summary` w `RentalPage` (krok „szczegóły”). */
+  const summary = useMemo(() => {
+    const {
+      pickupDate,
+      returnDate,
+      pickupTime,
+      returnTime,
+      pickupLocation,
+      returnLocation,
+    } = rentalPeriod;
+    const model = selected;
+    const options = additionalOptions;
+
+    const defaultReturn = {
+      rentalDays: 0,
+      rentalPrice: 0,
+      optionsPrice: 0,
+      totalPrice: 0,
+      deposit: 5000,
+      totalWithDeposit: 5000,
+      totalKmLimit: 0,
+      costPerKmOverLimit: 0,
+      pickupFee: 0,
+      returnFee: 0,
+    };
+
+    if (!pickupDate || !returnDate || !pickupTime || !returnTime || !model) {
+      return defaultReturn;
+    }
+
+    const start = new Date(`${pickupDate}T${pickupTime}`);
+    const end = new Date(`${returnDate}T${returnTime}`);
+
+    if (start >= end) {
+      return defaultReturn;
+    }
+
+    const diffTime = end.getTime() - start.getTime();
+    const rentalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+
+    const tier =
+      model.priceTiers?.find((t) => {
+        const range = t.days.match(/\d+/g);
+        if (!range) return false;
+
+        const min = parseInt(range[0], 10);
+        let max: number;
+
+        if (range.length > 1) {
+          max = parseInt(range[1], 10);
+        } else if (t.days.includes('+') || t.days.includes('-')) {
+          max = Infinity;
+        } else {
+          max = min;
+        }
+
+        return rentalDays >= min && rentalDays <= max;
+      }) || { pricePerDay: model.pricePerDay, kmLimitPerDay: 250 };
+
+    const rentalPrice = rentalDays * tier.pricePerDay;
+    const totalKmLimit = rentalDays * tier.kmLimitPerDay;
+    const costPerKmOverLimit = model.costPerKmOverLimit || 0;
+
+    let optionsPrice = 0;
+    ADDITIONAL_OPTIONS.forEach((opt) => {
+      if (options[opt.id]) {
+        const price = getPriceForCar(opt.price, model.id);
+        optionsPrice += opt.type === 'per_day' ? price * rentalDays : price;
+      }
+    });
+
+    const pickupLoc = RENTAL_LOCATIONS_DATA.find((loc) => loc.title === pickupLocation);
+    const pickupFee = pickupLoc?.price || 0;
+
+    const returnLoc = RENTAL_LOCATIONS_DATA.find((loc) => loc.title === returnLocation);
+    const returnFee = returnLoc?.price || 0;
+
+    const totalPrice = rentalPrice + optionsPrice + pickupFee + returnFee;
+    const deposit = model.deposit || 5000;
+    const totalWithDeposit = totalPrice + deposit;
+
+    return {
+      rentalDays,
+      rentalPrice,
+      optionsPrice,
+      totalPrice,
+      deposit,
+      totalWithDeposit,
+      totalKmLimit,
+      costPerKmOverLimit,
+      pickupFee,
+      returnFee,
+    };
+  }, [rentalPeriod, additionalOptions, selected]);
+
   const breadcrumbs = useMemo(() => {
     const crumbs: { name: string; path?: string }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
     if (selected) {
@@ -609,18 +704,90 @@ const RentalV2Page: React.FC = () => {
             </div>
 
             <aside className="min-w-0 lg:col-span-1">
-              <div className="rounded-lg border border-border bg-secondary p-6 lg:sticky lg:top-24">
-                <h2 className="text-2xl font-bold">Podsumowanie</h2>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  Wybrana marka:{' '}
-                  <span className="font-medium text-foreground">{selectedBrand?.name ?? '—'}</span>
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Wybrany pojazd: <span className="font-medium text-foreground">{selected?.name ?? '—'}</span>
-                </p>
-                <p className="mt-6 text-sm text-muted-foreground">
-                  Tutaj trafi pełny formularz rezerwacji (w budowie).
-                </p>
+              <div className="lg:sticky lg:top-24">
+                <div className="space-y-6 rounded-lg bg-secondary p-6">
+                  <h2 className="text-3xl font-bold">Podsumowanie</h2>
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-medium text-foreground">{selectedBrand?.name ?? '—'}</span>
+                    {' · '}
+                    <span className="font-medium text-foreground">{selected?.name ?? '—'}</span>
+                  </p>
+                  <div className="space-y-2 border-t border-border pt-4">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Okres najmu</span>
+                      <span className="font-medium">
+                        {summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '—'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Cena najmu</span>
+                      <span className="font-medium">
+                        {summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                      </span>
+                    </div>
+                    {summary.pickupFee > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Podstawienie auta</span>
+                        <span className="font-medium">{`${summary.pickupFee.toLocaleString('pl-PL')} zł`}</span>
+                      </div>
+                    )}
+                    {summary.returnFee > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Odbiór auta</span>
+                        <span className="font-medium">{`${summary.returnFee.toLocaleString('pl-PL')} zł`}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Limit kilometrów</span>
+                      <span className="font-medium">
+                        {summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '—'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Koszt poza limitem</span>
+                      <span className="font-medium">
+                        {summary.costPerKmOverLimit > 0
+                          ? `${summary.costPerKmOverLimit.toLocaleString('pl-PL', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })} zł/km`
+                          : '—'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Opcje dodatkowe</span>
+                      <span className="font-medium">
+                        {summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}
+                      </span>
+                    </div>
+                    <div className="mt-2 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
+                      <span>Cena łącznie</span>
+                      <span>
+                        {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Kaucja</span>
+                      <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
+                    </div>
+                    <div className="flex justify-between pt-2 text-sm">
+                      <span className="text-muted-foreground">Do zapłaty (za wynajem)</span>
+                      <span className="font-medium">
+                        {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <div className="flex items-center justify-center gap-4">
+                    <img src="https://img.apolloidea.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
+                    <img src="https://img.apolloidea.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
+                    <img src="https://img.apolloidea.com/img/pay-blik.svg" alt="BLIK" className="h-6" />
+                    <img src="https://img.apolloidea.com/img/pay-visa.svg" alt="Visa" className="h-6" />
+                    <img src="https://img.apolloidea.com/img/pay-mastercard.svg" alt="Mastercard" className="h-6" />
+                    <img src="https://img.apolloidea.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
+                  </div>
+                </div>
               </div>
             </aside>
           </div>

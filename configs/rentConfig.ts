@@ -123,7 +123,7 @@ export const ADDITIONAL_OPTIONS = [
     { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time', description: 'Bezpieczeństwo dla najmłodszych pasażerów.' },
     { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time', description: 'Dostawa pojazdu pod wskazany adres na terenie Warszawy.' },
     { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: { 'tesla-3-highland': 290, 'tesla-y-juniper': 320, 'tesla-x': 350, 'tesla-cybertruck': 390 }, type: 'one_time', description: 'Zwróć auto bez konieczności ładowania.' },
-    { id: 'emptyBattery', name: 'Pakiet myjnia', price: { 'tesla-3-highland': 290, 'tesla-y-juniper': 320, 'tesla-x': 350, 'tesla-cybertruck': 390 }, type: 'one_time', description: 'Moliwość zwrotu brudnego auta.' },
+    { id: 'wash', name: 'Pakiet myjnia', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 99, 'tesla-x': 119, 'tesla-cybertruck': 190 }, type: 'one_time', description: 'Moliwość zwrotu brudnego auta.' },
 ] as const;
 
 /** Dostępne sloty godzin (cała doba, co 30 min). Godziny pracy biura i dopłata poza nimi: `workConfig.ts`. */

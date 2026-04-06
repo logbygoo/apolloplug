@@ -44,6 +44,13 @@ const getDefaultOptionsForCar = (carId: string): AdditionalOptionsState =>
     ADDITIONAL_OPTIONS.map((o) => [o.id, getPriceForCar(o.price, carId) === 0])
   ) as AdditionalOptionsState;
 
+/** Podsumowanie v2: „1 dzień”, „2 dni”, „5 dni” itd. */
+function formatPolishRentalDays(n: number): string {
+  if (n <= 0) return '—';
+  if (n === 1) return '1 dzień';
+  return `${n} dni`;
+}
+
 type RentalPeriodState = {
   pickupDate: string;
   pickupTime: string;
@@ -376,7 +383,6 @@ const RentalV2Page: React.FC = () => {
   }, []);
 
   const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
-  const selectedBrand = BRANDS.find((b) => b.id === selectedBrandId);
 
   /** Ta sama logika co `summary` w `RentalPage` (krok „szczegóły”). */
   const summary = useMemo(() => {
@@ -472,6 +478,20 @@ const RentalV2Page: React.FC = () => {
       returnFee,
     };
   }, [rentalPeriod, additionalOptions, selected]);
+
+  /** Wiersze „- nazwa (cena)” w podsumowaniu v2 — tylko zaznaczone opcje. */
+  const v2OptionLines = useMemo(() => {
+    const model = selected;
+    return ADDITIONAL_OPTIONS.filter((opt) => additionalOptions[opt.id]).map((opt) => {
+      const unit = getPriceForCar(opt.price, model.id);
+      const shortName = opt.name.split(/\s+/)[0]?.toLowerCase() ?? opt.id;
+      const detail =
+        opt.type === 'per_day'
+          ? `${unit.toLocaleString('pl-PL')} zł/db`
+          : `${unit.toLocaleString('pl-PL')} zł`;
+      return { id: opt.id, shortName, detail };
+    });
+  }, [additionalOptions, selected]);
 
   const breadcrumbs = useMemo(() => {
     const crumbs: { name: string; path?: string }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
@@ -705,47 +725,54 @@ const RentalV2Page: React.FC = () => {
 
             <aside className="min-w-0 lg:col-span-1">
               <div className="lg:sticky lg:top-24">
-                <div className="space-y-6 rounded-lg bg-secondary p-6">
+                <div className="rounded-lg bg-secondary p-6">
                   <h2 className="text-3xl font-bold">Podsumowanie</h2>
-                  <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">{selectedBrand?.name ?? '—'}</span>
-                    {' · '}
-                    <span className="font-medium text-foreground">{selected?.name ?? '—'}</span>
-                  </p>
-                  <div className="space-y-2 border-t border-border pt-4">
-                    <div className="flex justify-between">
+
+                  <div className="my-4 border-t border-border" />
+
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between gap-3">
                       <span className="text-muted-foreground">Okres najmu</span>
-                      <span className="font-medium">
-                        {summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '—'}
+                      <span className="shrink-0 text-right font-medium">
+                        {formatPolishRentalDays(summary.rentalDays)}
                       </span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between gap-3">
                       <span className="text-muted-foreground">Cena najmu</span>
-                      <span className="font-medium">
+                      <span className="shrink-0 text-right font-medium">
                         {summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '—'}
                       </span>
                     </div>
                     {summary.pickupFee > 0 && (
-                      <div className="flex justify-between">
+                      <div className="flex justify-between gap-3">
                         <span className="text-muted-foreground">Podstawienie auta</span>
-                        <span className="font-medium">{`${summary.pickupFee.toLocaleString('pl-PL')} zł`}</span>
+                        <span className="shrink-0 text-right font-medium">
+                          {`${summary.pickupFee.toLocaleString('pl-PL')} zł`}
+                        </span>
                       </div>
                     )}
                     {summary.returnFee > 0 && (
-                      <div className="flex justify-between">
+                      <div className="flex justify-between gap-3">
                         <span className="text-muted-foreground">Odbiór auta</span>
-                        <span className="font-medium">{`${summary.returnFee.toLocaleString('pl-PL')} zł`}</span>
+                        <span className="shrink-0 text-right font-medium">
+                          {`${summary.returnFee.toLocaleString('pl-PL')} zł`}
+                        </span>
                       </div>
                     )}
-                    <div className="flex justify-between">
+                  </div>
+
+                  <div className="my-4 border-t border-border" />
+
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between gap-3">
                       <span className="text-muted-foreground">Limit kilometrów</span>
-                      <span className="font-medium">
+                      <span className="shrink-0 text-right font-medium">
                         {summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '—'}
                       </span>
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between gap-3">
                       <span className="text-muted-foreground">Koszt poza limitem</span>
-                      <span className="font-medium">
+                      <span className="shrink-0 text-right font-medium">
                         {summary.costPerKmOverLimit > 0
                           ? `${summary.costPerKmOverLimit.toLocaleString('pl-PL', {
                               minimumFractionDigits: 2,
@@ -754,28 +781,40 @@ const RentalV2Page: React.FC = () => {
                           : '—'}
                       </span>
                     </div>
-                    <div className="flex justify-between">
+                  </div>
+
+                  <div className="my-4 border-t border-border" />
+
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between gap-3">
                       <span className="text-muted-foreground">Opcje dodatkowe</span>
-                      <span className="font-medium">
+                      <span className="shrink-0 text-right font-medium">
                         {summary.optionsPrice > 0 ? `${summary.optionsPrice.toLocaleString('pl-PL')} zł` : '0 zł'}
                       </span>
                     </div>
-                    <div className="mt-2 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
-                      <span>Cena łącznie</span>
-                      <span>
-                        {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Kaucja</span>
-                      <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
-                    </div>
-                    <div className="flex justify-between pt-2 text-sm">
-                      <span className="text-muted-foreground">Do zapłaty (za wynajem)</span>
-                      <span className="font-medium">
-                        {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
-                      </span>
-                    </div>
+                    {v2OptionLines.length > 0 && (
+                      <ul className="list-none space-y-1 pl-0 text-muted-foreground">
+                        {v2OptionLines.map((line) => (
+                          <li key={line.id} className="pl-2">
+                            <span className="text-foreground/80">
+                              {'- '}
+                              {line.shortName} ({line.detail})
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  <div className="my-4 border-t border-border" />
+
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground">Do zapłaty dziś</p>
+                    <p className="text-2xl font-bold text-primary">
+                      {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                    </p>
+                    <p className="pt-2 text-sm text-muted-foreground">Kaucja w dniu odbioru</p>
+                    <p className="text-xl font-semibold">{summary.deposit.toLocaleString('pl-PL')} zł</p>
                   </div>
                 </div>
                 <div className="mt-4">

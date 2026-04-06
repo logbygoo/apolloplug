@@ -82,8 +82,8 @@ const RENTAL_V2_E2E_STYLES = `
     }
   }
 
-  /* --container-width: 40rem tylko 640–767px — zwężony blok z PageHeader (szary box) */
-  @media (min-width: 640px) and (max-width: 767px) {
+  /* Poniżej md: --container-width to 100% (<640px) albo 40rem (640–767px) — mniejszy szary box + h1 */
+  @media (max-width: 767px) {
     .rental-v2 .rental-v2-page-header > div {
       padding-top: 1.75rem;
       padding-bottom: 1.75rem;

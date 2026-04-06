@@ -28,6 +28,10 @@ const timeOptions = Array.from({ length: 25 }, (_, i) => {
 
 const RENTAL_LOCATIONS_DATA: Location[] = LOCATIONS;
 
+/** Ogranicza szerokość <select> do kolumny siatki — długie teksty opcji nie rozpychają strony w poziomie. */
+const rentalPeriodSelectClassName =
+  'block h-12 w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
+
 const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
   if (typeof price === 'number') {
     return price;
@@ -38,7 +42,7 @@ const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, car
 const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <section className="pt-8 first:pt-0">
     <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-    <div className="mt-6 grid gap-x-6 gap-y-6">{children}</div>
+    <div className="mt-6 flex flex-col gap-6">{children}</div>
   </section>
 );
 
@@ -196,12 +200,14 @@ const RENTAL_FORM_PDF_TILES = [
 ] as const;
 
 /**
- * Pełna szerokość viewportu + zwykłe natywne przewijanie poziome (bez scroll-snap).
- * Wzorzec bleed: 100vw + margin jak w CodePenie — tylko układ i overflow, bez „przyciągania” slajdów.
+ * Na mobile: tor zaczyna się w linii treści (jak nagłówek sekcji), rozciąga się w prawo do krawędzi
+ * viewportu (o szerokość paddingu kontenera px-4 / md:px-6). Bez 100vw — unikamy poziomego scrolla strony.
  */
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-  <div className={`relative left-0 max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}>
-    <div className="no-scrollbar flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-3 pl-4 pr-4 [-webkit-overflow-scrolling:touch] touch-pan-x">
+  <div
+    className={`relative max-w-none lg:hidden w-[calc(100%+1rem)] md:w-[calc(100%+1.5rem)] ${className ?? ''}`}
+  >
+    <div className="no-scrollbar flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-3 pl-0 pr-4 md:pr-6 [-webkit-overflow-scrolling:touch] touch-pan-x">
       {children}
     </div>
   </div>
@@ -556,7 +562,7 @@ const RentalPage: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen min-w-0 overflow-x-hidden bg-background">
             <Seo {...SEO_CONFIG['/wypozyczalnia']} />
             <div className="mb-10 w-full bg-secondary">
                 <PageHeader
@@ -565,11 +571,11 @@ const RentalPage: React.FC = () => {
                     breadcrumbs={breadcrumbs}
                 />
             </div>
-            <div className="container mx-auto px-4 md:px-6 pb-16 md:pb-16">
+            <div className="container mx-auto min-w-0 max-w-full overflow-x-hidden px-4 md:px-6 pb-16 md:pb-16">
                 {step === 'details' && (
                     <>
                         <form onSubmit={handleProceedToPayment}>
-                            <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
+                            <div className="grid min-w-0 gap-8 lg:grid-cols-3 xl:gap-12">
                                 <div className="min-w-0 lg:col-span-2">
                                     <FormSection title="Wybierz Markę">
                                         <RentalEdgeScroller>
@@ -595,7 +601,7 @@ const RentalPage: React.FC = () => {
                                         </div>
                                     </FormSection>
                                     <FormSection title="Wybierz Model">
-                                        <>
+                                        <div className="flex flex-col gap-4">
                                             <RentalEdgeScroller>
                                                 {RENTAL_CARS.map((car) => (
                                                     <div key={car.id} className="w-[min(88vw,20rem)] shrink-0 sm:w-80">
@@ -629,7 +635,7 @@ const RentalPage: React.FC = () => {
                                                     />
                                                 ))}
                                             </div>
-                                            <div className="mt-3">
+                                            <div className="min-w-0">
                                                 {formData.model.specs &&
                                                     (() => {
                                                         const s = formData.model.specs;
@@ -642,7 +648,7 @@ const RentalPage: React.FC = () => {
                                                         if (s.drive) items.push({ key: 'd', label: 'Napęd:', value: s.drive });
                                                         if (items.length === 0) return null;
                                                         return (
-                                                            <>
+                                                            <div className="flex flex-col gap-2">
                                                                 <RentalEdgeScroller>
                                                                     {items.map((item) => (
                                                                         <div key={item.key} className="shrink-0">
@@ -653,7 +659,7 @@ const RentalPage: React.FC = () => {
                                                                         </div>
                                                                     ))}
                                                                 </RentalEdgeScroller>
-                                                                <div className="mt-2 hidden flex-wrap items-center gap-2 lg:flex">
+                                                                <div className="hidden flex-wrap items-center gap-2 lg:flex">
                                                                     {items.map((item) => (
                                                                         <div
                                                                             key={item.key}
@@ -664,18 +670,18 @@ const RentalPage: React.FC = () => {
                                                                         </div>
                                                                     ))}
                                                                 </div>
-                                                            </>
+                                                            </div>
                                                         );
                                                     })()}
                                                 <PriceTable car={formData.model} />
                                             </div>
-                                        </>
+                                        </div>
                                     </FormSection>
                                     <FormSection title="Okres najmu">
-                                        <div className="grid sm:grid-cols-3 gap-4 items-start">
-                                            <div>
+                                        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-3">
+                                            <div className="min-w-0">
                                                 <Label htmlFor="pickupDate">Odbiór</Label>
-                                                <div className="relative mt-1">
+                                                <div className="relative mt-1 min-w-0">
                                                     <Input
                                                         id="pickupDate"
                                                         type="date"
@@ -683,21 +689,59 @@ const RentalPage: React.FC = () => {
                                                         min={today}
                                                         onChange={handleInputChange}
                                                         required
-                                                        className="h-auto pr-10"
+                                                        className="h-auto min-w-0 pr-10"
                                                         style={{ padding: '11px' }}
                                                     />
-                                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                         <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div><Label htmlFor="pickupTime">Godzina</Label><div className="relative mt-1"><select id="pickupTime" value={formData.pickupTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="pickupLocation">Miejsce</Label><div className="relative mt-1"><select id="pickupLocation" value={formData.pickupLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div className="min-w-0">
+                                                <Label htmlFor="pickupTime">Godzina</Label>
+                                                <div className="relative mt-1 min-w-0">
+                                                    <select
+                                                        id="pickupTime"
+                                                        value={formData.pickupTime}
+                                                        onChange={handleInputChange}
+                                                        className={rentalPeriodSelectClassName}
+                                                    >
+                                                        <option disabled>--:--</option>
+                                                        {timeOptions.map((t) => (
+                                                            <option key={t} value={t}>
+                                                                {t}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                                                </div>
+                                            </div>
+                                            <div className="min-w-0">
+                                                <Label htmlFor="pickupLocation">Miejsce</Label>
+                                                <div className="relative mt-1 min-w-0">
+                                                    <select
+                                                        id="pickupLocation"
+                                                        value={formData.pickupLocation}
+                                                        onChange={handleInputChange}
+                                                        className={rentalPeriodSelectClassName}
+                                                    >
+                                                        <option disabled value="">
+                                                            Wybierz
+                                                        </option>
+                                                        {RENTAL_LOCATIONS_DATA.map((loc) => (
+                                                            <option key={loc.title} value={loc.title}>
+                                                                {`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="grid sm:grid-cols-3 gap-4 items-start">
-                                            <div>
+                                        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-3">
+                                            <div className="min-w-0">
                                                 <Label htmlFor="returnDate">Zwrot</Label>
-                                                <div className="relative mt-1">
+                                                <div className="relative mt-1 min-w-0">
                                                     <Input
                                                         id="returnDate"
                                                         type="date"
@@ -705,16 +749,54 @@ const RentalPage: React.FC = () => {
                                                         min={formData.pickupDate || today}
                                                         onChange={handleInputChange}
                                                         required
-                                                        className="h-auto pr-10"
+                                                        className="h-auto min-w-0 pr-10"
                                                         style={{ padding: '11px' }}
                                                     />
-                                                     <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                                         <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div><Label htmlFor="returnTime">Godzina</Label><div className="relative mt-1"><select id="returnTime" value={formData.returnTime} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled>--:--</option>{timeOptions.map(t=><option key={t} value={t}>{t}</option>)}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
-                                            <div><Label htmlFor="returnLocation">Miejsce</Label><div className="relative mt-1"><select id="returnLocation" value={formData.returnLocation} onChange={handleInputChange} className="block w-full rounded-md bg-secondary px-3 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-12 appearance-none"><option disabled value="">Wybierz</option>{RENTAL_LOCATIONS_DATA.map(loc => (<option key={loc.title} value={loc.title}>{`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}</option>))}</select><ChevronDownIcon className="absolute top-1/2 -translate-y-1/2 right-3 w-5 h-5 text-muted-foreground pointer-events-none"/></div></div>
+                                            <div className="min-w-0">
+                                                <Label htmlFor="returnTime">Godzina</Label>
+                                                <div className="relative mt-1 min-w-0">
+                                                    <select
+                                                        id="returnTime"
+                                                        value={formData.returnTime}
+                                                        onChange={handleInputChange}
+                                                        className={rentalPeriodSelectClassName}
+                                                    >
+                                                        <option disabled>--:--</option>
+                                                        {timeOptions.map((t) => (
+                                                            <option key={t} value={t}>
+                                                                {t}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                                                </div>
+                                            </div>
+                                            <div className="min-w-0">
+                                                <Label htmlFor="returnLocation">Miejsce</Label>
+                                                <div className="relative mt-1 min-w-0">
+                                                    <select
+                                                        id="returnLocation"
+                                                        value={formData.returnLocation}
+                                                        onChange={handleInputChange}
+                                                        className={rentalPeriodSelectClassName}
+                                                    >
+                                                        <option disabled value="">
+                                                            Wybierz
+                                                        </option>
+                                                        {RENTAL_LOCATIONS_DATA.map((loc) => (
+                                                            <option key={loc.title} value={loc.title}>
+                                                                {`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                                                </div>
+                                            </div>
                                         </div>
                                     </FormSection>
                                     <FormSection title="Dane kierowcy">
@@ -852,8 +934,8 @@ const RentalPage: React.FC = () => {
                 )}
                 {step === 'payment' && (
                   <form onSubmit={handleFinalSubmit}>
-                    <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
-                      <div className="lg:col-span-2">
+                    <div className="grid min-w-0 gap-8 lg:grid-cols-3 xl:gap-12">
+                      <div className="min-w-0 lg:col-span-2">
                         <FormSection title="Metoda płatności">
                            <div className="space-y-3">
                                 {paymentMethods.map(method => (

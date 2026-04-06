@@ -2,8 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Seo from '../components/Seo';
 import { PageHeader } from '../components/ui';
 import { RENTAL_CARS } from '../configs/rentConfig';
+import { BRANDS } from '../constants';
 import { CheckIcon } from '../icons';
 import type { Car } from '../types';
+
+type RentalBrand = (typeof BRANDS)[number];
 
 /**
  * Slider end-to-end z responsywnym --container-width (jak w dostarczonym HTML).
@@ -31,13 +34,6 @@ const RENTAL_V2_E2E_STYLES = `
     .rental-v2 { --container-width: 96rem; }
   }
 
-  .rental-v2 .e2e-v2-hint {
-    max-width: min(100% - 2rem, var(--container-width));
-    margin: 0 auto;
-    padding: 1rem;
-    font-size: 0.875rem;
-    color: hsl(0 0% 45%);
-  }
   .rental-v2 .e2e-v2-debug {
     position: sticky;
     top: 3.5rem;
@@ -108,6 +104,52 @@ const RentalV2EdgeScroller: React.FC<{ children: React.ReactNode }> = ({ childre
   </div>
 );
 
+/** Ten sam tor co modele: pełna szerokość viewportu + .e2e-slider / .e2e-track */
+const RentalV2E2ESlider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="mt-6 lg:hidden">
+    <RentalV2EdgeScroller>
+      <section className="e2e-slider touch-pan-x" style={sliderGapStyle}>
+        <div className="e2e-track">{children}</div>
+      </section>
+    </RentalV2EdgeScroller>
+  </div>
+);
+
+const V2BrandCard: React.FC<{
+  brand: RentalBrand;
+  isSelected: boolean;
+  onSelect: () => void;
+  layout?: 'slider' | 'grid';
+}> = ({ brand, isSelected, onSelect, layout = 'slider' }) => {
+  const widthClass =
+    layout === 'grid'
+      ? 'h-16 min-h-[4rem] w-full min-w-0'
+      : 'h-16 min-h-[4rem] min-w-[200px] w-[min(48vw,280px)] shrink-0';
+
+  return (
+    <div
+      onClick={brand.available ? onSelect : undefined}
+      className={`relative flex flex-col items-center justify-center rounded-lg border p-2 transition-all ${widthClass} ${
+        isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
+      } ${brand.available ? 'cursor-pointer hover:border-foreground/50' : 'cursor-not-allowed opacity-50'}`}
+    >
+      <div
+        className={`absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-sm transition-all ${
+          isSelected ? 'bg-foreground text-background' : 'bg-secondary'
+        }`}
+      >
+        {isSelected && <CheckIcon className="h-3 w-3" strokeWidth={3} />}
+      </div>
+      {!brand.available && (
+        <div className="absolute left-1 top-1 rounded bg-muted px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground">
+          Wkrótce
+        </div>
+      )}
+      <img src={brand.logoUrl} alt={`${brand.name} logo`} className="h-8 max-h-8 w-auto object-contain" />
+    </div>
+  );
+};
+
 const V2ModelCard: React.FC<{
   car: Car;
   isSelected: boolean;
@@ -161,8 +203,26 @@ const V2ModelCard: React.FC<{
 
 const RentalV2Page: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>(RENTAL_CARS[0]?.id ?? '');
+  const [selectedBrandId, setSelectedBrandId] = useState<string>(() => {
+    const id = RENTAL_CARS[0]?.id ?? '';
+    return BRANDS.find((b) => id.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
+  });
   const rentalRootRef = useRef<HTMLDivElement>(null);
   const [debugLine, setDebugLine] = useState('');
+
+  const handleSelectCar = (carId: string) => {
+    setSelectedId(carId);
+    const b = BRANDS.find((br) => carId.includes(br.id));
+    if (b) setSelectedBrandId(b.id);
+  };
+
+  const handleSelectBrand = (brandId: string) => {
+    setSelectedBrandId(brandId);
+    const car =
+      RENTAL_CARS.find((c) => c.id.includes(brandId) && c.available !== false) ??
+      RENTAL_CARS.find((c) => c.id.includes(brandId));
+    if (car) setSelectedId(car.id);
+  };
 
   useEffect(() => {
     const setMeta = (name: string, content: string) => {
@@ -196,6 +256,7 @@ const RentalV2Page: React.FC = () => {
   }, []);
 
   const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
+  const selectedBrand = BRANDS.find((b) => b.id === selectedBrandId);
 
   const breadcrumbs = useMemo(() => {
     const crumbs: { name: string; path?: string }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
@@ -225,49 +286,67 @@ const RentalV2Page: React.FC = () => {
         <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">
           <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
             <div className="min-w-0 overflow-x-visible lg:col-span-2">
-              <h2 className="text-2xl font-bold tracking-tight">Wybierz model</h2>
+              <section>
+                <h2 className="text-2xl font-bold tracking-tight">Wybierz Markę</h2>
+                <div className="mt-6 hidden gap-4 lg:grid lg:grid-cols-3">
+                  {BRANDS.map((brand) => (
+                    <V2BrandCard
+                      key={brand.id}
+                      brand={brand}
+                      layout="grid"
+                      isSelected={selectedBrandId === brand.id}
+                      onSelect={() => handleSelectBrand(brand.id)}
+                    />
+                  ))}
+                </div>
+                <RentalV2E2ESlider>
+                  {BRANDS.map((brand) => (
+                    <V2BrandCard
+                      key={brand.id}
+                      brand={brand}
+                      layout="slider"
+                      isSelected={selectedBrandId === brand.id}
+                      onSelect={() => handleSelectBrand(brand.id)}
+                    />
+                  ))}
+                </RentalV2E2ESlider>
+              </section>
 
-              {/* Statyczna siatka — gdy sidebar jest obok (≥ lg) */}
-              <div className="mt-6 hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
-                {RENTAL_CARS.map((car) => (
-                  <V2ModelCard
-                    key={car.id}
-                    car={car}
-                    layout="grid"
-                    isSelected={selectedId === car.id}
-                    onSelect={() => setSelectedId(car.id)}
-                  />
-                ))}
-              </div>
-
-              {/* Slider — tylko &lt; lg; tor na pełną szerokość okna (nie wąska kolumna .container) */}
-              <div className="mt-6 lg:hidden">
-                <RentalV2EdgeScroller>
-                  <p className="e2e-v2-hint mb-0">
-                    Przewiń poziomo. Lewy/prawy padding toru liczy się od{' '}
-                    <code className="text-foreground">--container-width</code> (zmienia się przy sm/md/lg/xl/2xl).
-                  </p>
-                  <section className="e2e-slider touch-pan-x" style={sliderGapStyle}>
-                    <div className="e2e-track">
-                      {RENTAL_CARS.map((car) => (
-                        <V2ModelCard
-                          key={car.id}
-                          car={car}
-                          layout="slider"
-                          isSelected={selectedId === car.id}
-                          onSelect={() => setSelectedId(car.id)}
-                        />
-                      ))}
-                    </div>
-                  </section>
-                </RentalV2EdgeScroller>
-              </div>
+              <section className="pt-8">
+                <h2 className="text-2xl font-bold tracking-tight">Wybierz Model</h2>
+                <div className="mt-6 hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
+                  {RENTAL_CARS.map((car) => (
+                    <V2ModelCard
+                      key={car.id}
+                      car={car}
+                      layout="grid"
+                      isSelected={selectedId === car.id}
+                      onSelect={() => handleSelectCar(car.id)}
+                    />
+                  ))}
+                </div>
+                <RentalV2E2ESlider>
+                  {RENTAL_CARS.map((car) => (
+                    <V2ModelCard
+                      key={car.id}
+                      car={car}
+                      layout="slider"
+                      isSelected={selectedId === car.id}
+                      onSelect={() => handleSelectCar(car.id)}
+                    />
+                  ))}
+                </RentalV2E2ESlider>
+              </section>
             </div>
 
             <aside className="min-w-0 lg:col-span-1">
               <div className="rounded-lg border border-border bg-secondary p-6 lg:sticky lg:top-24">
                 <h2 className="text-2xl font-bold">Podsumowanie</h2>
                 <p className="mt-4 text-sm text-muted-foreground">
+                  Wybrana marka:{' '}
+                  <span className="font-medium text-foreground">{selectedBrand?.name ?? '—'}</span>
+                </p>
+                <p className="mt-2 text-sm text-muted-foreground">
                   Wybrany pojazd: <span className="font-medium text-foreground">{selected?.name ?? '—'}</span>
                 </p>
                 <p className="mt-6 text-sm text-muted-foreground">

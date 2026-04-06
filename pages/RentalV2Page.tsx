@@ -24,9 +24,21 @@ type RentalBrand = (typeof BRANDS)[number];
 
 const RENTAL_LOCATIONS_DATA = LOCATIONS;
 
-const todayDate = new Date();
 const formatDate = (date: Date) => date.toISOString().split('T')[0];
-const today = formatDate(todayDate);
+
+/** Aktualna data (YYYY-MM-DD) — używaj przy walidacji, nie stałej z początku modułu. */
+function getTodayIso(): string {
+  return formatDate(new Date());
+}
+
+/** Odbiór ≥ dziś, zwrot ≥ odbiór (stringi ISO sortują się chronologicznie). */
+function normalizeRentalPeriodDates(rp: RentalPeriodState, todayIso: string): RentalPeriodState {
+  let pickup = rp.pickupDate;
+  let ret = rp.returnDate;
+  if (!pickup || pickup < todayIso) pickup = todayIso;
+  if (!ret || ret < pickup) ret = pickup;
+  return { ...rp, pickupDate: pickup, returnDate: ret };
+}
 
 const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
   if (typeof price === 'number') {
@@ -168,12 +180,12 @@ function hydrateFromSession(stored: RentalV2Session): RentalV2Session {
   if (!BRANDS.some((b) => b.id === brandId)) {
     brandId = BRANDS.find((b) => carId.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
   }
-  const rp = { ...stored.rentalPeriod };
+  let rp: RentalPeriodState = { ...stored.rentalPeriod };
   if (!isValidLocationTitle(rp.pickupLocation)) rp.pickupLocation = LOCATIONS[0]?.title ?? '';
   if (!isValidLocationTitle(rp.returnLocation)) rp.returnLocation = LOCATIONS[0]?.title ?? '';
-  if (rp.returnDate < rp.pickupDate) rp.returnDate = rp.pickupDate;
   rp.pickupTime = snapTimeToRentalSlot(rp.pickupTime);
   rp.returnTime = snapTimeToRentalSlot(rp.returnTime);
+  rp = normalizeRentalPeriodDates(rp, getTodayIso());
   return {
     selectedId: carId,
     selectedBrandId: brandId,
@@ -495,14 +507,20 @@ const RentalV2Page: React.FC = () => {
     }
   }, [selectedId, selectedBrandId, rentalPeriod, additionalOptions]);
 
+  /** Po wczytaniu sesji / nowym dniu: podbij przeszłe daty do dziś i uzgodnij zwrot z odbiorem. */
+  useEffect(() => {
+    setRentalPeriod((prev) => {
+      const n = normalizeRentalPeriodDates(prev, getTodayIso());
+      if (n.pickupDate === prev.pickupDate && n.returnDate === prev.returnDate) return prev;
+      return n;
+    });
+  }, []);
+
   const handleRentalPeriodChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
     setRentalPeriod((prev) => {
       const next = { ...prev, [id]: value } as RentalPeriodState;
-      if (id === 'pickupDate' && next.returnDate < value) {
-        next.returnDate = value;
-      }
-      return next;
+      return normalizeRentalPeriodDates(next, getTodayIso());
     });
   };
 
@@ -787,7 +805,7 @@ const RentalV2Page: React.FC = () => {
                             id="pickupDate"
                             type="date"
                             value={rentalPeriod.pickupDate}
-                            min={today}
+                            min={getTodayIso()}
                             onChange={handleRentalPeriodChange}
                             required
                             className={RENTAL_PERIOD_DATE_INPUT_CLASSNAME}
@@ -849,7 +867,7 @@ const RentalV2Page: React.FC = () => {
                             id="returnDate"
                             type="date"
                             value={rentalPeriod.returnDate}
-                            min={rentalPeriod.pickupDate || today}
+                            min={rentalPeriod.pickupDate || getTodayIso()}
                             onChange={handleRentalPeriodChange}
                             required
                             className={RENTAL_PERIOD_DATE_INPUT_CLASSNAME}
@@ -1091,7 +1109,7 @@ const RentalV2Page: React.FC = () => {
             className="w-full bg-transparent px-0 py-3 text-left text-background transition-opacity hover:opacity-90 active:opacity-80"
           >
             <div className="flex items-baseline justify-between gap-3 text-sm font-semibold leading-tight">
-              <span>Zarezerwuj pojazd</span>
+              <span>Podsumowanie</span>
               <span className="shrink-0 tabular-nums">
                 {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
               </span>

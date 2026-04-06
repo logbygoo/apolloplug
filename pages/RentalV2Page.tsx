@@ -1,8 +1,17 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Seo from '../components/Seo';
 import { Input, Label, PageHeader } from '../components/ui';
-import { RENTAL_CARS, RENTAL_PERIOD_SELECT_CLASSNAME, RENTAL_TIME_OPTIONS } from '../configs/rentConfig';
-import { LOCATIONS } from '../configs/locationsConfig';
+import {
+  RENTAL_CARS,
+  RENTAL_PERIOD_DATE_CELL,
+  RENTAL_PERIOD_DATETIME_PAIR,
+  RENTAL_PERIOD_LOCATION_CELL,
+  RENTAL_PERIOD_ROW_LAYOUT,
+  RENTAL_PERIOD_SELECT_CLASSNAME,
+  RENTAL_PERIOD_TIME_CELL,
+  RENTAL_TIME_OPTIONS,
+} from '../configs/rentConfig';
+import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 import { BRANDS } from '../constants';
 import { CalendarDaysIcon, CheckIcon, ChevronDownIcon } from '../icons';
@@ -387,45 +396,47 @@ const RentalV2Page: React.FC = () => {
               <section className="mt-8">
                 <h2 className="text-2xl font-bold tracking-tight">Okres najmu</h2>
                 <div className="mt-3 flex flex-col gap-6">
-                  <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-3">
-                    <div className="min-w-0">
-                      <Label htmlFor="pickupDate">Odbiór</Label>
-                      <div className="relative mt-1 min-w-0">
-                        <Input
-                          id="pickupDate"
-                          type="date"
-                          value={rentalPeriod.pickupDate}
-                          min={today}
-                          onChange={handleRentalPeriodChange}
-                          required
-                          className="h-auto min-w-0 pr-10"
-                          style={{ padding: '11px' }}
-                        />
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                          <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                  <div className={RENTAL_PERIOD_ROW_LAYOUT}>
+                    <div className={RENTAL_PERIOD_DATETIME_PAIR}>
+                      <div className={RENTAL_PERIOD_DATE_CELL}>
+                        <Label htmlFor="pickupDate">Odbiór</Label>
+                        <div className="relative mt-1 min-w-0">
+                          <Input
+                            id="pickupDate"
+                            type="date"
+                            value={rentalPeriod.pickupDate}
+                            min={today}
+                            onChange={handleRentalPeriodChange}
+                            required
+                            className="h-auto min-w-0 pr-10"
+                            style={{ padding: '11px' }}
+                          />
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                            <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className={RENTAL_PERIOD_TIME_CELL}>
+                        <Label htmlFor="pickupTime">Godzina</Label>
+                        <div className="relative mt-1 min-w-0">
+                          <select
+                            id="pickupTime"
+                            value={rentalPeriod.pickupTime}
+                            onChange={handleRentalPeriodChange}
+                            className={RENTAL_PERIOD_SELECT_CLASSNAME}
+                          >
+                            <option disabled>--:--</option>
+                            {RENTAL_TIME_OPTIONS.map((t) => (
+                              <option key={t} value={t}>
+                                {formatRentalTimeOptionLabel(t)}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                         </div>
                       </div>
                     </div>
-                    <div className="min-w-0">
-                      <Label htmlFor="pickupTime">Godzina</Label>
-                      <div className="relative mt-1 min-w-0">
-                        <select
-                          id="pickupTime"
-                          value={rentalPeriod.pickupTime}
-                          onChange={handleRentalPeriodChange}
-                          className={RENTAL_PERIOD_SELECT_CLASSNAME}
-                        >
-                          <option disabled>--:--</option>
-                          {RENTAL_TIME_OPTIONS.map((t) => (
-                            <option key={t} value={t}>
-                              {formatRentalTimeOptionLabel(t)}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                      </div>
-                    </div>
-                    <div className="min-w-0">
+                    <div className={RENTAL_PERIOD_LOCATION_CELL}>
                       <Label htmlFor="pickupLocation">Miejsce</Label>
                       <div className="relative mt-1 min-w-0">
                         <select
@@ -439,7 +450,7 @@ const RentalV2Page: React.FC = () => {
                           </option>
                           {RENTAL_LOCATIONS_DATA.map((loc) => (
                             <option key={loc.title} value={loc.title}>
-                              {`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}
+                              {formatLocationSelectLabel(loc)}
                             </option>
                           ))}
                         </select>
@@ -447,45 +458,47 @@ const RentalV2Page: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-3">
-                    <div className="min-w-0">
-                      <Label htmlFor="returnDate">Zwrot</Label>
-                      <div className="relative mt-1 min-w-0">
-                        <Input
-                          id="returnDate"
-                          type="date"
-                          value={rentalPeriod.returnDate}
-                          min={rentalPeriod.pickupDate || today}
-                          onChange={handleRentalPeriodChange}
-                          required
-                          className="h-auto min-w-0 pr-10"
-                          style={{ padding: '11px' }}
-                        />
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                          <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                  <div className={RENTAL_PERIOD_ROW_LAYOUT}>
+                    <div className={RENTAL_PERIOD_DATETIME_PAIR}>
+                      <div className={RENTAL_PERIOD_DATE_CELL}>
+                        <Label htmlFor="returnDate">Zwrot</Label>
+                        <div className="relative mt-1 min-w-0">
+                          <Input
+                            id="returnDate"
+                            type="date"
+                            value={rentalPeriod.returnDate}
+                            min={rentalPeriod.pickupDate || today}
+                            onChange={handleRentalPeriodChange}
+                            required
+                            className="h-auto min-w-0 pr-10"
+                            style={{ padding: '11px' }}
+                          />
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                            <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className={RENTAL_PERIOD_TIME_CELL}>
+                        <Label htmlFor="returnTime">Godzina</Label>
+                        <div className="relative mt-1 min-w-0">
+                          <select
+                            id="returnTime"
+                            value={rentalPeriod.returnTime}
+                            onChange={handleRentalPeriodChange}
+                            className={RENTAL_PERIOD_SELECT_CLASSNAME}
+                          >
+                            <option disabled>--:--</option>
+                            {RENTAL_TIME_OPTIONS.map((t) => (
+                              <option key={t} value={t}>
+                                {formatRentalTimeOptionLabel(t)}
+                              </option>
+                            ))}
+                          </select>
+                          <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                         </div>
                       </div>
                     </div>
-                    <div className="min-w-0">
-                      <Label htmlFor="returnTime">Godzina</Label>
-                      <div className="relative mt-1 min-w-0">
-                        <select
-                          id="returnTime"
-                          value={rentalPeriod.returnTime}
-                          onChange={handleRentalPeriodChange}
-                          className={RENTAL_PERIOD_SELECT_CLASSNAME}
-                        >
-                          <option disabled>--:--</option>
-                          {RENTAL_TIME_OPTIONS.map((t) => (
-                            <option key={t} value={t}>
-                              {formatRentalTimeOptionLabel(t)}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                      </div>
-                    </div>
-                    <div className="min-w-0">
+                    <div className={RENTAL_PERIOD_LOCATION_CELL}>
                       <Label htmlFor="returnLocation">Miejsce</Label>
                       <div className="relative mt-1 min-w-0">
                         <select
@@ -499,7 +512,7 @@ const RentalV2Page: React.FC = () => {
                           </option>
                           {RENTAL_LOCATIONS_DATA.map((loc) => (
                             <option key={loc.title} value={loc.title}>
-                              {`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}
+                              {formatLocationSelectLabel(loc)}
                             </option>
                           ))}
                         </select>

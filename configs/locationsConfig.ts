@@ -7,6 +7,15 @@ export interface Location {
   price?: number | null;
 }
 
+/** Etykieta opcji miejsc odbioru/zwrotu: nazwa → (W CENIE) lub (cena zł) → adres. */
+export function formatLocationSelectLabel(loc: Location): string {
+  const included = loc.price == null || loc.price === 0;
+  if (included) {
+    return `${loc.title} (W CENIE) — ${loc.address}`;
+  }
+  return `${loc.title} (${loc.price!.toLocaleString('pl-PL')} zł) — ${loc.address}`;
+}
+
 export const LOCATIONS: Location[] = [
   { lat: 52.1755, lng: 20.9427, type: 'supercharger', title: 'Supercharger Aleja Krakowska 61', address: 'Aleja Krakowska 61, Warszawa', price: null },
   { lat: 52.2272, lng: 20.9023, type: 'greenway', title: 'Greenway Batalionów Chłopskich 73', address: 'Batalionów Chłopskich 73, Warszawa', price: null },

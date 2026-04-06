@@ -136,14 +136,11 @@ export const RENTAL_TIME_OPTIONS: string[] = Array.from({ length: 48 }, (_, i) =
 export const RENTAL_PERIOD_SELECT_CLASSNAME =
   'block h-12 w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
 
-/** Wiersz okresu: data + godzina obok (65% / 35% od 350px), miejsce obok; poniżej 350px kolumna. */
-export const RENTAL_PERIOD_ROW_LAYOUT =
-  'flex min-w-0 flex-col gap-4 min-[350px]:flex-row min-[350px]:items-end min-[350px]:gap-4';
-export const RENTAL_PERIOD_DATETIME_PAIR =
-  'flex min-w-0 w-full flex-col gap-4 min-[350px]:min-w-0 min-[350px]:flex-1 min-[350px]:flex-row min-[350px]:gap-2';
-export const RENTAL_PERIOD_DATE_CELL =
-  'min-w-0 w-full min-[350px]:w-[65%] min-[350px]:min-w-0';
-export const RENTAL_PERIOD_TIME_CELL =
-  'min-w-0 w-full min-[350px]:w-[35%] min-[350px]:min-w-0';
-export const RENTAL_PERIOD_LOCATION_CELL =
-  'min-w-0 w-full min-[350px]:min-w-0 min-[350px]:flex-1';
+/**
+ * Okres najmu: tylko data + godzina obok (65/35 od 350px); miejsce w osobnym wierszu pod spodem.
+ * Grid z minmax(0,…) zapobiega poziomemu rozpychaniu strony.
+ */
+export const RENTAL_PERIOD_DATETIME_GRID =
+  'grid w-full min-w-0 max-w-full grid-cols-1 gap-4 min-[350px]:grid-cols-[minmax(0,65fr)_minmax(0,35fr)] min-[350px]:items-end';
+export const RENTAL_PERIOD_FIELD_CELL = 'min-w-0 max-w-full';
+export const RENTAL_PERIOD_LOCATION_ROW = 'min-w-0 w-full max-w-full';

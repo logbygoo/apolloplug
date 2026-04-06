@@ -3,12 +3,10 @@ import Seo from '../components/Seo';
 import { Input, Label, PageHeader } from '../components/ui';
 import {
   RENTAL_CARS,
-  RENTAL_PERIOD_DATE_CELL,
-  RENTAL_PERIOD_DATETIME_PAIR,
-  RENTAL_PERIOD_LOCATION_CELL,
-  RENTAL_PERIOD_ROW_LAYOUT,
+  RENTAL_PERIOD_DATETIME_GRID,
+  RENTAL_PERIOD_FIELD_CELL,
+  RENTAL_PERIOD_LOCATION_ROW,
   RENTAL_PERIOD_SELECT_CLASSNAME,
-  RENTAL_PERIOD_TIME_CELL,
   RENTAL_TIME_OPTIONS,
 } from '../configs/rentConfig';
 import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig';
@@ -393,14 +391,14 @@ const RentalV2Page: React.FC = () => {
                 </div>
               </section>
 
-              <section className="mt-8">
+              <section className="mt-8 min-w-0 max-w-full overflow-x-hidden">
                 <h2 className="text-2xl font-bold tracking-tight">Okres najmu</h2>
-                <div className="mt-3 flex flex-col gap-6">
-                  <div className={RENTAL_PERIOD_ROW_LAYOUT}>
-                    <div className={RENTAL_PERIOD_DATETIME_PAIR}>
-                      <div className={RENTAL_PERIOD_DATE_CELL}>
+                <div className="mt-3 flex min-w-0 max-w-full flex-col gap-8">
+                  <div className="min-w-0 max-w-full space-y-4">
+                    <div className={RENTAL_PERIOD_DATETIME_GRID}>
+                      <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="pickupDate">Odbiór</Label>
-                        <div className="relative mt-1 min-w-0">
+                        <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                           <Input
                             id="pickupDate"
                             type="date"
@@ -408,17 +406,17 @@ const RentalV2Page: React.FC = () => {
                             min={today}
                             onChange={handleRentalPeriodChange}
                             required
-                            className="h-auto min-w-0 pr-10"
+                            className="box-border h-auto min-w-0 max-w-full pr-10"
                             style={{ padding: '11px' }}
                           />
                           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                            <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                            <CalendarDaysIcon className="h-5 w-5 shrink-0 text-muted-foreground" />
                           </div>
                         </div>
                       </div>
-                      <div className={RENTAL_PERIOD_TIME_CELL}>
+                      <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="pickupTime">Godzina</Label>
-                        <div className="relative mt-1 min-w-0">
+                        <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                           <select
                             id="pickupTime"
                             value={rentalPeriod.pickupTime}
@@ -436,9 +434,9 @@ const RentalV2Page: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className={RENTAL_PERIOD_LOCATION_CELL}>
+                    <div className={RENTAL_PERIOD_LOCATION_ROW}>
                       <Label htmlFor="pickupLocation">Miejsce</Label>
-                      <div className="relative mt-1 min-w-0">
+                      <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                         <select
                           id="pickupLocation"
                           value={rentalPeriod.pickupLocation}
@@ -458,11 +456,12 @@ const RentalV2Page: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={RENTAL_PERIOD_ROW_LAYOUT}>
-                    <div className={RENTAL_PERIOD_DATETIME_PAIR}>
-                      <div className={RENTAL_PERIOD_DATE_CELL}>
+
+                  <div className="min-w-0 max-w-full space-y-4">
+                    <div className={RENTAL_PERIOD_DATETIME_GRID}>
+                      <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="returnDate">Zwrot</Label>
-                        <div className="relative mt-1 min-w-0">
+                        <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                           <Input
                             id="returnDate"
                             type="date"
@@ -470,17 +469,17 @@ const RentalV2Page: React.FC = () => {
                             min={rentalPeriod.pickupDate || today}
                             onChange={handleRentalPeriodChange}
                             required
-                            className="h-auto min-w-0 pr-10"
+                            className="box-border h-auto min-w-0 max-w-full pr-10"
                             style={{ padding: '11px' }}
                           />
                           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                            <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                            <CalendarDaysIcon className="h-5 w-5 shrink-0 text-muted-foreground" />
                           </div>
                         </div>
                       </div>
-                      <div className={RENTAL_PERIOD_TIME_CELL}>
+                      <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="returnTime">Godzina</Label>
-                        <div className="relative mt-1 min-w-0">
+                        <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                           <select
                             id="returnTime"
                             value={rentalPeriod.returnTime}
@@ -498,9 +497,9 @@ const RentalV2Page: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    <div className={RENTAL_PERIOD_LOCATION_CELL}>
+                    <div className={RENTAL_PERIOD_LOCATION_ROW}>
                       <Label htmlFor="returnLocation">Miejsce</Label>
-                      <div className="relative mt-1 min-w-0">
+                      <div className="relative mt-1 min-w-0 overflow-hidden rounded-md">
                         <select
                           id="returnLocation"
                           value={rentalPeriod.returnLocation}

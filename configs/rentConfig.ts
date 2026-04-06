@@ -6,7 +6,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-3-highland',
     name: 'Model 3 Highland',
     imageUrl: [
-      'https://img.apolloidea.com/img/tesla-3-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-3-375x250.png',
     ],
     // Zdjęcia wyświetlane w Sliderze na stronie /wypozycz/tesla-3-highland
     landingPageImages: [
@@ -39,7 +39,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-y-juniper',
     name: 'Model Y Juniper',
     imageUrl: [
-      'https://img.apolloidea.com/img/tesla-y-600x400.png',
+      'https://img.apolloidea.com/img/tesla-y-375x250.png',
     ],
     pricePerDay: 890,
     available: true,

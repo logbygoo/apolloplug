@@ -153,12 +153,30 @@
     gap: var(--slider-gap, 20px);
     padding-top: 20px;
     padding-bottom: 20px;
-    padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
-    padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
   }
-  /* Wypożyczalnia: odstęp między kartami jak poprzednio (gap-4); esoteric domyślnie 20px */
+  /*
+   * Wypożyczalnia: pierwsza karta w linii z treścią (.container + px-4 / md:px-6), ale tor można przewinąć
+   * do krawędzi viewportu (padding toru jest w przewijanej treści).
+   * offset = margines boczny wyśrodkowanego pudełka + ten sam gutter co kontener.
+   */
   .rental-e2e-bleed {
     --slider-gap: 1rem;
+    --content-gutter: 1rem; /* px-4 */
+  }
+  @media (min-width: 768px) {
+    .rental-e2e-bleed {
+      --content-gutter: 1.5rem; /* md:px-6 */
+    }
+  }
+  .rental-e2e-bleed .e2e-track {
+    padding-left: max(
+      var(--content-gutter),
+      calc((100vw - min(100vw, var(--container-width))) / 2 + var(--content-gutter))
+    );
+    padding-right: max(
+      var(--content-gutter),
+      calc((100vw - min(100vw, var(--container-width))) / 2 + var(--content-gutter))
+    );
   }
   input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;

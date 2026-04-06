@@ -200,9 +200,8 @@ const RENTAL_FORM_PDF_TILES = [
 ] as const;
 
 /**
- * Jak esoteric.pl: zewnętrzny bleed 100vw, w środku .e2e-slider (scroll) + .e2e-track (inline-flex + padding
- * z max(1rem, (100% - --container-width)/2 + 15px)) — małe ekrany: 1rem z boku; duże: wyrównanie do 80rem.
- * Odstęp między kartami: --slider-gap (domyślnie 20px w CSS); u nas 1rem ≈ gap-4.
+ * Bleed 100vw + .e2e-slider / .e2e-track. Poziomy padding toru = (100vw − min(100vw, 80rem))/2 + gutter
+ * (jak wyśrodkowany .container + px-4 / md:px-6). Pierwsza karta jak treść; przy scrollu padding odjeżdża — widać krawędź ekranu.
  */
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
   <div

@@ -63,7 +63,7 @@ const RENTAL_V2_E2E_STYLES = `
     display: inline-flex;
     width: max-content;
     gap: var(--slider-gap, 20px);
-    /* Odstęp od h2 daje wrapper .rental-v2-h2-stack (mt-6), nie padding toru — bez podwajania */
+    /* Odstęp od h2 daje wrapper (mt-3), nie padding toru — bez podwajania */
     padding-top: 0;
     padding-bottom: 24px;
     /* px-4: wewnętrzny gutter jak treść w .container poniżej md */
@@ -105,7 +105,7 @@ const RentalV2EdgeScroller: React.FC<{ children: React.ReactNode }> = ({ childre
   </div>
 );
 
-/** Slider w tym samym stosie co siatka — odstęp od h2 tylko z rodzica (mt-6). */
+/** Slider w tym samym stosie co siatka — odstęp od h2 tylko z rodzica (mt-3). */
 const RentalV2E2ESlider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="lg:hidden">
     <RentalV2EdgeScroller>
@@ -289,7 +289,7 @@ const RentalV2Page: React.FC = () => {
             <div className="min-w-0 overflow-x-visible lg:col-span-2">
               <section>
                 <h2 className="text-2xl font-bold tracking-tight">Wybierz Markę</h2>
-                <div className="mt-6">
+                <div className="mt-3">
                   <div className="hidden gap-4 lg:grid lg:grid-cols-3">
                     {BRANDS.map((brand) => (
                       <V2BrandCard
@@ -317,7 +317,7 @@ const RentalV2Page: React.FC = () => {
 
               <section className="mt-8">
                 <h2 className="text-2xl font-bold tracking-tight">Wybierz Model</h2>
-                <div className="mt-6">
+                <div className="mt-3">
                   <div className="hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
                     {RENTAL_CARS.map((car) => (
                       <V2ModelCard

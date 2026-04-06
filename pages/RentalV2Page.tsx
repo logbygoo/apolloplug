@@ -1,12 +1,32 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Seo from '../components/Seo';
-import { PageHeader } from '../components/ui';
-import { RENTAL_CARS } from '../configs/rentConfig';
+import { Input, Label, PageHeader } from '../components/ui';
+import { RENTAL_CARS, RENTAL_PERIOD_SELECT_CLASSNAME, RENTAL_TIME_OPTIONS } from '../configs/rentConfig';
+import { LOCATIONS } from '../configs/locationsConfig';
+import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 import { BRANDS } from '../constants';
-import { CheckIcon } from '../icons';
+import { CalendarDaysIcon, CheckIcon, ChevronDownIcon } from '../icons';
 import type { Car } from '../types';
 
 type RentalBrand = (typeof BRANDS)[number];
+
+const RENTAL_LOCATIONS_DATA = LOCATIONS;
+
+const todayDate = new Date();
+const tomorrowDate = new Date(todayDate);
+tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+const formatDate = (date: Date) => date.toISOString().split('T')[0];
+const today = formatDate(todayDate);
+const tomorrow = formatDate(tomorrowDate);
+
+type RentalPeriodState = {
+  pickupDate: string;
+  pickupTime: string;
+  pickupLocation: string;
+  returnDate: string;
+  returnTime: string;
+  returnLocation: string;
+};
 
 /**
  * Slider end-to-end z responsywnym --container-width (jak w dostarczonym HTML).
@@ -210,8 +230,27 @@ const RentalV2Page: React.FC = () => {
     const id = RENTAL_CARS[0]?.id ?? '';
     return BRANDS.find((b) => id.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
   });
+  const [rentalPeriod, setRentalPeriod] = useState<RentalPeriodState>(() => ({
+    pickupDate: today,
+    pickupTime: '10:00',
+    pickupLocation: LOCATIONS[0]?.title ?? '',
+    returnDate: tomorrow,
+    returnTime: '10:00',
+    returnLocation: LOCATIONS[0]?.title ?? '',
+  }));
   const rentalRootRef = useRef<HTMLDivElement>(null);
   const [debugLine, setDebugLine] = useState('');
+
+  const handleRentalPeriodChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    setRentalPeriod((prev) => {
+      const next = { ...prev, [id]: value } as RentalPeriodState;
+      if (id === 'pickupDate' && next.returnDate < value) {
+        next.returnDate = value;
+      }
+      return next;
+    });
+  };
 
   const handleSelectCar = (carId: string) => {
     setSelectedId(carId);
@@ -342,6 +381,132 @@ const RentalV2Page: React.FC = () => {
                       />
                     ))}
                   </RentalV2E2ESlider>
+                </div>
+              </section>
+
+              <section className="mt-8">
+                <h2 className="text-2xl font-bold tracking-tight">Okres najmu</h2>
+                <div className="mt-3 flex flex-col gap-6">
+                  <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="min-w-0">
+                      <Label htmlFor="pickupDate">Odbiór</Label>
+                      <div className="relative mt-1 min-w-0">
+                        <Input
+                          id="pickupDate"
+                          type="date"
+                          value={rentalPeriod.pickupDate}
+                          min={today}
+                          onChange={handleRentalPeriodChange}
+                          required
+                          className="h-auto min-w-0 pr-10"
+                          style={{ padding: '11px' }}
+                        />
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                          <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <Label htmlFor="pickupTime">Godzina</Label>
+                      <div className="relative mt-1 min-w-0">
+                        <select
+                          id="pickupTime"
+                          value={rentalPeriod.pickupTime}
+                          onChange={handleRentalPeriodChange}
+                          className={RENTAL_PERIOD_SELECT_CLASSNAME}
+                        >
+                          <option disabled>--:--</option>
+                          {RENTAL_TIME_OPTIONS.map((t) => (
+                            <option key={t} value={t}>
+                              {formatRentalTimeOptionLabel(t)}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <Label htmlFor="pickupLocation">Miejsce</Label>
+                      <div className="relative mt-1 min-w-0">
+                        <select
+                          id="pickupLocation"
+                          value={rentalPeriod.pickupLocation}
+                          onChange={handleRentalPeriodChange}
+                          className={RENTAL_PERIOD_SELECT_CLASSNAME}
+                        >
+                          <option disabled value="">
+                            Wybierz
+                          </option>
+                          {RENTAL_LOCATIONS_DATA.map((loc) => (
+                            <option key={loc.title} value={loc.title}>
+                              {`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="min-w-0">
+                      <Label htmlFor="returnDate">Zwrot</Label>
+                      <div className="relative mt-1 min-w-0">
+                        <Input
+                          id="returnDate"
+                          type="date"
+                          value={rentalPeriod.returnDate}
+                          min={rentalPeriod.pickupDate || today}
+                          onChange={handleRentalPeriodChange}
+                          required
+                          className="h-auto min-w-0 pr-10"
+                          style={{ padding: '11px' }}
+                        />
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                          <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <Label htmlFor="returnTime">Godzina</Label>
+                      <div className="relative mt-1 min-w-0">
+                        <select
+                          id="returnTime"
+                          value={rentalPeriod.returnTime}
+                          onChange={handleRentalPeriodChange}
+                          className={RENTAL_PERIOD_SELECT_CLASSNAME}
+                        >
+                          <option disabled>--:--</option>
+                          {RENTAL_TIME_OPTIONS.map((t) => (
+                            <option key={t} value={t}>
+                              {formatRentalTimeOptionLabel(t)}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <Label htmlFor="returnLocation">Miejsce</Label>
+                      <div className="relative mt-1 min-w-0">
+                        <select
+                          id="returnLocation"
+                          value={rentalPeriod.returnLocation}
+                          onChange={handleRentalPeriodChange}
+                          className={RENTAL_PERIOD_SELECT_CLASSNAME}
+                        >
+                          <option disabled value="">
+                            Wybierz
+                          </option>
+                          {RENTAL_LOCATIONS_DATA.map((loc) => (
+                            <option key={loc.title} value={loc.title}>
+                              {`${!loc.price ? '(W CENIE) ' : ''}${loc.title} (${loc.address})`}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDownIcon className="pointer-events-none absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </section>
             </div>

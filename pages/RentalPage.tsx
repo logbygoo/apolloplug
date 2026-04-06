@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button, Input, Label, PageHeader } from '../components/ui';
-import { RENTAL_CARS, ADDITIONAL_OPTIONS } from '../configs/rentConfig';
+import { RENTAL_CARS, ADDITIONAL_OPTIONS, RENTAL_TIME_OPTIONS, RENTAL_PERIOD_SELECT_CLASSNAME } from '../configs/rentConfig';
 import { LOCATIONS, Location } from '../configs/locationsConfig';
 import { BRANDS } from '../constants';
 import { ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, CalendarDaysIcon } from '../icons';
@@ -11,6 +11,7 @@ import { createReservationAdminEmailPayload, createReservationCustomerEmailPaylo
 import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 import { mailApiUrl, smsApiUrl } from '../configs/notifications/apiEndpoints';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 
 // Declare gtag for TypeScript
 declare global {
@@ -19,18 +20,7 @@ declare global {
   }
 }
 
-const timeOptions = Array.from({ length: 25 }, (_, i) => {
-    const hour = Math.floor(i / 2) + 8;
-    const minute = i % 2 === 0 ? '00' : '30';
-    if (hour > 20) return null;
-    return `${String(hour).padStart(2, '0')}:${minute}`;
-}).filter(Boolean) as string[];
-
 const RENTAL_LOCATIONS_DATA: Location[] = LOCATIONS;
-
-/** Ogranicza szerokość <select> do kolumny siatki — długie teksty opcji nie rozpychają strony w poziomie. */
-const rentalPeriodSelectClassName =
-  'block h-12 w-full min-w-0 max-w-full appearance-none rounded-md border border-border bg-secondary px-3 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2';
 
 const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
   if (typeof price === 'number') {
@@ -707,12 +697,12 @@ const RentalPage: React.FC = () => {
                                                         id="pickupTime"
                                                         value={formData.pickupTime}
                                                         onChange={handleInputChange}
-                                                        className={rentalPeriodSelectClassName}
+                                                        className={RENTAL_PERIOD_SELECT_CLASSNAME}
                                                     >
                                                         <option disabled>--:--</option>
-                                                        {timeOptions.map((t) => (
+                                                        {RENTAL_TIME_OPTIONS.map((t) => (
                                                             <option key={t} value={t}>
-                                                                {t}
+                                                                {formatRentalTimeOptionLabel(t)}
                                                             </option>
                                                         ))}
                                                     </select>
@@ -726,7 +716,7 @@ const RentalPage: React.FC = () => {
                                                         id="pickupLocation"
                                                         value={formData.pickupLocation}
                                                         onChange={handleInputChange}
-                                                        className={rentalPeriodSelectClassName}
+                                                        className={RENTAL_PERIOD_SELECT_CLASSNAME}
                                                     >
                                                         <option disabled value="">
                                                             Wybierz
@@ -767,12 +757,12 @@ const RentalPage: React.FC = () => {
                                                         id="returnTime"
                                                         value={formData.returnTime}
                                                         onChange={handleInputChange}
-                                                        className={rentalPeriodSelectClassName}
+                                                        className={RENTAL_PERIOD_SELECT_CLASSNAME}
                                                     >
                                                         <option disabled>--:--</option>
-                                                        {timeOptions.map((t) => (
+                                                        {RENTAL_TIME_OPTIONS.map((t) => (
                                                             <option key={t} value={t}>
-                                                                {t}
+                                                                {formatRentalTimeOptionLabel(t)}
                                                             </option>
                                                         ))}
                                                     </select>
@@ -786,7 +776,7 @@ const RentalPage: React.FC = () => {
                                                         id="returnLocation"
                                                         value={formData.returnLocation}
                                                         onChange={handleInputChange}
-                                                        className={rentalPeriodSelectClassName}
+                                                        className={RENTAL_PERIOD_SELECT_CLASSNAME}
                                                     >
                                                         <option disabled value="">
                                                             Wybierz

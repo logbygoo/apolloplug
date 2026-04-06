@@ -124,6 +124,37 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
+
+  /* End-to-end slider — ta sama idea co esoteric.pl (.e2e-slider + .e2e-track) */
+  :root {
+    --container-width: 80rem; /* max-w-7xl / ~1280px — zgodne z typowym Tailwind container */
+  }
+  .e2e-slider {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .e2e-slider::-webkit-scrollbar {
+    height: 0;
+    display: none;
+  }
+  .e2e-track {
+    display: inline-flex;
+    width: max-content;
+    gap: var(--slider-gap, 20px);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
+    padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
+  }
+  /* Wypożyczalnia: odstęp między kartami jak poprzednio (gap-4); esoteric domyślnie 20px */
+  .rental-e2e-bleed {
+    --slider-gap: 1rem;
+  }
   input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;

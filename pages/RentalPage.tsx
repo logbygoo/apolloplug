@@ -200,16 +200,16 @@ const RENTAL_FORM_PDF_TILES = [
 ] as const;
 
 /**
- * Pełna szerokość viewportu względem kolumny treści: na większych ekranach (wyśrodkowany container)
- * samo -mx-4 nie wystarcza — trzeba ml-[calc(50%-50vw)] + w-[100vw], żeby tor dojeżdżał do obu krawędzi ekranu.
- * Pierwszy/ostatni element: margines jak padding kontenera — wyrównanie z tytułem i przewijalny odstęp.
+ * Jak esoteric.pl: zewnętrzny bleed 100vw, w środku .e2e-slider (scroll) + .e2e-track (inline-flex + padding
+ * z max(1rem, (100% - --container-width)/2 + 15px)) — małe ekrany: 1rem z boku; duże: wyrównanie do 80rem.
+ * Odstęp między kartami: --slider-gap (domyślnie 20px w CSS); u nas 1rem ≈ gap-4.
  */
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
   <div
-    className={`relative max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}
+    className={`rental-e2e-bleed relative max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}
   >
-    <div className="no-scrollbar flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-3 [-webkit-overflow-scrolling:touch] touch-pan-x [&>*:first-child]:ml-4 md:[&>*:first-child]:ml-6 [&>*:last-child]:mr-4 md:[&>*:last-child]:mr-6">
-      {children}
+    <div className="e2e-slider touch-pan-x">
+      <div className="e2e-track">{children}</div>
     </div>
   </div>
 );

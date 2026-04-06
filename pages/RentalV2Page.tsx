@@ -49,6 +49,15 @@ function formatPolishRentalDays(n: number): string {
   return `${n} dni`;
 }
 
+/** `YYYY-MM-DD` → `dd.mm` (pływający CTA). */
+function formatDdMmFromIso(iso: string): string {
+  if (!iso) return '';
+  const p = iso.split('-');
+  if (p.length !== 3) return iso;
+  const [, m, d] = p;
+  return `${d}.${m}`;
+}
+
 type RentalPeriodState = {
   pickupDate: string;
   pickupTime: string;
@@ -468,6 +477,8 @@ const RentalV2Page: React.FC = () => {
     () => getInitialRentalV2State().additionalOptions
   );
   const rentalRootRef = useRef<HTMLDivElement>(null);
+  const summaryAsideRef = useRef<HTMLElement>(null);
+  const [summaryInView, setSummaryInView] = useState(false);
   const [debugLine, setDebugLine] = useState('');
 
   useEffect(() => {
@@ -542,6 +553,19 @@ const RentalV2Page: React.FC = () => {
     tick();
     window.addEventListener('resize', tick);
     return () => window.removeEventListener('resize', tick);
+  }, []);
+
+  useEffect(() => {
+    const el = summaryAsideRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        setSummaryInView(entry.isIntersecting);
+      },
+      { root: null, threshold: 0.06, rootMargin: '0px 0px -32px 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
@@ -658,6 +682,11 @@ const RentalV2Page: React.FC = () => {
     });
   }, [additionalOptions, selected]);
 
+  const floatingCtaSubline = useMemo(() => {
+    if (summary.rentalDays <= 0) return '—';
+    return `${formatDdMmFromIso(rentalPeriod.pickupDate)}–${formatDdMmFromIso(rentalPeriod.returnDate)} — ${formatPolishRentalDays(summary.rentalDays)} — ${summary.tierPricePerDay.toLocaleString('pl-PL')} zł/db`;
+  }, [summary.rentalDays, summary.tierPricePerDay, rentalPeriod.pickupDate, rentalPeriod.returnDate]);
+
   const breadcrumbs = useMemo(() => {
     const crumbs: { name: string; path?: string }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
     if (selected) {
@@ -671,7 +700,10 @@ const RentalV2Page: React.FC = () => {
       <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
       <style>{RENTAL_PERIOD_FIELD_STYLES}</style>
       <style>{RENTAL_V2_E2E_STYLES}</style>
-      <div ref={rentalRootRef} className="rental-v2 min-h-screen bg-background pb-16 text-foreground">
+      <div
+        ref={rentalRootRef}
+        className="rental-v2 min-h-screen bg-background pb-28 text-foreground lg:pb-16"
+      >
         <div className="e2e-v2-debug">{debugLine}</div>
 
         <div className="mb-8 w-full border-b border-border bg-secondary">
@@ -914,7 +946,7 @@ const RentalV2Page: React.FC = () => {
               </section>
             </div>
 
-            <aside className="min-w-0 lg:col-span-1">
+            <aside ref={summaryAsideRef} className="min-w-0 lg:col-span-1">
               <div className="lg:sticky lg:top-24">
                 <div className="rounded-lg bg-secondary p-6">
                   <h2 className="text-3xl font-bold">Podsumowanie</h2>
@@ -1043,6 +1075,25 @@ const RentalV2Page: React.FC = () => {
             </aside>
           </div>
         </div>
+      </div>
+
+      {/* Pływający CTA: tylko viewport < lg (jak --container-width przed 64rem); ukryty gdy widać panel podsumowania */}
+      <div
+        className={`fixed inset-x-0 bottom-0 z-50 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 lg:hidden ${summaryInView ? 'hidden' : ''}`}
+        aria-hidden={summaryInView}
+      >
+        <button
+          type="button"
+          className="w-full rounded-lg bg-foreground px-4 py-3 text-left text-background shadow-lg transition-opacity hover:bg-foreground/90"
+        >
+          <div className="flex items-baseline justify-between gap-3 text-sm font-semibold leading-tight">
+            <span>Zarezerwuj pojazd</span>
+            <span className="shrink-0 tabular-nums">
+              {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+            </span>
+          </div>
+          <div className="mt-1.5 text-xs font-normal leading-snug text-background/85">{floatingCtaSubline}</div>
+        </button>
       </div>
     </>
   );

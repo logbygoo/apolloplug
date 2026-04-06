@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import {
@@ -16,7 +17,7 @@ import {
 import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 import { BRANDS } from '../constants';
-import { CalendarDaysIcon, CheckIcon, ChevronDownIcon } from '../icons';
+import { CalendarDaysIcon, CheckIcon, ChevronDownIcon, DocumentTextIcon } from '../icons';
 import type { Car } from '../types';
 
 type RentalBrand = (typeof BRANDS)[number];
@@ -329,6 +330,26 @@ const V2BrandCard: React.FC<{
     </div>
   );
 };
+
+/** Slugi jak w `DOCUMENTS_DATA` — podgląd PDF na stronie Dokumentacja. */
+const RENTAL_V2_SZKIC_UMOWY_DOCS = [
+  { title: 'Umowa wynajmu', docSlug: 'wzor-umowy' },
+  { title: 'Protokół Odbioru/Zwrotu', docSlug: 'protokol-wydania-zwrotu' },
+  { title: 'Regulamin Wypożyczalni', docSlug: 'regulamin-wypozyczalni' },
+] as const;
+
+const V2LegalDocTile: React.FC<{ title: string; docSlug: string }> = ({ title, docSlug }) => (
+  <Link
+    to={`/dokumentacja?doc=${encodeURIComponent(docSlug)}`}
+    className="group flex min-h-[4.5rem] items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary"
+  >
+    <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
+    <div className="min-w-0">
+      <p className="font-medium text-foreground">{title}</p>
+      <p className="text-sm text-muted-foreground">Otwórz w dokumentacji</p>
+    </div>
+  </Link>
+);
 
 const V2ModelCard: React.FC<{
   car: Car;
@@ -851,6 +872,27 @@ const RentalV2Page: React.FC = () => {
                       onToggle={() => handleOptionToggle(opt.id)}
                     />
                   ))}
+                </div>
+              </section>
+
+              <section className="mt-8 min-w-0 max-w-full overflow-x-hidden">
+                <h2 className="text-2xl font-bold tracking-tight">Szkic umowy</h2>
+                <div className="mt-3">
+                  <div className="hidden gap-4 lg:grid lg:grid-cols-3">
+                    {RENTAL_V2_SZKIC_UMOWY_DOCS.map((doc) => (
+                      <V2LegalDocTile key={doc.docSlug} title={doc.title} docSlug={doc.docSlug} />
+                    ))}
+                  </div>
+                  <RentalV2E2ESlider>
+                    {RENTAL_V2_SZKIC_UMOWY_DOCS.map((doc) => (
+                      <div
+                        key={doc.docSlug}
+                        className="w-[min(88vw,22rem)] shrink-0 sm:w-96"
+                      >
+                        <V2LegalDocTile title={doc.title} docSlug={doc.docSlug} />
+                      </div>
+                    ))}
+                  </RentalV2E2ESlider>
                 </div>
               </section>
             </div>

@@ -200,14 +200,15 @@ const RENTAL_FORM_PDF_TILES = [
 ] as const;
 
 /**
- * Na mobile: tor zaczyna się w linii treści (jak nagłówek sekcji), rozciąga się w prawo do krawędzi
- * viewportu (o szerokość paddingu kontenera px-4 / md:px-6). Bez 100vw — unikamy poziomego scrolla strony.
+ * End-to-end w poziomie: ujemny margines = padding kontenera (px-4 / md:px-6), żeby tor dotykał krawędzi ekranu.
+ * Wyrównanie pierwszej karty z tytułem: margin-left na pierwszym dziecku (przewija się z listą). Ostatni element —
+ * margin-right, żeby po prawej był ten sam „oddech” i można było przewinąć do końca.
  */
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
   <div
-    className={`relative max-w-none lg:hidden w-[calc(100%+1rem)] md:w-[calc(100%+1.5rem)] ${className ?? ''}`}
+    className={`relative max-w-none lg:hidden -mx-4 w-[calc(100%+2rem)] md:-mx-6 md:w-[calc(100%+3rem)] ${className ?? ''}`}
   >
-    <div className="no-scrollbar flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-3 pl-0 pr-4 md:pr-6 [-webkit-overflow-scrolling:touch] touch-pan-x">
+    <div className="no-scrollbar flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-3 [-webkit-overflow-scrolling:touch] touch-pan-x [&>*:first-child]:ml-4 md:[&>*:first-child]:ml-6 [&>*:last-child]:mr-4 md:[&>*:last-child]:mr-6">
       {children}
     </div>
   </div>

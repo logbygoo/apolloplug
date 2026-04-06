@@ -24,7 +24,17 @@ type RentalBrand = (typeof BRANDS)[number];
 
 const RENTAL_LOCATIONS_DATA = LOCATIONS;
 
-const formatDate = (date: Date) => date.toISOString().split('T')[0];
+/**
+ * `YYYY-MM-DD` w **lokalnej** strefie czasowej.
+ * Nie używaj `toISOString().split('T')[0]` — to data UTC; po północy lokalnej
+ * może być jeszcze „wczoraj” w UTC i `min` na inputach dat pozwala wybrać wczoraj.
+ */
+const formatDate = (date: Date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
 
 /** Aktualna data (YYYY-MM-DD) — używaj przy walidacji, nie stałej z początku modułu. */
 function getTodayIso(): string {
@@ -702,7 +712,7 @@ const RentalV2Page: React.FC = () => {
 
   const floatingCtaSubline = useMemo(() => {
     if (summary.rentalDays <= 0) return '—';
-    return `${formatDdMmFromIso(rentalPeriod.pickupDate)}–${formatDdMmFromIso(rentalPeriod.returnDate)} — ${formatPolishRentalDays(summary.rentalDays)} — ${summary.tierPricePerDay.toLocaleString('pl-PL')} zł/db`;
+    return `${formatDdMmFromIso(rentalPeriod.pickupDate)}–${formatDdMmFromIso(rentalPeriod.returnDate)} · ${formatPolishRentalDays(summary.rentalDays)} · ${summary.tierPricePerDay.toLocaleString('pl-PL')} zł/db`;
   }, [summary.rentalDays, summary.tierPricePerDay, rentalPeriod.pickupDate, rentalPeriod.returnDate]);
 
   const breadcrumbs = useMemo(() => {

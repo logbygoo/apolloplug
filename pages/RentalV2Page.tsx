@@ -69,8 +69,17 @@ const RENTAL_V2_E2E_STYLES = `
     gap: var(--slider-gap, 20px);
     padding-top: 24px;
     padding-bottom: 24px;
+    /* px-4: wewnętrzny gutter jak treść w .container poniżej md */
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
+  }
+  /* Od md: treść ma md:px-6 (1.5rem); przy --container-width: 48rem fuzz 15px dawał start toru ~9px
+     na lewo od nagłówka / podsumowania — ten sam gutter co .container */
+  @media (min-width: 768px) {
+    .rental-v2 .e2e-track {
+      padding-left: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
+      padding-right: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
+    }
   }
 `;
 

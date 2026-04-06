@@ -39,7 +39,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-y-juniper',
     name: 'Model Y Juniper',
     imageUrl: [
-      'https://img.apolloidea.com/img/tesla-y-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-y-600x400.png',
     ],
     pricePerDay: 890,
     available: true,

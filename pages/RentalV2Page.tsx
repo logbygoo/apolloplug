@@ -8,13 +8,6 @@ import type { Car } from '../types';
 
 type RentalBrand = (typeof BRANDS)[number];
 
-/** np. `.../tesla-y-low-600x400.jpg` → `.../tesla-y-low-gray-600x400.jpg` na wybranym kafelku */
-function rentalV2CardImageUrl(baseUrl: string, selected: boolean): string {
-  if (!selected) return baseUrl;
-  const withGray = baseUrl.replace(/-(\d+x\d+)(\.[a-z]+)$/i, '-gray-$1$2');
-  return withGray !== baseUrl ? withGray : baseUrl;
-}
-
 /**
  * Slider end-to-end z responsywnym --container-width (jak w dostarczonym HTML).
  * Wszystko pod .rental-v2 — bez kolizji z globalnym .e2e-track w index.html.
@@ -172,11 +165,6 @@ const V2ModelCard: React.FC<{
     return car.pricePerDay;
   }, [car]);
 
-  const imageSrc = useMemo(
-    () => rentalV2CardImageUrl(car.imageUrl[0] ?? '', isSelected),
-    [car.imageUrl, isSelected]
-  );
-
   const widthClass =
     layout === 'grid'
       ? 'min-h-[12rem] w-full min-w-0'
@@ -201,7 +189,7 @@ const V2ModelCard: React.FC<{
           Wkrótce
         </div>
       )}
-      <img src={imageSrc} alt={car.name} className="mb-4 h-32 w-full object-contain" />
+      <img src={car.imageUrl[0]} alt={car.name} className="mb-4 h-32 w-full object-contain" />
       <div className="mt-auto text-center">
         <h3 className="font-semibold">{car.name}</h3>
         {isAvailable ? (

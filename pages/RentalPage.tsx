@@ -200,14 +200,16 @@ const RENTAL_FORM_PDF_TILES = [
 ] as const;
 
 /**
- * Bleed 100vw + .e2e-slider / .e2e-track. Poziomy padding toru = (100vw − min(100vw, 80rem))/2 + gutter
- * (jak wyśrodkowany .container + px-4 / md:px-6). Pierwsza karta jak treść; przy scrollu padding odjeżdża — widać krawędź ekranu.
+ * End-to-End Slider jak w przykładzie: zewnątrz pełna szerokość viewportu (sekcja „full width”),
+ * w środku .e2e-slider (100% = viewport) + .e2e-track (inline-flex, max-content, padding z index.html).
  */
+const rentalE2eSliderStyle = { '--slider-gap': '1rem' } as React.CSSProperties;
+
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
   <div
-    className={`rental-e2e-bleed relative max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}
+    className={`relative w-[100vw] max-w-[100vw] shrink-0 ml-[calc(50%-50vw)] lg:hidden ${className ?? ''}`}
   >
-    <div className="e2e-slider touch-pan-x">
+    <div className="e2e-slider touch-pan-x" style={rentalE2eSliderStyle}>
       <div className="e2e-track">{children}</div>
     </div>
   </div>

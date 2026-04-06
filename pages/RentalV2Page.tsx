@@ -32,7 +32,8 @@ const RENTAL_V2_STYLES = `
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
   }
-  @media (max-width: 1023px) {
+  /* ≤768px (max-md i wężej) */
+  @media (max-width: 768px) {
     .rental-v2 .e2e-track {
       padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 280px));
     }

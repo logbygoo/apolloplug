@@ -54,6 +54,8 @@ const RENTAL_V2_E2E_STYLES = `
     overscroll-behavior-x: contain;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /* touch-pan-x (same as samo pan-x) blokuje przewijanie strony góra/dół; pan-x + pan-y odblokowuje */
+    touch-action: pan-x pan-y;
   }
   .rental-v2 .e2e-slider::-webkit-scrollbar {
     height: 0;
@@ -109,7 +111,7 @@ const RentalV2EdgeScroller: React.FC<{ children: React.ReactNode }> = ({ childre
 const RentalV2E2ESlider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div className="lg:hidden">
     <RentalV2EdgeScroller>
-      <section className="e2e-slider touch-pan-x" style={sliderGapStyle}>
+      <section className="e2e-slider" style={sliderGapStyle}>
         <div className="e2e-track">{children}</div>
       </section>
     </RentalV2EdgeScroller>

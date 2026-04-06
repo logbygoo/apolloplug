@@ -78,6 +78,17 @@ const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
 
 const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
 
+/**
+ * Wychodzi z szerokości kolumny / .container — pełna szerokość viewportu.
+ * Bez resetu md: (w przeciwieństwie do RentalEdgeScroller na /wypozyczalnia), żeby
+ * .e2e-track miał poprawne 100% przy calc paddingu i nic nie obcinało z overflow rodziców.
+ */
+const RentalV2EdgeScroller: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="relative shrink-0 overflow-x-visible w-[100vw] max-w-[100vw] ml-[calc(50%-50vw)]">
+    {children}
+  </div>
+);
+
 const V2ModelCard: React.FC<{
   car: Car;
   isSelected: boolean;
@@ -200,25 +211,27 @@ const RentalV2Page: React.FC = () => {
                 ))}
               </div>
 
-              {/* Slider — tylko gdy układ jest jednokolumnowy (sidebar pod spodem, &lt; lg) */}
-              <div className="mt-6 min-w-0 lg:hidden">
-                <p className="e2e-v2-hint mb-0">
-                  Przewiń poziomo. Lewy/prawy padding toru liczy się od{' '}
-                  <code className="text-foreground">--container-width</code> (zmienia się przy sm/md/lg/xl/2xl).
-                </p>
-                <section className="e2e-slider" style={sliderGapStyle}>
-                  <div className="e2e-track">
-                    {RENTAL_CARS.map((car) => (
-                      <V2ModelCard
-                        key={car.id}
-                        car={car}
-                        layout="slider"
-                        isSelected={selectedId === car.id}
-                        onSelect={() => setSelectedId(car.id)}
-                      />
-                    ))}
-                  </div>
-                </section>
+              {/* Slider — tylko &lt; lg; tor na pełną szerokość okna (nie wąska kolumna .container) */}
+              <div className="mt-6 lg:hidden">
+                <RentalV2EdgeScroller>
+                  <p className="e2e-v2-hint mb-0">
+                    Przewiń poziomo. Lewy/prawy padding toru liczy się od{' '}
+                    <code className="text-foreground">--container-width</code> (zmienia się przy sm/md/lg/xl/2xl).
+                  </p>
+                  <section className="e2e-slider touch-pan-x" style={sliderGapStyle}>
+                    <div className="e2e-track">
+                      {RENTAL_CARS.map((car) => (
+                        <V2ModelCard
+                          key={car.id}
+                          car={car}
+                          layout="slider"
+                          isSelected={selectedId === car.id}
+                          onSelect={() => setSelectedId(car.id)}
+                        />
+                      ))}
+                    </div>
+                  </section>
+                </RentalV2EdgeScroller>
               </div>
             </div>
 

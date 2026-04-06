@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Seo from '../components/Seo';
-import { Input, Label, PageHeader } from '../components/ui';
+import { Button, Input, Label, PageHeader } from '../components/ui';
 import {
   ADDITIONAL_OPTIONS,
   RENTAL_CARS,
@@ -24,11 +24,8 @@ type RentalBrand = (typeof BRANDS)[number];
 const RENTAL_LOCATIONS_DATA = LOCATIONS;
 
 const todayDate = new Date();
-const tomorrowDate = new Date(todayDate);
-tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 const formatDate = (date: Date) => date.toISOString().split('T')[0];
 const today = formatDate(todayDate);
-const tomorrow = formatDate(tomorrowDate);
 
 const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
   if (typeof price === 'number') {
@@ -59,6 +56,134 @@ type RentalPeriodState = {
   returnTime: string;
   returnLocation: string;
 };
+
+const RENTAL_V2_SESSION_KEY = 'rentalV2FormState';
+
+type RentalV2Session = {
+  selectedId: string;
+  selectedBrandId: string;
+  rentalPeriod: RentalPeriodState;
+  additionalOptions: AdditionalOptionsState;
+};
+
+function addDays(date: Date, days: number): Date {
+  const d = new Date(date.getTime());
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+/** +1 h od teraz, w górę do najbliższego slotu 30 min (jak w `RENTAL_TIME_OPTIONS`). */
+function computeDefaultTimeOneHourAhead(): string {
+  const d = new Date();
+  d.setTime(d.getTime() + 60 * 60 * 1000);
+  let totalMin = d.getHours() * 60 + d.getMinutes();
+  let slotMin = Math.ceil(totalMin / 30) * 30;
+  if (slotMin > 23 * 60 + 30) slotMin = 23 * 60 + 30;
+  const h = Math.floor(slotMin / 60);
+  const m = slotMin % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+function snapTimeToRentalSlot(s: string): string {
+  if (RENTAL_TIME_OPTIONS.includes(s)) return s;
+  const parts = s.split(':').map(Number);
+  const h = parts[0] ?? 0;
+  const min = parts[1] ?? 0;
+  let total = h * 60 + min;
+  total = Math.round(total / 30) * 30;
+  total = Math.min(Math.max(total, 0), 23 * 60 + 30);
+  const hh = String(Math.floor(total / 60)).padStart(2, '0');
+  const mm = String(total % 60).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function isValidLocationTitle(title: string): boolean {
+  return LOCATIONS.some((l) => l.title === title);
+}
+
+function mergeAdditionalOptionsFromStored(
+  stored: Partial<Record<string, boolean>> | undefined,
+  carId: string
+): AdditionalOptionsState {
+  const base = getDefaultOptionsForCar(carId);
+  if (!stored) return base;
+  for (const o of ADDITIONAL_OPTIONS) {
+    if (typeof stored[o.id] === 'boolean') {
+      base[o.id] = stored[o.id];
+    }
+  }
+  return base;
+}
+
+function loadRentalV2Session(): RentalV2Session | null {
+  try {
+    const raw = sessionStorage.getItem(RENTAL_V2_SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<RentalV2Session>;
+    if (!parsed?.selectedId || !parsed.rentalPeriod) return null;
+    if (!RENTAL_CARS.some((c) => c.id === parsed.selectedId)) return null;
+    return parsed as RentalV2Session;
+  } catch {
+    return null;
+  }
+}
+
+function buildFirstVisitState(): RentalV2Session {
+  const carId = RENTAL_CARS[0]?.id ?? '';
+  const brandId = BRANDS.find((b) => carId.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
+  const now = new Date();
+  const pickupDate = formatDate(now);
+  const returnDate = formatDate(addDays(now, 3));
+  const t = computeDefaultTimeOneHourAhead();
+  return {
+    selectedId: carId,
+    selectedBrandId: brandId,
+    rentalPeriod: {
+      pickupDate,
+      pickupTime: t,
+      pickupLocation: LOCATIONS[0]?.title ?? '',
+      returnDate,
+      returnTime: t,
+      returnLocation: LOCATIONS[0]?.title ?? '',
+    },
+    additionalOptions: getDefaultOptionsForCar(carId),
+  };
+}
+
+function hydrateFromSession(stored: RentalV2Session): RentalV2Session {
+  const carId = RENTAL_CARS.some((c) => c.id === stored.selectedId)
+    ? stored.selectedId
+    : (RENTAL_CARS[0]?.id ?? '');
+  let brandId = stored.selectedBrandId;
+  if (!BRANDS.some((b) => b.id === brandId)) {
+    brandId = BRANDS.find((b) => carId.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
+  }
+  const rp = { ...stored.rentalPeriod };
+  if (!isValidLocationTitle(rp.pickupLocation)) rp.pickupLocation = LOCATIONS[0]?.title ?? '';
+  if (!isValidLocationTitle(rp.returnLocation)) rp.returnLocation = LOCATIONS[0]?.title ?? '';
+  if (rp.returnDate < rp.pickupDate) rp.returnDate = rp.pickupDate;
+  rp.pickupTime = snapTimeToRentalSlot(rp.pickupTime);
+  rp.returnTime = snapTimeToRentalSlot(rp.returnTime);
+  return {
+    selectedId: carId,
+    selectedBrandId: brandId,
+    rentalPeriod: rp,
+    additionalOptions: mergeAdditionalOptionsFromStored(stored.additionalOptions, carId),
+  };
+}
+
+let rentalV2InitialCache: RentalV2Session | null = null;
+
+function getInitialRentalV2State(): RentalV2Session {
+  if (rentalV2InitialCache) return rentalV2InitialCache;
+  if (typeof window === 'undefined') {
+    rentalV2InitialCache = buildFirstVisitState();
+    return rentalV2InitialCache;
+  }
+  const stored = loadRentalV2Session();
+  rentalV2InitialCache = stored ? hydrateFromSession(stored) : buildFirstVisitState();
+  return rentalV2InitialCache;
+}
 
 /**
  * Slider end-to-end z responsywnym --container-width (jak w dostarczonym HTML).
@@ -303,24 +428,28 @@ const CheckboxOption: React.FC<{
 };
 
 const RentalV2Page: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<string>(RENTAL_CARS[0]?.id ?? '');
-  const [selectedBrandId, setSelectedBrandId] = useState<string>(() => {
-    const id = RENTAL_CARS[0]?.id ?? '';
-    return BRANDS.find((b) => id.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
-  });
-  const [rentalPeriod, setRentalPeriod] = useState<RentalPeriodState>(() => ({
-    pickupDate: today,
-    pickupTime: '10:00',
-    pickupLocation: LOCATIONS[0]?.title ?? '',
-    returnDate: tomorrow,
-    returnTime: '10:00',
-    returnLocation: LOCATIONS[0]?.title ?? '',
-  }));
-  const [additionalOptions, setAdditionalOptions] = useState<AdditionalOptionsState>(() =>
-    getDefaultOptionsForCar(RENTAL_CARS[0]?.id ?? '')
+  const [selectedId, setSelectedId] = useState<string>(() => getInitialRentalV2State().selectedId);
+  const [selectedBrandId, setSelectedBrandId] = useState<string>(() => getInitialRentalV2State().selectedBrandId);
+  const [rentalPeriod, setRentalPeriod] = useState<RentalPeriodState>(() => getInitialRentalV2State().rentalPeriod);
+  const [additionalOptions, setAdditionalOptions] = useState<AdditionalOptionsState>(
+    () => getInitialRentalV2State().additionalOptions
   );
   const rentalRootRef = useRef<HTMLDivElement>(null);
   const [debugLine, setDebugLine] = useState('');
+
+  useEffect(() => {
+    const payload: RentalV2Session = {
+      selectedId,
+      selectedBrandId,
+      rentalPeriod,
+      additionalOptions,
+    };
+    try {
+      sessionStorage.setItem(RENTAL_V2_SESSION_KEY, JSON.stringify(payload));
+    } catch {
+      /* ignore quota / private mode */
+    }
+  }, [selectedId, selectedBrandId, rentalPeriod, additionalOptions]);
 
   const handleRentalPeriodChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -832,6 +961,14 @@ const RentalV2Page: React.FC = () => {
                     <span className="text-muted-foreground">Kaucja (płatna w dniu odbioru)</span>
                     <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
                   </div>
+
+                  <Button
+                    type="button"
+                    size="lg"
+                    className="mt-6 h-14 w-full !bg-foreground text-lg font-semibold !text-background hover:!bg-foreground/90"
+                  >
+                    Zarezerwuj pojazd
+                  </Button>
                 </div>
                 <div className="mt-4">
                   <div className="flex items-center justify-center gap-4">

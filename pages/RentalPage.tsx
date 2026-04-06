@@ -179,14 +179,31 @@ const DocumentTile: React.FC<{ title: string; href: string }> = ({ title, href }
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex items-center gap-4 p-4 border border-border rounded-lg bg-card hover:bg-secondary transition-colors group"
+    className="flex min-h-[4.5rem] items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary group"
   >
-    <DocumentTextIcon className="w-8 h-8 text-muted-foreground flex-shrink-0" />
-    <div>
+    <DocumentTextIcon className="h-8 w-8 flex-shrink-0 text-muted-foreground" />
+    <div className="min-w-0">
       <p className="font-medium text-foreground">{title}</p>
       <p className="text-sm text-muted-foreground">Otwórz dokument PDF</p>
     </div>
   </a>
+);
+
+const RENTAL_FORM_PDF_TILES = [
+  { title: 'Umowa wynajmu', href: '/pdf/wzor-umowy.pdf' },
+  { title: 'Protokół Odbioru/Zwrotu', href: '/pdf/protokol-wydania-zwrotu.pdf' },
+  { title: 'Regulamin Wypożyczalni', href: '/pdf/regulamin-wypozyczalni.pdf' },
+] as const;
+
+/** Pełna szerokość viewportu + przewijanie poziome (wzorzec „bleed”); widoczne tylko poniżej lg. */
+const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
+  <div
+    className={`relative left-0 max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}
+  >
+    <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden pb-3 pl-4 pr-4 scroll-pl-4 scroll-pr-4 touch-pan-x">
+      {children}
+    </div>
+  </div>
 );
 
 const todayDate = new Date();
@@ -552,71 +569,109 @@ const RentalPage: React.FC = () => {
                     <>
                         <form onSubmit={handleProceedToPayment}>
                             <div className="grid lg:grid-cols-3 gap-8 xl:gap-12">
-                                <div className="lg:col-span-2">
+                                <div className="min-w-0 lg:col-span-2">
                                     <FormSection title="Wybierz Markę">
-                                        <div className="grid grid-cols-3 gap-4">
-                                            {BRANDS.map(brand => (
-                                                <BrandCard key={brand.id} brand={brand} isSelected={formData.brand.id === brand.id} onSelect={() => setFormData(p => ({ ...p, brand }))} />
+                                        <RentalEdgeScroller>
+                                            {BRANDS.map((brand) => (
+                                                <div key={brand.id} className="w-[min(42vw,9.5rem)] shrink-0 snap-start sm:w-36">
+                                                    <BrandCard
+                                                        brand={brand}
+                                                        isSelected={formData.brand.id === brand.id}
+                                                        onSelect={() => setFormData((p) => ({ ...p, brand }))}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </RentalEdgeScroller>
+                                        <div className="hidden gap-4 lg:grid lg:grid-cols-3">
+                                            {BRANDS.map((brand) => (
+                                                <BrandCard
+                                                    key={brand.id}
+                                                    brand={brand}
+                                                    isSelected={formData.brand.id === brand.id}
+                                                    onSelect={() => setFormData((p) => ({ ...p, brand }))}
+                                                />
                                             ))}
                                         </div>
                                     </FormSection>
                                     <FormSection title="Wybierz Model">
-                                        <div className="min-w-0 -mx-4 sm:mx-0">
-                                            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x snap-mandatory px-4 sm:px-0 scroll-pl-4 sm:scroll-pl-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible sm:snap-none">
-                                                {RENTAL_CARS.map(car => (
-                                                    <div key={car.id} className="w-4/5 flex-shrink-0 snap-start sm:w-auto">
-                                                        <ModelCard car={car} isSelected={formData.model.id === car.id} onSelect={() => setFormData(p => ({ ...p, model: car, brand: BRANDS.find(b => car.id.includes(b.id)) || p.brand }))} />
+                                        <>
+                                            <RentalEdgeScroller>
+                                                {RENTAL_CARS.map((car) => (
+                                                    <div key={car.id} className="w-[min(88vw,20rem)] shrink-0 snap-start sm:w-80">
+                                                        <ModelCard
+                                                            car={car}
+                                                            isSelected={formData.model.id === car.id}
+                                                            onSelect={() =>
+                                                                setFormData((p) => ({
+                                                                    ...p,
+                                                                    model: car,
+                                                                    brand: BRANDS.find((b) => car.id.includes(b.id)) || p.brand,
+                                                                }))
+                                                            }
+                                                        />
                                                     </div>
                                                 ))}
+                                            </RentalEdgeScroller>
+                                            <div className="hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
+                                                {RENTAL_CARS.map((car) => (
+                                                    <ModelCard
+                                                        key={car.id}
+                                                        car={car}
+                                                        isSelected={formData.model.id === car.id}
+                                                        onSelect={() =>
+                                                            setFormData((p) => ({
+                                                                ...p,
+                                                                model: car,
+                                                                brand: BRANDS.find((b) => car.id.includes(b.id)) || p.brand,
+                                                            }))
+                                                        }
+                                                    />
+                                                ))}
                                             </div>
-                                            <div className="px-4 sm:px-0">
-                                                {formData.model.specs && (
-                                                    <div className="mt-3 space-y-2">
-                                                        <div className="flex flex-wrap items-center gap-2">
-                                                            {formData.model.specs.version && (
-                                                                <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                                    <span className="text-muted-foreground">Wersja:</span>
-                                                                    <span className="font-semibold text-foreground">{formData.model.specs.version}</span>
+                                            <div className="mt-3">
+                                                {formData.model.specs &&
+                                                    (() => {
+                                                        const s = formData.model.specs;
+                                                        const items: { key: string; label: string; value: string }[] = [];
+                                                        if (s.version) items.push({ key: 'v', label: 'Wersja:', value: s.version });
+                                                        if (s.color) items.push({ key: 'c', label: 'Kolor:', value: s.color });
+                                                        if (s.interiorColor) items.push({ key: 'i', label: 'Wnętrze:', value: s.interiorColor });
+                                                        if (s.range) items.push({ key: 'r', label: 'Zasięg:', value: s.range });
+                                                        if (s.acceleration) items.push({ key: 'a', label: 'Do 100 km/h:', value: s.acceleration });
+                                                        if (s.drive) items.push({ key: 'd', label: 'Napęd:', value: s.drive });
+                                                        if (items.length === 0) return null;
+                                                        return (
+                                                            <>
+                                                                <RentalEdgeScroller>
+                                                                    {items.map((item) => (
+                                                                        <div
+                                                                            key={item.key}
+                                                                            className="shrink-0 snap-start"
+                                                                        >
+                                                                            <div className="flex items-baseline gap-x-1.5 whitespace-nowrap rounded-full bg-secondary px-3 py-1.5 text-sm">
+                                                                                <span className="text-muted-foreground">{item.label}</span>
+                                                                                <span className="font-semibold text-foreground">{item.value}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+                                                                </RentalEdgeScroller>
+                                                                <div className="mt-2 hidden flex-wrap items-center gap-2 lg:flex">
+                                                                    {items.map((item) => (
+                                                                        <div
+                                                                            key={item.key}
+                                                                            className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm"
+                                                                        >
+                                                                            <span className="text-muted-foreground">{item.label}</span>
+                                                                            <span className="font-semibold text-foreground">{item.value}</span>
+                                                                        </div>
+                                                                    ))}
                                                                 </div>
-                                                            )}
-                                                            {formData.model.specs.color && (
-                                                                <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                                    <span className="text-muted-foreground">Kolor:</span>
-                                                                    <span className="font-semibold text-foreground">{formData.model.specs.color}</span>
-                                                                </div>
-                                                            )}
-                                                            {formData.model.specs.interiorColor && (
-                                                                <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                                    <span className="text-muted-foreground">Wnętrze:</span>
-                                                                    <span className="font-semibold text-foreground">{formData.model.specs.interiorColor}</span>
-                                                                </div>
-                                                            )}
-                                                            {formData.model.specs.range && (
-                                                                <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                                    <span className="text-muted-foreground">Zasięg:</span>
-                                                                    <span className="font-semibold text-foreground">{formData.model.specs.range}</span>
-                                                                </div>
-                                                            )}
-                                                            {formData.model.specs.acceleration && (
-                                                                <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                                    <span className="text-muted-foreground">Do 100km/h:</span>
-                                                                    <span className="font-semibold text-foreground">{formData.model.specs.acceleration}</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                         <div className="flex flex-wrap items-center gap-2">
-                                                            {formData.model.specs.drive && (
-                                                                <div className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm">
-                                                                    <span className="text-muted-foreground">Napęd:</span>
-                                                                    <span className="font-semibold text-foreground">{formData.model.specs.drive}</span>
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )}
+                                                            </>
+                                                        );
+                                                    })()}
                                                 <PriceTable car={formData.model} />
                                             </div>
-                                        </div>
+                                        </>
                                     </FormSection>
                                     <FormSection title="Okres najmu">
                                         <div className="grid sm:grid-cols-3 gap-4 items-start">
@@ -736,10 +791,22 @@ const RentalPage: React.FC = () => {
                                                     onToggle={() => handleAgreementToggle('commercial')}
                                                 />
                                             </div>
-                                            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                                <DocumentTile title="Umowa wynajmu" href="#" />
-                                                <DocumentTile title="Protokół Odbioru/Zwrotu" href="#" />
-                                                <DocumentTile title="Regulamin Wypożyczalni" href="#" />
+                                            <div className="mt-6">
+                                                <RentalEdgeScroller>
+                                                    {RENTAL_FORM_PDF_TILES.map((doc) => (
+                                                        <div
+                                                            key={doc.href}
+                                                            className="w-[min(88vw,22rem)] shrink-0 snap-start sm:w-96"
+                                                        >
+                                                            <DocumentTile title={doc.title} href={doc.href} />
+                                                        </div>
+                                                    ))}
+                                                </RentalEdgeScroller>
+                                                <div className="hidden gap-4 lg:grid lg:grid-cols-3">
+                                                    {RENTAL_FORM_PDF_TILES.map((doc) => (
+                                                        <DocumentTile key={doc.href} title={doc.title} href={doc.href} />
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     </FormSection>

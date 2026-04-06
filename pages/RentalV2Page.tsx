@@ -78,7 +78,12 @@ const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
 
 const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
 
-const V2ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void }> = ({ car, isSelected, onSelect }) => {
+const V2ModelCard: React.FC<{
+  car: Car;
+  isSelected: boolean;
+  onSelect: () => void;
+  layout?: 'slider' | 'grid';
+}> = ({ car, isSelected, onSelect, layout = 'slider' }) => {
   const isAvailable = car.available !== false;
   const minPrice = useMemo(() => {
     if (car.priceTiers && car.priceTiers.length > 0) {
@@ -87,10 +92,15 @@ const V2ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => voi
     return car.pricePerDay;
   }, [car]);
 
+  const widthClass =
+    layout === 'grid'
+      ? 'min-h-[12rem] w-full min-w-0'
+      : 'min-h-[12rem] w-[min(88vw,20rem)] shrink-0 sm:w-80';
+
   return (
     <div
       onClick={isAvailable ? onSelect : undefined}
-      className={`relative flex h-full min-h-[12rem] w-[min(88vw,20rem)] shrink-0 cursor-pointer flex-col rounded-lg border p-4 transition-all sm:w-80 ${
+      className={`relative flex h-full cursor-pointer flex-col rounded-lg border p-4 transition-all ${widthClass} ${
         isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
       } ${isAvailable ? 'hover:border-foreground/50' : 'cursor-not-allowed opacity-50'}`}
     >
@@ -173,10 +183,45 @@ const RentalV2Page: React.FC = () => {
         </div>
 
         <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">
-          <div className="grid min-w-0 grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
-            <div className="min-w-0 lg:col-span-2">
+          <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
+            <div className="min-w-0 overflow-x-visible lg:col-span-2">
               <h2 className="text-2xl font-bold tracking-tight">Wybierz model</h2>
+
+              {/* Statyczna siatka — gdy sidebar jest obok (≥ lg) */}
+              <div className="mt-6 hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
+                {RENTAL_CARS.map((car) => (
+                  <V2ModelCard
+                    key={car.id}
+                    car={car}
+                    layout="grid"
+                    isSelected={selectedId === car.id}
+                    onSelect={() => setSelectedId(car.id)}
+                  />
+                ))}
+              </div>
+
+              {/* Slider — tylko gdy układ jest jednokolumnowy (sidebar pod spodem, &lt; lg) */}
+              <div className="mt-6 min-w-0 lg:hidden">
+                <p className="e2e-v2-hint mb-0">
+                  Przewiń poziomo. Lewy/prawy padding toru liczy się od{' '}
+                  <code className="text-foreground">--container-width</code> (zmienia się przy sm/md/lg/xl/2xl).
+                </p>
+                <section className="e2e-slider" style={sliderGapStyle}>
+                  <div className="e2e-track">
+                    {RENTAL_CARS.map((car) => (
+                      <V2ModelCard
+                        key={car.id}
+                        car={car}
+                        layout="slider"
+                        isSelected={selectedId === car.id}
+                        onSelect={() => setSelectedId(car.id)}
+                      />
+                    ))}
+                  </div>
+                </section>
+              </div>
             </div>
+
             <aside className="min-w-0 lg:col-span-1">
               <div className="rounded-lg border border-border bg-secondary p-6 lg:sticky lg:top-24">
                 <h2 className="text-2xl font-bold">Podsumowanie</h2>
@@ -190,24 +235,6 @@ const RentalV2Page: React.FC = () => {
             </aside>
           </div>
         </div>
-
-        <p className="e2e-v2-hint">
-          Przewiń poziomo. Lewy/prawy padding toru liczy się od <code className="text-foreground">--container-width</code> (zmienia się przy
-          sm/md/lg/xl/2xl). Otwórz DevTools i zmieniaj szerokość okna.
-        </p>
-
-        <section className="e2e-slider" style={sliderGapStyle}>
-          <div className="e2e-track">
-            {RENTAL_CARS.map((car) => (
-              <V2ModelCard
-                key={car.id}
-                car={car}
-                isSelected={selectedId === car.id}
-                onSelect={() => setSelectedId(car.id)}
-              />
-            ))}
-          </div>
-        </section>
       </div>
     </>
   );

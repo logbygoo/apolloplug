@@ -49,7 +49,7 @@ const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ t
 const BrandCard: React.FC<{ brand: typeof BRANDS[number], isSelected: boolean, onSelect: () => void }> = ({ brand, isSelected, onSelect }) => (
     <div
         onClick={brand.available ? onSelect : undefined}
-        className={`relative flex h-16 flex-col items-center justify-center cursor-pointer rounded-lg border p-2 transition-all ${
+        className={`relative flex h-16 min-w-[200px] flex-col items-center justify-center cursor-pointer rounded-lg border p-2 transition-all ${
             isSelected ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
         } ${
             brand.available ? 'hover:border-foreground/50' : 'opacity-50 cursor-not-allowed'
@@ -200,13 +200,13 @@ const RENTAL_FORM_PDF_TILES = [
 ] as const;
 
 /**
- * End-to-end w poziomie: ujemny margines = padding kontenera (px-4 / md:px-6), żeby tor dotykał krawędzi ekranu.
- * Wyrównanie pierwszej karty z tytułem: margin-left na pierwszym dziecku (przewija się z listą). Ostatni element —
- * margin-right, żeby po prawej był ten sam „oddech” i można było przewinąć do końca.
+ * Pełna szerokość viewportu względem kolumny treści: na większych ekranach (wyśrodkowany container)
+ * samo -mx-4 nie wystarcza — trzeba ml-[calc(50%-50vw)] + w-[100vw], żeby tor dojeżdżał do obu krawędzi ekranu.
+ * Pierwszy/ostatni element: margines jak padding kontenera — wyrównanie z tytułem i przewijalny odstęp.
  */
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
   <div
-    className={`relative max-w-none lg:hidden -mx-4 w-[calc(100%+2rem)] md:-mx-6 md:w-[calc(100%+3rem)] ${className ?? ''}`}
+    className={`relative max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}
   >
     <div className="no-scrollbar flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-3 [-webkit-overflow-scrolling:touch] touch-pan-x [&>*:first-child]:ml-4 md:[&>*:first-child]:ml-6 [&>*:last-child]:mr-4 md:[&>*:last-child]:mr-6">
       {children}
@@ -581,7 +581,7 @@ const RentalPage: React.FC = () => {
                                     <FormSection title="Wybierz Markę">
                                         <RentalEdgeScroller>
                                             {BRANDS.map((brand) => (
-                                                <div key={brand.id} className="w-[min(42vw,9.5rem)] shrink-0 sm:w-36">
+                                                <div key={brand.id} className="min-w-[200px] shrink-0 w-[min(48vw,280px)]">
                                                     <BrandCard
                                                         brand={brand}
                                                         isSelected={formData.brand.id === brand.id}

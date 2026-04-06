@@ -195,12 +195,13 @@ const RENTAL_FORM_PDF_TILES = [
   { title: 'Regulamin Wypożyczalni', href: '/pdf/regulamin-wypozyczalni.pdf' },
 ] as const;
 
-/** Pełna szerokość viewportu + przewijanie poziome (wzorzec „bleed”); widoczne tylko poniżej lg. */
+/**
+ * Pełna szerokość viewportu + zwykłe natywne przewijanie poziome (bez scroll-snap).
+ * Wzorzec bleed: 100vw + margin jak w CodePenie — tylko układ i overflow, bez „przyciągania” slajdów.
+ */
 const RentalEdgeScroller: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-  <div
-    className={`relative left-0 max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}
-  >
-    <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden pb-3 pl-4 pr-4 scroll-pl-4 scroll-pr-4 touch-pan-x">
+  <div className={`relative left-0 max-w-[100vw] w-[100vw] lg:hidden ml-[calc(50%-50vw)] ${className ?? ''}`}>
+    <div className="no-scrollbar flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-3 pl-4 pr-4 [-webkit-overflow-scrolling:touch] touch-pan-x">
       {children}
     </div>
   </div>
@@ -573,7 +574,7 @@ const RentalPage: React.FC = () => {
                                     <FormSection title="Wybierz Markę">
                                         <RentalEdgeScroller>
                                             {BRANDS.map((brand) => (
-                                                <div key={brand.id} className="w-[min(42vw,9.5rem)] shrink-0 snap-start sm:w-36">
+                                                <div key={brand.id} className="w-[min(42vw,9.5rem)] shrink-0 sm:w-36">
                                                     <BrandCard
                                                         brand={brand}
                                                         isSelected={formData.brand.id === brand.id}
@@ -597,7 +598,7 @@ const RentalPage: React.FC = () => {
                                         <>
                                             <RentalEdgeScroller>
                                                 {RENTAL_CARS.map((car) => (
-                                                    <div key={car.id} className="w-[min(88vw,20rem)] shrink-0 snap-start sm:w-80">
+                                                    <div key={car.id} className="w-[min(88vw,20rem)] shrink-0 sm:w-80">
                                                         <ModelCard
                                                             car={car}
                                                             isSelected={formData.model.id === car.id}
@@ -644,10 +645,7 @@ const RentalPage: React.FC = () => {
                                                             <>
                                                                 <RentalEdgeScroller>
                                                                     {items.map((item) => (
-                                                                        <div
-                                                                            key={item.key}
-                                                                            className="shrink-0 snap-start"
-                                                                        >
+                                                                        <div key={item.key} className="shrink-0">
                                                                             <div className="flex items-baseline gap-x-1.5 whitespace-nowrap rounded-full bg-secondary px-3 py-1.5 text-sm">
                                                                                 <span className="text-muted-foreground">{item.label}</span>
                                                                                 <span className="font-semibold text-foreground">{item.value}</span>
@@ -796,7 +794,7 @@ const RentalPage: React.FC = () => {
                                                     {RENTAL_FORM_PDF_TILES.map((doc) => (
                                                         <div
                                                             key={doc.href}
-                                                            className="w-[min(88vw,22rem)] shrink-0 snap-start sm:w-96"
+                                                            className="w-[min(88vw,22rem)] shrink-0 sm:w-96"
                                                         >
                                                             <DocumentTile title={doc.title} href={doc.href} />
                                                         </div>

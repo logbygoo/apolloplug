@@ -338,18 +338,32 @@ const RENTAL_V2_SZKIC_UMOWY_DOCS = [
   { title: 'Regulamin Wypożyczalni', docSlug: 'regulamin-wypozyczalni' },
 ] as const;
 
-const V2LegalDocTile: React.FC<{ title: string; docSlug: string }> = ({ title, docSlug }) => (
-  <Link
-    to={`/dokumentacja?doc=${encodeURIComponent(docSlug)}`}
-    className="group flex min-h-[4.5rem] items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary"
-  >
-    <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
-    <div className="min-w-0">
-      <p className="font-medium text-foreground">{title}</p>
-      <p className="text-sm text-muted-foreground">Otwórz w dokumentacji</p>
-    </div>
-  </Link>
-);
+/** Te same szerokości / wysokość slajdu co `V2ModelCard` (layout slider vs grid). */
+const V2LegalDocTile: React.FC<{ title: string; docSlug: string; layout?: 'slider' | 'grid' }> = ({
+  title,
+  docSlug,
+  layout = 'slider',
+}) => {
+  const widthClass =
+    layout === 'grid'
+      ? 'min-h-[12rem] w-full min-w-0'
+      : 'min-h-[12rem] w-[min(88vw,20rem)] shrink-0 sm:w-80';
+
+  return (
+    <Link
+      to={`/dokumentacja?doc=${encodeURIComponent(docSlug)}`}
+      className={`group flex flex-col rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary ${widthClass}`}
+    >
+      <div className="flex min-h-0 flex-1 items-center gap-4">
+        <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
+        <div className="min-w-0">
+          <p className="font-medium text-foreground">{title}</p>
+          <p className="text-sm text-muted-foreground">Otwórz w dokumentacji</p>
+        </div>
+      </div>
+    </Link>
+  );
+};
 
 const V2ModelCard: React.FC<{
   car: Car;
@@ -875,22 +889,27 @@ const RentalV2Page: React.FC = () => {
                 </div>
               </section>
 
-              <section className="mt-8 min-w-0 max-w-full overflow-x-hidden">
+              <section className="mt-8">
                 <h2 className="text-2xl font-bold tracking-tight">Szkic umowy</h2>
                 <div className="mt-3">
-                  <div className="hidden gap-4 lg:grid lg:grid-cols-3">
+                  <div className="hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
                     {RENTAL_V2_SZKIC_UMOWY_DOCS.map((doc) => (
-                      <V2LegalDocTile key={doc.docSlug} title={doc.title} docSlug={doc.docSlug} />
+                      <V2LegalDocTile
+                        key={doc.docSlug}
+                        title={doc.title}
+                        docSlug={doc.docSlug}
+                        layout="grid"
+                      />
                     ))}
                   </div>
                   <RentalV2E2ESlider>
                     {RENTAL_V2_SZKIC_UMOWY_DOCS.map((doc) => (
-                      <div
+                      <V2LegalDocTile
                         key={doc.docSlug}
-                        className="w-[min(88vw,22rem)] shrink-0 sm:w-96"
-                      >
-                        <V2LegalDocTile title={doc.title} docSlug={doc.docSlug} />
-                      </div>
+                        title={doc.title}
+                        docSlug={doc.docSlug}
+                        layout="slider"
+                      />
                     ))}
                   </RentalV2E2ESlider>
                 </div>

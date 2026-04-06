@@ -118,11 +118,12 @@ export const RENTAL_CARS: Car[] = [
 
 export const ADDITIONAL_OPTIONS = [
     { id: 'insurance', name: 'Ubezpieczenie OC AC NNW', price: 0, type: 'one_time', description: 'Zabezpiecza kierowcę przed kosztami szkód spowodowanymi przez innych uczestników ruchu.' },
+    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 129, 'tesla-x': 149, 'tesla-cybertruck': 199 }, type: 'per_day', description: 'Udział w szkodzie zmniejszony do wysokości kaucji.' },
     { id: 'tires', name: 'Ubezpieczenie opon', price: { 'tesla-3-highland': 9, 'tesla-y-juniper': 12, 'tesla-x': 15, 'tesla-cybertruck': 19 }, type: 'per_day', description: 'Pokrycie kosztów uszkodzenia opon.' },
-    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 129, 'tesla-x': 149, 'tesla-cybertruck': 199 }, type: 'per_day', description: 'Obniżenie odpowiedzialności finansowej.' },
     { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time', description: 'Bezpieczeństwo dla najmłodszych pasażerów.' },
-    { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time', description: 'Wygodna dostawa pojazdu pod wskazany adres.' },
+    { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time', description: 'Dostawa pojazdu pod wskazany adres na terenie Warszawy.' },
     { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: { 'tesla-3-highland': 290, 'tesla-y-juniper': 320, 'tesla-x': 350, 'tesla-cybertruck': 390 }, type: 'one_time', description: 'Zwróć auto bez konieczności ładowania.' },
+    { id: 'emptyBattery', name: 'Pakiet myjnia', price: { 'tesla-3-highland': 290, 'tesla-y-juniper': 320, 'tesla-x': 350, 'tesla-cybertruck': 390 }, type: 'one_time', description: 'Moliwość zwrotu brudnego auta.' },
 ] as const;
 
 /** Dostępne sloty godzin (cała doba, co 30 min). Godziny pracy biura i dopłata poza nimi: `workConfig.ts`. */

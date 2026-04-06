@@ -81,6 +81,18 @@ const RENTAL_V2_E2E_STYLES = `
       padding-right: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
     }
   }
+
+  /* --container-width: 40rem tylko 640–767px — zwężony blok z PageHeader (szary box) */
+  @media (min-width: 640px) and (max-width: 767px) {
+    .rental-v2 .rental-v2-page-header > div {
+      padding-top: 1.75rem;
+      padding-bottom: 1.75rem;
+    }
+    .rental-v2 .rental-v2-page-header h1 {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+  }
 `;
 
 const breadcrumbs = [{ name: 'Wypożyczalnia v2' }];
@@ -195,11 +207,13 @@ const RentalV2Page: React.FC = () => {
         <div className="e2e-v2-debug">{debugLine}</div>
 
         <div className="mb-8 w-full border-b border-border bg-secondary">
-          <PageHeader
-            title="Wypożyczalnia EV"
-            subtitle="Nowy układ (test) — wybór pojazdu"
-            breadcrumbs={breadcrumbs}
-          />
+          <div className="rental-v2-page-header">
+            <PageHeader
+              title="Wypożyczalnia EV"
+              subtitle="Nowy układ (test) — wybór pojazdu"
+              breadcrumbs={breadcrumbs}
+            />
+          </div>
         </div>
 
         <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">

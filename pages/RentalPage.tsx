@@ -571,7 +571,7 @@ const RentalPage: React.FC = () => {
                     breadcrumbs={breadcrumbs}
                 />
             </div>
-            <div className="container mx-auto min-w-0 max-w-full overflow-x-hidden px-4 md:px-6 pb-16 md:pb-16">
+            <div className="container mx-auto min-w-0 overflow-x-hidden px-4 md:px-6 pb-16 md:pb-16">
                 {step === 'details' && (
                     <>
                         <form onSubmit={handleProceedToPayment}>

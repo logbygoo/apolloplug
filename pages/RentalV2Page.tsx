@@ -408,6 +408,8 @@ const RentalV2Page: React.FC = () => {
       costPerKmOverLimit: 0,
       pickupFee: 0,
       returnFee: 0,
+      tierPricePerDay: 0,
+      tierKmLimitPerDay: 0,
     };
 
     if (!pickupDate || !returnDate || !pickupTime || !returnTime || !model) {
@@ -476,6 +478,8 @@ const RentalV2Page: React.FC = () => {
       costPerKmOverLimit,
       pickupFee,
       returnFee,
+      tierPricePerDay: tier.pricePerDay,
+      tierKmLimitPerDay: tier.kmLimitPerDay,
     };
   }, [rentalPeriod, additionalOptions, selected]);
 
@@ -731,13 +735,18 @@ const RentalV2Page: React.FC = () => {
 
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between gap-3">
-                      <span className="text-muted-foreground">Okres najmu</span>
+                      <span className="text-muted-foreground">Okres wynajmu</span>
                       <span className="shrink-0 text-right font-medium">
                         {formatPolishRentalDays(summary.rentalDays)}
                       </span>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <span className="text-muted-foreground">Cena najmu</span>
+                      <span className="min-w-0 text-muted-foreground">
+                        Cena wynajmu
+                        {summary.rentalDays > 0
+                          ? ` (${summary.tierPricePerDay.toLocaleString('pl-PL')} zł/db)`
+                          : ''}
+                      </span>
                       <span className="shrink-0 text-right font-medium">
                         {summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '—'}
                       </span>
@@ -764,7 +773,12 @@ const RentalV2Page: React.FC = () => {
 
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between gap-3">
-                      <span className="text-muted-foreground">Limit kilometrów</span>
+                      <span className="min-w-0 text-muted-foreground">
+                        Limit kilometrów
+                        {summary.rentalDays > 0
+                          ? ` (${summary.tierKmLimitPerDay.toLocaleString('pl-PL')} km/db)`
+                          : ''}
+                      </span>
                       <span className="shrink-0 text-right font-medium">
                         {summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '—'}
                       </span>
@@ -808,14 +822,14 @@ const RentalV2Page: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="flex justify-between border-t border-border pt-2 mt-2 text-xl font-bold text-primary">
+                  <div className="mt-6 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                     <span>Do zapłaty dziś</span>
                     <span>
                       {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Kaucja w dniu odbioru</span>
+                  <div className="mt-2 flex justify-between text-sm">
+                    <span className="text-muted-foreground">Kaucja (płatna w dniu odbioru)</span>
                     <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
                   </div>
                 </div>

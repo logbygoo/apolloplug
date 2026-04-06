@@ -479,17 +479,16 @@ const RentalV2Page: React.FC = () => {
     };
   }, [rentalPeriod, additionalOptions, selected]);
 
-  /** Wiersze „- nazwa (cena)” w podsumowaniu v2 — tylko zaznaczone opcje. */
+  /** Wiersze opcji w podsumowaniu v2 — tylko zaznaczone; pełna nazwa + stawka w nawiasie. */
   const v2OptionLines = useMemo(() => {
     const model = selected;
     return ADDITIONAL_OPTIONS.filter((opt) => additionalOptions[opt.id]).map((opt) => {
       const unit = getPriceForCar(opt.price, model.id);
-      const shortName = opt.name.split(/\s+/)[0]?.toLowerCase() ?? opt.id;
       const detail =
         opt.type === 'per_day'
           ? `${unit.toLocaleString('pl-PL')} zł/db`
           : `${unit.toLocaleString('pl-PL')} zł`;
-      return { id: opt.id, shortName, detail };
+      return { id: opt.id, fullName: opt.name, detail };
     });
   }, [additionalOptions, selected]);
 
@@ -793,28 +792,31 @@ const RentalV2Page: React.FC = () => {
                       </span>
                     </div>
                     {v2OptionLines.length > 0 && (
-                      <ul className="list-none space-y-1 pl-0 text-muted-foreground">
+                      <ul className="list-none space-y-1.5 pl-0">
                         {v2OptionLines.map((line) => (
-                          <li key={line.id} className="pl-2">
-                            <span className="text-foreground/80">
-                              {'- '}
-                              {line.shortName} ({line.detail})
-                            </span>
+                          <li
+                            key={line.id}
+                            className="flex min-w-0 max-w-full items-baseline gap-1 pl-2 text-sm text-muted-foreground"
+                            title={line.fullName}
+                          >
+                            <span className="shrink-0">- </span>
+                            <span className="min-w-0 flex-1 truncate">{line.fullName}</span>
+                            <span className="shrink-0">({line.detail})</span>
                           </li>
                         ))}
                       </ul>
                     )}
                   </div>
 
-                  <div className="my-4 border-t border-border" />
-
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground">Do zapłaty dziś</p>
-                    <p className="text-2xl font-bold text-primary">
+                  <div className="flex justify-between border-t border-border pt-2 mt-2 text-xl font-bold text-primary">
+                    <span>Do zapłaty dziś</span>
+                    <span>
                       {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
-                    </p>
-                    <p className="pt-2 text-sm text-muted-foreground">Kaucja w dniu odbioru</p>
-                    <p className="text-xl font-semibold">{summary.deposit.toLocaleString('pl-PL')} zł</p>
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Kaucja w dniu odbioru</span>
+                    <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
                   </div>
                 </div>
                 <div className="mt-4">

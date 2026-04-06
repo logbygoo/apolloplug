@@ -157,6 +157,12 @@
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + 15px));
   }
+  /* Poniżej lg (1024px): kolumna z podsumowaniem pod spodem — inne wyrównanie lewej krawędzi toru */
+  @media (max-width: 1023px) {
+    .e2e-track {
+      padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + 280px));
+    }
+  }
   input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;

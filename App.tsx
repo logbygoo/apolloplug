@@ -149,7 +149,20 @@ const Footer: React.FC = () => {
             </NavLink>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">{SITE_DOMAIN} © {new Date().getFullYear()} all rights reserved</p>
+        <p className="text-xs text-muted-foreground">
+          {SITE_DOMAIN} © {new Date().getFullYear()} all rights reserved
+          <span className="mx-1.5">·</span>
+          Made & Powered by{' '}
+          <a
+            href="https://rploy.com"
+            title="Made and Powered by Rploy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground underline underline-offset-2 hover:text-foreground"
+          >
+            rploy.com
+          </a>
+        </p>
       </div>
     </footer>
   );

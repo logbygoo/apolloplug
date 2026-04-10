@@ -307,9 +307,9 @@ const RENTAL_V2_SHELL_STYLES = `
   }
 `;
 
-/** Jak data/godzina na v1 (breakpoint 350px), kolumny równe 50/50. */
+/** Jak pola daty/czasu na wypożyczalni — minmax(0,…) + bez max-w-full na siatce (nie psuje .container). */
 const RESERVATION_PAIR_GRID =
-  'grid w-full min-w-0 max-w-full grid-cols-1 gap-4 min-[350px]:grid-cols-2 min-[350px]:items-end';
+  'grid w-full min-w-0 grid-cols-1 gap-4 min-[350px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] min-[350px]:items-end';
 
 const RentalReservationPage: React.FC = () => {
   const { carId } = useParams<{ carId: string }>();
@@ -453,17 +453,17 @@ const RentalReservationPage: React.FC = () => {
     <>
       <Seo title={`Rezerwacja — ${selected.name}`} description="Dane kierowcy i podsumowanie rezerwacji." />
       <style>{RENTAL_V2_SHELL_STYLES}</style>
-      <div className="rental-v2 min-h-screen w-full min-w-0 max-w-full overflow-x-hidden bg-background pb-16 text-foreground">
+      <div className="rental-v2 min-h-screen overflow-x-hidden bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <div className="rental-v2-page-header">
             <PageHeader title="Rezerwacja" breadcrumbs={breadcrumbs} />
           </div>
         </div>
 
-        <div className="container mx-auto min-w-0 max-w-full px-4 pb-6 md:px-6">
-          <div className="grid min-w-0 max-w-full grid-cols-1 gap-8 overflow-x-hidden lg:grid-cols-3 lg:gap-12">
-            <div className="min-w-0 max-w-full lg:col-span-2">
-              <form id="rental-driver-form" onSubmit={handleSubmit} className="min-w-0 max-w-full space-y-6">
+        <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">
+          <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
+            <div className="min-w-0 overflow-x-visible lg:col-span-2">
+              <form id="rental-driver-form" onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex w-full rounded-lg border border-border bg-secondary p-1.5">
                   <button
                     type="button"
@@ -652,9 +652,9 @@ const RentalReservationPage: React.FC = () => {
               </form>
             </div>
 
-            <aside className="min-w-0 max-w-full scroll-mt-[4.5rem] lg:col-span-1">
+            <aside className="min-w-0 scroll-mt-[4.5rem] lg:col-span-1">
               <div className="lg:sticky lg:top-24">
-                <div className="min-w-0 max-w-full overflow-hidden rounded-lg bg-secondary p-6">
+                <div className="rounded-lg bg-secondary p-6">
                   <p className="mb-3 text-center">
                     <Link to="/wypozyczalnia-v2" className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground">
                       Zmodyfikuj rezerwację
@@ -780,8 +780,8 @@ const RentalReservationPage: React.FC = () => {
                     Zarezerwuj i Opłać
                   </button>
                 </div>
-                <div className="mt-4 min-w-0 max-w-full">
-                  <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+                <div className="mt-4">
+                  <div className="flex items-center justify-center gap-4">
                     <img src="https://img.apolloidea.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
                     <img src="https://img.apolloidea.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
                     <img src="https://img.apolloidea.com/img/pay-blik.svg" alt="BLIK" className="h-6" />

@@ -392,13 +392,13 @@ const V2LegalDocTile: React.FC<{ title: string; docSlug: string; layout?: 'slide
 }) => {
   const widthClass =
     layout === 'grid'
-      ? 'w-full min-w-0'
+      ? 'min-w-0 w-full max-w-none'
       : 'w-[min(88vw,20rem)] shrink-0 sm:w-80';
 
   return (
     <Link
       to={`/dokumentacja?doc=${encodeURIComponent(docSlug)}`}
-      className={`group flex items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary ${widthClass}`}
+      className={`group flex min-w-0 items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary ${widthClass}`}
     >
       <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
       <div className="min-w-0">
@@ -935,7 +935,7 @@ const RentalV2Page: React.FC = () => {
               </section>
 
               <section className="mt-8 min-w-0 max-w-full overflow-x-hidden">
-                <h2 className="text-2xl font-bold tracking-tight">Okres najmu</h2>
+                <h2 className="text-2xl font-bold tracking-tight">Odbiór auta</h2>
                 <div className="mt-3 flex min-w-0 max-w-full flex-col gap-8">
                   <div className={`rental-period ${RENTAL_PERIOD_GROUP_BOX} space-y-4`}>
                     <div className={RENTAL_PERIOD_DATETIME_GRID}>
@@ -999,7 +999,9 @@ const RentalV2Page: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className={`rental-period ${RENTAL_PERIOD_GROUP_BOX} space-y-4`}>
+                  <div>
+                    <h3 className="text-2xl font-bold tracking-tight">Zwrot auta</h3>
+                    <div className={`rental-period mt-3 ${RENTAL_PERIOD_GROUP_BOX} space-y-4`}>
                     <div className={RENTAL_PERIOD_DATETIME_GRID}>
                       <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="returnDate">Data zwrotu</Label>
@@ -1060,6 +1062,7 @@ const RentalV2Page: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                  </div>
                 </div>
               </section>
 
@@ -1081,7 +1084,7 @@ const RentalV2Page: React.FC = () => {
               <section className="mt-8">
                 <h2 className="text-2xl font-bold tracking-tight">Szkic umowy</h2>
                 <div className="mt-3">
-                  <div className="hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
+                  <div className="hidden min-w-0 w-full gap-4 lg:grid lg:grid-cols-3">
                     {RENTAL_V2_SZKIC_UMOWY_DOCS.map((doc) => (
                       <V2LegalDocTile
                         key={doc.docSlug}
@@ -1247,7 +1250,7 @@ const RentalV2Page: React.FC = () => {
             onClick={() => {
               summaryAsideRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="w-full bg-transparent px-0 py-3 text-left text-background transition-opacity hover:opacity-90 active:opacity-80"
+            className="w-full bg-transparent px-0 text-left text-background transition-opacity hover:opacity-90 active:opacity-80"
           >
             <div className="flex items-baseline justify-between gap-3 leading-tight">
               <span className="text-sm font-semibold">Podsumowanie</span>

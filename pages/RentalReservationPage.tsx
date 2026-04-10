@@ -1,14 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
-import { Button, Input, Label, PageHeader } from '../components/ui';
+import { Input, Label, PageHeader } from '../components/ui';
 import { CheckIcon, InformationCircleIcon } from '../icons';
-import {
-  ADDITIONAL_OPTIONS,
-  RENTAL_CARS,
-  RENTAL_PERIOD_DATETIME_GRID,
-  RENTAL_PERIOD_FIELD_CELL,
-} from '../configs/rentConfig';
+import { ADDITIONAL_OPTIONS, RENTAL_CARS, RENTAL_PERIOD_FIELD_CELL } from '../configs/rentConfig';
 import { LOCATIONS } from '../configs/locationsConfig';
 import { RENTAL_V2_RESERVATION_DRIVER_KEY, RENTAL_V2_SESSION_KEY } from '../configs/rentalV2Session';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
@@ -70,6 +65,16 @@ const emptyDriver = (): DriverFormState => ({
   email: '',
   phone: '',
 });
+
+/** Ten sam tooltip co na /wypozyczalnia (hover). */
+const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }> = ({ content, children }) => (
+  <div className="group relative flex items-center">
+    {children}
+    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max max-w-[240px] -translate-x-1/2 rounded-md bg-foreground p-2 text-center text-xs text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+      {content}
+    </div>
+  </div>
+);
 
 const AgreementCheckbox: React.FC<{
   id: string;
@@ -185,8 +190,9 @@ const RENTAL_V2_SHELL_STYLES = `
   }
 `;
 
-/** Jak data + godzina na wypożyczalni v1: jedna kolumna poniżej 350px, obok siebie od 350px. */
-const RESERVATION_PAIR_GRID = RENTAL_PERIOD_DATETIME_GRID;
+/** Jak data/godzina na v1 (breakpoint 350px), kolumny równe 50/50. */
+const RESERVATION_PAIR_GRID =
+  'grid w-full min-w-0 max-w-full grid-cols-1 gap-4 min-[350px]:grid-cols-2 min-[350px]:items-end';
 
 const RentalReservationPage: React.FC = () => {
   const { carId } = useParams<{ carId: string }>();
@@ -359,17 +365,6 @@ const RentalReservationPage: React.FC = () => {
                   {driver.reservationType === 'company' ? (
                     <div className={RESERVATION_PAIR_GRID}>
                       <div className={RENTAL_PERIOD_FIELD_CELL}>
-                        <Label htmlFor="nip">NIP</Label>
-                        <Input
-                          id="nip"
-                          value={driver.nip}
-                          onChange={handleDriverChange}
-                          required
-                          className="mt-1"
-                          placeholder="np. 1234567890"
-                        />
-                      </div>
-                      <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="fullName">Imię i nazwisko</Label>
                         <Input
                           id="fullName"
@@ -378,6 +373,10 @@ const RentalReservationPage: React.FC = () => {
                           required
                           className="mt-1"
                         />
+                      </div>
+                      <div className={RENTAL_PERIOD_FIELD_CELL}>
+                        <Label htmlFor="nip">NIP</Label>
+                        <Input id="nip" value={driver.nip} onChange={handleDriverChange} required className="mt-1" />
                       </div>
                     </div>
                   ) : (
@@ -420,14 +419,15 @@ const RentalReservationPage: React.FC = () => {
                         <Label htmlFor="licenseBlanketNumber" className="mb-0">
                           Nr. blankietu prawa jazdy
                         </Label>
-                        <button
-                          type="button"
-                          className="shrink-0 rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                          title="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu"
-                          aria-label="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu"
-                        >
-                          <InformationCircleIcon className="h-4 w-4" />
-                        </button>
+                        <Tooltip content="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu">
+                          <span
+                            className="inline-flex shrink-0 text-muted-foreground"
+                            tabIndex={0}
+                            aria-label="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu"
+                          >
+                            <InformationCircleIcon className="h-4 w-4" />
+                          </span>
+                        </Tooltip>
                       </div>
                       <Input
                         id="licenseBlanketNumber"
@@ -474,11 +474,23 @@ const RentalReservationPage: React.FC = () => {
                     label={
                       <>
                         Akceptuję{' '}
-                        <Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">
+                        <Link
+                          to="/dokumentacja"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="underline hover:text-foreground"
+                        >
                           regulamin
                         </Link>{' '}
                         oraz{' '}
-                        <Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">
+                        <Link
+                          to="/dokumentacja"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="underline hover:text-foreground"
+                        >
                           politykę prywatności
                         </Link>{' '}
                         apolloidea.com <span className="text-destructive">*</span>
@@ -629,14 +641,13 @@ const RentalReservationPage: React.FC = () => {
                     <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
                   </div>
 
-                  <Button
+                  <button
                     type="submit"
                     form="rental-driver-form"
-                    size="lg"
-                    className="mt-6 h-14 w-full !bg-foreground text-lg font-semibold !text-background hover:!bg-foreground/90"
+                    className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
                   >
                     Zarezerwuj i Opłać
-                  </Button>
+                  </button>
                 </div>
                 <div className="mt-4">
                   <div className="flex items-center justify-center gap-4">

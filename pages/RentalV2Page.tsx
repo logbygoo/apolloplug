@@ -1238,7 +1238,7 @@ const RentalV2Page: React.FC = () => {
 
       {/* Pływający CTA: tylko viewport < lg; pełna szerokość, bg do safe-area (pasek home / przeglądarka); ukryty gdy widać podsumowanie */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 w-full max-w-[100vw] rounded-t-md bg-foreground lg:hidden ${summaryInView ? 'hidden' : ''}`}
+        className={`fixed inset-x-0 bottom-0 z-50 w-full max-w-[100vw] rounded-t-3xl bg-foreground lg:hidden ${summaryInView ? 'hidden' : ''}`}
         aria-hidden={summaryInView}
       >
         <div className="box-border w-full px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
@@ -1249,9 +1249,9 @@ const RentalV2Page: React.FC = () => {
             }}
             className="w-full bg-transparent px-0 py-3 text-left text-background transition-opacity hover:opacity-90 active:opacity-80"
           >
-            <div className="flex items-baseline justify-between gap-3 text-sm font-semibold leading-tight">
-              <span>Podsumowanie</span>
-              <span className="shrink-0 tabular-nums">
+            <div className="flex items-baseline justify-between gap-3 leading-tight">
+              <span className="text-sm font-semibold">Podsumowanie</span>
+              <span className="shrink-0 text-xl font-bold tabular-nums tracking-tight">
                 {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
               </span>
             </div>

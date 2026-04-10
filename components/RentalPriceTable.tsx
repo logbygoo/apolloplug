@@ -21,8 +21,10 @@ const RentalPriceTable: React.FC<{ car: Car; className?: string; showHeading?: b
               <tr key={index} className="odd:bg-white even:bg-secondary/50">
                 <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-foreground">{tier.days}</td>
                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-foreground">
-                  <div>{tier.pricePerDay} zł</div>
-                  <div className="text-xs text-muted-foreground">{tier.kmLimitPerDay} km/dzień</div>
+                  <span className="inline-flex items-baseline justify-end gap-x-1.5">
+                    <span className="font-medium">{tier.pricePerDay} zł/dzień</span>
+                    <span className="text-xs text-muted-foreground">({tier.kmLimitPerDay} km/dzień)</span>
+                  </span>
                 </td>
               </tr>
             ))}

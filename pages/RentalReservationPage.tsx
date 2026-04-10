@@ -66,11 +66,17 @@ const emptyDriver = (): DriverFormState => ({
   phone: '',
 });
 
-/** Ten sam tooltip co na /wypozyczalnia (hover). */
+/**
+ * Tooltip jak na /wypozyczalnia, ale bez wystawania poza viewport na wąskich ekranach:
+ * max-width od szerokości okna, zawijanie tekstu, brak w-max powodującego overflow.
+ */
 const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }> = ({ content, children }) => (
-  <div className="group relative flex items-center">
+  <div className="group relative flex min-w-0 max-w-full shrink-0 items-center">
     {children}
-    <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 w-max max-w-[240px] -translate-x-1/2 rounded-md bg-foreground p-2 text-center text-xs text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+    <div
+      className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-md bg-foreground p-2 text-left text-xs leading-snug text-background opacity-0 shadow-lg transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 sm:max-w-[240px]"
+      style={{ wordBreak: 'break-word' }}
+    >
       {content}
     </div>
   </div>
@@ -89,7 +95,7 @@ const AgreementCheckbox: React.FC<{
     }`}
   >
     <div className="flex items-start">
-      <label htmlFor={id} className="flex cursor-pointer items-start group">
+      <label htmlFor={id} className="flex min-w-0 cursor-pointer items-start group">
         <input id={id} type="checkbox" checked={isChecked} onChange={onToggle} className="absolute h-0 w-0 opacity-0" />
         <div
           className={`relative mt-0.5 mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-sm transition-all ${
@@ -98,7 +104,9 @@ const AgreementCheckbox: React.FC<{
         >
           {isChecked && <CheckIcon className="h-3.5 w-3.5 text-background" strokeWidth={3} />}
         </div>
-        <span className="text-sm text-muted-foreground transition-colors group-hover:text-foreground">{label}</span>
+        <span className="min-w-0 flex-1 break-words text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+          {label}
+        </span>
       </label>
     </div>
   </div>
@@ -322,17 +330,17 @@ const RentalReservationPage: React.FC = () => {
     <>
       <Seo title={`Rezerwacja — ${selected.name}`} description="Dane kierowcy i podsumowanie rezerwacji." />
       <style>{RENTAL_V2_SHELL_STYLES}</style>
-      <div className="rental-v2 min-h-screen bg-background pb-16 text-foreground">
+      <div className="rental-v2 min-h-screen w-full min-w-0 max-w-full overflow-x-hidden bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <div className="rental-v2-page-header">
             <PageHeader title="Rezerwacja" breadcrumbs={breadcrumbs} />
           </div>
         </div>
 
-        <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">
-          <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
-            <div className="min-w-0 lg:col-span-2">
-              <form id="rental-driver-form" onSubmit={handleSubmit} className="space-y-6">
+        <div className="container mx-auto min-w-0 max-w-full px-4 pb-6 md:px-6">
+          <div className="grid min-w-0 max-w-full grid-cols-1 gap-8 overflow-x-hidden lg:grid-cols-3 lg:gap-12">
+            <div className="min-w-0 max-w-full lg:col-span-2">
+              <form id="rental-driver-form" onSubmit={handleSubmit} className="min-w-0 max-w-full space-y-6">
                 <div className="flex w-full rounded-lg border border-border bg-secondary p-1.5">
                   <button
                     type="button"
@@ -521,9 +529,9 @@ const RentalReservationPage: React.FC = () => {
               </form>
             </div>
 
-            <aside className="min-w-0 scroll-mt-[4.5rem] lg:col-span-1">
+            <aside className="min-w-0 max-w-full scroll-mt-[4.5rem] lg:col-span-1">
               <div className="lg:sticky lg:top-24">
-                <div className="rounded-lg bg-secondary p-6">
+                <div className="min-w-0 max-w-full overflow-hidden rounded-lg bg-secondary p-6">
                   <p className="mb-3 text-center">
                     <Link to="/wypozyczalnia-v2" className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground">
                       Zmodyfikuj rezerwację
@@ -649,8 +657,8 @@ const RentalReservationPage: React.FC = () => {
                     Zarezerwuj i Opłać
                   </button>
                 </div>
-                <div className="mt-4">
-                  <div className="flex items-center justify-center gap-4">
+                <div className="mt-4 min-w-0 max-w-full">
+                  <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
                     <img src="https://img.apolloidea.com/img/pay-apple.svg" alt="Apple Pay" className="h-6" />
                     <img src="https://img.apolloidea.com/img/pay-google.svg" alt="Google Pay" className="h-6" />
                     <img src="https://img.apolloidea.com/img/pay-blik.svg" alt="BLIK" className="h-6" />

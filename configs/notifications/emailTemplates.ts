@@ -1,8 +1,8 @@
 import type { ReservationFormData } from '../rentalReservationFormData';
 import type { TransferFormData } from '../../pages/TransfersPage';
-import { ADDITIONAL_OPTIONS } from '../rentConfig';
 import { LOCATIONS } from '../locationsConfig';
 import { SITE_LOGO_URL } from '../site';
+import { buildV2OptionLines } from '../../utils/rentalV2Summary';
 
 /** Pełny adres punktu odbioru/zwrotu (tytuł z formularza → adres z konfiguracji). */
 const formatRentalLocationLine = (title: string): string => {
@@ -140,6 +140,24 @@ const generateDetailsTable = (rows: [string, string][]) => {
     </table>`;
 };
 
+/** Wspólna tabela „Podsumowanie kosztów” (wynajem) — ta sama w mailu do admina i do klienta. */
+const buildRentalCostSummaryTable = (summary: {
+    rentalDays: number;
+    rentalPrice: number;
+    optionsPrice: number;
+    totalPrice: number;
+    deposit: number;
+    totalWithDeposit: number;
+}) =>
+    generateDetailsTable([
+        ['Okres najmu', `${summary.rentalDays} dni`],
+        ['Koszt najmu', `${summary.rentalPrice.toLocaleString('pl-PL')} zł`],
+        ['Opcje dodatkowe', `${summary.optionsPrice.toLocaleString('pl-PL')} zł`],
+        ['<strong>Suma</strong>', `<strong>${summary.totalPrice.toLocaleString('pl-PL')} zł</strong>`],
+        ['Kaucja', `${summary.deposit.toLocaleString('pl-PL')} zł`],
+        ['<strong>Do zapłaty łącznie</strong>', `<strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong>`],
+    ]);
+
 // ============================================================================
 // === POWIADOMIENIA Z WYNAJMU (RENTAL)
 // ============================================================================
@@ -188,16 +206,13 @@ export const createReservationAdminEmailPayload = (
 
     const detailsContent = generateDetailsTable(detailsRows);
 
-    const paymentContent = generateDetailsTable([
-        ['Okres najmu', `${summary.rentalDays} dni`],
-        ['Koszt najmu', `${summary.rentalPrice.toLocaleString('pl-PL')} zł`],
-        ['Opcje dodatkowe', `${summary.optionsPrice.toLocaleString('pl-PL')} zł`],
-        ['<strong>Suma</strong>', `<strong>${summary.totalPrice.toLocaleString('pl-PL')} zł</strong>`],
-        ['Kaucja', `${summary.deposit.toLocaleString('pl-PL')} zł`],
-        ['<strong>Do zapłaty łącznie</strong>', `<strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong>`],
-    ]);
+    const paymentContent = buildRentalCostSummaryTable(summary);
 
-    const optionsList = ADDITIONAL_OPTIONS.filter(opt => data.options[opt.id]).map(opt => `<li>${opt.name}</li>`).join('');
+    const optionLines = buildV2OptionLines(data.model, data.options);
+    const optionsTableHtml =
+        optionLines.length > 0
+            ? generateDetailsTable(optionLines.map((line) => [line.fullName, line.detail]))
+            : '';
 
     const agreementsContent = generateDetailsTable([
         ['Regulamin i polityka prywatności', agreements.terms ? '&#9989; Tak' : '&#10060; Nie'],
@@ -210,7 +225,7 @@ export const createReservationAdminEmailPayload = (
         ${detailsContent}
         <h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Podsumowanie kosztów</h3>
         ${paymentContent}
-        ${optionsList ? `<h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Wybrane opcje</h3><ul style="padding-left: 20px; margin:0; color: #4b5563;">${optionsList}</ul>` : ''}
+        ${optionsTableHtml ? `<h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Wybrane opcje</h3>${optionsTableHtml}` : ''}
         <h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Zgody</h3>
         ${agreementsContent}
     `;
@@ -238,19 +253,22 @@ export const createReservationAdminEmailPayload = (
  */
 export const createReservationCustomerEmailPayload = (data: ReservationFormData, summary: any): EmailPayload => {
     // --- Budowanie treści (body) ---
-    const content = generateDetailsTable([
+    const detailsContent = generateDetailsTable([
         ['Model pojazdu', data.model.name],
         ['Termin odbioru', `${formatDate(data.pickupDate)} o ${data.pickupTime}`],
         ['Miejsce odbioru', formatRentalLocationLine(data.pickupLocation)],
         ['Termin zwrotu', `${formatDate(data.returnDate)} o ${data.returnTime}`],
         ['Miejsce zwrotu', formatRentalLocationLine(data.returnLocation)],
-        ['Do zapłaty (z kaucją)', `<strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong>`],
     ]);
+
+    const paymentContent = buildRentalCostSummaryTable(summary);
 
     const fullContent = `
       <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 12px 0; color: #111827;">Potwierdzenie rezerwacji</h2>
       <p style="font-size: 16px; color: #4b5563; margin: 0 0 24px 0;">Dziękujemy za złożenie rezerwacji w apolloidea.com. Otrzymaliśmy Twoje zgłoszenie i wkrótce je potwierdzimy.</p>
-      ${content}
+      ${detailsContent}
+      <h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0; color: #111827;">Podsumowanie kosztów</h3>
+      ${paymentContent}
       <p style="font-size: 14px; color: #4b5563; margin: 24px 0 0 0;">W kolejnym kroku zostaniesz poproszony o dokonanie płatności. Jeśli masz jakiekolwiek pytania, skontaktuj się z nami.</p>
     `;
 

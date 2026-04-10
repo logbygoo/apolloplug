@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
-import { Input, Label, PageHeader } from '../components/ui';
+import { Button, Input, Label, PageHeader } from '../components/ui';
 import { CheckIcon, InformationCircleIcon } from '../icons';
 import { ADDITIONAL_OPTIONS, RENTAL_CARS, RENTAL_PERIOD_FIELD_CELL } from '../configs/rentConfig';
 import { buildReservationFormDataFromV2 } from '../configs/rentalReservationFormData';
 import {
   createReservationAdminEmailPayload,
   createReservationCustomerEmailPayload,
+  createPaymentConfirmationAdminEmailPayload,
 } from '../configs/notifications/emailTemplates';
 import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 import { mailApiUrl, smsApiUrl } from '../configs/notifications/apiEndpoints';
@@ -21,6 +22,8 @@ import {
   type RentalPeriodState,
 } from '../utils/rentalV2Summary';
 import type { Car } from '../types';
+
+const reservationNumberStorageKey = (id: string) => `rentalV2ReservationNumber_${id}`;
 
 declare global {
   interface Window {
@@ -347,6 +350,7 @@ const RESERVATION_PAIR_GRID =
   'grid w-full min-w-0 grid-cols-1 gap-4 min-[350px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] min-[350px]:items-end';
 
 const RentalReservationPage: React.FC = () => {
+  const navigate = useNavigate();
   const { carId } = useParams<{ carId: string }>();
   const [ready, setReady] = useState(false);
 
@@ -370,8 +374,13 @@ const RentalReservationPage: React.FC = () => {
   const [agreementAttempted, setAgreementAttempted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  /** Dane kierowcy → płatność (jak krok 2 na starej wypożyczalni) → podziękowanie. */
+  const [flowStep, setFlowStep] = useState<'driver' | 'payment' | 'done'>('driver');
+  const [reservationNumber, setReservationNumber] = useState('');
+  const [isPaymentFinalizing, setIsPaymentFinalizing] = useState(false);
   const agreementsRef = useRef<HTMLDivElement>(null);
+  /** Ostatni payload rezerwacji — do maila potwierdzenia płatności. */
+  const lastReservationPayloadRef = useRef<ReturnType<typeof buildReservationFormDataFromV2> | null>(null);
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -404,6 +413,29 @@ const RentalReservationPage: React.FC = () => {
       /* ignore */
     }
   }, [driver, agreements, carId, ready]);
+
+  useEffect(() => {
+    if (!carId) return;
+    try {
+      const saved = sessionStorage.getItem(reservationNumberStorageKey(carId));
+      if (saved) setReservationNumber(saved);
+    } catch {
+      /* ignore */
+    }
+  }, [carId]);
+
+  useEffect(() => {
+    if (!carId || !reservationNumber) return;
+    try {
+      sessionStorage.setItem(reservationNumberStorageKey(carId), reservationNumber);
+    } catch {
+      /* ignore */
+    }
+  }, [carId, reservationNumber]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [flowStep]);
 
   const selected: Car = car ?? RENTAL_CARS[0];
   const rentalPeriod = session?.rentalPeriod;
@@ -532,7 +564,10 @@ const RentalReservationPage: React.FC = () => {
         });
       }
 
-      setSubmitted(true);
+      lastReservationPayloadRef.current = formPayload;
+      const num = reservationNumber.trim() || `AP-${Date.now()}`;
+      setReservationNumber(num);
+      setFlowStep('payment');
       window.scrollTo(0, 0);
     } catch (err) {
       console.error(err);
@@ -541,6 +576,40 @@ const RentalReservationPage: React.FC = () => {
       );
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const paymentMethods = [{ id: 'payu', name: 'PayU' as const }];
+  const selectedPaymentMethod = 'payu';
+  const paymentAmount = summary.totalPrice > 0 ? summary.totalPrice.toFixed(2) : '0.00';
+  const paymentName = reservationNumber || `AP-${Date.now()}`;
+  const payuPaymentUrl = `https://rent.ffgroup.pl/pay/?name=${encodeURIComponent(paymentName)}&amount=${encodeURIComponent(paymentAmount)}`;
+
+  const handleFinalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!session || !rentalPeriod || !additionalOptions) return;
+    const payload =
+      lastReservationPayloadRef.current ??
+      buildReservationFormDataFromV2(selected, session.selectedBrandId, rentalPeriod, driver, additionalOptions);
+    setIsPaymentFinalizing(true);
+    try {
+      await new Promise((r) => setTimeout(r, 1500));
+      const paymentMethodName = paymentMethods.find((p) => p.id === selectedPaymentMethod)?.name || 'Nieznana';
+      const paymentConfirmationPayload = createPaymentConfirmationAdminEmailPayload(payload, summary, paymentMethodName);
+      const response = await fetch(mailApiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentConfirmationPayload),
+      });
+      if (!response.ok) {
+        console.warn('Nie udało się wysłać e-maila potwierdzającego płatność do administratora.');
+      }
+      setFlowStep('done');
+    } catch (err) {
+      console.error(err);
+      setFlowStep('done');
+    } finally {
+      setIsPaymentFinalizing(false);
     }
   };
 
@@ -554,8 +623,25 @@ const RentalReservationPage: React.FC = () => {
 
   const breadcrumbs = [
     { name: 'Wypożyczalnia', path: '/wypozyczalnia' },
-    { name: 'Rezerwacja' },
+    { name: flowStep === 'payment' ? 'Płatność' : 'Rezerwacja' },
   ];
+
+  if (flowStep === 'done') {
+    return (
+      <>
+        <Seo title={`Rezerwacja zakończona — ${selected.name}`} description="Potwierdzenie rezerwacji w Apollo Idea." />
+        <div className="container mx-auto flex min-h-[calc(100vh-8rem)] max-w-2xl flex-col items-center justify-center px-4 py-24 text-center">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Dziękujemy za rezerwację</h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Potwierdzenie dla {selected.name} zostało wysłane na adres {driver.email.trim()}.
+          </p>
+          <Button type="button" className="mt-10" size="lg" onClick={() => navigate('/wypozyczalnia')}>
+            Zarezerwuj kolejny pojazd
+          </Button>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -564,11 +650,114 @@ const RentalReservationPage: React.FC = () => {
       <div className="rental-v2 min-h-screen overflow-x-hidden bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <div className="rental-v2-page-header">
-            <PageHeader title="Rezerwacja" breadcrumbs={breadcrumbs} />
+            <PageHeader
+              title={flowStep === 'payment' ? 'Płatność' : 'Rezerwacja'}
+              subtitle={flowStep === 'payment' ? 'Dokonaj płatności za wynajem — bezpiecznie przez operatora PayU' : undefined}
+              breadcrumbs={breadcrumbs}
+            />
           </div>
         </div>
 
         <div className="container mx-auto min-w-0 px-4 pb-6 md:px-6">
+          {flowStep === 'payment' ? (
+            <form onSubmit={handleFinalSubmit}>
+              <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
+                <div className="min-w-0 overflow-x-visible lg:col-span-2">
+                  <section className="pt-0">
+                    <h2 className="text-2xl font-bold tracking-tight">Metoda płatności</h2>
+                    <div className="mt-6 space-y-3">
+                      {paymentMethods.map((method) => (
+                        <div key={method.id} className="rounded-lg border border-sky-300">
+                          <div className="flex items-center rounded-t-lg bg-secondary/50 p-4">
+                            <span className="font-medium">{method.name}</span>
+                          </div>
+                          <div className="border-t border-sky-300 bg-sky-50 p-6">
+                            <h3 className="mb-2 text-lg font-semibold">Płatność PayU</h3>
+                            <p className="text-muted-foreground">
+                              Po kliknięciu przycisku &quot;Opłać rezerwację&quot; zostaniesz przekierowany na stronę operatora
+                              płatności PayU, aby bezpiecznie dokończyć transakcję.
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+
+                <aside className="min-w-0 scroll-mt-[4.5rem] lg:col-span-1">
+                  <div className="lg:sticky lg:top-24">
+                    <div className="space-y-6 rounded-lg bg-secondary p-6">
+                      <h2 className="text-3xl font-bold">Podsumowanie</h2>
+                      <div className="space-y-2 border-t border-border pt-4">
+                        <div className="flex justify-between gap-3">
+                          <span className="text-muted-foreground">Okres najmu</span>
+                          <span className="font-medium">
+                            {summary.rentalDays > 0 ? `${summary.rentalDays} dni` : '—'}
+                          </span>
+                        </div>
+                        {summary.pickupFee > 0 && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Podstawienie auta</span>
+                            <span className="font-medium">{`${summary.pickupFee.toLocaleString('pl-PL')} zł`}</span>
+                          </div>
+                        )}
+                        {summary.returnFee > 0 && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Odbiór auta</span>
+                            <span className="font-medium">{`${summary.returnFee.toLocaleString('pl-PL')} zł`}</span>
+                          </div>
+                        )}
+                        <div className="mt-2 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
+                          <span>Cena łącznie</span>
+                          <span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Kaucja (płatna przy odbiorze)</span>
+                          <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
+                        </div>
+                        <div className="flex justify-between pt-2 font-bold">
+                          <span className="text-muted-foreground">Do zapłaty (za wynajem)</span>
+                          <span className="font-medium">
+                            {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-3">
+                        <Button
+                          type="button"
+                          size="lg"
+                          className="w-full"
+                          disabled={isPaymentFinalizing || summary.totalPrice <= 0}
+                          onClick={() => {
+                            window.location.href = payuPaymentUrl;
+                          }}
+                        >
+                          Opłać rezerwację
+                        </Button>
+                        <Button
+                          type="submit"
+                          variant="secondary"
+                          className="w-full"
+                          disabled={isPaymentFinalizing || summary.totalPrice <= 0}
+                        >
+                          {isPaymentFinalizing ? 'Przetwarzanie…' : 'Potwierdź płatność (zakończ rezerwację)'}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          className="w-full"
+                          disabled={isPaymentFinalizing}
+                          onClick={() => setFlowStep('driver')}
+                        >
+                          Wróć do danych kierowcy
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </aside>
+              </div>
+            </form>
+          ) : (
           <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
             <div className="min-w-0 overflow-x-visible lg:col-span-2">
               <form id="rental-driver-form" onSubmit={handleSubmit} className="space-y-6">
@@ -577,16 +766,7 @@ const RentalReservationPage: React.FC = () => {
                     {submitError}
                   </div>
                 )}
-                {submitted && (
-                  <div className="rounded-md border border-border bg-secondary px-4 py-3 text-sm leading-relaxed">
-                    <p className="font-semibold text-foreground">Dziękujemy za złożenie rezerwacji.</p>
-                    <p className="mt-1 text-muted-foreground">
-                      Wysłaliśmy potwierdzenie na podany adres e-mail oraz wiadomość SMS. Wkrótce wrócimy z informacją o
-                      dalszych krokach i płatności.
-                    </p>
-                  </div>
-                )}
-                <fieldset disabled={submitted || isSubmitting} className="min-w-0 space-y-6 border-0 p-0">
+                <fieldset disabled={isSubmitting} className="min-w-0 space-y-6 border-0 p-0">
                 <div className="flex w-full rounded-lg border border-border bg-secondary p-1.5">
                   <button
                     type="button"
@@ -930,10 +1110,10 @@ const RentalReservationPage: React.FC = () => {
                   <button
                     type="submit"
                     form="rental-driver-form"
-                    disabled={isSubmitting || submitted}
+                    disabled={isSubmitting}
                     className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {isSubmitting ? 'Wysyłanie…' : submitted ? 'Wysłano' : 'Zarezerwuj i Opłać'}
+                    {isSubmitting ? 'Wysyłanie…' : 'Przejdź do płatności'}
                   </button>
                 </div>
                 <div className="mt-4">
@@ -949,6 +1129,7 @@ const RentalReservationPage: React.FC = () => {
               </div>
             </aside>
           </div>
+          )}
         </div>
       </div>
     </>

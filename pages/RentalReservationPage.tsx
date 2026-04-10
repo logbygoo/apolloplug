@@ -191,6 +191,28 @@ const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }>
   );
 };
 
+/** Jedna linia etykiety; nadmiar jako … (wymaga min-w-0 na komórce siatki). */
+const FORM_LABEL_CLASS = 'block min-w-0 truncate';
+
+/** Etykieta + ikona „i” z tooltipem (etykieta obcina się w jednej linii). */
+const ReservationLabelHint: React.FC<{
+  htmlFor: string;
+  children: React.ReactNode;
+  tooltip: React.ReactNode;
+  ariaLabel: string;
+}> = ({ htmlFor, children, tooltip, ariaLabel }) => (
+  <div className="flex min-w-0 items-center gap-1.5">
+    <Label htmlFor={htmlFor} className="mb-0 min-w-0 flex-1 truncate">
+      {children}
+    </Label>
+    <Tooltip content={tooltip}>
+      <span className="inline-flex shrink-0 text-muted-foreground" tabIndex={0} aria-label={ariaLabel}>
+        <InformationCircleIcon className="h-4 w-4" />
+      </span>
+    </Tooltip>
+  </div>
+);
+
 const AgreementCheckbox: React.FC<{
   id: string;
   label: React.ReactNode;
@@ -328,11 +350,16 @@ const RentalReservationPage: React.FC = () => {
       meta.setAttribute('content', previous);
     };
   }, []);
+
   const [session, setSession] = useState<RentalV2SessionStored | null>(null);
   const [driver, setDriver] = useState<DriverFormState>(() => emptyDriver());
   const [agreements, setAgreements] = useState<AgreementsState>(() => emptyAgreements());
   const [agreementAttempted, setAgreementAttempted] = useState(false);
   const agreementsRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const car = carId ? RENTAL_CARS.find((c) => c.id === carId) : undefined;
 
@@ -496,7 +523,9 @@ const RentalReservationPage: React.FC = () => {
                   {driver.reservationType === 'company' ? (
                     <div className={RESERVATION_PAIR_GRID}>
                       <div className={RENTAL_PERIOD_FIELD_CELL}>
-                        <Label htmlFor="fullName">Imię i nazwisko</Label>
+                        <Label htmlFor="fullName" className={FORM_LABEL_CLASS}>
+                          Imię i nazwisko
+                        </Label>
                         <Input
                           id="fullName"
                           value={driver.fullName}
@@ -506,24 +535,40 @@ const RentalReservationPage: React.FC = () => {
                         />
                       </div>
                       <div className={RENTAL_PERIOD_FIELD_CELL}>
-                        <Label htmlFor="nip">NIP</Label>
+                        <Label htmlFor="nip" className={FORM_LABEL_CLASS}>
+                          NIP
+                        </Label>
                         <Input id="nip" value={driver.nip} onChange={handleDriverChange} required className="mt-1" />
                       </div>
                     </div>
                   ) : (
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="fullName">Imię i nazwisko</Label>
+                      <Label htmlFor="fullName" className={FORM_LABEL_CLASS}>
+                        Imię i nazwisko
+                      </Label>
                       <Input id="fullName" value={driver.fullName} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                   )}
 
                   <div className={RESERVATION_PAIR_GRID}>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="pesel">PESEL</Label>
+                      <ReservationLabelHint
+                        htmlFor="pesel"
+                        tooltip="11-cyfrowy numer PESEL (bez spacji i znaków)"
+                        ariaLabel="11-cyfrowy numer PESEL (bez spacji i znaków)"
+                      >
+                        PESEL
+                      </ReservationLabelHint>
                       <Input id="pesel" value={driver.pesel} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="idDocumentNumber">Nr dowodu</Label>
+                      <ReservationLabelHint
+                        htmlFor="idDocumentNumber"
+                        tooltip="Seria i numer dokumentu np. ZZC108201 lub ZE3012539"
+                        ariaLabel="Seria i numer dokumentu np. ZZC108201 lub ZE3012539"
+                      >
+                        Nr. dowodu lub paszportu
+                      </ReservationLabelHint>
                       <Input
                         id="idDocumentNumber"
                         value={driver.idDocumentNumber}
@@ -536,7 +581,13 @@ const RentalReservationPage: React.FC = () => {
 
                   <div className={RESERVATION_PAIR_GRID}>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="licenseNumber">Numer prawa jazdy</Label>
+                      <ReservationLabelHint
+                        htmlFor="licenseNumber"
+                        tooltip="Pozycja 5 na przodzie dokumentu np. SP006/16/8"
+                        ariaLabel="Pozycja 5 na przodzie dokumentu np. SP006/16/8"
+                      >
+                        Numer prawa jazdy
+                      </ReservationLabelHint>
                       <Input
                         id="licenseNumber"
                         value={driver.licenseNumber}
@@ -546,20 +597,13 @@ const RentalReservationPage: React.FC = () => {
                       />
                     </div>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <div className="flex items-center gap-1.5">
-                        <Label htmlFor="licenseBlanketNumber" className="mb-0">
-                          Nr. blankietu prawa jazdy
-                        </Label>
-                        <Tooltip content="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu">
-                          <span
-                            className="inline-flex shrink-0 text-muted-foreground"
-                            tabIndex={0}
-                            aria-label="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu"
-                          >
-                            <InformationCircleIcon className="h-4 w-4" />
-                          </span>
-                        </Tooltip>
-                      </div>
+                      <ReservationLabelHint
+                        htmlFor="licenseBlanketNumber"
+                        tooltip="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu np. SP006168"
+                        ariaLabel="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu np. SP006168"
+                      >
+                        Nr. blankietu prawa jazdy
+                      </ReservationLabelHint>
                       <Input
                         id="licenseBlanketNumber"
                         value={driver.licenseBlanketNumber}
@@ -571,28 +615,42 @@ const RentalReservationPage: React.FC = () => {
                   </div>
 
                   <div className={RENTAL_PERIOD_FIELD_CELL}>
-                    <Label htmlFor="address">Adres zamieszkania</Label>
+                    <ReservationLabelHint
+                      htmlFor="address"
+                      tooltip="Pełny adres zamieszkania z ulicą, numerem budynku i numerem mieszkania"
+                      ariaLabel="Pełny adres zamieszkania z ulicą, numerem budynku i numerem mieszkania"
+                    >
+                      Adres zamieszkania
+                    </ReservationLabelHint>
                     <Input id="address" value={driver.address} onChange={handleDriverChange} required className="mt-1" />
                   </div>
 
                   <div className={RESERVATION_PAIR_GRID}>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="postalCode">Kod pocztowy</Label>
+                      <Label htmlFor="postalCode" className={FORM_LABEL_CLASS}>
+                        Kod pocztowy
+                      </Label>
                       <Input id="postalCode" value={driver.postalCode} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="city">Miejscowość</Label>
+                      <Label htmlFor="city" className={FORM_LABEL_CLASS}>
+                        Miejscowość
+                      </Label>
                       <Input id="city" value={driver.city} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                   </div>
 
                   <div className={RESERVATION_PAIR_GRID}>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="email">E-mail</Label>
+                      <Label htmlFor="email" className={FORM_LABEL_CLASS}>
+                        E-mail
+                      </Label>
                       <Input id="email" type="email" value={driver.email} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="phone">Telefon</Label>
+                      <Label htmlFor="phone" className={FORM_LABEL_CLASS}>
+                        Telefon
+                      </Label>
                       <Input id="phone" type="tel" value={driver.phone} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                   </div>

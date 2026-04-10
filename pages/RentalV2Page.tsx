@@ -10,7 +10,6 @@ import {
   RENTAL_PERIOD_DATETIME_GRID,
   RENTAL_PERIOD_FIELD_CELL,
   RENTAL_PERIOD_FIELD_STYLES,
-  RENTAL_PERIOD_GROUP_BOX,
   RENTAL_PERIOD_LOCATION_ROW,
   RENTAL_PERIOD_SELECT_CLASSNAME,
   RENTAL_TIME_OPTIONS,
@@ -426,7 +425,7 @@ const V2ModelCard: React.FC<{
   const widthClass =
     layout === 'grid'
       ? 'min-h-[12rem] w-full min-w-0'
-      : 'min-h-[12rem] w-[min(88vw,20rem)] shrink-0 sm:w-80';
+      : 'min-h-[12rem] w-[min(88vw,15rem)] shrink-0 sm:w-60';
 
   return (
     <div
@@ -937,7 +936,7 @@ const RentalV2Page: React.FC = () => {
               <section className="mt-8 min-w-0 max-w-full overflow-x-hidden">
                 <h2 className="text-2xl font-bold tracking-tight">Odbiór auta</h2>
                 <div className="mt-3 flex min-w-0 max-w-full flex-col gap-8">
-                  <div className={`rental-period ${RENTAL_PERIOD_GROUP_BOX} space-y-4`}>
+                  <div className="rental-period min-w-0 max-w-full space-y-4">
                     <div className={RENTAL_PERIOD_DATETIME_GRID}>
                       <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="pickupDate">Data odbioru</Label>
@@ -1001,7 +1000,7 @@ const RentalV2Page: React.FC = () => {
 
                   <div>
                     <h3 className="text-2xl font-bold tracking-tight">Zwrot auta</h3>
-                    <div className={`rental-period mt-3 ${RENTAL_PERIOD_GROUP_BOX} space-y-4`}>
+                    <div className="rental-period mt-3 min-w-0 max-w-full space-y-4">
                     <div className={RENTAL_PERIOD_DATETIME_GRID}>
                       <div className={RENTAL_PERIOD_FIELD_CELL}>
                         <Label htmlFor="returnDate">Data zwrotu</Label>
@@ -1250,7 +1249,7 @@ const RentalV2Page: React.FC = () => {
             onClick={() => {
               summaryAsideRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className="w-full bg-transparent px-0 text-left text-background transition-opacity hover:opacity-90 active:opacity-80"
+            className="w-full bg-transparent px-0 text-left text-background"
           >
             <div className="flex items-baseline justify-between gap-3 leading-tight">
               <span className="text-sm font-semibold">Podsumowanie</span>

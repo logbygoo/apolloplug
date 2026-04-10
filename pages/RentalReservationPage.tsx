@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { Input, Label, PageHeader } from '../components/ui';
@@ -66,21 +66,130 @@ const emptyDriver = (): DriverFormState => ({
   phone: '',
 });
 
-/**
- * Tooltip jak na /wypozyczalnia, ale bez wystawania poza viewport na wąskich ekranach:
- * max-width od szerokości okna, zawijanie tekstu, brak w-max powodującego overflow.
- */
-const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }> = ({ content, children }) => (
-  <div className="group relative flex min-w-0 max-w-full shrink-0 items-center">
-    {children}
+/** Desktop: hover; urządzenia bez precyzyjnego hover: tap przełącza; pozycja `fixed` + clamp do krawędzi okna. */
+const Tooltip: React.FC<{ content: React.ReactNode; children: React.ReactNode }> = ({ content, children }) => {
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [coords, setCoords] = useState<{ left: number; top: number } | null>(null);
+
+  const isHoverUI = () =>
+    typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  const updatePosition = useCallback(() => {
+    const wrap = triggerRef.current;
+    const bubble = bubbleRef.current;
+    if (!wrap || !bubble) return;
+    const margin = 10;
+    const maxW = Math.min(240, window.innerWidth - 2 * margin);
+    bubble.style.width = `${maxW}px`;
+    bubble.style.boxSizing = 'border-box';
+    const rect = wrap.getBoundingClientRect();
+    const tw = bubble.offsetWidth;
+    const th = bubble.offsetHeight;
+    let left = rect.left + rect.width / 2 - tw / 2;
+    left = Math.max(margin, Math.min(left, window.innerWidth - tw - margin));
+    let top = rect.top - th - 8;
+    if (top < margin) {
+      top = rect.bottom + 8;
+    }
+    if (top + th > window.innerHeight - margin) {
+      top = Math.max(margin, window.innerHeight - th - margin);
+    }
+    setCoords({ left, top });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setCoords(null);
+      return;
+    }
+    updatePosition();
+    const ro = new ResizeObserver(() => updatePosition());
+    if (bubbleRef.current) ro.observe(bubbleRef.current);
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [open, updatePosition, content]);
+
+  useEffect(() => {
+    if (!open || isHoverUI()) return;
+    const close = (ev: MouseEvent) => {
+      if (triggerRef.current?.contains(ev.target as Node)) return;
+      setOpen(false);
+    };
+    const t = window.setTimeout(() => document.addEventListener('click', close), 0);
+    return () => {
+      clearTimeout(t);
+      document.removeEventListener('click', close);
+    };
+  }, [open]);
+
+  return (
     <div
-      className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 max-w-[min(240px,calc(100vw-2rem))] -translate-x-1/2 rounded-md bg-foreground p-2 text-left text-xs leading-snug text-background opacity-0 shadow-lg transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 sm:max-w-[240px]"
-      style={{ wordBreak: 'break-word' }}
+      ref={triggerRef}
+      className="relative flex shrink-0 items-center"
+      aria-expanded={open}
+      onMouseEnter={() => {
+        if (isHoverUI()) setOpen(true);
+      }}
+      onMouseLeave={() => {
+        if (isHoverUI()) setOpen(false);
+      }}
+      onClick={(e) => {
+        if (!isHoverUI()) {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((o) => !o);
+        }
+      }}
+      onFocusCapture={(e) => {
+        const t = e.target as HTMLElement;
+        if (
+          triggerRef.current?.contains(t) &&
+          typeof t.matches === 'function' &&
+          t.matches(':focus-visible')
+        ) {
+          setOpen(true);
+        }
+      }}
+      onBlurCapture={(e) => {
+        if (!triggerRef.current?.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
     >
-      {content}
+      {React.isValidElement(children)
+        ? React.cloneElement(children as React.ReactElement<{ onKeyDown?: (ev: React.KeyboardEvent) => void }>, {
+            onKeyDown: (ev: React.KeyboardEvent) => {
+              if (ev.key === 'Enter' || ev.key === ' ') {
+                ev.preventDefault();
+                setOpen((o) => !o);
+              }
+              const prev = (children as React.ReactElement<{ onKeyDown?: typeof ev }>).props.onKeyDown;
+              prev?.(ev);
+            },
+          })
+        : children}
+      {open && (
+        <div
+          ref={bubbleRef}
+          role="tooltip"
+          className="pointer-events-none fixed z-[100] box-border rounded-md bg-foreground p-2 text-left text-xs leading-snug text-background shadow-lg transition-opacity"
+          style={
+            coords
+              ? { left: coords.left, top: coords.top, opacity: 1 }
+              : { left: -9999, top: 0, visibility: 'hidden' as const, opacity: 0 }
+          }
+        >
+          {content}
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 const AgreementCheckbox: React.FC<{
   id: string;
@@ -205,6 +314,20 @@ const RESERVATION_PAIR_GRID =
 const RentalReservationPage: React.FC = () => {
   const { carId } = useParams<{ carId: string }>();
   const [ready, setReady] = useState(false);
+
+  /** Na tej stronie wyłączamy pinch-zoom / auto-zoom przy focusie w polach (iOS). Przy opuszczeniu trasy przywracamy viewport. */
+  useEffect(() => {
+    const meta = document.querySelector('meta[name="viewport"]');
+    if (!meta) return;
+    const previous = meta.getAttribute('content') ?? '';
+    meta.setAttribute(
+      'content',
+      'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover'
+    );
+    return () => {
+      meta.setAttribute('content', previous);
+    };
+  }, []);
   const [session, setSession] = useState<RentalV2SessionStored | null>(null);
   const [driver, setDriver] = useState<DriverFormState>(() => emptyDriver());
   const [agreements, setAgreements] = useState<AgreementsState>(() => emptyAgreements());

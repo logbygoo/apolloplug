@@ -1,8 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  buildV2OptionLines,
+  computeRentalV2Summary,
+  formatPolishRentalDays,
+  type RentalPeriodState,
+} from '../utils/rentalV2Summary';
 import RentalPriceTable from '../components/RentalPriceTable';
 import Seo from '../components/Seo';
-import { Button, Input, Label, PageHeader } from '../components/ui';
+import { Input, Label, PageHeader } from '../components/ui';
 import {
   ADDITIONAL_OPTIONS,
   RENTAL_CARS,
@@ -17,6 +23,7 @@ import {
 import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 import { CAR_FLEET } from '../configs/fleetConfig';
+import { RENTAL_V2_SESSION_KEY } from '../configs/rentalV2Session';
 import { BRANDS } from '../constants';
 import { CalendarDaysIcon, CheckIcon, ChevronDownIcon, DocumentTextIcon } from '../icons';
 import type { Car } from '../types';
@@ -65,13 +72,6 @@ const getDefaultOptionsForCar = (carId: string): AdditionalOptionsState =>
     ADDITIONAL_OPTIONS.map((o) => [o.id, getPriceForCar(o.price, carId) === 0])
   ) as AdditionalOptionsState;
 
-/** Podsumowanie v2: „1 dzień”, „2 dni”, „5 dni” itd. */
-function formatPolishRentalDays(n: number): string {
-  if (n <= 0) return '—';
-  if (n === 1) return '1 dzień';
-  return `${n} dni`;
-}
-
 /** `YYYY-MM-DD` → `dd.mm` (pływający CTA). */
 function formatDdMmFromIso(iso: string): string {
   if (!iso) return '';
@@ -80,17 +80,6 @@ function formatDdMmFromIso(iso: string): string {
   const [, m, d] = p;
   return `${d}.${m}`;
 }
-
-type RentalPeriodState = {
-  pickupDate: string;
-  pickupTime: string;
-  pickupLocation: string;
-  returnDate: string;
-  returnTime: string;
-  returnLocation: string;
-};
-
-const RENTAL_V2_SESSION_KEY = 'rentalV2FormState';
 
 type RentalV2Session = {
   selectedId: string;
@@ -242,18 +231,6 @@ const RENTAL_V2_E2E_STYLES = `
   }
   @media (min-width: 1536px) {
     .rental-v2 { --container-width: 96rem; }
-  }
-
-  .rental-v2 .e2e-v2-debug {
-    position: sticky;
-    top: 3.5rem;
-    z-index: 10;
-    border-bottom: 1px solid hsl(0 0% 90%);
-    background: hsl(0 0% 96%);
-    padding: 0.5rem 1rem;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: 11px;
-    color: hsl(0 0% 45%);
   }
 
   .rental-v2 .e2e-slider {
@@ -559,7 +536,6 @@ const RentalV2Page: React.FC = () => {
   const rentalRootRef = useRef<HTMLDivElement>(null);
   const summaryAsideRef = useRef<HTMLElement>(null);
   const [summaryInView, setSummaryInView] = useState(false);
-  const [debugLine, setDebugLine] = useState('');
   const [modelDetailTab, setModelDetailTab] = useState<ModelDetailTabId>('spec');
   const modelTabPanelRef = useRef<HTMLDivElement>(null);
 
@@ -642,18 +618,6 @@ const RentalV2Page: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const tick = () => {
-      const root = rentalRootRef.current;
-      if (!root) return;
-      const cw = getComputedStyle(root).getPropertyValue('--container-width').trim();
-      setDebugLine(`viewport: ${window.innerWidth}px  |  --container-width: ${cw}`);
-    };
-    tick();
-    window.addEventListener('resize', tick);
-    return () => window.removeEventListener('resize', tick);
-  }, []);
-
-  useEffect(() => {
     const el = summaryAsideRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -668,117 +632,15 @@ const RentalV2Page: React.FC = () => {
 
   const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
 
-  /** Ta sama logika co `summary` w `RentalPage` (krok „szczegóły”). */
-  const summary = useMemo(() => {
-    const {
-      pickupDate,
-      returnDate,
-      pickupTime,
-      returnTime,
-      pickupLocation,
-      returnLocation,
-    } = rentalPeriod;
-    const model = selected;
-    const options = additionalOptions;
+  const summary = useMemo(
+    () => computeRentalV2Summary(rentalPeriod, selected, additionalOptions),
+    [rentalPeriod, additionalOptions, selected]
+  );
 
-    const defaultReturn = {
-      rentalDays: 0,
-      rentalPrice: 0,
-      optionsPrice: 0,
-      totalPrice: 0,
-      deposit: 5000,
-      totalWithDeposit: 5000,
-      totalKmLimit: 0,
-      costPerKmOverLimit: 0,
-      pickupFee: 0,
-      returnFee: 0,
-      tierPricePerDay: 0,
-      tierKmLimitPerDay: 0,
-    };
-
-    if (!pickupDate || !returnDate || !pickupTime || !returnTime || !model) {
-      return defaultReturn;
-    }
-
-    const start = new Date(`${pickupDate}T${pickupTime}`);
-    const end = new Date(`${returnDate}T${returnTime}`);
-
-    if (start >= end) {
-      return defaultReturn;
-    }
-
-    const diffTime = end.getTime() - start.getTime();
-    const rentalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
-
-    const tier =
-      model.priceTiers?.find((t) => {
-        const range = t.days.match(/\d+/g);
-        if (!range) return false;
-
-        const min = parseInt(range[0], 10);
-        let max: number;
-
-        if (range.length > 1) {
-          max = parseInt(range[1], 10);
-        } else if (t.days.includes('+') || t.days.includes('-')) {
-          max = Infinity;
-        } else {
-          max = min;
-        }
-
-        return rentalDays >= min && rentalDays <= max;
-      }) || { pricePerDay: model.pricePerDay, kmLimitPerDay: 250 };
-
-    const rentalPrice = rentalDays * tier.pricePerDay;
-    const totalKmLimit = rentalDays * tier.kmLimitPerDay;
-    const costPerKmOverLimit = model.costPerKmOverLimit || 0;
-
-    let optionsPrice = 0;
-    ADDITIONAL_OPTIONS.forEach((opt) => {
-      if (options[opt.id]) {
-        const price = getPriceForCar(opt.price, model.id);
-        optionsPrice += opt.type === 'per_day' ? price * rentalDays : price;
-      }
-    });
-
-    const pickupLoc = RENTAL_LOCATIONS_DATA.find((loc) => loc.title === pickupLocation);
-    const pickupFee = pickupLoc?.price || 0;
-
-    const returnLoc = RENTAL_LOCATIONS_DATA.find((loc) => loc.title === returnLocation);
-    const returnFee = returnLoc?.price || 0;
-
-    const totalPrice = rentalPrice + optionsPrice + pickupFee + returnFee;
-    const deposit = model.deposit || 5000;
-    const totalWithDeposit = totalPrice + deposit;
-
-    return {
-      rentalDays,
-      rentalPrice,
-      optionsPrice,
-      totalPrice,
-      deposit,
-      totalWithDeposit,
-      totalKmLimit,
-      costPerKmOverLimit,
-      pickupFee,
-      returnFee,
-      tierPricePerDay: tier.pricePerDay,
-      tierKmLimitPerDay: tier.kmLimitPerDay,
-    };
-  }, [rentalPeriod, additionalOptions, selected]);
-
-  /** Wiersze opcji w podsumowaniu v2 — tylko zaznaczone; pełna nazwa + stawka w nawiasie. */
-  const v2OptionLines = useMemo(() => {
-    const model = selected;
-    return ADDITIONAL_OPTIONS.filter((opt) => additionalOptions[opt.id]).map((opt) => {
-      const unit = getPriceForCar(opt.price, model.id);
-      const detail =
-        opt.type === 'per_day'
-          ? `${unit.toLocaleString('pl-PL')} zł/db`
-          : `${unit.toLocaleString('pl-PL')} zł`;
-      return { id: opt.id, fullName: opt.name, detail };
-    });
-  }, [additionalOptions, selected]);
+  const v2OptionLines = useMemo(
+    () => buildV2OptionLines(selected, additionalOptions),
+    [additionalOptions, selected]
+  );
 
   const floatingCtaSubline = useMemo(() => {
     if (summary.rentalDays <= 0) return '—';
@@ -808,8 +670,6 @@ const RentalV2Page: React.FC = () => {
         ref={rentalRootRef}
         className="rental-v2 min-h-screen bg-background pb-28 text-foreground lg:pb-16"
       >
-        <div className="e2e-v2-debug">{debugLine}</div>
-
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <div className="rental-v2-page-header">
             <PageHeader
@@ -936,23 +796,23 @@ const RentalV2Page: React.FC = () => {
                       <RentalPriceTable car={selected} className="mt-0" showHeading={false} />
                     )}
                     {modelDetailTab === 'description' && (
-                      <div className="space-y-4">
+                      <p className="text-sm leading-relaxed text-foreground">
                         {fleetCarDescription ? (
-                          <p className="text-sm leading-relaxed text-foreground">{fleetCarDescription}</p>
+                          <>
+                            {fleetCarDescription}{' '}
+                            <Link
+                              to={`/wypozycz/${selected.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
+                            >
+                              Przeczytaj więcej
+                            </Link>
+                          </>
                         ) : (
-                          <p className="text-sm text-muted-foreground">Brak opisu dla tego modelu.</p>
+                          <span className="text-muted-foreground">Brak opisu dla tego modelu.</span>
                         )}
-                        <div>
-                          <Link
-                            to={`/wypozycz/${selected.id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
-                          >
-                            Przeczytaj więcej
-                          </Link>
-                        </div>
-                      </div>
+                      </p>
                     )}
                   </div>
                 </div>
@@ -1132,7 +992,10 @@ const RentalV2Page: React.FC = () => {
               </section>
             </div>
 
-            <aside ref={summaryAsideRef} className="min-w-0 lg:col-span-1">
+            <aside
+              ref={summaryAsideRef}
+              className="min-w-0 scroll-mt-[4.5rem] lg:col-span-1"
+            >
               <div className="lg:sticky lg:top-24">
                 <div className="rounded-lg bg-secondary p-6">
                   <h2 className="text-3xl font-bold">Podsumowanie</h2>
@@ -1239,13 +1102,12 @@ const RentalV2Page: React.FC = () => {
                     <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
                   </div>
 
-                  <Button
-                    type="button"
-                    size="lg"
-                    className="mt-6 h-14 w-full !bg-foreground text-lg font-semibold !text-background hover:!bg-foreground/90"
+                  <Link
+                    to={`/rezerwacja/${selected.id}`}
+                    className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
                   >
                     Zarezerwuj pojazd
-                  </Button>
+                  </Link>
                 </div>
                 <div className="mt-4">
                   <div className="flex items-center justify-center gap-4">

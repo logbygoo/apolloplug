@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import TransfersPage from './pages/TransfersPage';
 import RentalPage from './pages/RentalPage';
 import RentalV2Page from './pages/RentalV2Page';
+import RentalReservationPage from './pages/RentalReservationPage';
 import FinancingPage from './pages/FinancingPage';
 import FleetPage from './pages/FleetPage';
 import CarDetailPage from './pages/CarDetailPage';
@@ -200,6 +201,7 @@ const App: React.FC = () => {
                     <Route path="/transfery" element={<TransfersPage />} />
                     <Route path="/wypozyczalnia" element={<RentalPage />} />
                     <Route path="/wypozyczalnia-v2" element={<RentalV2Page />} />
+                    <Route path="/rezerwacja/:carId" element={<RentalReservationPage />} />
                     <Route path="/finansowanie" element={<FinancingPage />} />
                     <Route path="/flota" element={<FleetPage />} />
                     <Route path="/flota/:carId" element={<CarDetailPage />} />

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import RentalPriceTable from '../components/RentalPriceTable';
 import Seo from '../components/Seo';
 import { Button, Input, Label, PageHeader } from '../components/ui';
 import {
@@ -445,6 +446,47 @@ const V2ModelCard: React.FC<{
   );
 };
 
+/** Pigułki specyfikacji — ten sam zestaw pól co na /wypozyczalnia (krok szczegóły). */
+const RentalCarSpecPills: React.FC<{ car: Car }> = ({ car }) => {
+  if (!car.specs) return null;
+  const s = car.specs;
+  const items: { key: string; label: string; value: string }[] = [];
+  if (s.version) items.push({ key: 'v', label: 'Wersja:', value: s.version });
+  if (s.color) items.push({ key: 'c', label: 'Kolor:', value: s.color });
+  if (s.interiorColor) items.push({ key: 'i', label: 'Wnętrze:', value: s.interiorColor });
+  if (s.range) items.push({ key: 'r', label: 'Zasięg:', value: s.range });
+  if (s.acceleration) items.push({ key: 'a', label: 'Do 100 km/h:', value: s.acceleration });
+  if (s.drive) items.push({ key: 'd', label: 'Napęd:', value: s.drive });
+  if (items.length === 0) return null;
+  return (
+    <div className="flex flex-col gap-2">
+      <RentalV2E2ESlider>
+        {items.map((item) => (
+          <div key={item.key} className="shrink-0">
+            <div className="flex items-baseline gap-x-1.5 whitespace-nowrap rounded-full bg-secondary px-3 py-1.5 text-sm">
+              <span className="text-muted-foreground">{item.label}</span>
+              <span className="font-semibold text-foreground">{item.value}</span>
+            </div>
+          </div>
+        ))}
+      </RentalV2E2ESlider>
+      <div className="hidden flex-wrap items-center gap-2 lg:flex">
+        {items.map((item) => (
+          <div
+            key={item.key}
+            className="flex items-baseline gap-x-1.5 rounded-full bg-secondary px-3 py-1.5 text-sm"
+          >
+            <span className="text-muted-foreground">{item.label}</span>
+            <span className="font-semibold text-foreground">{item.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+type ModelDetailTabId = 'spec' | 'pricing' | 'description';
+
 const CheckboxOption: React.FC<{
   car: Car;
   option: (typeof ADDITIONAL_OPTIONS)[number];
@@ -502,6 +544,7 @@ const RentalV2Page: React.FC = () => {
   const summaryAsideRef = useRef<HTMLElement>(null);
   const [summaryInView, setSummaryInView] = useState(false);
   const [debugLine, setDebugLine] = useState('');
+  const [modelDetailTab, setModelDetailTab] = useState<ModelDetailTabId>('spec');
 
   useEffect(() => {
     const payload: RentalV2Session = {
@@ -800,6 +843,61 @@ const RentalV2Page: React.FC = () => {
                       />
                     ))}
                   </RentalV2E2ESlider>
+                </div>
+
+                <div className="mt-6 min-w-0 border-b border-border">
+                  <div
+                    className="flex flex-wrap gap-x-6 gap-y-2 sm:gap-x-10"
+                    role="tablist"
+                    aria-label="Szczegóły wybranego modelu"
+                  >
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={modelDetailTab === 'spec'}
+                      onClick={() => setModelDetailTab('spec')}
+                      className={`border-b-4 px-1 pb-2 text-sm font-medium transition-colors sm:px-2 ${
+                        modelDetailTab === 'spec'
+                          ? 'border-foreground text-foreground'
+                          : 'border-transparent text-muted-foreground'
+                      }`}
+                    >
+                      Specyfikacja
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={modelDetailTab === 'pricing'}
+                      onClick={() => setModelDetailTab('pricing')}
+                      className={`border-b-4 px-1 pb-2 text-sm font-medium transition-colors sm:px-2 ${
+                        modelDetailTab === 'pricing'
+                          ? 'border-foreground text-foreground'
+                          : 'border-transparent text-muted-foreground'
+                      }`}
+                    >
+                      Cennik
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={modelDetailTab === 'description'}
+                      onClick={() => setModelDetailTab('description')}
+                      className={`border-b-4 px-1 pb-2 text-sm font-medium transition-colors sm:px-2 ${
+                        modelDetailTab === 'description'
+                          ? 'border-foreground text-foreground'
+                          : 'border-transparent text-muted-foreground'
+                      }`}
+                    >
+                      Opis auta
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-4 min-w-0" role="tabpanel">
+                  {modelDetailTab === 'spec' && <RentalCarSpecPills car={selected} />}
+                  {modelDetailTab === 'pricing' && <RentalPriceTable car={selected} className="mt-0" />}
+                  {modelDetailTab === 'description' && (
+                    <p className="text-sm text-muted-foreground">opis</p>
+                  )}
                 </div>
               </section>
 

@@ -18,6 +18,7 @@ import { BRANDS } from '../constants';
 import { ChevronDownIcon, CheckIcon, InformationCircleIcon, DocumentTextIcon, CalendarDaysIcon } from '../icons';
 import type { Car } from '../types';
 import Seo from '../components/Seo';
+import RentalPriceTable from '../components/RentalPriceTable';
 import { createReservationAdminEmailPayload, createReservationCustomerEmailPayload, createPaymentConfirmationAdminEmailPayload } from '../configs/notifications/emailTemplates';
 import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 import { mailApiUrl, smsApiUrl } from '../configs/notifications/apiEndpoints';
@@ -105,33 +106,6 @@ const ModelCard: React.FC<{ car: Car; isSelected: boolean; onSelect: () => void;
                 ) : (
                     <p className="text-sm text-muted-foreground">&nbsp;</p>
                 )}
-            </div>
-        </div>
-    );
-};
-
-const PriceTable: React.FC<{ car: Car }> = ({ car }) => {
-    if (!car.priceTiers || car.priceTiers.length === 0) {
-        return null;
-    }
-
-    return (
-        <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-2">Cennik dla {car.name}</h3>
-            <div className="overflow-hidden border border-border rounded-lg">
-                <table className="min-w-full">
-                    <tbody className="bg-background divide-y divide-border">
-                        {car.priceTiers.map((tier, index) => (
-                            <tr key={index} className="odd:bg-white even:bg-secondary/50">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{tier.days}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-right text-foreground">
-                                    <div>{tier.pricePerDay} zł</div>
-                                    <div className="text-xs text-muted-foreground">{tier.kmLimitPerDay} km/dzień</div>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
             </div>
         </div>
     );
@@ -678,7 +652,7 @@ const RentalPage: React.FC = () => {
                                                             </div>
                                                         );
                                                     })()}
-                                                <PriceTable car={formData.model} />
+                                                <RentalPriceTable car={formData.model} />
                                             </div>
                                         </div>
                                     </FormSection>

@@ -1,7 +1,14 @@
 import type { ReservationFormData } from '../rentalReservationFormData';
 import type { TransferFormData } from '../../pages/TransfersPage';
 import { ADDITIONAL_OPTIONS } from '../rentConfig';
+import { LOCATIONS } from '../locationsConfig';
 import { SITE_LOGO_URL } from '../site';
+
+/** Pełny adres punktu odbioru/zwrotu (tytuł z formularza → adres z konfiguracji). */
+const formatRentalLocationLine = (title: string): string => {
+  const loc = LOCATIONS.find((l) => l.title === title);
+  return loc ? `${loc.title} — ${loc.address}` : title;
+};
 
 // Define a common type for the email payload
 interface EmailPayload {
@@ -20,22 +27,38 @@ interface EmailPayload {
  * ----------------------------------------------------------------------------
  * Główny szablon "Finansowy"
  * ----------------------------------------------------------------------------
- * Używany do powiadomień transakcyjnych, które zawierają kwotę i przycisk akcji.
- * @param title - Główny tytuł wiadomości (np. "Potwierdzenie rezerwacji")
- * @param mainAmount - Kluczowa kwota do wyświetlenia (np. "1 234,56 zł")
- * @param content - Główna treść HTML wiadomości (np. tabela ze szczegółami)
- * @param buttonUrl - URL dla przycisku akcji
- * @param buttonText - Tekst na przycisku akcji
- * @returns Pełny kod HTML emaila.
+ * Opcjonalnie: duża kwota + podpis pod nią; treść szczegółów poniżej (bez przycisków CTA).
  */
-const createFinancialLayout = (title: string, mainAmount: string, content: string, buttonUrl: string = '#', buttonText: string = 'Zarządzaj rezerwacją') => `
-<!DOCTYPE html>
+const createFinancialLayout = (opts: {
+  pageTitle: string;
+  content: string;
+  /** Duża kwota pod logo — brak = sekcja ukryta */
+  heroAmount?: string;
+  /** Tekst pod kwotą */
+  heroSubtitle?: string;
+}) => {
+  const { pageTitle, content, heroAmount, heroSubtitle } = opts;
+  const heroBlock =
+    heroAmount != null && heroAmount !== ''
+      ? `<tr>
+                                    <td align="center">
+                                        <h1 style="font-size: 32px; font-weight: 700; margin: 0 0 16px 0; color: #111827;">${heroAmount}</h1>
+                                        ${
+                                          heroSubtitle
+                                            ? `<p style="font-size: 18px; color: #4b5563; margin: 0 0 24px 0;">${heroSubtitle}</p>`
+                                            : ''
+                                        }
+                                    </td>
+                                </tr>`
+      : '';
+
+  return `<!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Zen+Dots&display=swap" rel="stylesheet">
-    <title>${title}</title>
+    <title>${pageTitle}</title>
 </head>
 <body style="margin: 0; padding: 0; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-color: #f0f2f5; font-family: 'Inter', Arial, sans-serif; color: #1c1e21;">
     <table width="100%" border="0" cellPadding="0" cellSpacing="0" style="background-color: #f0f2f5;">
@@ -52,22 +75,7 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
                     <tr>
                         <td style="padding: 32px 24px;">
                             <table width="100%" border="0" cellPadding="0" cellSpacing="0">
-                                <!-- Main Message -->
-                                <tr>
-                                    <td align="center">
-                                        <h1 style="font-size: 32px; font-weight: 700; margin: 0 0 16px 0; color: #111827;">${mainAmount}</h1>
-                                        <p style="font-size: 18px; color: #4b5563; margin: 0 0 24px 0;">${title}</p>
-                                    </td>
-                                </tr>
-                                <!--<!-- Action Button -->
-                                <tr>
-                                    <td align="center" style="padding-bottom: 32px;">
-                                        <a href="${buttonUrl}" target="_blank" style="display: inline-block; background-color: #111827; color: #ffffff; font-size: 16px; font-weight: 500; text-decoration: none; padding: 14px 28px; border-radius: 8px;">
-                                            ${buttonText}
-                                        </a>
-                                    </td>
-                                </tr>-->
-                                <!-- Details Section -->
+                                ${heroBlock}
                                 <tr>
                                     <td>
                                         ${content}
@@ -90,6 +98,7 @@ const createFinancialLayout = (title: string, mainAmount: string, content: strin
 </body>
 </html>
 `;
+};
 
 /**
  * ----------------------------------------------------------------------------
@@ -147,28 +156,34 @@ export const createReservationAdminEmailPayload = (
     // --- Budowanie treści (body) ---
     const detailsRows: [string, string][] = [
         ['Model pojazdu', data.model.name],
-        ['Odbiór', `${formatDate(data.pickupDate)} o ${data.pickupTime} w ${data.pickupLocation}`],
-        ['Zwrot', `${formatDate(data.returnDate)} o ${data.returnTime} w ${data.returnLocation}`],
+        [
+            'Odbiór',
+            `${formatDate(data.pickupDate)} o ${data.pickupTime} — ${formatRentalLocationLine(data.pickupLocation)}`,
+        ],
+        [
+            'Zwrot',
+            `${formatDate(data.returnDate)} o ${data.returnTime} — ${formatRentalLocationLine(data.returnLocation)}`,
+        ],
         ['Imię i nazwisko', data.fullName],
         ['Email', `<a href="mailto:${data.email}" style="color: #111827; text-decoration: none;">${data.email}</a>`],
         ['Telefon', data.phone],
         ['Adres', `${data.address}, ${data.postalCode} ${data.city}`],
-        ['PESEL', data.pesel],
-        ['Prawo jazdy', data.licenseNumber],
     ];
 
     if (data.reservationType) {
         detailsRows.push(['Typ najmu', data.reservationType === 'company' ? 'Firmowy' : 'Prywatny']);
     }
+    if (data.nip) {
+        detailsRows.push(['NIP', data.nip]);
+    }
+
+    detailsRows.push(['PESEL', data.pesel]);
     if (data.idDocumentNumber) {
         detailsRows.push(['Nr dowodu / paszport', data.idDocumentNumber]);
     }
+    detailsRows.push(['Prawo jazdy', data.licenseNumber]);
     if (data.licenseBlanketNumber) {
         detailsRows.push(['Nr blankietu prawa jazdy', data.licenseBlanketNumber]);
-    }
-
-    if (data.nip) {
-        detailsRows.push(['NIP', data.nip]);
     }
 
     const detailsContent = generateDetailsTable(detailsRows);
@@ -200,11 +215,12 @@ export const createReservationAdminEmailPayload = (
         ${agreementsContent}
     `;
 
-    const html = createFinancialLayout(
-        `Nowa rezerwacja na ${data.model.name}`,
-        `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł`,
-        fullContent
-    );
+    const html = createFinancialLayout({
+        pageTitle: `Nowa rezerwacja — ${data.model.name}`,
+        heroAmount: `${summary.totalPrice.toLocaleString('pl-PL')} zł`,
+        heroSubtitle: `Nowa rezerwacja na ${data.model.name}`,
+        content: fullContent,
+    });
 
     // --- Konfiguracja i zwrot payloadu ---
     return {
@@ -225,23 +241,23 @@ export const createReservationCustomerEmailPayload = (data: ReservationFormData,
     const content = generateDetailsTable([
         ['Model pojazdu', data.model.name],
         ['Termin odbioru', `${formatDate(data.pickupDate)} o ${data.pickupTime}`],
-        ['Miejsce odbioru', data.pickupLocation],
+        ['Miejsce odbioru', formatRentalLocationLine(data.pickupLocation)],
         ['Termin zwrotu', `${formatDate(data.returnDate)} o ${data.returnTime}`],
-        ['Miejsce zwrotu', data.returnLocation],
+        ['Miejsce zwrotu', formatRentalLocationLine(data.returnLocation)],
         ['Do zapłaty (z kaucją)', `<strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong>`],
     ]);
 
     const fullContent = `
-      <p style="font-size: 16px; color: #4b5563; margin: 0 0 24px 0; text-align: center;">Dziękujemy za złożenie rezerwacji w apolloidea.com. Otrzymaliśmy Twoje zgłoszenie i wkrótce je potwierdzimy.</p>
+      <h2 style="font-size: 20px; font-weight: 700; margin: 0 0 12px 0; color: #111827;">Potwierdzenie rezerwacji</h2>
+      <p style="font-size: 16px; color: #4b5563; margin: 0 0 24px 0;">Dziękujemy za złożenie rezerwacji w apolloidea.com. Otrzymaliśmy Twoje zgłoszenie i wkrótce je potwierdzimy.</p>
       ${content}
-      <p style="font-size: 14px; color: #4b5563; margin: 24px 0 0 0; text-align: center;">W kolejnym kroku zostaniesz poproszony o dokonanie płatności. Jeśli masz jakiekolwiek pytania, skontaktuj się z nami.</p>
+      <p style="font-size: 14px; color: #4b5563; margin: 24px 0 0 0;">W kolejnym kroku zostaniesz poproszony o dokonanie płatności. Jeśli masz jakiekolwiek pytania, skontaktuj się z nami.</p>
     `;
 
-    const html = createFinancialLayout(
-        `Potwierdzenie rezerwacji ${data.model.name}`,
-        `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł`,
-        fullContent
-    );
+    const html = createFinancialLayout({
+        pageTitle: `Potwierdzenie rezerwacji: ${data.model.name}`,
+        content: fullContent,
+    });
 
     // --- Konfiguracja i zwrot payloadu ---
     return {
@@ -277,11 +293,12 @@ export const createPaymentConfirmationAdminEmailPayload = (
         ${content}
     `;
 
-    const html = createFinancialLayout(
-        `Płatność zakończona pomyślnie`,
-        `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł`,
-        fullContent
-    );
+    const html = createFinancialLayout({
+        pageTitle: `Płatność zakończona pomyślnie`,
+        heroAmount: `${summary.totalWithDeposit.toLocaleString('pl-PL')} zł`,
+        heroSubtitle: 'Płatność zakończona pomyślnie',
+        content: fullContent,
+    });
 
     return {
         to: "office@apolloidea.com",
@@ -326,13 +343,12 @@ export const createTransferAdminEmailPayload = (data: TransferFormData, summary:
         ${generateDetailsTable(detailsRows)}
     `;
 
-    const html = createFinancialLayout(
-        `Nowe zamówienie transferu`,
-        summary.price,
-        fullContent,
-        '#',
-        'Zobacz w panelu'
-    );
+    const html = createFinancialLayout({
+        pageTitle: `Nowe zamówienie transferu`,
+        heroAmount: summary.price,
+        heroSubtitle: 'Nowe zamówienie transferu',
+        content: fullContent,
+    });
     
     // --- Konfiguracja i zwrot payloadu ---
     return {
@@ -368,13 +384,12 @@ export const createTransferCustomerEmailPayload = (data: TransferFormData, summa
       ${generateDetailsTable(detailsRows)}
     `;
 
-    const html = createFinancialLayout(
-        `Potwierdzenie zamówienia`,
-        summary.price,
-        fullContent,
-        '#',
-        'Zarządzaj zamówieniem'
-    );
+    const html = createFinancialLayout({
+        pageTitle: `Potwierdzenie zamówienia transferu`,
+        heroAmount: summary.price,
+        heroSubtitle: 'Potwierdzenie zamówienia',
+        content: fullContent,
+    });
 
     // --- Konfiguracja i zwrot payloadu ---
     return {

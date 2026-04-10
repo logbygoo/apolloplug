@@ -684,7 +684,7 @@ const RentalReservationPage: React.FC = () => {
                       onClick={() => setFlowStep('driver')}
                       className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
                     >
-                      Wróć do danych kierowcy
+                      Modyfikuj swoją rezerwację
                     </button>
                   </p>
                 </div>
@@ -1044,9 +1044,20 @@ const RentalReservationPage: React.FC = () => {
                     type="submit"
                     form="rental-driver-form"
                     disabled={isSubmitting}
-                    className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-busy={isSubmitting}
+                    className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {isSubmitting ? 'Wysyłanie…' : 'Przejdź do płatności'}
+                    {isSubmitting ? (
+                      <>
+                        <span
+                          className="inline-block size-5 shrink-0 rounded-full border-2 border-background border-t-transparent animate-spin"
+                          aria-hidden
+                        />
+                        <span>Wysyłam…</span>
+                      </>
+                    ) : (
+                      'Przejdź do płatności'
+                    )}
                   </button>
                 </div>
                 <div className="mt-4">

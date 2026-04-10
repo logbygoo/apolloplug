@@ -147,7 +147,6 @@ const buildRentalCostSummaryTable = (summary: {
     optionsPrice: number;
     totalPrice: number;
     deposit: number;
-    totalWithDeposit: number;
 }) =>
     generateDetailsTable([
         ['Okres najmu', `${summary.rentalDays} dni`],
@@ -155,7 +154,6 @@ const buildRentalCostSummaryTable = (summary: {
         ['Opcje dodatkowe', `${summary.optionsPrice.toLocaleString('pl-PL')} zł`],
         ['<strong>Suma</strong>', `<strong>${summary.totalPrice.toLocaleString('pl-PL')} zł</strong>`],
         ['Kaucja', `${summary.deposit.toLocaleString('pl-PL')} zł`],
-        ['<strong>Do zapłaty łącznie</strong>', `<strong>${summary.totalWithDeposit.toLocaleString('pl-PL')} zł</strong>`],
     ]);
 
 // ============================================================================

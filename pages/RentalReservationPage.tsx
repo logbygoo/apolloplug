@@ -4,6 +4,13 @@ import Seo from '../components/Seo';
 import { Input, Label, PageHeader } from '../components/ui';
 import { CheckIcon, InformationCircleIcon } from '../icons';
 import { ADDITIONAL_OPTIONS, RENTAL_CARS, RENTAL_PERIOD_FIELD_CELL } from '../configs/rentConfig';
+import { buildReservationFormDataFromV2 } from '../configs/rentalReservationFormData';
+import {
+  createReservationAdminEmailPayload,
+  createReservationCustomerEmailPayload,
+} from '../configs/notifications/emailTemplates';
+import { createReservationAdminSmsPayload, createReservationCustomerSmsPayload } from '../configs/notifications/smsTemplates';
+import { mailApiUrl, smsApiUrl } from '../configs/notifications/apiEndpoints';
 import { LOCATIONS } from '../configs/locationsConfig';
 import { RENTAL_V2_RESERVATION_DRIVER_KEY, RENTAL_V2_SESSION_KEY } from '../configs/rentalV2Session';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
@@ -14,6 +21,12 @@ import {
   type RentalPeriodState,
 } from '../utils/rentalV2Summary';
 import type { Car } from '../types';
+
+declare global {
+  interface Window {
+    gtag?: (command: string, action: string, params?: Record<string, unknown>) => void;
+  }
+}
 
 type RentalV2SessionStored = {
   selectedId: string;
@@ -355,6 +368,9 @@ const RentalReservationPage: React.FC = () => {
   const [driver, setDriver] = useState<DriverFormState>(() => emptyDriver());
   const [agreements, setAgreements] = useState<AgreementsState>(() => emptyAgreements());
   const [agreementAttempted, setAgreementAttempted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
   const agreementsRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -446,8 +462,9 @@ const RentalReservationPage: React.FC = () => {
     setAgreements((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     if (driver.reservationType === 'company' && !driver.nip.trim()) {
       return;
     }
@@ -460,7 +477,71 @@ const RentalReservationPage: React.FC = () => {
       });
       return;
     }
-    /* Płatność — do podłączenia */
+    if (!session || !rentalPeriod || !additionalOptions || summary.totalPrice <= 0 || summary.rentalDays <= 0) {
+      setSubmitError('Brak poprawnego podsumowania rezerwacji. Wróć do wypożyczalni i uzupełnij okres najmu.');
+      return;
+    }
+
+    const formPayload = buildReservationFormDataFromV2(
+      selected,
+      session.selectedBrandId,
+      rentalPeriod,
+      driver,
+      additionalOptions
+    );
+
+    setIsSubmitting(true);
+    try {
+      const adminEmailPayload = createReservationAdminEmailPayload(formPayload, summary, agreements);
+      const adminResponse = await fetch(mailApiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(adminEmailPayload),
+      });
+      if (!adminResponse.ok) throw new Error('Nie udało się wysłać powiadomienia do biura.');
+
+      const customerEmailPayload = createReservationCustomerEmailPayload(formPayload, summary);
+      const customerResponse = await fetch(mailApiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(customerEmailPayload),
+      });
+      if (!customerResponse.ok) {
+        console.warn('Nie udało się wysłać e-maila do klienta; administrator został powiadomiony.');
+      }
+
+      const adminSmsPayload = createReservationAdminSmsPayload(formPayload, summary);
+      fetch(smsApiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(adminSmsPayload),
+      }).catch((err) => console.warn('SMS do admina:', err));
+
+      const customerSmsPayload = createReservationCustomerSmsPayload(formPayload);
+      fetch(smsApiUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(customerSmsPayload),
+      }).catch((err) => console.warn('SMS do klienta:', err));
+
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-17760954062/WQuYCP6q7McbEM7NipVC',
+          value: 1.0,
+          currency: 'PLN',
+        });
+      }
+
+      setSubmitted(true);
+      window.scrollTo(0, 0);
+    } catch (err) {
+      console.error(err);
+      setSubmitError(
+        err instanceof Error ? err.message : 'Wystąpił błąd podczas wysyłania rezerwacji. Spróbuj ponownie.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (!ready) {
@@ -468,7 +549,7 @@ const RentalReservationPage: React.FC = () => {
   }
 
   if (!carId || !car || !session || !rentalPeriod || !additionalOptions) {
-    return <Navigate to="/wypozyczalnia-v2" replace />;
+    return <Navigate to="/wypozyczalnia" replace />;
   }
 
   const breadcrumbs = [
@@ -491,6 +572,21 @@ const RentalReservationPage: React.FC = () => {
           <div className="grid min-w-0 grid-cols-1 gap-8 overflow-x-visible lg:grid-cols-3 lg:gap-12">
             <div className="min-w-0 overflow-x-visible lg:col-span-2">
               <form id="rental-driver-form" onSubmit={handleSubmit} className="space-y-6">
+                {submitError && (
+                  <div className="rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+                    {submitError}
+                  </div>
+                )}
+                {submitted && (
+                  <div className="rounded-md border border-border bg-secondary px-4 py-3 text-sm leading-relaxed">
+                    <p className="font-semibold text-foreground">Dziękujemy za złożenie rezerwacji.</p>
+                    <p className="mt-1 text-muted-foreground">
+                      Wysłaliśmy potwierdzenie na podany adres e-mail oraz wiadomość SMS. Wkrótce wrócimy z informacją o
+                      dalszych krokach i płatności.
+                    </p>
+                  </div>
+                )}
+                <fieldset disabled={submitted || isSubmitting} className="min-w-0 space-y-6 border-0 p-0">
                 <div className="flex w-full rounded-lg border border-border bg-secondary p-1.5">
                   <button
                     type="button"
@@ -707,6 +803,7 @@ const RentalReservationPage: React.FC = () => {
                     onToggle={() => handleAgreementToggle('commercial')}
                   />
                 </div>
+                </fieldset>
               </form>
             </div>
 
@@ -714,7 +811,7 @@ const RentalReservationPage: React.FC = () => {
               <div className="lg:sticky lg:top-24">
                 <div className="rounded-lg bg-secondary p-6">
                   <p className="mb-3 text-center">
-                    <Link to="/wypozyczalnia-v2" className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground">
+                    <Link to="/wypozyczalnia" className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground">
                       Zmodyfikuj rezerwację
                     </Link>
                   </p>
@@ -833,9 +930,10 @@ const RentalReservationPage: React.FC = () => {
                   <button
                     type="submit"
                     form="rental-driver-form"
-                    className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
+                    disabled={isSubmitting || submitted}
+                    className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Zarezerwuj i Opłać
+                    {isSubmitting ? 'Wysyłanie…' : submitted ? 'Wysłano' : 'Zarezerwuj i Opłać'}
                   </button>
                 </div>
                 <div className="mt-4">

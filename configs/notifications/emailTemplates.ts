@@ -1,4 +1,4 @@
-import type { FormData } from '../../pages/RentalPage';
+import type { ReservationFormData } from '../rentalReservationFormData';
 import type { TransferFormData } from '../../pages/TransfersPage';
 import { ADDITIONAL_OPTIONS } from '../rentConfig';
 import { SITE_LOGO_URL } from '../site';
@@ -140,7 +140,7 @@ const generateDetailsTable = (rows: [string, string][]) => {
  * Wysyłane do administratora po złożeniu przez klienta rezerwacji wynajmu.
  */
 export const createReservationAdminEmailPayload = (
-    data: FormData, 
+    data: ReservationFormData,
     summary: any,
     agreements: { terms: boolean; marketing: boolean; commercial: boolean }
 ): EmailPayload => {
@@ -156,6 +156,16 @@ export const createReservationAdminEmailPayload = (
         ['PESEL', data.pesel],
         ['Prawo jazdy', data.licenseNumber],
     ];
+
+    if (data.reservationType) {
+        detailsRows.push(['Typ najmu', data.reservationType === 'company' ? 'Firmowy' : 'Prywatny']);
+    }
+    if (data.idDocumentNumber) {
+        detailsRows.push(['Nr dowodu / paszport', data.idDocumentNumber]);
+    }
+    if (data.licenseBlanketNumber) {
+        detailsRows.push(['Nr blankietu prawa jazdy', data.licenseBlanketNumber]);
+    }
 
     if (data.nip) {
         detailsRows.push(['NIP', data.nip]);
@@ -210,7 +220,7 @@ export const createReservationAdminEmailPayload = (
  * WYNAJEM (Klient): Potwierdzenie otrzymania rezerwacji
  * Wysyłane do klienta po pomyślnym złożeniu rezerwacji (przed płatnością).
  */
-export const createReservationCustomerEmailPayload = (data: FormData, summary: any): EmailPayload => {
+export const createReservationCustomerEmailPayload = (data: ReservationFormData, summary: any): EmailPayload => {
     // --- Budowanie treści (body) ---
     const content = generateDetailsTable([
         ['Model pojazdu', data.model.name],
@@ -249,7 +259,7 @@ export const createReservationCustomerEmailPayload = (data: FormData, summary: a
  * NIE ZAWIERA WRAŻLIWYCH DANYCH.
  */
 export const createPaymentConfirmationAdminEmailPayload = (
-    data: FormData, 
+    data: ReservationFormData,
     summary: any,
     paymentMethod: string
 ): EmailPayload => {

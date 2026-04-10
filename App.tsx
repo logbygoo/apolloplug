@@ -1,9 +1,8 @@
 
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import TransfersPage from './pages/TransfersPage';
-import RentalPage from './pages/RentalPage';
 import RentalV2Page from './pages/RentalV2Page';
 import RentalReservationPage from './pages/RentalReservationPage';
 import FinancingPage from './pages/FinancingPage';
@@ -199,8 +198,8 @@ const App: React.FC = () => {
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/transfery" element={<TransfersPage />} />
-                    <Route path="/wypozyczalnia" element={<RentalPage />} />
-                    <Route path="/wypozyczalnia-v2" element={<RentalV2Page />} />
+                    <Route path="/wypozyczalnia" element={<RentalV2Page />} />
+                    <Route path="/wypozyczalnia-v2" element={<Navigate to="/wypozyczalnia" replace />} />
                     <Route path="/rezerwacja/:carId" element={<RentalReservationPage />} />
                     <Route path="/finansowanie" element={<FinancingPage />} />
                     <Route path="/flota" element={<FleetPage />} />

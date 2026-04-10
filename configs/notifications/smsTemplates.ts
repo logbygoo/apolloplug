@@ -1,4 +1,4 @@
-import type { FormData } from '../../pages/RentalPage';
+import type { ReservationFormData } from '../rentalReservationFormData';
 import type { TransferFormData } from '../../pages/TransfersPage';
 
 interface Summary {
@@ -30,7 +30,7 @@ const SMS_SENDER = 'Apollo';
  * @param summary - Podsumowanie kosztów i dni.
  * @returns Obiekt payloadu SMS.
  */
-export const createReservationAdminSmsPayload = (formData: FormData, summary: Summary): SmsPayload => {
+export const createReservationAdminSmsPayload = (formData: ReservationFormData, summary: Summary): SmsPayload => {
     const pickupDateFormatted = new Date(formData.pickupDate).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const message = `${formData.model.name} - ${summary.rentalDays} doby od ${pickupDateFormatted} ${formData.pickupTime} - ${summary.totalPrice} zł - ${formData.fullName}`;
     return {
@@ -46,7 +46,7 @@ export const createReservationAdminSmsPayload = (formData: FormData, summary: Su
  * @param formData - Dane z formularza rezerwacji.
  * @returns Obiekt payloadu SMS.
  */
-export const createReservationCustomerSmsPayload = (formData: FormData): SmsPayload => {
+export const createReservationCustomerSmsPayload = (formData: ReservationFormData): SmsPayload => {
     const message = `Potwierdzamy otrzymanie rezerwacji. Szczegóły przesłane mailowo na ${formData.email} Dokończ rezerwację finalizując płatność.`;
     return {
         to: formData.phone,

@@ -24,6 +24,7 @@ import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_V2_SESSION_KEY } from '../configs/rentalV2Session';
+import { SEO_CONFIG } from '../configs/seoConfig';
 import { BRANDS } from '../constants';
 import { CalendarDaysIcon, CheckIcon, ChevronDownIcon, DocumentTextIcon } from '../icons';
 import type { Car } from '../types';
@@ -663,7 +664,7 @@ const RentalV2Page: React.FC = () => {
 
   return (
     <>
-      <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
+      <Seo {...SEO_CONFIG['/wypozyczalnia']} />
       <style>{RENTAL_PERIOD_FIELD_STYLES}</style>
       <style>{RENTAL_V2_E2E_STYLES}</style>
       <div

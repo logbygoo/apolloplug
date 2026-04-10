@@ -16,6 +16,7 @@ import {
 } from '../configs/rentConfig';
 import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
+import { CAR_FLEET } from '../configs/fleetConfig';
 import { BRANDS } from '../constants';
 import { CalendarDaysIcon, CheckIcon, ChevronDownIcon, DocumentTextIcon } from '../icons';
 import type { Car } from '../types';
@@ -397,6 +398,8 @@ const V2LegalDocTile: React.FC<{ title: string; docSlug: string; layout?: 'slide
   return (
     <Link
       to={`/dokumentacja?doc=${encodeURIComponent(docSlug)}`}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`group flex min-w-0 items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary ${widthClass}`}
     >
       <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
@@ -790,6 +793,12 @@ const RentalV2Page: React.FC = () => {
     return crumbs;
   }, [selected]);
 
+  /** Tekst marketingowy z `fleetConfig` (landingi `/wypozycz/:id`). */
+  const fleetCarDescription = useMemo(
+    () => CAR_FLEET.find((c) => c.id === selected.id)?.description,
+    [selected.id]
+  );
+
   return (
     <>
       <Seo title="Wypożyczalnia v2 (test)" description="Strona testowa — bez indeksowania." />
@@ -927,7 +936,23 @@ const RentalV2Page: React.FC = () => {
                       <RentalPriceTable car={selected} className="mt-0" showHeading={false} />
                     )}
                     {modelDetailTab === 'description' && (
-                      <p className="text-sm text-muted-foreground">opis</p>
+                      <div className="space-y-4">
+                        {fleetCarDescription ? (
+                          <p className="text-sm leading-relaxed text-foreground">{fleetCarDescription}</p>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">Brak opisu dla tego modelu.</p>
+                        )}
+                        <div>
+                          <Link
+                            to={`/wypozycz/${selected.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
+                          >
+                            Przeczytaj więcej
+                          </Link>
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>

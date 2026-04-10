@@ -302,6 +302,20 @@ const RENTAL_V2_E2E_STYLES = `
       line-height: 2.25rem;
     }
   }
+
+  @keyframes rental-v2-tab-fade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .rental-v2 .rental-v2-model-tab-panel {
+    animation: rental-v2-tab-fade 0.32s ease-out forwards;
+  }
 `;
 
 const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
@@ -545,6 +559,17 @@ const RentalV2Page: React.FC = () => {
   const [summaryInView, setSummaryInView] = useState(false);
   const [debugLine, setDebugLine] = useState('');
   const [modelDetailTab, setModelDetailTab] = useState<ModelDetailTabId>('spec');
+  const modelTabPanelRef = useRef<HTMLDivElement>(null);
+
+  const selectModelDetailTab = (tab: ModelDetailTabId) => {
+    setModelDetailTab(tab);
+    /* Po malowaniu nowej treści zakładki — płynne przewinięcie do panelu (np. na mobile). */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        modelTabPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+  };
 
   useEffect(() => {
     const payload: RentalV2Session = {
@@ -855,7 +880,7 @@ const RentalV2Page: React.FC = () => {
                       type="button"
                       role="tab"
                       aria-selected={modelDetailTab === 'spec'}
-                      onClick={() => setModelDetailTab('spec')}
+                      onClick={() => selectModelDetailTab('spec')}
                       className={`border-b-4 px-1 pb-2 text-sm font-medium transition-colors sm:px-2 ${
                         modelDetailTab === 'spec'
                           ? 'border-foreground text-foreground'
@@ -868,7 +893,7 @@ const RentalV2Page: React.FC = () => {
                       type="button"
                       role="tab"
                       aria-selected={modelDetailTab === 'pricing'}
-                      onClick={() => setModelDetailTab('pricing')}
+                      onClick={() => selectModelDetailTab('pricing')}
                       className={`border-b-4 px-1 pb-2 text-sm font-medium transition-colors sm:px-2 ${
                         modelDetailTab === 'pricing'
                           ? 'border-foreground text-foreground'
@@ -881,7 +906,7 @@ const RentalV2Page: React.FC = () => {
                       type="button"
                       role="tab"
                       aria-selected={modelDetailTab === 'description'}
-                      onClick={() => setModelDetailTab('description')}
+                      onClick={() => selectModelDetailTab('description')}
                       className={`border-b-4 px-1 pb-2 text-sm font-medium transition-colors sm:px-2 ${
                         modelDetailTab === 'description'
                           ? 'border-foreground text-foreground'
@@ -892,12 +917,20 @@ const RentalV2Page: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                <div className="mt-4 min-w-0" role="tabpanel">
-                  {modelDetailTab === 'spec' && <RentalCarSpecPills car={selected} />}
-                  {modelDetailTab === 'pricing' && <RentalPriceTable car={selected} className="mt-0" />}
-                  {modelDetailTab === 'description' && (
-                    <p className="text-sm text-muted-foreground">opis</p>
-                  )}
+                <div
+                  ref={modelTabPanelRef}
+                  className="mt-4 min-w-0 scroll-mt-24"
+                  role="tabpanel"
+                >
+                  <div key={modelDetailTab} className="rental-v2-model-tab-panel">
+                    {modelDetailTab === 'spec' && <RentalCarSpecPills car={selected} />}
+                    {modelDetailTab === 'pricing' && (
+                      <RentalPriceTable car={selected} className="mt-0" showHeading={false} />
+                    )}
+                    {modelDetailTab === 'description' && (
+                      <p className="text-sm text-muted-foreground">opis</p>
+                    )}
+                  </div>
                 </div>
               </section>
 

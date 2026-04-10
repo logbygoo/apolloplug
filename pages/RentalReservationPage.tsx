@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { Button, Input, Label, PageHeader } from '../components/ui';
+import { CheckIcon } from '../icons';
 import { ADDITIONAL_OPTIONS, RENTAL_CARS } from '../configs/rentConfig';
-import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig';
+import { LOCATIONS } from '../configs/locationsConfig';
 import { RENTAL_V2_RESERVATION_DRIVER_KEY, RENTAL_V2_SESSION_KEY } from '../configs/rentalV2Session';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 import {
@@ -36,6 +37,18 @@ type DriverFormState = {
   phone: string;
 };
 
+type AgreementsState = {
+  terms: boolean;
+  marketing: boolean;
+  commercial: boolean;
+};
+
+const emptyAgreements = (): AgreementsState => ({
+  terms: false,
+  marketing: false,
+  commercial: false,
+});
+
 const emptyDriver = (): DriverFormState => ({
   reservationType: 'private',
   nip: '',
@@ -48,6 +61,34 @@ const emptyDriver = (): DriverFormState => ({
   email: '',
   phone: '',
 });
+
+const AgreementCheckbox: React.FC<{
+  id: string;
+  label: React.ReactNode;
+  isChecked: boolean;
+  onToggle: () => void;
+  highlightError?: boolean;
+}> = ({ id, label, isChecked, onToggle, highlightError }) => (
+  <div
+    className={`rounded-md transition-colors ${
+      highlightError ? 'bg-destructive/10 p-2 ring-2 ring-destructive' : ''
+    }`}
+  >
+    <div className="flex items-start">
+      <label htmlFor={id} className="flex cursor-pointer items-start group">
+        <input id={id} type="checkbox" checked={isChecked} onChange={onToggle} className="absolute h-0 w-0 opacity-0" />
+        <div
+          className={`relative mt-0.5 mr-3 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-sm transition-all ${
+            isChecked ? 'bg-foreground' : 'bg-secondary'
+          }`}
+        >
+          {isChecked && <CheckIcon className="h-3.5 w-3.5 text-background" strokeWidth={3} />}
+        </div>
+        <span className="text-sm text-muted-foreground transition-colors group-hover:text-foreground">{label}</span>
+      </label>
+    </div>
+  </div>
+);
 
 function formatPlDate(iso: string): string {
   const p = iso.split('-');
@@ -69,28 +110,36 @@ function loadSessionForCar(carId: string): RentalV2SessionStored | null {
   }
 }
 
-function loadDriver(carId: string): DriverFormState {
+function loadReservationForm(carId: string): { driver: DriverFormState; agreements: AgreementsState } {
   try {
     const raw = sessionStorage.getItem(RENTAL_V2_RESERVATION_DRIVER_KEY);
-    if (!raw) return emptyDriver();
+    if (!raw) return { driver: emptyDriver(), agreements: emptyAgreements() };
     const parsed = JSON.parse(raw) as Record<string, unknown>;
-    if (parsed.forCarId !== carId) return emptyDriver();
+    if (parsed.forCarId !== carId) return { driver: emptyDriver(), agreements: emptyAgreements() };
     const b = emptyDriver();
+    const ag = parsed.agreements as Partial<AgreementsState> | undefined;
     return {
-      ...b,
-      reservationType: parsed.reservationType === 'company' ? 'company' : 'private',
-      nip: String(parsed.nip ?? ''),
-      fullName: String(parsed.fullName ?? ''),
-      pesel: String(parsed.pesel ?? ''),
-      licenseNumber: String(parsed.licenseNumber ?? ''),
-      address: String(parsed.address ?? ''),
-      postalCode: String(parsed.postalCode ?? ''),
-      city: String(parsed.city ?? ''),
-      email: String(parsed.email ?? ''),
-      phone: String(parsed.phone ?? ''),
+      driver: {
+        ...b,
+        reservationType: parsed.reservationType === 'company' ? 'company' : 'private',
+        nip: String(parsed.nip ?? ''),
+        fullName: String(parsed.fullName ?? ''),
+        pesel: String(parsed.pesel ?? ''),
+        licenseNumber: String(parsed.licenseNumber ?? ''),
+        address: String(parsed.address ?? ''),
+        postalCode: String(parsed.postalCode ?? ''),
+        city: String(parsed.city ?? ''),
+        email: String(parsed.email ?? ''),
+        phone: String(parsed.phone ?? ''),
+      },
+      agreements: {
+        terms: Boolean(ag?.terms),
+        marketing: Boolean(ag?.marketing),
+        commercial: Boolean(ag?.commercial),
+      },
     };
   } catch {
-    return emptyDriver();
+    return { driver: emptyDriver(), agreements: emptyAgreements() };
   }
 }
 
@@ -130,6 +179,9 @@ const RentalReservationPage: React.FC = () => {
   const [ready, setReady] = useState(false);
   const [session, setSession] = useState<RentalV2SessionStored | null>(null);
   const [driver, setDriver] = useState<DriverFormState>(() => emptyDriver());
+  const [agreements, setAgreements] = useState<AgreementsState>(() => emptyAgreements());
+  const [agreementAttempted, setAgreementAttempted] = useState(false);
+  const agreementsRef = useRef<HTMLDivElement>(null);
 
   const car = carId ? RENTAL_CARS.find((c) => c.id === carId) : undefined;
 
@@ -141,7 +193,9 @@ const RentalReservationPage: React.FC = () => {
     }
     const s = loadSessionForCar(carId);
     setSession(s);
-    setDriver(loadDriver(carId));
+    const loaded = loadReservationForm(carId);
+    setDriver(loaded.driver);
+    setAgreements(loaded.agreements);
     setReady(true);
   }, [carId]);
 
@@ -150,12 +204,12 @@ const RentalReservationPage: React.FC = () => {
     try {
       sessionStorage.setItem(
         RENTAL_V2_RESERVATION_DRIVER_KEY,
-        JSON.stringify({ ...driver, forCarId: carId })
+        JSON.stringify({ ...driver, forCarId: carId, agreements })
       );
     } catch {
       /* ignore */
     }
-  }, [driver, carId, ready]);
+  }, [driver, agreements, carId, ready]);
 
   const selected: Car = car ?? RENTAL_CARS[0];
   const rentalPeriod = session?.rentalPeriod;
@@ -187,19 +241,45 @@ const RentalReservationPage: React.FC = () => {
     return buildV2OptionLines(selected, additionalOptions);
   }, [additionalOptions, selected]);
 
-  const heroImage = selected.landingPageImages?.[0] ?? selected.imageUrl[0];
+  /** Ten sam obraz co karty „Wybierz model” (pierwsze zdjęcie z konfiguracji modelu). */
+  const modelCardImage = selected.imageUrl[0];
 
   const pickupLoc = rentalPeriod ? LOCATIONS.find((l) => l.title === rentalPeriod.pickupLocation) : undefined;
   const returnLoc = rentalPeriod ? LOCATIONS.find((l) => l.title === rentalPeriod.returnLocation) : undefined;
+
+  const pickupLine =
+    rentalPeriod &&
+    `Odbiór: ${formatPlDate(rentalPeriod.pickupDate)} · ${formatRentalTimeOptionLabel(rentalPeriod.pickupTime)} · ${
+      pickupLoc?.address ?? rentalPeriod.pickupLocation
+    }`;
+
+  const returnLine =
+    rentalPeriod &&
+    `Zwrot: ${formatPlDate(rentalPeriod.returnDate)} · ${formatRentalTimeOptionLabel(rentalPeriod.returnTime)} · ${
+      returnLoc?.address ?? rentalPeriod.returnLocation
+    }`;
 
   const handleDriverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setDriver((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleAgreementToggle = (key: keyof AgreementsState) => {
+    setAgreements((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (driver.reservationType === 'company' && !driver.nip.trim()) {
+      return;
+    }
+    if (!agreements.terms || !agreements.marketing) {
+      setAgreementAttempted(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          agreementsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
       return;
     }
     /* Płatność — do podłączenia */
@@ -225,11 +305,7 @@ const RentalReservationPage: React.FC = () => {
       <div className="rental-v2 min-h-screen bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <div className="rental-v2-page-header">
-            <PageHeader
-              title="Rezerwacja"
-              subtitle="Uzupełnij dane kierowcy i złóż rezerwację"
-              breadcrumbs={breadcrumbs}
-            />
+            <PageHeader title="Rezerwacja" breadcrumbs={breadcrumbs} />
           </div>
         </div>
 
@@ -243,7 +319,7 @@ const RentalReservationPage: React.FC = () => {
                     onClick={() => setDriver((d) => ({ ...d, reservationType: 'private' }))}
                     className={`flex-1 rounded-md px-3 py-2.5 text-sm font-medium transition-colors sm:text-base ${
                       driver.reservationType === 'private'
-                        ? 'bg-background text-foreground shadow-sm'
+                        ? 'bg-foreground text-background'
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
@@ -257,7 +333,7 @@ const RentalReservationPage: React.FC = () => {
                     onClick={() => setDriver((d) => ({ ...d, reservationType: 'company' }))}
                     className={`flex-1 rounded-md px-3 py-2.5 text-sm font-medium transition-colors sm:text-base ${
                       driver.reservationType === 'company'
-                        ? 'bg-background text-foreground shadow-sm'
+                        ? 'bg-foreground text-background'
                         : 'text-muted-foreground hover:text-foreground'
                     }`}
                   >
@@ -318,42 +394,65 @@ const RentalReservationPage: React.FC = () => {
                     <Input id="phone" type="tel" value={driver.phone} onChange={handleDriverChange} required className="mt-1" />
                   </div>
                 </div>
+
+                <div ref={agreementsRef} className="scroll-mt-28 space-y-4 border-t border-border pt-6">
+                  <AgreementCheckbox
+                    id="res-terms"
+                    highlightError={agreementAttempted && !agreements.terms}
+                    label={
+                      <>
+                        Akceptuję{' '}
+                        <Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">
+                          regulamin
+                        </Link>{' '}
+                        oraz{' '}
+                        <Link to="/dokumentacja" onClick={(e) => e.stopPropagation()} className="underline hover:text-foreground">
+                          politykę prywatności
+                        </Link>{' '}
+                        apolloidea.com <span className="text-destructive">*</span>
+                      </>
+                    }
+                    isChecked={agreements.terms}
+                    onToggle={() => handleAgreementToggle('terms')}
+                  />
+                  <AgreementCheckbox
+                    id="res-marketing"
+                    highlightError={agreementAttempted && !agreements.marketing}
+                    label={
+                      <>
+                        Potwierdzam zapoznanie się ze wzorem umowy najmu i protokołu odbioru/zwrotu pojazdu{' '}
+                        <span className="text-destructive">*</span>
+                      </>
+                    }
+                    isChecked={agreements.marketing}
+                    onToggle={() => handleAgreementToggle('marketing')}
+                  />
+                  <AgreementCheckbox
+                    id="res-commercial"
+                    label="Wyrażam zgodę na otrzymywanie informacji handlowych drogą elektroniczną i SMS."
+                    isChecked={agreements.commercial}
+                    onToggle={() => handleAgreementToggle('commercial')}
+                  />
+                </div>
               </form>
             </div>
 
             <aside className="min-w-0 scroll-mt-[4.5rem] lg:col-span-1">
               <div className="lg:sticky lg:top-24">
                 <div className="rounded-lg bg-secondary p-6">
+                  <p className="mb-3 text-center">
+                    <Link to="/wypozyczalnia-v2" className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground">
+                      Zmodyfikuj rezerwację
+                    </Link>
+                  </p>
                   <div className="mb-4 overflow-hidden rounded-lg border border-border bg-background">
-                    <img src={heroImage} alt={selected.name} className="h-auto w-full object-cover" />
+                    <img src={modelCardImage} alt={selected.name} className="h-auto w-full object-contain" />
                   </div>
                   <h2 className="text-2xl font-bold">{selected.name}</h2>
 
                   <div className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">Odbiór</span>
-                      <p className="font-medium">
-                        {formatPlDate(rentalPeriod.pickupDate)}{' '}
-                        <span className="text-muted-foreground">
-                          {formatRentalTimeOptionLabel(rentalPeriod.pickupTime)}
-                        </span>
-                      </p>
-                      <p className="mt-0.5 text-muted-foreground">
-                        {pickupLoc ? formatLocationSelectLabel(pickupLoc) : rentalPeriod.pickupLocation}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Zwrot</span>
-                      <p className="font-medium">
-                        {formatPlDate(rentalPeriod.returnDate)}{' '}
-                        <span className="text-muted-foreground">
-                          {formatRentalTimeOptionLabel(rentalPeriod.returnTime)}
-                        </span>
-                      </p>
-                      <p className="mt-0.5 text-muted-foreground">
-                        {returnLoc ? formatLocationSelectLabel(returnLoc) : rentalPeriod.returnLocation}
-                      </p>
-                    </div>
+                    <p className="whitespace-normal break-words font-medium leading-snug">{pickupLine}</p>
+                    <p className="whitespace-normal break-words font-medium leading-snug">{returnLine}</p>
                   </div>
 
                   <h3 className="mt-6 text-xl font-bold">Podsumowanie</h3>

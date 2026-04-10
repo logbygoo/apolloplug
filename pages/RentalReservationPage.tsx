@@ -2,8 +2,13 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { Button, Input, Label, PageHeader } from '../components/ui';
-import { CheckIcon } from '../icons';
-import { ADDITIONAL_OPTIONS, RENTAL_CARS } from '../configs/rentConfig';
+import { CheckIcon, InformationCircleIcon } from '../icons';
+import {
+  ADDITIONAL_OPTIONS,
+  RENTAL_CARS,
+  RENTAL_PERIOD_DATETIME_GRID,
+  RENTAL_PERIOD_FIELD_CELL,
+} from '../configs/rentConfig';
 import { LOCATIONS } from '../configs/locationsConfig';
 import { RENTAL_V2_RESERVATION_DRIVER_KEY, RENTAL_V2_SESSION_KEY } from '../configs/rentalV2Session';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
@@ -29,7 +34,9 @@ type DriverFormState = {
   nip: string;
   fullName: string;
   pesel: string;
+  idDocumentNumber: string;
   licenseNumber: string;
+  licenseBlanketNumber: string;
   address: string;
   postalCode: string;
   city: string;
@@ -54,7 +61,9 @@ const emptyDriver = (): DriverFormState => ({
   nip: '',
   fullName: '',
   pesel: '',
+  idDocumentNumber: '',
   licenseNumber: '',
+  licenseBlanketNumber: '',
   address: '',
   postalCode: '',
   city: '',
@@ -125,7 +134,9 @@ function loadReservationForm(carId: string): { driver: DriverFormState; agreemen
         nip: String(parsed.nip ?? ''),
         fullName: String(parsed.fullName ?? ''),
         pesel: String(parsed.pesel ?? ''),
+        idDocumentNumber: String(parsed.idDocumentNumber ?? ''),
         licenseNumber: String(parsed.licenseNumber ?? ''),
+        licenseBlanketNumber: String(parsed.licenseBlanketNumber ?? ''),
         address: String(parsed.address ?? ''),
         postalCode: String(parsed.postalCode ?? ''),
         city: String(parsed.city ?? ''),
@@ -173,6 +184,9 @@ const RENTAL_V2_SHELL_STYLES = `
     }
   }
 `;
+
+/** Jak data + godzina na wypożyczalni v1: jedna kolumna poniżej 350px, obok siebie od 350px. */
+const RESERVATION_PAIR_GRID = RENTAL_PERIOD_DATETIME_GRID;
 
 const RentalReservationPage: React.FC = () => {
   const { carId } = useParams<{ carId: string }>();
@@ -341,57 +355,115 @@ const RentalReservationPage: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2">
-                  {driver.reservationType === 'company' && (
-                    <div className="sm:col-span-2">
-                      <Label htmlFor="nip">NIP</Label>
-                      <Input
-                        id="nip"
-                        value={driver.nip}
-                        onChange={handleDriverChange}
-                        required={driver.reservationType === 'company'}
-                        className="mt-1"
-                        placeholder="np. 1234567890"
-                      />
+                <div className="space-y-4">
+                  {driver.reservationType === 'company' ? (
+                    <div className={RESERVATION_PAIR_GRID}>
+                      <div className={RENTAL_PERIOD_FIELD_CELL}>
+                        <Label htmlFor="nip">NIP</Label>
+                        <Input
+                          id="nip"
+                          value={driver.nip}
+                          onChange={handleDriverChange}
+                          required
+                          className="mt-1"
+                          placeholder="np. 1234567890"
+                        />
+                      </div>
+                      <div className={RENTAL_PERIOD_FIELD_CELL}>
+                        <Label htmlFor="fullName">Imię i nazwisko</Label>
+                        <Input
+                          id="fullName"
+                          value={driver.fullName}
+                          onChange={handleDriverChange}
+                          required
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="fullName">Imię i nazwisko</Label>
+                      <Input id="fullName" value={driver.fullName} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                   )}
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="fullName">Imię i nazwisko</Label>
-                    <Input id="fullName" value={driver.fullName} onChange={handleDriverChange} required className="mt-1" />
+
+                  <div className={RESERVATION_PAIR_GRID}>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="pesel">PESEL</Label>
+                      <Input id="pesel" value={driver.pesel} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="idDocumentNumber">Nr dowodu</Label>
+                      <Input
+                        id="idDocumentNumber"
+                        value={driver.idDocumentNumber}
+                        onChange={handleDriverChange}
+                        required
+                        className="mt-1"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="pesel">PESEL</Label>
-                    <Input id="pesel" value={driver.pesel} onChange={handleDriverChange} required className="mt-1" />
+
+                  <div className={RESERVATION_PAIR_GRID}>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="licenseNumber">Numer prawa jazdy</Label>
+                      <Input
+                        id="licenseNumber"
+                        value={driver.licenseNumber}
+                        onChange={handleDriverChange}
+                        required
+                        className="mt-1"
+                      />
+                    </div>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <div className="flex items-center gap-1.5">
+                        <Label htmlFor="licenseBlanketNumber" className="mb-0">
+                          Nr. blankietu prawa jazdy
+                        </Label>
+                        <button
+                          type="button"
+                          className="shrink-0 rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          title="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu"
+                          aria-label="Numer blankietu prawa jazdy spod kodu kreskowego na odwrocie dokumentu"
+                        >
+                          <InformationCircleIcon className="h-4 w-4" />
+                        </button>
+                      </div>
+                      <Input
+                        id="licenseBlanketNumber"
+                        value={driver.licenseBlanketNumber}
+                        onChange={handleDriverChange}
+                        required
+                        className="mt-1"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="licenseNumber">Numer prawa jazdy</Label>
-                    <Input
-                      id="licenseNumber"
-                      value={driver.licenseNumber}
-                      onChange={handleDriverChange}
-                      required
-                      className="mt-1"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
+
+                  <div className={RENTAL_PERIOD_FIELD_CELL}>
                     <Label htmlFor="address">Adres zamieszkania</Label>
                     <Input id="address" value={driver.address} onChange={handleDriverChange} required className="mt-1" />
                   </div>
-                  <div>
-                    <Label htmlFor="postalCode">Kod pocztowy</Label>
-                    <Input id="postalCode" value={driver.postalCode} onChange={handleDriverChange} required className="mt-1" />
+
+                  <div className={RESERVATION_PAIR_GRID}>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="postalCode">Kod pocztowy</Label>
+                      <Input id="postalCode" value={driver.postalCode} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="city">Miejscowość</Label>
+                      <Input id="city" value={driver.city} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="city">Miejscowość</Label>
-                    <Input id="city" value={driver.city} onChange={handleDriverChange} required className="mt-1" />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">E-mail</Label>
-                    <Input id="email" type="email" value={driver.email} onChange={handleDriverChange} required className="mt-1" />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Telefon</Label>
-                    <Input id="phone" type="tel" value={driver.phone} onChange={handleDriverChange} required className="mt-1" />
+
+                  <div className={RESERVATION_PAIR_GRID}>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="email">E-mail</Label>
+                      <Input id="email" type="email" value={driver.email} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="phone">Telefon</Label>
+                      <Input id="phone" type="tel" value={driver.phone} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
                   </div>
                 </div>
 
@@ -445,10 +517,12 @@ const RentalReservationPage: React.FC = () => {
                       Zmodyfikuj rezerwację
                     </Link>
                   </p>
-                  <div className="mb-4 overflow-hidden rounded-lg border border-border bg-background">
-                    <img src={modelCardImage} alt={selected.name} className="h-auto w-full object-contain" />
+                  <div className="mb-4 flex min-w-0 items-center gap-3">
+                    <div className="w-[30%] max-w-[140px] shrink-0">
+                      <img src={modelCardImage} alt="" className="h-auto w-full object-contain" />
+                    </div>
+                    <h2 className="min-w-0 flex-1 text-xl font-bold leading-tight sm:text-2xl">{selected.name}</h2>
                   </div>
-                  <h2 className="text-2xl font-bold">{selected.name}</h2>
 
                   <div className="mt-4 space-y-2 border-t border-border pt-4 text-sm">
                     <p className="whitespace-normal break-words font-medium leading-snug">{pickupLine}</p>
@@ -574,11 +648,6 @@ const RentalReservationPage: React.FC = () => {
                     <img src="https://img.apolloidea.com/img/pay-maestro.svg" alt="Maestro" className="h-6" />
                   </div>
                 </div>
-                <p className="mt-4 text-center text-sm text-muted-foreground">
-                  <Link to="/wypozyczalnia-v2" className="underline hover:text-foreground">
-                    Wróć do wypożyczalni
-                  </Link>
-                </p>
               </div>
             </aside>
           </div>

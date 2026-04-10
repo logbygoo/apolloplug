@@ -23,7 +23,7 @@ import {
 import { LOCATIONS, formatLocationSelectLabel } from '../configs/locationsConfig';
 import { formatRentalTimeOptionLabel } from '../configs/workConfig';
 import { CAR_FLEET } from '../configs/fleetConfig';
-import { RENTAL_V2_SESSION_KEY } from '../configs/rentalV2Session';
+import { getPersistedRentalV2SessionJson, persistRentalV2Session } from '../configs/rentalV2Session';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import { BRANDS } from '../constants';
 import { CalendarDaysIcon, CheckIcon, ChevronDownIcon, DocumentTextIcon } from '../icons';
@@ -140,7 +140,7 @@ function mergeAdditionalOptionsFromStored(
 
 function loadRentalV2Session(): RentalV2Session | null {
   try {
-    const raw = sessionStorage.getItem(RENTAL_V2_SESSION_KEY);
+    const raw = getPersistedRentalV2SessionJson();
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<RentalV2Session>;
     if (!parsed?.selectedId || !parsed.rentalPeriod) return null;
@@ -195,17 +195,13 @@ function hydrateFromSession(stored: RentalV2Session): RentalV2Session {
   };
 }
 
-let rentalV2InitialCache: RentalV2Session | null = null;
-
+/** Bez cache modułu — przy każdym wejściu na /wypozyczalnia czytamy z localStorage / sessionStorage. */
 function getInitialRentalV2State(): RentalV2Session {
-  if (rentalV2InitialCache) return rentalV2InitialCache;
   if (typeof window === 'undefined') {
-    rentalV2InitialCache = buildFirstVisitState();
-    return rentalV2InitialCache;
+    return buildFirstVisitState();
   }
   const stored = loadRentalV2Session();
-  rentalV2InitialCache = stored ? hydrateFromSession(stored) : buildFirstVisitState();
-  return rentalV2InitialCache;
+  return stored ? hydrateFromSession(stored) : buildFirstVisitState();
 }
 
 /**
@@ -528,12 +524,11 @@ const CheckboxOption: React.FC<{
 };
 
 const RentalV2Page: React.FC = () => {
-  const [selectedId, setSelectedId] = useState<string>(() => getInitialRentalV2State().selectedId);
-  const [selectedBrandId, setSelectedBrandId] = useState<string>(() => getInitialRentalV2State().selectedBrandId);
-  const [rentalPeriod, setRentalPeriod] = useState<RentalPeriodState>(() => getInitialRentalV2State().rentalPeriod);
-  const [additionalOptions, setAdditionalOptions] = useState<AdditionalOptionsState>(
-    () => getInitialRentalV2State().additionalOptions
-  );
+  const initialV2 = useMemo(() => getInitialRentalV2State(), []);
+  const [selectedId, setSelectedId] = useState(initialV2.selectedId);
+  const [selectedBrandId, setSelectedBrandId] = useState(initialV2.selectedBrandId);
+  const [rentalPeriod, setRentalPeriod] = useState<RentalPeriodState>(initialV2.rentalPeriod);
+  const [additionalOptions, setAdditionalOptions] = useState<AdditionalOptionsState>(initialV2.additionalOptions);
   const rentalRootRef = useRef<HTMLDivElement>(null);
   const summaryAsideRef = useRef<HTMLElement>(null);
   const [summaryInView, setSummaryInView] = useState(false);
@@ -557,11 +552,7 @@ const RentalV2Page: React.FC = () => {
       rentalPeriod,
       additionalOptions,
     };
-    try {
-      sessionStorage.setItem(RENTAL_V2_SESSION_KEY, JSON.stringify(payload));
-    } catch {
-      /* ignore quota / private mode */
-    }
+    persistRentalV2Session(JSON.stringify(payload));
   }, [selectedId, selectedBrandId, rentalPeriod, additionalOptions]);
 
   /** Po wczytaniu sesji / nowym dniu: podbij przeszłe daty do dziś i uzgodnij zwrot z odbiorem. */

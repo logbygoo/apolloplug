@@ -179,8 +179,22 @@ const RentalCarLandingPage: React.FC = () => {
             <style>{CAR_LANDING_E2E_STYLES}</style>
             <Seo {...seoData} />
 
-            {/* Galeria E2E (scrollbar ukryty jak na /wypozyczalnia) */}
-            <section className="w-full bg-background">
+            {/* Ten sam układ co /wypozyczalnia: szare tło + PageHeader */}
+            <div className="mb-8 w-full border-b border-border bg-secondary">
+                <div className="rental-v2-page-header">
+                    <PageHeader
+                        title={`Wynajem ${carFleet.name}`}
+                        subtitle="Wypożyczalnia aut elektrycznych Warszawa • Tesla"
+                        breadcrumbs={[
+                            { name: 'Wypożyczalnia', path: '/wypozyczalnia' },
+                            { name: carFleet.name },
+                        ]}
+                    />
+                </div>
+            </div>
+
+            {/* Galeria E2E — białe tło pod sliderem */}
+            <section className="w-full bg-white">
                 <RentalLandingEdgeScroller>
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track items-stretch">
@@ -211,20 +225,6 @@ const RentalCarLandingPage: React.FC = () => {
                     </section>
                 </RentalLandingEdgeScroller>
             </section>
-
-            {/* Jak nagłówek na /wypozyczalnia — wersja jasna (bg-background zamiast bg-secondary) */}
-            <div className="mb-8 w-full border-b border-border bg-background">
-                <div className="rental-v2-page-header">
-                    <PageHeader
-                        title={`Wynajem ${carFleet.name}`}
-                        subtitle="Wypożyczalnia aut elektrycznych Warszawa • Tesla"
-                        breadcrumbs={[
-                            { name: 'Wypożyczalnia', path: '/wypozyczalnia' },
-                            { name: carFleet.name },
-                        ]}
-                    />
-                </div>
-            </div>
 
             {/* Lightbox: tło lub zdjęcie zamyka; strzałki / klawisze zmieniają slajd */}
             {lightboxIndex !== null && galleryItems[lightboxIndex] && (

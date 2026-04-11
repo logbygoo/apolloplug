@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getShuffledLandingGallery, landingImageThumbSrc } from '../configs/landingPageImages';
 import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
@@ -58,12 +58,19 @@ const CAR_LANDING_E2E_STYLES = `
   }
   .rental-car-landing .e2e-track {
     display: inline-flex;
+    align-items: stretch;
     width: max-content;
     gap: var(--slider-gap, 20px);
     padding-top: 0;
     padding-bottom: 0;
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
+  }
+  /* Jeden rząd: wszystkie slajdy jak najwyższy box; sufit żeby zdjęcia nie rozpychały sekcji */
+  .rental-car-landing .e2e-slide {
+    min-height: 0;
+    max-height: min(40vh, 360px);
+    align-self: stretch;
   }
   @media (min-width: 768px) {
     .rental-car-landing .e2e-track {
@@ -125,34 +132,6 @@ const RentalCarLandingPage: React.FC = () => {
         });
     }, [galleryItems]);
 
-    /** Wysokość wszystkich slajdów = wysokość pierwszego (nagłówek) po zmianie treści / okna. */
-    const headerSlideRef = useRef<HTMLDivElement>(null);
-    const [slideHeightPx, setSlideHeightPx] = useState<number | null>(null);
-
-    useLayoutEffect(() => {
-        const el = headerSlideRef.current;
-        if (!el) return;
-        const measure = () => {
-            let h = Math.ceil(el.getBoundingClientRect().height);
-            if (h <= 0) return;
-            // Bez rozciągania flex (items-start) wysokość = treść nagłówka; górny limit żeby nie „puchło”
-            const maxH = Math.floor(window.innerHeight * 0.72);
-            if (h > maxH) h = maxH;
-            setSlideHeightPx(h);
-        };
-        measure();
-        const ro = new ResizeObserver(() => measure());
-        ro.observe(el);
-        window.addEventListener('resize', measure);
-        return () => {
-            ro.disconnect();
-            window.removeEventListener('resize', measure);
-        };
-    }, [carId, carFleet.name, minPrice]);
-
-    const slideHeightStyle =
-        slideHeightPx != null ? ({ height: slideHeightPx, minHeight: slideHeightPx } as const) : undefined;
-
     const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const galleryCount = galleryItems.length;
@@ -212,18 +191,12 @@ const RentalCarLandingPage: React.FC = () => {
             <section className="w-full bg-white">
                 <RentalLandingEdgeScroller>
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
-                        <div className="e2e-track items-start">
+                        <div className="e2e-track">
                             <div
-                                ref={headerSlideRef}
-                                style={slideHeightStyle}
-                                className={`pointer-events-none shrink-0 snap-center flex w-[70vw] max-w-[70vw] flex-col justify-center self-start overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)] ${
-                                    slideHeightPx != null
-                                        ? 'min-h-0'
-                                        : 'min-h-[30vh] md:min-h-[280px] lg:min-h-[340px]'
-                                }`}
+                                className="e2e-slide pointer-events-none shrink-0 snap-center flex w-[70vw] max-w-[70vw] flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)]"
                                 aria-label="Nagłówek strony"
                             >
-                                <div className="rental-v2-page-header flex min-h-0 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
+                                <div className="rental-v2-page-header flex min-h-0 flex-1 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
                                     <div className="pointer-events-auto min-w-0">
                                         <nav aria-label="breadcrumb" className="mb-3 overflow-hidden">
                                             <ol className="flex items-center gap-2 text-sm">
@@ -274,16 +247,13 @@ const RentalCarLandingPage: React.FC = () => {
                                     key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
-                                    style={slideHeightStyle}
-                                    className={`group relative shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-[70vw] max-w-[70vw] md:w-auto md:max-w-[min(92vw,920px)] ${
-                                        slideHeightPx != null ? 'min-h-0' : 'h-[30vh] md:h-[280px] lg:h-[340px]'
-                                    }`}
+                                    className="e2e-slide group relative flex min-h-0 shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-[70vw] max-w-[70vw] md:w-auto md:max-w-[min(92vw,920px)]"
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >
                                     <img
                                         src={landingImageThumbSrc(item.src)}
                                         alt={item.alt}
-                                        className="block h-full w-full object-cover md:h-full md:w-auto md:max-w-full md:object-contain"
+                                        className="block min-h-0 h-full w-full object-cover md:h-full md:w-auto md:max-w-full md:object-contain"
                                         loading={index < 2 ? 'eager' : 'lazy'}
                                         decoding="async"
                                     />

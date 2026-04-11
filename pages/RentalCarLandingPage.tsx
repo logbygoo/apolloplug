@@ -76,6 +76,11 @@ const CAR_LANDING_E2E_STYLES = `
     width: 100%;
     max-width: 500px;
   }
+  @media (max-width: 767px) {
+    .rental-car-landing .e2e-slide--photo {
+      max-width: 70vw;
+    }
+  }
   @media (min-width: 768px) {
     .rental-car-landing .e2e-track {
       padding-left: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
@@ -193,7 +198,7 @@ const RentalCarLandingPage: React.FC = () => {
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track">
                             <div
-                                className="e2e-slide pointer-events-none w-max max-w-[min(92vw,920px)] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto"
+                                className="e2e-slide pointer-events-none w-max max-w-[70vw] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto md:max-w-[min(92vw,920px)]"
                                 aria-label="Nagłówek strony"
                             >
                                 <div className="rental-v2-page-header flex min-h-0 flex-1 flex-col justify-center pr-5 md:pr-8">
@@ -230,14 +235,14 @@ const RentalCarLandingPage: React.FC = () => {
                                         <p className="mt-3 max-w-3xl text-base text-muted-foreground md:mt-4 md:text-lg">
                                             Wypożyczalnia aut elektrycznych Warszawa • Tesla
                                         </p>
-                                        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:justify-start">
+                                        <div className="mt-5 flex flex-wrap items-center justify-start gap-x-4 gap-y-2">
                                             <Link
                                                 to={`/wypozyczalnia?model=${carId}`}
                                                 className="inline-flex h-12 w-full max-w-[280px] shrink-0 items-center justify-center rounded-md bg-foreground px-8 text-base font-semibold text-background transition-colors hover:bg-foreground/90 sm:w-auto"
                                             >
                                                 Zarezerwuj pojazd
                                             </Link>
-                                            <p className="m-0 text-center text-sm text-muted-foreground sm:text-left">
+                                            <p className="m-0 text-left text-sm text-muted-foreground">
                                                 już od{' '}
                                                 <strong className="font-semibold text-foreground">
                                                     {minPrice.toLocaleString('pl-PL')} zł

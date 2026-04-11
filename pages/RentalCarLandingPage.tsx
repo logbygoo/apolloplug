@@ -193,10 +193,10 @@ const RentalCarLandingPage: React.FC = () => {
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track">
                             <div
-                                className="e2e-slide pointer-events-none w-max max-w-[min(92vw,920px)] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto bg-secondary"
+                                className="e2e-slide pointer-events-none w-max max-w-[min(92vw,920px)] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto"
                                 aria-label="Nagłówek strony"
                             >
-                                <div className="rental-v2-page-header flex min-h-0 flex-1 flex-col justify-center p-0">
+                                <div className="rental-v2-page-header flex min-h-0 flex-1 flex-col justify-center pr-5 md:pr-8">
                                     <div className="pointer-events-auto min-w-0">
                                         <nav aria-label="breadcrumb" className="mb-3 overflow-hidden">
                                             <ol className="flex items-center gap-2 text-sm">
@@ -230,15 +230,21 @@ const RentalCarLandingPage: React.FC = () => {
                                         <p className="mt-3 max-w-3xl text-base text-muted-foreground md:mt-4 md:text-lg">
                                             Wypożyczalnia aut elektrycznych Warszawa • Tesla
                                         </p>
-                                        <Link
-                                            to={`/wypozyczalnia?model=${carId}`}
-                                            className="mt-5 inline-flex h-12 w-full max-w-[280px] items-center justify-center rounded-md bg-foreground px-8 text-base font-semibold text-background transition-colors hover:bg-foreground/90 sm:w-auto"
-                                        >
-                                            Zarezerwuj pojazd
-                                        </Link>
-                                        <p className="mt-2 text-center text-sm text-muted-foreground sm:text-left">
-                                            już od {minPrice.toLocaleString('pl-PL')} zł/dzień
-                                        </p>
+                                        <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:justify-start">
+                                            <Link
+                                                to={`/wypozyczalnia?model=${carId}`}
+                                                className="inline-flex h-12 w-full max-w-[280px] shrink-0 items-center justify-center rounded-md bg-foreground px-8 text-base font-semibold text-background transition-colors hover:bg-foreground/90 sm:w-auto"
+                                            >
+                                                Zarezerwuj pojazd
+                                            </Link>
+                                            <p className="m-0 text-center text-sm text-muted-foreground sm:text-left">
+                                                już od{' '}
+                                                <strong className="font-semibold text-foreground">
+                                                    {minPrice.toLocaleString('pl-PL')} zł
+                                                </strong>
+                                                /dzień
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

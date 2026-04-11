@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getShuffledLandingGallery, landingImageThumbSrc } from '../configs/landingPageImages';
 import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
@@ -113,23 +114,19 @@ const RentalCarLandingPage: React.FC = () => {
         return carRental.pricePerDay;
     }, [carRental]);
 
-    /** Galeria landing — bez duplikatów; szerokość każdej karty zależy od proporcji zdjęcia. */
-    const galleryImages = useMemo(() => {
-        return carRental.landingPageImages && carRental.landingPageImages.length > 0
-            ? [...carRental.landingPageImages]
-            : [...carRental.imageUrl];
-    }, [carRental]);
+    /** Galeria: miniatury `-min.jpg` w sliderze, pełne `src` w lightbox; kolejność losowa przy każdym zestawieniu. */
+    const galleryItems = useMemo(() => getShuffledLandingGallery(carRental), [carRental.id]);
 
     useEffect(() => {
-        galleryImages.forEach((src) => {
+        galleryItems.forEach((item) => {
             const img = new Image();
-            img.src = src;
+            img.src = item.src;
         });
-    }, [galleryImages]);
+    }, [galleryItems]);
 
     const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-    const galleryCount = galleryImages.length;
+    const galleryCount = galleryItems.length;
     const lightboxTouchStartX = useRef<number | null>(null);
     const lightboxIgnoreClickRef = useRef(false);
 
@@ -167,7 +164,7 @@ const RentalCarLandingPage: React.FC = () => {
       description: SEO_CONFIG['/wypozycz/:carId'].description.replace('{carName}', carFleet.name),
       ogTitle: (SEO_CONFIG['/wypozycz/:carId'].ogTitle || '').replace('{carName}', carFleet.name),
       ogDescription: (SEO_CONFIG['/wypozycz/:carId'].ogDescription || '').replace('{carName}', carFleet.name),
-      ogImage: galleryImages[0],
+      ogImage: galleryItems[0]?.src,
     };
 
     const features = [
@@ -187,17 +184,17 @@ const RentalCarLandingPage: React.FC = () => {
                 <RentalLandingEdgeScroller>
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track items-stretch">
-                            {galleryImages.map((src, index) => (
+                            {galleryItems.map((item, index) => (
                                 <button
-                                    key={`${src}-${index}`}
+                                    key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
                                     className="group relative shrink-0 snap-center cursor-zoom-in rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                    aria-label={`Powiększ zdjęcie ${index + 1} z ${galleryCount}`}
+                                    aria-label={`Powiększ: ${item.alt}`}
                                 >
                                     <img
-                                        src={src}
-                                        alt={`${carFleet.name}, zdjęcie ${index + 1}`}
+                                        src={landingImageThumbSrc(item.src)}
+                                        alt={item.alt}
                                         className="block h-[220px] w-auto max-w-[min(92vw,920px)] rounded-[30px] object-contain sm:h-[280px] md:h-[340px]"
                                         loading={index < 2 ? 'eager' : 'lazy'}
                                         decoding="async"
@@ -230,7 +227,7 @@ const RentalCarLandingPage: React.FC = () => {
             </div>
 
             {/* Lightbox: tło lub zdjęcie zamyka; strzałki / klawisze zmieniają slajd */}
-            {lightboxIndex !== null && galleryImages[lightboxIndex] && (
+            {lightboxIndex !== null && galleryItems[lightboxIndex] && (
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center p-4"
                     role="dialog"
@@ -296,8 +293,8 @@ const RentalCarLandingPage: React.FC = () => {
                             aria-label="Zamknij podgląd"
                         >
                             <img
-                                src={galleryImages[lightboxIndex]}
-                                alt={`${carFleet.name} — zdjęcie ${lightboxIndex + 1}`}
+                                src={galleryItems[lightboxIndex].src}
+                                alt={galleryItems[lightboxIndex].alt}
                                 className="max-h-[85vh] max-w-full rounded-2xl object-contain"
                             />
                         </button>

@@ -1,10 +1,15 @@
+/** Zdjęcia landing `/wypozycz/:id` — `src` pełne, miniatura: `src` z `-min` przed `.jpg`. */
+export type LandingPageImageEntry = {
+  src: string;
+  alt: string;
+};
 
 export interface Car {
   id: string;
   name: string;
   description?: string;
   imageUrl: string[];
-  landingPageImages?: string[]; // New optional field for Hero Slider images
+  landingPageImages?: LandingPageImageEntry[];
   pricePerDay: number;
   specs?: {
     range: string;

@@ -15,6 +15,7 @@ import {
   ArrowRightIcon,
   CheckIcon,
   HomeIcon,
+  XMarkIcon,
 } from '../icons';
 import { ChevronDownIcon } from '../components/HeroIcons';
 import type { SeoData } from '../types';
@@ -142,6 +143,7 @@ const RentalCarLandingPage: React.FC = () => {
 
     const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [mobileRentSheetOpen, setMobileRentSheetOpen] = useState(true);
     const galleryCount = galleryItems.length;
     const lightboxTouchStartX = useRef<number | null>(null);
     const lightboxIgnoreClickRef = useRef(false);
@@ -183,6 +185,9 @@ const RentalCarLandingPage: React.FC = () => {
       ogImage: galleryItems[0]?.src,
     };
 
+    /** PNG z `rentConfig.imageUrl` (ikona auta w pływającym CTA na mobile) */
+    const carRentIconSrc = carRental.imageUrl[0] ?? carFleet.imageUrl[0] ?? galleryItems[0]?.src;
+
     const features = [
         { icon: BoltIcon, title: "Zasięg i Ładowanie", desc: `Realny zasięg do ${carFleet.specs?.range}. Dostęp do sieci Supercharger.` },
         { icon: SparklesIcon, title: "Komfort Highland", desc: "Wentylowane fotele, cichsza kabina i ekran dla pasażerów z tyłu." },
@@ -191,7 +196,9 @@ const RentalCarLandingPage: React.FC = () => {
     ];
 
     return (
-        <div className="rental-car-landing bg-background">
+        <div
+            className={`rental-car-landing bg-background${mobileRentSheetOpen ? ' max-md:pb-[7.5rem]' : ''}`}
+        >
             <style>{CAR_LANDING_E2E_STYLES}</style>
             <Seo {...seoData} />
 
@@ -517,6 +524,49 @@ const RentalCarLandingPage: React.FC = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Mobile: pływający pasek CTA przy dołu ekranu (białe tło do safe-area; zamknięcie = slide w dół) */}
+            <div
+                className={`fixed inset-x-0 bottom-0 z-40 bg-white transition-transform duration-300 ease-out motion-reduce:transition-none motion-reduce:duration-0 md:hidden ${
+                    mobileRentSheetOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none'
+                }`}
+                style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+                aria-hidden={!mobileRentSheetOpen}
+            >
+                    <div className="rounded-t-3xl border border-border/60 bg-white px-4 pb-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+                        <div className="flex items-center gap-3">
+                            {carRentIconSrc ? (
+                                <img
+                                    src={carRentIconSrc}
+                                    alt=""
+                                    className="h-[50px] w-auto shrink-0 object-contain"
+                                    height={50}
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            ) : (
+                                <span className="h-[50px] w-[50px] shrink-0" aria-hidden />
+                            )}
+                            <p className="min-w-0 flex-1 text-sm font-medium leading-snug text-foreground">
+                                Wybierz termin wynajmu
+                            </p>
+                            <button
+                                type="button"
+                                onClick={() => setMobileRentSheetOpen(false)}
+                                className="-mr-1 -mt-1 shrink-0 rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                                aria-label="Zamknij"
+                            >
+                                <XMarkIcon className="h-5 w-5" />
+                            </button>
+                        </div>
+                        <Link
+                            to={`/wypozyczalnia?model=${carId}`}
+                            className="flex h-9 w-full items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
+                        >
+                            Zarezerwuj
+                        </Link>
+                    </div>
+            </div>
         </div>
     );
 };

@@ -114,6 +114,22 @@ const MagnifyingGlassIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
   </svg>
 );
 
+/** Safari/WebKit: sama zmiana content na meta theme-color często nie odświeża paska adresu — klon wymusza ponowne odczytanie. */
+function applyThemeColorMeta(content: string) {
+    let el = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+    if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute('name', 'theme-color');
+        document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+    const parent = el.parentNode;
+    if (parent) {
+        const clone = el.cloneNode(true) as HTMLMetaElement;
+        parent.replaceChild(clone, el);
+    }
+}
+
 const RentalCarLandingPage: React.FC = () => {
     const { carId } = useParams<{ carId: string }>();
     const carFleet = CAR_FLEET.find(c => c.id === carId);
@@ -144,6 +160,7 @@ const RentalCarLandingPage: React.FC = () => {
     const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [mobileRentSheetOpen, setMobileRentSheetOpen] = useState(true);
+    const themeColorOnEnterRef = useRef<string | null>(null);
     const galleryCount = galleryItems.length;
     const lightboxTouchStartX = useRef<number | null>(null);
     const lightboxIgnoreClickRef = useRef(false);
@@ -175,6 +192,27 @@ const RentalCarLandingPage: React.FC = () => {
             document.body.style.overflow = prev;
         };
     }, [lightboxIndex]);
+
+    useEffect(() => {
+        const m = document.querySelector('meta[name="theme-color"]');
+        themeColorOnEnterRef.current = m?.getAttribute('content') ?? null;
+        return () => {
+            const meta = document.querySelector('meta[name="theme-color"]');
+            const v = themeColorOnEnterRef.current;
+            if (meta && v !== null) meta.setAttribute('content', v);
+        };
+    }, []);
+
+    /** Po zamknięciu pływaka (mobile): theme-color → transparent; WebKit często ignoruje jedną zmianę — drugie ustawienie po 350ms (koniec animacji slide). */
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (!window.matchMedia('(max-width: 767px)').matches) return;
+        if (mobileRentSheetOpen) return;
+
+        applyThemeColorMeta('transparent');
+        const t = window.setTimeout(() => applyThemeColorMeta('transparent'), 350);
+        return () => clearTimeout(t);
+    }, [mobileRentSheetOpen]);
 
     const seoData: SeoData = {
       ...SEO_CONFIG['/wypozycz/:carId'],
@@ -525,9 +563,9 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Mobile: pływający pasek CTA przy dołu ekranu (białe tło do safe-area; zamknięcie = slide w dół) */}
+            {/* Mobile: pływający pasek CTA (tylko karta ma bg-white — zewnątrz przezroczyste, żeby pasek przeglądarki nie był „wyciszany” na biało po zamknięciu) */}
             <div
-                className={`fixed inset-x-0 bottom-0 z-40 bg-white transition-transform duration-300 ease-out motion-reduce:transition-none motion-reduce:duration-0 md:hidden ${
+                className={`fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ease-out motion-reduce:transition-none motion-reduce:duration-0 md:hidden ${
                     mobileRentSheetOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none'
                 }`}
                 style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}

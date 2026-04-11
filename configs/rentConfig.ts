@@ -11,7 +11,7 @@ export const RENTAL_CARS: Car[] = [
     // Zdjęcia wyświetlane w Sliderze na stronie /wypozycz/tesla-3-highland
     landingPageImages: [
         'https://img.apolloidea.com/tesla-3/main-cards-tesla-3.jpg',
-        'https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Model-3-Performance-Hero-Desktop-LHD',
+        'https://img.apolloidea.com/tesla-3/znaczek-tesli-na-masce-tesla-3-highland-min.jpg',
         'https://digitalassets.tesla.com/tesla-contents/image/upload/f_auto,q_auto:best/Model-3-Interior-Desktop-LHD'
     ],
     pricePerDay: 790,

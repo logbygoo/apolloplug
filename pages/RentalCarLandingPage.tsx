@@ -533,7 +533,7 @@ const RentalCarLandingPage: React.FC = () => {
                 style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
                 aria-hidden={!mobileRentSheetOpen}
             >
-                    <div className="rounded-t-3xl border border-border/60 bg-white px-4 pb-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+                    <div className="rounded-t-3xl border border-border/60 border-b-0 bg-white px-4 pb-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
                         <div className="flex items-center gap-3">
                             {carRentIconSrc ? (
                                 <img

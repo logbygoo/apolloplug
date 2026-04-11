@@ -189,13 +189,13 @@ const RentalCarLandingPage: React.FC = () => {
                                     key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
-                                    className="group relative shrink-0 snap-center cursor-zoom-in rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    className="group relative shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-[30vh] w-[70vw] max-w-[70vw] md:h-[280px] lg:h-[340px] md:w-auto md:max-w-[min(92vw,920px)]"
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >
                                     <img
                                         src={landingImageThumbSrc(item.src)}
                                         alt={item.alt}
-                                        className="block h-[220px] w-auto max-w-[min(92vw,920px)] rounded-[30px] object-contain sm:h-[280px] md:h-[340px]"
+                                        className="block h-full w-full object-cover md:h-full md:w-auto md:max-w-full md:object-contain"
                                         loading={index < 2 ? 'eager' : 'lazy'}
                                         decoding="async"
                                     />

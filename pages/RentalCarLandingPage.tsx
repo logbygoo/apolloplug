@@ -66,21 +66,16 @@ const CAR_LANDING_E2E_STYLES = `
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
   }
-  /* Jeden rząd: wszystkie slajdy jak najwyższy box; min-h żeby przy niskim oknie coś było widać; max-h żeby sekcja nie dominowała */
+  /* Jeden rząd: wszystkie slajdy jak najwyższy box; stała wysokość 300px */
   .rental-car-landing .e2e-slide {
-    min-height: 220px;
-    max-height: min(40vh, 360px);
+    min-height: 300px;
+    max-height: 300px;
     align-self: stretch;
   }
   .rental-car-landing .e2e-slide--photo {
     position: relative;
     width: 100%;
     max-width: 500px;
-  }
-  @media (max-width: 767px) {
-    .rental-car-landing .e2e-slide--photo {
-      max-width: 70vw;
-    }
   }
   @media (min-width: 768px) {
     .rental-car-landing .e2e-track {

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
@@ -22,9 +22,6 @@ const RentalCarLandingPage: React.FC = () => {
     const carFleet = CAR_FLEET.find(c => c.id === carId);
     const carRental = RENTAL_CARS.find(c => c.id === carId);
     
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [isHovered, setIsHovered] = useState(false);
-
     if (!carFleet || !carRental) {
         return <Navigate to="/wypozyczalnia" replace />;
     }
@@ -37,45 +34,19 @@ const RentalCarLandingPage: React.FC = () => {
         return carRental.pricePerDay;
     }, [carRental]);
 
-    // Priority: use landingPageImages if available (better for hero slider), fallback to standard imageUrl
+    /** Galeria landing — bez duplikatów; szerokość każdej karty zależy od proporcji zdjęcia. */
     const galleryImages = useMemo(() => {
-        const images = carRental.landingPageImages && carRental.landingPageImages.length > 0 
-            ? carRental.landingPageImages 
-            : carRental.imageUrl;
-            
-        // Add duplicate if only 1 image to allow slider to function properly
-        if (images.length < 2) {
-            return [...images, images[0]];
-        }
-        return images;
+        return carRental.landingPageImages && carRental.landingPageImages.length > 0
+            ? [...carRental.landingPageImages]
+            : [...carRental.imageUrl];
     }, [carRental]);
 
-    // --- Slider Logic (Same as HomePage) ---
     useEffect(() => {
-        // Preload images
-        galleryImages.forEach(src => {
+        galleryImages.forEach((src) => {
             const img = new Image();
             img.src = src;
         });
     }, [galleryImages]);
-
-    const goToNext = useCallback(() => {
-        setCurrentIndex(prevIndex => (prevIndex === galleryImages.length - 1 ? 0 : prevIndex + 1));
-    }, [galleryImages.length]);
-
-    const goToPrevious = () => {
-        setCurrentIndex(prevIndex => (prevIndex === 0 ? galleryImages.length - 1 : prevIndex - 1));
-    };
-
-    const goToSlide = (index: number) => {
-        setCurrentIndex(index);
-    };
-
-    useEffect(() => {
-        if (isHovered) return;
-        const slideInterval = setInterval(goToNext, 10000);
-        return () => clearInterval(slideInterval);
-    }, [currentIndex, isHovered, goToNext]);
 
 
     const seoData: SeoData = {
@@ -98,97 +69,50 @@ const RentalCarLandingPage: React.FC = () => {
         <div className="bg-background">
             <Seo {...seoData} />
             
-            {/* HERO SLIDER (Matching HomePage Style) */}
-            <section 
-                className="relative h-[600px] w-full text-white"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-            >
-                {/* Progress Bar */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-black/20 z-10">
-                    <div 
-                        key={currentIndex}
-                        className="h-full bg-white"
-                        style={{
-                            animation: 'progressBarFill 10s linear forwards',
-                            animationPlayState: isHovered ? 'paused' : 'running'
-                        }}
-                    />
-                </div>
-
-                {/* Background Images */}
-                <div className="absolute inset-0 w-full h-full">
-                    {galleryImages.map((img, index) => (
-                        <div
-                            key={index}
-                            className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ease-in-out ${
-                                currentIndex === index ? 'opacity-100' : 'opacity-0'
-                            }`}
-                            style={{ backgroundImage: `url(${img})` }}
-                            role="img"
-                            aria-label={`Zdjęcie ${carFleet.name} ${index + 1}`}
-                        />
-                    ))}
-                </div>
-
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/40" />
-
-                {/* Content */}
-                <div className="relative container mx-auto h-full flex flex-col justify-center items-center text-center px-4">
-                    <div className="animate-fade-in-up">
-                        <span className="inline-block px-3 py-1 mb-6 text-sm font-semibold tracking-wider uppercase bg-white/20 backdrop-blur-sm rounded-sm border border-white/30">
-                            Dostępny od ręki
-                        </span>
-                        <h1 className="text-4xl md:text-6xl font-semibold text-shadow-md mb-4">
-                            Wynajem {carFleet.name}
-                        </h1>
-                        <p className="mt-2 text-xl md:text-2xl text-shadow text-white/90 max-w-2xl mx-auto">
-                            Poczuj przyszłość motoryzacji w Warszawie
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col items-center gap-6 mt-10 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                        <div className="flex flex-col sm:flex-row gap-4">
-                            <Link to={`/wypozyczalnia?model=${carId}`}>
-                                <Button size="lg" variant="primary" className="w-64 text-lg h-14">
-                                    Cena od {minPrice} zł / doba
-                                </Button>
-                            </Link>
-                            <Link to="/flota">
-                                <Button 
-                                    size="lg" 
-                                    variant="secondary" 
-                                    className="w-64 text-lg h-14 bg-white/20 !text-white border border-white/50 hover:bg-white/30"
-                                >
-                                    Zobacz pełną ofertę
-                                </Button>
-                            </Link>
-                        </div>
-                        
-                        {/* Slide Indicators */}
-                        <div className="flex gap-2 mt-4">
-                            {galleryImages.map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => goToSlide(index)}
-                                    className={`h-1.5 w-6 rounded-full transition-colors ${
-                                        currentIndex === index ? 'bg-white' : 'bg-white/20 hover:bg-white/40'
-                                    }`}
-                                    aria-label={`Przejdź do slajdu ${index + 1}`}
+            {/* Galeria pozioma (scroll na całą szerokość) + nagłówek i CTA pod zdjęciami */}
+            <section className="w-full bg-background">
+                <div
+                    className="w-full overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin]"
+                    style={{ scrollbarGutter: 'stable' }}
+                >
+                    <div className="flex w-max snap-x snap-mandatory gap-4 px-3 py-8 sm:gap-6 sm:px-4 md:py-10 md:pl-6 md:pr-6">
+                        {galleryImages.map((src, index) => (
+                            <div
+                                key={`${src}-${index}`}
+                                className="snap-center flex-shrink-0 rounded-[30px] bg-white p-[10px] shadow-sm ring-1 ring-border/60"
+                            >
+                                <img
+                                    src={src}
+                                    alt={`${carFleet.name} — zdjęcie ${index + 1}`}
+                                    className="block h-[220px] w-auto max-w-[min(92vw,920px)] object-contain sm:h-[280px] md:h-[340px] rounded-[20px]"
+                                    loading={index < 2 ? 'eager' : 'lazy'}
+                                    decoding="async"
                                 />
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Navigation Arrows */}
-                <button onClick={goToPrevious} className="absolute top-1/2 left-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </button>
-                <button onClick={goToNext} className="absolute top-1/2 right-4 -translate-y-1/2 p-2 rounded-md bg-black/10 hover:bg-black/20 text-white z-10 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </button>
+                <div className="container mx-auto px-4 pb-12 text-center md:pb-16">
+                    <h1 className="text-4xl font-semibold text-foreground md:text-6xl">
+                        Wynajem {carFleet.name}
+                    </h1>
+                    <p className="mx-auto mt-4 max-w-2xl text-xl text-muted-foreground md:text-2xl">
+                        Poczuj przyszłość motoryzacji w Warszawie
+                    </p>
+                    <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                        <Link to={`/wypozyczalnia?model=${carId}`}>
+                            <Button size="lg" variant="primary" className="h-14 w-64 text-lg">
+                                Cena od {minPrice} zł / doba
+                            </Button>
+                        </Link>
+                        <Link to="/flota">
+                            <Button size="lg" variant="secondary" className="h-14 w-64 text-lg">
+                                Zobacz pełną ofertę
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
             </section>
 
             {/* KEY METRICS */}

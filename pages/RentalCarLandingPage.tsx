@@ -66,11 +66,15 @@ const CAR_LANDING_E2E_STYLES = `
     padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
     padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
   }
-  /* Jeden rząd: wszystkie slajdy jak najwyższy box; sufit żeby zdjęcia nie rozpychały sekcji */
+  /* Jeden rząd: wszystkie slajdy jak najwyższy box; min-h żeby przy niskim oknie coś było widać; max-h żeby sekcja nie dominowała */
   .rental-car-landing .e2e-slide {
-    min-height: 0;
+    min-height: 220px;
     max-height: min(40vh, 360px);
     align-self: stretch;
+  }
+  .rental-car-landing .e2e-slide--photo {
+    width: 100%;
+    max-width: 500px;
   }
   @media (min-width: 768px) {
     .rental-car-landing .e2e-track {
@@ -247,13 +251,13 @@ const RentalCarLandingPage: React.FC = () => {
                                     key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
-                                    className="e2e-slide group relative flex h-full min-h-0 w-max max-w-[min(92vw,920px)] shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    className="e2e-slide e2e-slide--photo group relative flex h-full min-h-0 shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >
                                     <img
                                         src={landingImageThumbSrc(item.src)}
                                         alt={item.alt}
-                                        className="block min-h-0 h-full w-auto max-w-full object-contain"
+                                        className="pointer-events-none block min-h-0 h-full w-full object-cover"
                                         loading={index < 2 ? 'eager' : 'lazy'}
                                         decoding="async"
                                     />

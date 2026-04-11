@@ -186,10 +186,10 @@ const RentalCarLandingPage: React.FC = () => {
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track items-stretch">
                             <div
-                                className="pointer-events-none shrink-0 snap-center flex h-[30vh] w-[70vw] max-w-[70vw] flex-col justify-center overflow-hidden rounded-[30px] bg-secondary md:h-[280px] lg:h-[340px] md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)]"
+                                className="pointer-events-none shrink-0 snap-center flex min-h-[30vh] w-[70vw] max-w-[70vw] flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:min-h-[280px] lg:min-h-[340px] md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)]"
                                 aria-label="Nagłówek strony"
                             >
-                                <div className="rental-v2-page-header flex h-full min-h-0 flex-col justify-center px-4 py-3 md:px-6">
+                                <div className="rental-v2-page-header flex h-full min-h-0 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
                                     <div className="pointer-events-auto min-w-0">
                                         <nav aria-label="breadcrumb" className="mb-3 overflow-hidden">
                                             <ol className="flex items-center gap-2 text-sm">
@@ -223,6 +223,12 @@ const RentalCarLandingPage: React.FC = () => {
                                         <p className="mt-3 max-w-3xl text-base text-muted-foreground md:mt-4 md:text-lg">
                                             Wypożyczalnia aut elektrycznych Warszawa • Tesla
                                         </p>
+                                        <Link
+                                            to={`/wypozyczalnia?model=${carId}`}
+                                            className="mt-5 inline-flex h-12 w-full max-w-[280px] items-center justify-center rounded-md bg-foreground text-base font-semibold text-background transition-colors hover:bg-foreground/90 sm:w-auto"
+                                        >
+                                            Zarezerwuj pojazd
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

@@ -193,7 +193,7 @@ const RentalCarLandingPage: React.FC = () => {
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track">
                             <div
-                                className="e2e-slide pointer-events-none shrink-0 snap-center flex w-[70vw] max-w-[70vw] flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)]"
+                                className="e2e-slide pointer-events-none w-max max-w-[min(92vw,920px)] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary"
                                 aria-label="Nagłówek strony"
                             >
                                 <div className="rental-v2-page-header flex min-h-0 flex-1 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
@@ -247,13 +247,13 @@ const RentalCarLandingPage: React.FC = () => {
                                     key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
-                                    className="e2e-slide group relative flex min-h-0 shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-[70vw] max-w-[70vw] md:w-auto md:max-w-[min(92vw,920px)]"
+                                    className="e2e-slide group relative flex h-full min-h-0 w-max max-w-[min(92vw,920px)] shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >
                                     <img
                                         src={landingImageThumbSrc(item.src)}
                                         alt={item.alt}
-                                        className="block min-h-0 h-full w-full object-cover md:h-full md:w-auto md:max-w-full md:object-contain"
+                                        className="block min-h-0 h-full w-auto max-w-full object-contain"
                                         loading={index < 2 ? 'eager' : 'lazy'}
                                         decoding="async"
                                     />

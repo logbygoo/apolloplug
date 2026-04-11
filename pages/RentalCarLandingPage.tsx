@@ -1,21 +1,99 @@
-
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
-import { Button, Card, CardContent } from '../components/ui';
+import { Button, Card, CardContent, PageHeader } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
-import { 
-  BoltIcon, 
-  SparklesIcon, 
-  ShieldCheckIcon, 
-  KeyIcon, 
+import {
+  BoltIcon,
+  SparklesIcon,
+  ShieldCheckIcon,
+  KeyIcon,
   ArrowRightIcon,
-  CheckIcon
+  CheckIcon,
 } from '../icons';
 import { MapPinIcon } from '../components/HeroIcons';
 import type { SeoData } from '../types';
+
+/** Te same reguły co `.rental-v2` na /wypozyczalnia — scrollbar ukryty, tor z gutterem jak `.container`. */
+const CAR_LANDING_E2E_STYLES = `
+  .rental-car-landing {
+    --container-width: 100%;
+    --slider-gap: 1.25rem;
+    --e2e-edge-fuzz: 15px;
+  }
+  @media (min-width: 640px) {
+    .rental-car-landing { --container-width: 40rem; }
+  }
+  @media (min-width: 768px) {
+    .rental-car-landing { --container-width: 48rem; }
+  }
+  @media (min-width: 1024px) {
+    .rental-car-landing { --container-width: 64rem; }
+  }
+  @media (min-width: 1280px) {
+    .rental-car-landing { --container-width: 80rem; }
+  }
+  @media (min-width: 1536px) {
+    .rental-car-landing { --container-width: 96rem; }
+  }
+
+  .rental-car-landing .e2e-slider {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-x pan-y;
+  }
+  .rental-car-landing .e2e-slider::-webkit-scrollbar {
+    height: 0;
+    display: none;
+  }
+  .rental-car-landing .e2e-track {
+    display: inline-flex;
+    width: max-content;
+    gap: var(--slider-gap, 20px);
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
+    padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
+  }
+  @media (min-width: 768px) {
+    .rental-car-landing .e2e-track {
+      padding-left: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
+      padding-right: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .rental-car-landing .rental-v2-page-header > div {
+      padding-top: 1.75rem;
+      padding-bottom: 1.75rem;
+    }
+    .rental-car-landing .rental-v2-page-header h1 {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+  }
+`;
+
+const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
+
+const RentalLandingEdgeScroller: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="relative ml-[calc(50%-50vw)] w-[100vw] max-w-[100vw] shrink-0 overflow-x-visible">
+    {children}
+  </div>
+);
+
+const MagnifyingGlassIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+  </svg>
+);
 
 const RentalCarLandingPage: React.FC = () => {
     const { carId } = useParams<{ carId: string }>();
@@ -48,6 +126,38 @@ const RentalCarLandingPage: React.FC = () => {
         });
     }, [galleryImages]);
 
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const galleryCount = galleryImages.length;
+    const lightboxTouchStartX = useRef<number | null>(null);
+    const lightboxIgnoreClickRef = useRef(false);
+
+    const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+    const goNextLightbox = useCallback(() => {
+        setLightboxIndex((i) => (i === null ? null : (i + 1) % galleryCount));
+    }, [galleryCount]);
+    const goPrevLightbox = useCallback(() => {
+        setLightboxIndex((i) => (i === null ? null : (i - 1 + galleryCount) % galleryCount));
+    }, [galleryCount]);
+
+    useEffect(() => {
+        if (lightboxIndex === null) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') goNextLightbox();
+            if (e.key === 'ArrowLeft') goPrevLightbox();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [lightboxIndex, closeLightbox, goNextLightbox, goPrevLightbox]);
+
+    useEffect(() => {
+        if (lightboxIndex === null) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, [lightboxIndex]);
 
     const seoData: SeoData = {
       ...SEO_CONFIG['/wypozycz/:carId'],
@@ -66,41 +176,57 @@ const RentalCarLandingPage: React.FC = () => {
     ];
 
     return (
-        <div className="bg-background">
+        <div className="rental-car-landing bg-background">
+            <style>{CAR_LANDING_E2E_STYLES}</style>
             <Seo {...seoData} />
-            
-            {/* Galeria pozioma (scroll na całą szerokość) + nagłówek i CTA pod zdjęciami */}
-            <section className="w-full bg-background">
-                <div
-                    className="w-full overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin]"
-                    style={{ scrollbarGutter: 'stable' }}
-                >
-                    <div className="flex w-max snap-x snap-mandatory gap-4 px-3 py-8 sm:gap-6 sm:px-4 md:py-10 md:pl-6 md:pr-6">
-                        {galleryImages.map((src, index) => (
-                            <div
-                                key={`${src}-${index}`}
-                                className="snap-center flex-shrink-0 rounded-[30px] bg-white p-[10px] shadow-sm ring-1 ring-border/60"
-                            >
-                                <img
-                                    src={src}
-                                    alt={`${carFleet.name} — zdjęcie ${index + 1}`}
-                                    className="block h-[220px] w-auto max-w-[min(92vw,920px)] object-contain sm:h-[280px] md:h-[340px] rounded-[20px]"
-                                    loading={index < 2 ? 'eager' : 'lazy'}
-                                    decoding="async"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
 
-                <div className="container mx-auto px-4 pb-12 text-center md:pb-16">
-                    <h1 className="text-4xl font-semibold text-foreground md:text-6xl">
-                        Wynajem {carFleet.name}
-                    </h1>
-                    <p className="mx-auto mt-4 max-w-2xl text-xl text-muted-foreground md:text-2xl">
-                        Poczuj przyszłość motoryzacji w Warszawie
-                    </p>
-                    <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            {/* Galeria E2E (scrollbar ukryty jak na /wypozyczalnia) */}
+            <section className="w-full bg-background">
+                <RentalLandingEdgeScroller>
+                    <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
+                        <div className="e2e-track items-stretch">
+                            {galleryImages.map((src, index) => (
+                                <button
+                                    key={`${src}-${index}`}
+                                    type="button"
+                                    onClick={() => setLightboxIndex(index)}
+                                    className="group relative shrink-0 snap-center cursor-zoom-in rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    aria-label={`Powiększ zdjęcie ${index + 1} z ${galleryCount}`}
+                                >
+                                    <img
+                                        src={src}
+                                        alt={`${carFleet.name}, zdjęcie ${index + 1}`}
+                                        className="block h-[220px] w-auto max-w-[min(92vw,920px)] rounded-[30px] object-contain sm:h-[280px] md:h-[340px]"
+                                        loading={index < 2 ? 'eager' : 'lazy'}
+                                        decoding="async"
+                                    />
+                                    <span
+                                        className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[30px] bg-black/0 transition-colors group-hover:bg-black/25"
+                                        aria-hidden
+                                    >
+                                        <MagnifyingGlassIcon className="h-10 w-10 text-white opacity-0 drop-shadow-md transition-opacity group-hover:opacity-100" />
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </section>
+                </RentalLandingEdgeScroller>
+            </section>
+
+            {/* Jak nagłówek na /wypozyczalnia — wersja jasna (bg-background zamiast bg-secondary) */}
+            <div className="mb-8 w-full border-b border-border bg-background">
+                <div className="rental-v2-page-header">
+                    <PageHeader
+                        title={`Wynajem ${carFleet.name}`}
+                        subtitle="Poczuj przyszłość motoryzacji w Warszawie"
+                        breadcrumbs={[
+                            { name: 'Wypożyczalnia', path: '/wypozyczalnia' },
+                            { name: carFleet.name },
+                        ]}
+                    />
+                </div>
+                <div className="container mx-auto flex flex-col items-center justify-center gap-4 px-4 pb-14 pt-6 md:px-6">
+                    <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                         <Link to={`/wypozyczalnia?model=${carId}`}>
                             <Button size="lg" variant="primary" className="h-14 w-64 text-lg">
                                 Cena od {minPrice} zł / doba
@@ -113,7 +239,83 @@ const RentalCarLandingPage: React.FC = () => {
                         </Link>
                     </div>
                 </div>
-            </section>
+            </div>
+
+            {/* Lightbox: tło lub zdjęcie zamyka; strzałki / klawisze zmieniają slajd */}
+            {lightboxIndex !== null && galleryImages[lightboxIndex] && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Powiększone zdjęcie"
+                >
+                    <button
+                        type="button"
+                        className="absolute inset-0 bg-black/85"
+                        aria-label="Zamknij"
+                        onClick={closeLightbox}
+                    />
+                    <button
+                        type="button"
+                        className="absolute left-2 top-1/2 z-[2] -translate-y-1/2 rounded-full bg-white/15 p-2.5 text-white transition-colors hover:bg-white/25 md:left-4"
+                        aria-label="Poprzednie zdjęcie"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            goPrevLightbox();
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                            <path d="m15 18-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+                    <button
+                        type="button"
+                        className="absolute right-2 top-1/2 z-[2] -translate-y-1/2 rounded-full bg-white/15 p-2.5 text-white transition-colors hover:bg-white/25 md:right-4"
+                        aria-label="Następne zdjęcie"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            goNextLightbox();
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                            <path d="m9 18 6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </button>
+                    <div className="relative z-[1] flex max-h-[min(90vh,900px)] max-w-[min(96vw,1200px)] items-center justify-center">
+                        <button
+                            type="button"
+                            className="max-h-[85vh] max-w-full touch-pan-y border-0 bg-transparent p-0"
+                            onClick={() => {
+                                if (lightboxIgnoreClickRef.current) return;
+                                closeLightbox();
+                            }}
+                            onTouchStart={(e) => {
+                                lightboxTouchStartX.current = e.touches[0].clientX;
+                            }}
+                            onTouchEnd={(e) => {
+                                if (lightboxTouchStartX.current === null) return;
+                                const dx = e.changedTouches[0].clientX - lightboxTouchStartX.current;
+                                lightboxTouchStartX.current = null;
+                                if (Math.abs(dx) > 45) {
+                                    lightboxIgnoreClickRef.current = true;
+                                    window.setTimeout(() => {
+                                        lightboxIgnoreClickRef.current = false;
+                                    }, 350);
+                                    if (dx > 0) goPrevLightbox();
+                                    else goNextLightbox();
+                                }
+                            }}
+                            aria-label="Zamknij podgląd"
+                        >
+                            <img
+                                src={galleryImages[lightboxIndex]}
+                                alt={`${carFleet.name} — zdjęcie ${lightboxIndex + 1}`}
+                                className="max-h-[85vh] max-w-full rounded-2xl object-contain"
+                            />
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* KEY METRICS */}
             <section className="bg-background border-b border-border">

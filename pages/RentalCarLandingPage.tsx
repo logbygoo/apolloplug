@@ -13,7 +13,6 @@ import {
   ArrowRightIcon,
   CheckIcon,
 } from '../icons';
-import { MapPinIcon } from '../components/HeroIcons';
 import type { SeoData } from '../types';
 
 /** Te same reguły co `.rental-v2` na /wypozyczalnia — scrollbar ukryty, tor z gutterem jak `.container`. */
@@ -172,7 +171,7 @@ const RentalCarLandingPage: React.FC = () => {
         { icon: BoltIcon, title: "Zasięg i Ładowanie", desc: `Realny zasięg do ${carFleet.specs?.range}. Dostęp do sieci Supercharger.` },
         { icon: SparklesIcon, title: "Komfort Highland", desc: "Wentylowane fotele, cichsza kabina i ekran dla pasażerów z tyłu." },
         { icon: ShieldCheckIcon, title: "Bezpieczeństwo", desc: "Najwyższa ocena bezpieczeństwa Euro NCAP. Pełen pakiet Autopilot." },
-        { icon: KeyIcon, title: "Minimum Formalności", desc: "Prosty proces online. Odbierz auto bez zbędnych papierów." },
+        { icon: KeyIcon, title: "Dostęp przez aplikację", desc: "Steruj klimatem, zamkiem i statusem ładowania z telefonu." },
     ];
 
     return (
@@ -218,7 +217,7 @@ const RentalCarLandingPage: React.FC = () => {
                 <div className="rental-v2-page-header">
                     <PageHeader
                         title={`Wynajem ${carFleet.name}`}
-                        subtitle="Poczuj przyszłość motoryzacji w Warszawie"
+                        subtitle="Wypożyczalnia aut elektrycznych Warszawa • Tesla"
                         breadcrumbs={[
                             { name: 'Wypożyczalnia', path: '/wypozyczalnia' },
                             { name: carFleet.name },
@@ -409,36 +408,24 @@ const RentalCarLandingPage: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* STICKY SIDEBAR CTA */}
+                    {/* STICKY SIDEBAR — jak karta podsumowania na /rezerwacja */}
                     <div className="lg:col-span-1">
-                        <div className="sticky top-24 bg-card border border-border rounded-xl p-6 shadow-lg">
-                            <h3 className="text-xl font-bold mb-4">Zarezerwuj termin</h3>
-                            <div className="space-y-4 mb-6">
-                                <div className="flex justify-between items-center py-2 border-b border-border">
+                        <div className="lg:sticky lg:top-24">
+                            <div className="rounded-lg bg-secondary p-6">
+                                <div className="flex justify-between gap-3 text-sm">
                                     <span className="text-muted-foreground">Cena od</span>
-                                    <span className="font-bold">{minPrice} zł / doba</span>
+                                    <span className="shrink-0 text-right font-medium">
+                                        {minPrice.toLocaleString('pl-PL')} zł / doba
+                                    </span>
                                 </div>
-                                <div className="flex justify-between items-center py-2 border-b border-border">
-                                    <span className="text-muted-foreground">Kaucja zwrotna</span>
-                                    <span className="font-bold">{carRental.deposit?.toLocaleString()} zł</span>
-                                </div>
-                                <div className="flex justify-between items-center py-2 border-b border-border">
-                                    <span className="text-muted-foreground">Limit km / dzień</span>
-                                    <span className="font-bold">250 km</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-2 rounded">
-                                    <MapPinIcon className="w-4 h-4" />
-                                    <span>Odbiór w Warszawie (Włochy/Centrum)</span>
-                                </div>
+                                <Link
+                                    to={`/wypozyczalnia?model=${carId}`}
+                                    className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
+                                >
+                                    Wybierz termin
+                                    <ArrowRightIcon className="h-5 w-5 shrink-0" aria-hidden />
+                                </Link>
                             </div>
-                            <Link to={`/wypozyczalnia?model=${carId}`} className="block w-full">
-                                <Button size="lg" className="w-full font-bold text-lg">
-                                    Wybierz termin <ArrowRightIcon className="ml-2 w-5 h-5" />
-                                </Button>
-                            </Link>
-                            <p className="text-xs text-center text-muted-foreground mt-4">
-                                Brak ukrytych opłat. Pełne ubezpieczenie w cenie.
-                            </p>
                         </div>
                     </div>
                 </div>

@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getShuffledLandingGallery, landingImageThumbSrc } from '../configs/landingPageImages';
 import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
-import { useParams, Navigate, Link } from 'react-router-dom';
+import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
-import { Card, CardContent, PageHeader } from '../components/ui';
+import { Card, CardContent } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import {
@@ -14,6 +14,7 @@ import {
   KeyIcon,
   ArrowRightIcon,
   CheckIcon,
+  HomeIcon,
 } from '../icons';
 import { ChevronDownIcon } from '../components/HeroIcons';
 import type { SeoData } from '../types';
@@ -179,25 +180,52 @@ const RentalCarLandingPage: React.FC = () => {
             <style>{CAR_LANDING_E2E_STYLES}</style>
             <Seo {...seoData} />
 
-            {/* Ten sam układ co /wypozyczalnia: szare tło + PageHeader */}
-            <div className="mb-8 w-full border-b border-border bg-secondary">
-                <div className="rental-v2-page-header">
-                    <PageHeader
-                        title={`Wynajem ${carFleet.name}`}
-                        subtitle="Wypożyczalnia aut elektrycznych Warszawa • Tesla"
-                        breadcrumbs={[
-                            { name: 'Wypożyczalnia', path: '/wypozyczalnia' },
-                            { name: carFleet.name },
-                        ]}
-                    />
-                </div>
-            </div>
-
-            {/* Galeria E2E — białe tło pod sliderem */}
+            {/* Galeria E2E: pierwszy slajd = szary box z okruszkami + h1 (jak header), potem zdjęcia; reszta paska biała */}
             <section className="w-full bg-white">
                 <RentalLandingEdgeScroller>
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track items-stretch">
+                            <div
+                                className="pointer-events-none shrink-0 snap-center flex h-[30vh] w-[70vw] max-w-[70vw] flex-col justify-center overflow-hidden rounded-[30px] bg-secondary md:h-[280px] lg:h-[340px] md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)]"
+                                aria-label="Nagłówek strony"
+                            >
+                                <div className="rental-v2-page-header flex h-full min-h-0 flex-col justify-center px-4 py-3 md:px-6">
+                                    <div className="pointer-events-auto min-w-0">
+                                        <nav aria-label="breadcrumb" className="mb-3 overflow-hidden">
+                                            <ol className="flex items-center gap-2 text-sm">
+                                                <li className="shrink-0">
+                                                    <NavLink
+                                                        to="/"
+                                                        className="text-muted-foreground hover:text-foreground"
+                                                        aria-label="Strona główna"
+                                                    >
+                                                        <HomeIcon className="h-5 w-5" />
+                                                    </NavLink>
+                                                </li>
+                                                <li className="flex shrink-0 items-center gap-2">
+                                                    <span className="text-muted-foreground/50">/</span>
+                                                    <NavLink
+                                                        to="/wypozyczalnia"
+                                                        className="whitespace-nowrap text-muted-foreground hover:text-foreground"
+                                                    >
+                                                        Wypożyczalnia
+                                                    </NavLink>
+                                                </li>
+                                                <li className="flex min-w-0 items-center gap-2">
+                                                    <span className="text-muted-foreground/50">/</span>
+                                                    <span className="truncate font-medium text-foreground">{carFleet.name}</span>
+                                                </li>
+                                            </ol>
+                                        </nav>
+                                        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
+                                            Wynajem {carFleet.name}
+                                        </h1>
+                                        <p className="mt-3 max-w-3xl text-base text-muted-foreground md:mt-4 md:text-lg">
+                                            Wypożyczalnia aut elektrycznych Warszawa • Tesla
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                             {galleryItems.map((item, index) => (
                                 <button
                                     key={item.src}

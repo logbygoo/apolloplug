@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { getShuffledLandingGallery, landingImageThumbSrc } from '../configs/landingPageImages';
 import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
@@ -125,6 +125,30 @@ const RentalCarLandingPage: React.FC = () => {
         });
     }, [galleryItems]);
 
+    /** Wysokość wszystkich slajdów = wysokość pierwszego (nagłówek) po zmianie treści / okna. */
+    const headerSlideRef = useRef<HTMLDivElement>(null);
+    const [slideHeightPx, setSlideHeightPx] = useState<number | null>(null);
+
+    useLayoutEffect(() => {
+        const el = headerSlideRef.current;
+        if (!el) return;
+        const measure = () => {
+            const h = Math.ceil(el.getBoundingClientRect().height);
+            if (h > 0) setSlideHeightPx(h);
+        };
+        measure();
+        const ro = new ResizeObserver(measure);
+        ro.observe(el);
+        window.addEventListener('resize', measure);
+        return () => {
+            ro.disconnect();
+            window.removeEventListener('resize', measure);
+        };
+    }, [carId, carFleet.name, minPrice]);
+
+    const slideHeightStyle =
+        slideHeightPx != null ? ({ height: slideHeightPx, minHeight: slideHeightPx } as const) : undefined;
+
     const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const galleryCount = galleryItems.length;
@@ -186,7 +210,13 @@ const RentalCarLandingPage: React.FC = () => {
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track items-stretch">
                             <div
-                                className="pointer-events-none shrink-0 snap-center flex min-h-[30vh] w-[70vw] max-w-[70vw] flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:min-h-[280px] lg:min-h-[340px] md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)]"
+                                ref={headerSlideRef}
+                                style={slideHeightStyle}
+                                className={`pointer-events-none shrink-0 snap-center flex w-[70vw] max-w-[70vw] flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)] ${
+                                    slideHeightPx != null
+                                        ? 'min-h-0'
+                                        : 'min-h-[30vh] md:min-h-[280px] lg:min-h-[340px]'
+                                }`}
                                 aria-label="Nagłówek strony"
                             >
                                 <div className="rental-v2-page-header flex h-full min-h-0 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
@@ -225,10 +255,13 @@ const RentalCarLandingPage: React.FC = () => {
                                         </p>
                                         <Link
                                             to={`/wypozyczalnia?model=${carId}`}
-                                            className="mt-5 inline-flex h-12 w-full max-w-[280px] items-center justify-center rounded-md bg-foreground text-base font-semibold text-background transition-colors hover:bg-foreground/90 sm:w-auto"
+                                            className="mt-5 inline-flex h-12 w-full max-w-[280px] items-center justify-center rounded-md bg-foreground px-8 text-base font-semibold text-background transition-colors hover:bg-foreground/90 sm:w-auto"
                                         >
                                             Zarezerwuj pojazd
                                         </Link>
+                                        <p className="mt-2 text-center text-sm text-muted-foreground sm:text-left">
+                                            już od {minPrice.toLocaleString('pl-PL')} zł/dzień
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -237,7 +270,10 @@ const RentalCarLandingPage: React.FC = () => {
                                     key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
-                                    className="group relative shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-[30vh] w-[70vw] max-w-[70vw] md:h-[280px] lg:h-[340px] md:w-auto md:max-w-[min(92vw,920px)]"
+                                    style={slideHeightStyle}
+                                    className={`group relative shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 w-[70vw] max-w-[70vw] md:w-auto md:max-w-[min(92vw,920px)] ${
+                                        slideHeightPx != null ? 'min-h-0' : 'h-[30vh] md:h-[280px] lg:h-[340px]'
+                                    }`}
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >
                                     <img

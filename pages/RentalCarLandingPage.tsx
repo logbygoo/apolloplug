@@ -73,8 +73,11 @@ const CAR_LANDING_E2E_STYLES = `
     align-self: stretch;
   }
   .rental-car-landing .e2e-slide--photo {
+    position: relative;
+    display: block;
     width: 100%;
     max-width: 500px;
+    min-height: 0;
   }
   @media (max-width: 767px) {
     .rental-car-landing .e2e-slide--photo {
@@ -238,7 +241,7 @@ const RentalCarLandingPage: React.FC = () => {
                                         <div className="mt-5 flex flex-wrap items-center justify-start gap-x-4 gap-y-2">
                                             <Link
                                                 to={`/wypozyczalnia?model=${carId}`}
-                                                className="inline-flex h-12 w-full max-w-[280px] shrink-0 items-center justify-center rounded-md bg-foreground px-8 text-base font-semibold text-background transition-colors hover:bg-foreground/90 sm:w-auto"
+                                                className="inline-flex h-12 shrink-0 items-center justify-center rounded-md bg-foreground px-8 text-base font-semibold text-background transition-colors hover:bg-foreground/90"
                                             >
                                                 Zarezerwuj pojazd
                                             </Link>
@@ -258,18 +261,18 @@ const RentalCarLandingPage: React.FC = () => {
                                     key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
-                                    className="e2e-slide e2e-slide--photo group relative flex h-full min-h-0 shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    className="e2e-slide e2e-slide--photo group relative h-full min-h-0 shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >
                                     <img
                                         src={landingImageThumbSrc(item.src)}
                                         alt={item.alt}
-                                        className="pointer-events-none block min-h-0 h-full w-full object-cover"
+                                        className="pointer-events-none absolute inset-0 z-0 min-h-0 object-cover"
                                         loading={index < 2 ? 'eager' : 'lazy'}
                                         decoding="async"
                                     />
                                     <span
-                                        className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[30px] bg-black/0 transition-colors group-hover:bg-black/25"
+                                        className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center rounded-[30px] bg-black/0 transition-colors group-hover:bg-black/25"
                                         aria-hidden
                                     >
                                         <MagnifyingGlassIcon className="h-10 w-10 text-white opacity-0 drop-shadow-md transition-opacity group-hover:opacity-100" />

@@ -74,10 +74,8 @@ const CAR_LANDING_E2E_STYLES = `
   }
   .rental-car-landing .e2e-slide--photo {
     position: relative;
-    display: block;
     width: 100%;
     max-width: 500px;
-    min-height: 0;
   }
   @media (max-width: 767px) {
     .rental-car-landing .e2e-slide--photo {
@@ -261,16 +259,18 @@ const RentalCarLandingPage: React.FC = () => {
                                     key={item.src}
                                     type="button"
                                     onClick={() => setLightboxIndex(index)}
-                                    className="e2e-slide e2e-slide--photo group relative h-full min-h-0 shrink-0 snap-center cursor-zoom-in overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                    className="e2e-slide e2e-slide--photo group relative flex h-full min-h-0 shrink-0 snap-center cursor-zoom-in flex-col overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >
-                                    <img
-                                        src={landingImageThumbSrc(item.src)}
-                                        alt={item.alt}
-                                        className="pointer-events-none absolute inset-0 z-0 min-h-0 object-cover"
-                                        loading={index < 2 ? 'eager' : 'lazy'}
-                                        decoding="async"
-                                    />
+                                    <span className="relative min-h-0 w-full flex-1 basis-0">
+                                        <img
+                                            src={landingImageThumbSrc(item.src)}
+                                            alt={item.alt}
+                                            className="pointer-events-none absolute inset-0 z-0 h-full w-full min-h-0 object-cover"
+                                            loading={index < 2 ? 'eager' : 'lazy'}
+                                            decoding="async"
+                                        />
+                                    </span>
                                     <span
                                         className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center rounded-[30px] bg-black/0 transition-colors group-hover:bg-black/25"
                                         aria-hidden

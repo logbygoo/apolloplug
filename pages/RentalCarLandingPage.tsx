@@ -77,6 +77,13 @@ const CAR_LANDING_E2E_STYLES = `
     width: 100%;
     max-width: 500px;
   }
+  /* Mobile: box ze zdjęciem max 80vw — wysokość wiersza nadal z .e2e-slide (300px), obraz object-cover dopasowuje kadrowanie */
+  @media (max-width: 767px) {
+    .rental-car-landing .e2e-slide--photo {
+      width: 80vw;
+      max-width: 80vw;
+    }
+  }
   @media (min-width: 768px) {
     .rental-car-landing .e2e-track {
       padding-left: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));

@@ -84,10 +84,6 @@ const CAR_LANDING_E2E_STYLES = `
   }
 
   @media (max-width: 767px) {
-    .rental-car-landing .rental-v2-page-header > div {
-      padding-top: 1.75rem;
-      padding-bottom: 1.75rem;
-    }
     .rental-car-landing .rental-v2-page-header h1 {
       font-size: 1.875rem;
       line-height: 2.25rem;
@@ -197,10 +193,10 @@ const RentalCarLandingPage: React.FC = () => {
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
                         <div className="e2e-track">
                             <div
-                                className="e2e-slide pointer-events-none w-max max-w-[min(92vw,920px)] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary"
+                                className="e2e-slide pointer-events-none w-max max-w-[min(92vw,920px)] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto bg-secondary"
                                 aria-label="Nagłówek strony"
                             >
-                                <div className="rental-v2-page-header flex min-h-0 flex-1 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
+                                <div className="rental-v2-page-header flex min-h-0 flex-1 flex-col justify-center p-0">
                                     <div className="pointer-events-auto min-w-0">
                                         <nav aria-label="breadcrumb" className="mb-3 overflow-hidden">
                                             <ol className="flex items-center gap-2 text-sm">

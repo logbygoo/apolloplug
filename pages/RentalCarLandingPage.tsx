@@ -363,24 +363,32 @@ const RentalCarLandingPage: React.FC = () => {
             )}
 
             {/* KEY METRICS — te same dane co na /wypozyczalnia (RENTAL_CARS / carRental.specs) */}
-            <section className="bg-background border-b border-border">
+            <section className="border-b border-border">
                 <div className="container mx-auto px-4 md:px-6 py-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-border/50">
-                        <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter">{carRental.specs?.acceleration ?? '—'}</p>
-                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">0-100 km/h</p>
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                            <p className="text-sm font-medium text-foreground">0-100 km/h</p>
+                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                {carRental.specs?.acceleration ?? '—'}
+                            </p>
                         </div>
-                        <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter">{carRental.specs?.range ?? '—'}</p>
-                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Zasięg</p>
+                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                            <p className="text-sm font-medium text-foreground">Zasięg</p>
+                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                {carRental.specs?.range ?? '—'}
+                            </p>
                         </div>
-                        <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter">{carRental.specs?.seating ?? '—'}</p>
-                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Miejsca</p>
+                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                            <p className="text-sm font-medium text-foreground">Miejsca</p>
+                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                {carRental.specs?.seating ?? '—'}
+                            </p>
                         </div>
-                        <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter text-blue-600">{minPrice} zł</p>
-                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Cena od / doba</p>
+                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                            <p className="text-sm font-medium text-foreground">Cena od / doba</p>
+                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                {minPrice.toLocaleString('pl-PL')} zł
+                            </p>
                         </div>
                     </div>
                 </div>

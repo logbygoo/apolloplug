@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
-import { Button, Card, CardContent, PageHeader } from '../components/ui';
+import { Card, CardContent, PageHeader } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import {
@@ -13,6 +14,7 @@ import {
   ArrowRightIcon,
   CheckIcon,
 } from '../icons';
+import { ChevronDownIcon } from '../components/HeroIcons';
 import type { SeoData } from '../types';
 
 /** Te same reguły co `.rental-v2` na /wypozyczalnia — scrollbar ukryty, tor z gutterem jak `.container`. */
@@ -125,6 +127,7 @@ const RentalCarLandingPage: React.FC = () => {
         });
     }, [galleryImages]);
 
+    const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const galleryCount = galleryImages.length;
     const lightboxTouchStartX = useRef<number | null>(null);
@@ -224,20 +227,6 @@ const RentalCarLandingPage: React.FC = () => {
                         ]}
                     />
                 </div>
-                <div className="container mx-auto flex flex-col items-center justify-center gap-4 px-4 pb-14 pt-6 md:px-6">
-                    <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                        <Link to={`/wypozyczalnia?model=${carId}`}>
-                            <Button size="lg" variant="primary" className="h-14 w-64 text-lg">
-                                Cena od {minPrice} zł / doba
-                            </Button>
-                        </Link>
-                        <Link to="/flota">
-                            <Button size="lg" variant="secondary" className="h-14 w-64 text-lg">
-                                Zobacz pełną ofertę
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
             </div>
 
             {/* Lightbox: tło lub zdjęcie zamyka; strzałki / klawisze zmieniają slajd */}
@@ -316,23 +305,23 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             )}
 
-            {/* KEY METRICS */}
+            {/* KEY METRICS — te same dane co na /wypozyczalnia (RENTAL_CARS / carRental.specs) */}
             <section className="bg-background border-b border-border">
                 <div className="container mx-auto px-4 md:px-6 py-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-border/50">
                         <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter">{carFleet.specs?.acceleration}</p>
+                            <p className="text-3xl font-bold tracking-tighter">{carRental.specs?.acceleration ?? '—'}</p>
                             <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">0-100 km/h</p>
                         </div>
-                         <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter">{carFleet.specs?.range}</p>
-                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Zasięg WLTP</p>
+                        <div className="text-center px-2">
+                            <p className="text-3xl font-bold tracking-tighter">{carRental.specs?.range ?? '—'}</p>
+                            <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Zasięg</p>
                         </div>
-                         <div className="text-center px-2">
-                            <p className="text-3xl font-bold tracking-tighter">{carFleet.specs?.seating}</p>
+                        <div className="text-center px-2">
+                            <p className="text-3xl font-bold tracking-tighter">{carRental.specs?.seating ?? '—'}</p>
                             <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Miejsca</p>
                         </div>
-                         <div className="text-center px-2">
+                        <div className="text-center px-2">
                             <p className="text-3xl font-bold tracking-tighter text-blue-600">{minPrice} zł</p>
                             <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Cena od / doba</p>
                         </div>
@@ -406,6 +395,39 @@ const RentalCarLandingPage: React.FC = () => {
                             Nie czekaj. Sprawdź, dlaczego <strong>wynajem tesli 3</strong> to doświadczenie, którego nie zapomnisz. 
                             Nasza <strong>wypożyczalnia tesla 3</strong> gwarantuje naładowane auto, czystość i pełną gotowość do drogi.
                         </p>
+
+                        <div className="not-prose mx-auto mt-14 max-w-3xl border-t border-border pt-12">
+                            <h2 className="text-center text-2xl font-bold text-foreground">Najczęściej zadawane pytania</h2>
+                            <p className="mt-2 text-center text-muted-foreground">
+                                Krótkie odpowiedzi o autach elektrycznych i wynajmie — wspólne dla naszych modeli.
+                            </p>
+                            <div className="mt-8 space-y-2">
+                                {RENTAL_LANDING_FAQ.map((item, index) => {
+                                    const isOpen = openFaqIndex === index;
+                                    return (
+                                        <div key={item.question} className="overflow-hidden rounded-lg border border-border bg-card">
+                                            <button
+                                                type="button"
+                                                className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left text-base font-medium text-foreground transition-colors hover:bg-secondary/50"
+                                                aria-expanded={isOpen}
+                                                onClick={() => setOpenFaqIndex(isOpen ? -1 : index)}
+                                            >
+                                                <span>{item.question}</span>
+                                                <ChevronDownIcon
+                                                    className={`h-5 w-5 shrink-0 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                                                    aria-hidden
+                                                />
+                                            </button>
+                                            {isOpen && (
+                                                <div className="border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+                                                    {item.answer}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
 
                     {/* STICKY SIDEBAR — jak karta podsumowania na /rezerwacja */}

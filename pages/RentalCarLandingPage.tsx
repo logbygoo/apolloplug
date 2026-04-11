@@ -133,11 +133,15 @@ const RentalCarLandingPage: React.FC = () => {
         const el = headerSlideRef.current;
         if (!el) return;
         const measure = () => {
-            const h = Math.ceil(el.getBoundingClientRect().height);
-            if (h > 0) setSlideHeightPx(h);
+            let h = Math.ceil(el.getBoundingClientRect().height);
+            if (h <= 0) return;
+            // Bez rozciągania flex (items-start) wysokość = treść nagłówka; górny limit żeby nie „puchło”
+            const maxH = Math.floor(window.innerHeight * 0.72);
+            if (h > maxH) h = maxH;
+            setSlideHeightPx(h);
         };
         measure();
-        const ro = new ResizeObserver(measure);
+        const ro = new ResizeObserver(() => measure());
         ro.observe(el);
         window.addEventListener('resize', measure);
         return () => {
@@ -208,18 +212,18 @@ const RentalCarLandingPage: React.FC = () => {
             <section className="w-full bg-white">
                 <RentalLandingEdgeScroller>
                     <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
-                        <div className="e2e-track items-stretch">
+                        <div className="e2e-track items-start">
                             <div
                                 ref={headerSlideRef}
                                 style={slideHeightStyle}
-                                className={`pointer-events-none shrink-0 snap-center flex w-[70vw] max-w-[70vw] flex-col justify-center overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)] ${
+                                className={`pointer-events-none shrink-0 snap-center flex w-[70vw] max-w-[70vw] flex-col justify-center self-start overflow-x-hidden overflow-y-auto rounded-[30px] bg-secondary md:w-auto md:max-w-[min(92vw,920px)] md:min-w-[min(88vw,560px)] ${
                                     slideHeightPx != null
                                         ? 'min-h-0'
                                         : 'min-h-[30vh] md:min-h-[280px] lg:min-h-[340px]'
                                 }`}
                                 aria-label="Nagłówek strony"
                             >
-                                <div className="rental-v2-page-header flex h-full min-h-0 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
+                                <div className="rental-v2-page-header flex min-h-0 flex-col justify-center px-5 py-5 md:px-8 md:py-7">
                                     <div className="pointer-events-auto min-w-0">
                                         <nav aria-label="breadcrumb" className="mb-3 overflow-hidden">
                                             <ol className="flex items-center gap-2 text-sm">

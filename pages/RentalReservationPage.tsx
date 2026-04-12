@@ -29,7 +29,7 @@ const reservationNumberStorageKey = (id: string) => `rentalV2ReservationNumber_$
 
 declare global {
   interface Window {
-    gtag?: (command: string, action: string, params?: Record<string, unknown>) => void;
+    dataLayer?: Record<string, unknown>[];
   }
 }
 
@@ -554,13 +554,13 @@ const RentalReservationPage: React.FC = () => {
         body: JSON.stringify(customerSmsPayload),
       }).catch((err) => console.warn('SMS do klienta:', err));
 
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'conversion', {
-          send_to: 'AW-17760954062/WQuYCP6q7McbEM7NipVC',
-          value: 1.0,
-          currency: 'PLN',
-        });
-      }
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'conversion',
+        send_to: 'AW-17760954062/WQuYCP6q7McbEM7NipVC',
+        value: 1.0,
+        currency: 'PLN',
+      });
 
       const num = reservationNumber.trim() || `AP-${Date.now()}`;
       setReservationNumber(num);

@@ -563,7 +563,7 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Mobile: pływający pasek CTA (tylko karta ma bg-white — zewnątrz przezroczyste, żeby pasek przeglądarki nie był „wyciszany” na biało po zamknięciu) */}
+            {/* Mobile: pływający pasek CTA (tylko karta ma bg-white; zamknięcie = slide w dół + theme-color) */}
             <div
                 className={`fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ease-out motion-reduce:transition-none motion-reduce:duration-0 md:hidden ${
                     mobileRentSheetOpen ? 'translate-y-0' : 'translate-y-full pointer-events-none'

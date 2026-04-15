@@ -157,6 +157,23 @@ const RentalCarLandingPage: React.FC = () => {
         return carRental.pricePerDay;
     }, [carRental]);
 
+    const maxPrice = useMemo(() => {
+        if (carRental.priceTiers && carRental.priceTiers.length > 0) {
+            return Math.max(...carRental.priceTiers.map((tier) => tier.pricePerDay));
+        }
+        return carRental.pricePerDay;
+    }, [carRental]);
+
+    const kmLimitLabel = useMemo(() => {
+        const tiers = carRental.priceTiers;
+        if (!tiers?.length) return '—';
+        const mins = tiers.map((t) => t.kmLimitPerDay);
+        const lo = Math.min(...mins);
+        const hi = Math.max(...mins);
+        if (lo === hi) return `${lo} km / dobę`;
+        return `${lo}–${hi} km / dobę`;
+    }, [carRental.priceTiers]);
+
     /** Galeria: miniatury `-min.jpg` w sliderze, pełne `src` w lightbox; kolejność losowa przy każdym zestawieniu. */
     const galleryItems = useMemo(() => getShuffledLandingGallery(carRental), [carRental.id]);
 
@@ -481,16 +498,66 @@ const RentalCarLandingPage: React.FC = () => {
 
             {/* SEO CONTENT SECTION */}
             <section className="py-16 bg-background">
-                <div className="container mx-auto px-4 md:px-6 grid lg:grid-cols-3 gap-12">
-                    <div className="lg:col-span-2">
-                        <div
-                            className="prose prose-zinc max-w-none"
-                            dangerouslySetInnerHTML={{ __html: landingContent.longDescriptionHtml }}
-                        />
+                <div className="container mx-auto px-4 md:px-6">
+                    <div className="grid lg:grid-cols-3 lg:gap-12">
+                        <div className="lg:col-span-2">
+                            <div
+                                className="prose prose-zinc max-w-none"
+                                dangerouslySetInnerHTML={{ __html: landingContent.longDescriptionHtml }}
+                            />
+                        </div>
 
-                        <div className="not-prose mx-auto mt-14 max-w-3xl border-t border-border pt-12">
-                            <h2 className="text-center text-2xl font-bold text-foreground">Najczęściej zadawane pytania</h2>
-                            <p className="mt-2 text-center text-muted-foreground">
+                        {/* STICKY SIDEBAR — jak karta podsumowania na /rezerwacja */}
+                        <div className="lg:col-span-1 mt-10 lg:mt-0">
+                            <div className="lg:sticky lg:top-24">
+                                <div className="rounded-lg bg-secondary p-6">
+                                    <p className="text-sm text-muted-foreground">Cena za dobę</p>
+                                    <p className="mt-1 text-4xl font-bold tracking-tight text-foreground tabular-nums">
+                                        {maxPrice.toLocaleString('pl-PL')}{' '}
+                                        <span className="text-2xl font-semibold">zł</span>
+                                    </p>
+                                    {maxPrice !== minPrice && (
+                                        <p className="mt-2 text-sm text-muted-foreground">
+                                            od {minPrice.toLocaleString('pl-PL')} zł przy dłuższym wynajmie
+                                        </p>
+                                    )}
+                                    <dl className="mt-6 space-y-2.5 text-sm">
+                                        <div className="flex justify-between gap-4">
+                                            <dt className="text-muted-foreground shrink-0">Kaucja:</dt>
+                                            <dd className="text-right font-medium text-foreground tabular-nums">
+                                                {carRental.deposit != null
+                                                    ? `${carRental.deposit.toLocaleString('pl-PL')} zł`
+                                                    : '—'}
+                                            </dd>
+                                        </div>
+                                        <div className="flex justify-between gap-4">
+                                            <dt className="text-muted-foreground shrink-0">Limit kilometrów:</dt>
+                                            <dd className="text-right font-medium text-foreground">{kmLimitLabel}</dd>
+                                        </div>
+                                        <div className="flex justify-between gap-4">
+                                            <dt className="text-muted-foreground shrink-0">Koszt poza limitem:</dt>
+                                            <dd className="text-right font-medium text-foreground tabular-nums">
+                                                {carRental.costPerKmOverLimit.toLocaleString('pl-PL')} zł / km
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                    <Link
+                                        to={`/wypozyczalnia?model=${carId}`}
+                                        className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
+                                    >
+                                        Wybierz termin
+                                        <ArrowRightIcon className="h-5 w-5 shrink-0" aria-hidden />
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* FAQ — osobny blok pod opisem SEO, szerokość 2 kolumn siatki (wyrównanie z treścią nad sidebarem) */}
+                    <div className="mt-14 border-t border-border pt-12 lg:grid lg:grid-cols-3 lg:gap-12">
+                        <div className="lg:col-span-2 not-prose">
+                            <h2 className="text-2xl font-bold text-foreground">Najczęściej zadawane pytania</h2>
+                            <p className="mt-2 text-muted-foreground">
                                 Krótkie odpowiedzi o autach elektrycznych i wynajmie — wspólne dla naszych modeli.
                             </p>
                             <div className="mt-8 space-y-2">
@@ -518,27 +585,6 @@ const RentalCarLandingPage: React.FC = () => {
                                         </div>
                                     );
                                 })}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* STICKY SIDEBAR — jak karta podsumowania na /rezerwacja */}
-                    <div className="lg:col-span-1">
-                        <div className="lg:sticky lg:top-24">
-                            <div className="rounded-lg bg-secondary p-6">
-                                <div className="flex justify-between gap-3 text-sm">
-                                    <span className="text-muted-foreground">Cena od</span>
-                                    <span className="shrink-0 text-right font-medium">
-                                        {minPrice.toLocaleString('pl-PL')} zł / doba
-                                    </span>
-                                </div>
-                                <Link
-                                    to={`/wypozyczalnia?model=${carId}`}
-                                    className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
-                                >
-                                    Wybierz termin
-                                    <ArrowRightIcon className="h-5 w-5 shrink-0" aria-hidden />
-                                </Link>
                             </div>
                         </div>
                     </div>

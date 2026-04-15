@@ -34,7 +34,7 @@ export const RENTAL_CARS: Car[] = [
     pricePerDay: 790,
     available: true,
     deposit: 3000,
-    costPerKmOverLimit: 3,
+    costPerKmOverLimit: 2,
     priceTiers: [
         { days: '1 dzień', pricePerDay: 790, kmLimitPerDay: 250 },
         { days: '2-3 dni', pricePerDay: 590, kmLimitPerDay: 200 },
@@ -83,7 +83,7 @@ export const RENTAL_CARS: Car[] = [
     pricePerDay: 890,
     available: true,
     deposit: 3000,
-    costPerKmOverLimit: 3.5,
+    costPerKmOverLimit: 2.5,
     priceTiers: [
         { days: '1 dzień', pricePerDay: 890, kmLimitPerDay: 250 },
         { days: '2-3 dni', pricePerDay: 740, kmLimitPerDay: 220 },
@@ -110,7 +110,7 @@ export const RENTAL_CARS: Car[] = [
     pricePerDay: 450,
     available: false,
     deposit: 6000,
-    costPerKmOverLimit: 4,
+    costPerKmOverLimit: 3,
     priceTiers: [
         { days: '1-3 dni', pricePerDay: 450, kmLimitPerDay: 200 },
         { days: '4-7 dni', pricePerDay: 420, kmLimitPerDay: 180 },
@@ -137,7 +137,7 @@ export const RENTAL_CARS: Car[] = [
     visible: false,
     available: false,
     deposit: 5500,
-    costPerKmOverLimit: 4.5,
+    costPerKmOverLimit: 3.5,
     priceTiers: [
         { days: '1-3 dni', pricePerDay: 520, kmLimitPerDay: 200 },
         { days: '4-7 dni', pricePerDay: 490, kmLimitPerDay: 180 },
@@ -162,8 +162,8 @@ export const RENTAL_CARS: Car[] = [
     ],
     pricePerDay: 600,
     available: false,
-    deposit: 8000,
-    costPerKmOverLimit: 5,
+    deposit: 20000,
+    costPerKmOverLimit: 10,
     priceTiers: [
         { days: '1-3 dni', pricePerDay: 600, kmLimitPerDay: 200 },
         { days: '4-7 dni', pricePerDay: 550, kmLimitPerDay: 180 },

@@ -4,6 +4,7 @@ import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
+import { getRentalLandingPageContent } from '../configs/rentalLandingPageContent';
 import { Card, CardContent } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
@@ -13,12 +14,21 @@ import {
   ShieldCheckIcon,
   KeyIcon,
   ArrowRightIcon,
-  CheckIcon,
   HomeIcon,
   XMarkIcon,
 } from '../icons';
 import { ChevronDownIcon } from '../components/HeroIcons';
-import type { SeoData } from '../types';
+import type { RentalLandingFeatureIconKey, SeoData } from '../types';
+
+const RENTAL_LANDING_ICONS: Record<
+  RentalLandingFeatureIconKey,
+  React.ComponentType<React.SVGProps<SVGSVGElement>>
+> = {
+  bolt: BoltIcon,
+  sparkles: SparklesIcon,
+  shieldCheck: ShieldCheckIcon,
+  key: KeyIcon,
+};
 
 /** Te same reguły co `.rental-v2` na /wypozyczalnia — scrollbar ukryty, tor z gutterem jak `.container`. */
 const CAR_LANDING_E2E_STYLES = `
@@ -226,12 +236,15 @@ const RentalCarLandingPage: React.FC = () => {
     /** PNG z `rentConfig.imageUrl` (ikona auta w pływającym CTA na mobile) */
     const carRentIconSrc = carRental.imageUrl[0] ?? carFleet.imageUrl[0] ?? galleryItems[0]?.src;
 
-    const features = [
-        { icon: BoltIcon, title: "Zasięg i Ładowanie", desc: `Realny zasięg do ${carFleet.specs?.range}. Dostęp do sieci Supercharger.` },
-        { icon: SparklesIcon, title: "Komfort Highland", desc: "Wentylowane fotele, cichsza kabina i ekran dla pasażerów z tyłu." },
-        { icon: ShieldCheckIcon, title: "Bezpieczeństwo", desc: "Najwyższa ocena bezpieczeństwa Euro NCAP. Pełen pakiet Autopilot." },
-        { icon: KeyIcon, title: "Dostęp przez aplikację", desc: "Steruj klimatem, zamkiem i statusem ładowania z telefonu." },
-    ];
+    const landingContent = useMemo(
+        () =>
+            getRentalLandingPageContent(
+                carId,
+                carFleet.name,
+                carFleet.specs?.range ?? carRental.specs?.range ?? '—',
+            ),
+        [carId, carFleet.name, carFleet.specs?.range, carRental.specs?.range],
+    );
 
     return (
         <div
@@ -281,7 +294,7 @@ const RentalCarLandingPage: React.FC = () => {
                                             Wynajem {carFleet.name}
                                         </h1>
                                         <p className="mt-3 max-w-3xl text-base text-muted-foreground md:mt-4 md:text-lg">
-                                            Wypożyczalnia aut elektrycznych Warszawa • Tesla
+                                            {landingContent.heroSubtitle}
                                         </p>
                                         <div className="mt-5 flex flex-wrap items-center justify-start gap-x-4 gap-y-2">
                                             <Link
@@ -443,25 +456,25 @@ const RentalCarLandingPage: React.FC = () => {
             <section className="py-16 md:py-24 bg-secondary/30">
                 <div className="container mx-auto px-4 md:px-6">
                     <div className="text-center max-w-2xl mx-auto mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Dlaczego {carFleet.name}?</h2>
-                        <p className="text-muted-foreground text-lg">
-                            To nie jest zwykły samochód. To komputer na kołach, który definiuje na nowo pojęcie komfortu i osiągów.
-                            Idealny wybór na weekendowy wyjazd, test przed zakupem lub podróż biznesową.
-                        </p>
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">{landingContent.whyHeading}</h2>
+                        <p className="text-muted-foreground text-lg">{landingContent.whyLead}</p>
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {features.map((feature, idx) => (
-                            <Card key={idx} className="border-none shadow-md hover:shadow-xl transition-all duration-300">
-                                <CardContent className="pt-6">
-                                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
-                                        <feature.icon className="w-6 h-6" />
-                                    </div>
-                                    <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                                    <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                                </CardContent>
-                            </Card>
-                        ))}
+                        {landingContent.features.map((feature, idx) => {
+                            const FeatureIcon = RENTAL_LANDING_ICONS[feature.icon];
+                            return (
+                                <Card key={idx} className="border-none shadow-md hover:shadow-xl transition-all duration-300">
+                                    <CardContent className="pt-6">
+                                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
+                                            <FeatureIcon className="w-6 h-6" aria-hidden />
+                                        </div>
+                                        <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                                        <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
@@ -469,42 +482,11 @@ const RentalCarLandingPage: React.FC = () => {
             {/* SEO CONTENT SECTION */}
             <section className="py-16 bg-background">
                 <div className="container mx-auto px-4 md:px-6 grid lg:grid-cols-3 gap-12">
-                    <div className="lg:col-span-2 prose prose-zinc max-w-none">
-                        <h2 className="text-2xl font-bold text-foreground">Wypożyczalnia Tesla 3 Highland – Przyszłość w zasięgu ręki</h2>
-                        <p>
-                            Jeśli interesuje Cię <strong>tesla na wynajem</strong> w Warszawie, trafiłeś w idealne miejsce. 
-                            Nasz <strong>Tesla Model 3 Highland</strong> to najnowsza odsłona bestsellera, która zachwyca wyciszeniem, 
-                            lepszym zawieszeniem i materiałami premium. Jako profesjonalna <strong>wypożyczalnia samochodów tesla</strong>, 
-                            oferujemy przejrzyste warunki i auta dostępne od ręki.
-                        </p>
-                        <p>
-                            <strong>Wypożyczenie tesli model 3</strong> to świetny sposób, aby sprawdzić, jak auto elektryczne sprawdza się na co dzień. 
-                            Czy to <strong>wynajem krótkoterminowy</strong> na weekend, czy <strong>tesla na miesiąc</strong> w ramach testu przed zakupem 
-                            – nasza oferta jest elastyczna. 
-                        </p>
-                        <h3 className="text-xl font-bold text-foreground mt-6">Dlaczego warto wybrać naszą ofertę?</h3>
-                        <ul className="list-none pl-0 space-y-2 mt-4">
-                            <li className="flex items-start gap-2">
-                                <CheckIcon className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span><strong>Tesla wynajem warszawa</strong> - odbiór w centrum lub na lotnisku.</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <CheckIcon className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span><strong>Tesla na doby</strong> - idealne na śluby, eventy czy wycieczki.</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <CheckIcon className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span><strong>Wypożyczalnia ev</strong> z pełnym wsparciem i instruktażem.</span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <CheckIcon className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span>Możliwość opcji <strong>tesla w abonamencie</strong> dla firm.</span>
-                            </li>
-                        </ul>
-                        <p className="mt-6">
-                            Nie czekaj. Sprawdź, dlaczego <strong>wynajem tesli 3</strong> to doświadczenie, którego nie zapomnisz. 
-                            Nasza <strong>wypożyczalnia tesla 3</strong> gwarantuje naładowane auto, czystość i pełną gotowość do drogi.
-                        </p>
+                    <div className="lg:col-span-2">
+                        <div
+                            className="prose prose-zinc max-w-none"
+                            dangerouslySetInnerHTML={{ __html: landingContent.longDescriptionHtml }}
+                        />
 
                         <div className="not-prose mx-auto mt-14 max-w-3xl border-t border-border pt-12">
                             <h2 className="text-center text-2xl font-bold text-foreground">Najczęściej zadawane pytania</h2>

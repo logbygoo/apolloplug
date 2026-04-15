@@ -128,6 +128,33 @@ export const RENTAL_CARS: Car[] = [
     },
   },
   {
+    id: 'tesla-s',
+    name: 'Model S',
+    imageUrl: [
+      'https://img.apolloidea.com/tesla-s/main-cards-tesla-s.jpg',
+    ],
+    pricePerDay: 520,
+    visible: false,
+    available: false,
+    deposit: 5500,
+    costPerKmOverLimit: 4.5,
+    priceTiers: [
+        { days: '1-3 dni', pricePerDay: 520, kmLimitPerDay: 200 },
+        { days: '4-7 dni', pricePerDay: 490, kmLimitPerDay: 180 },
+        { days: '8-14 dni', pricePerDay: 460, kmLimitPerDay: 160 },
+        { days: '15+ dni', pricePerDay: 440, kmLimitPerDay: 150 },
+    ],
+    specs: {
+      version: 'Plaid',
+      range: '634 km',
+      seating: '5 osób',
+      acceleration: '2.1s',
+      color: 'Pearl White',
+      interiorColor: 'Czarna',
+      drive: '4x4',
+    },
+  },
+  {
     id: 'tesla-cybertruck',
     name: 'Cybertruck',
     imageUrl: [
@@ -155,14 +182,25 @@ export const RENTAL_CARS: Car[] = [
   }
 ];
 
+/** Pierwszy model widoczny w „Wybierz model”; gdy brak — fallback do pierwszego wpisu w `RENTAL_CARS`. */
+export function firstVisibleRentalCarId(): string {
+  const v = RENTAL_CARS.find((c) => c.visible !== false);
+  return v?.id ?? RENTAL_CARS[0]?.id ?? '';
+}
+
+/** Karty modeli na /wypozyczalnia — pomija `visible: false`. */
+export function rentalCarsForModelPicker(): Car[] {
+  return RENTAL_CARS.filter((c) => c.visible !== false);
+}
+
 export const ADDITIONAL_OPTIONS = [
     { id: 'insurance', name: 'Ubezpieczenie OC AC NNW', price: 0, type: 'one_time', description: 'Zabezpiecza kierowcę przed kosztami szkód spowodowanymi przez innych uczestników ruchu.' },
-    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 129, 'tesla-x': 149, 'tesla-cybertruck': 199 }, type: 'per_day', description: 'Udział w szkodzie zmniejszony do wysokości kaucji.' },
-    { id: 'tires', name: 'Ubezpieczenie opon', price: { 'tesla-3-highland': 9, 'tesla-y-juniper': 12, 'tesla-x': 15, 'tesla-cybertruck': 19 }, type: 'per_day', description: 'Pokrycie kosztów uszkodzenia opon.' },
+    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 129, 'tesla-x': 149, 'tesla-s': 169, 'tesla-cybertruck': 199 }, type: 'per_day', description: 'Udział w szkodzie zmniejszony do wysokości kaucji.' },
+    { id: 'tires', name: 'Ubezpieczenie opon', price: { 'tesla-3-highland': 9, 'tesla-y-juniper': 12, 'tesla-x': 15, 'tesla-s': 16, 'tesla-cybertruck': 19 }, type: 'per_day', description: 'Pokrycie kosztów uszkodzenia opon.' },
     { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time', description: 'Bezpieczeństwo dla najmłodszych pasażerów.' },
     { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time', description: 'Dostawa pojazdu pod wskazany adres na terenie Warszawy.' },
-    { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: { 'tesla-3-highland': 290, 'tesla-y-juniper': 320, 'tesla-x': 350, 'tesla-cybertruck': 390 }, type: 'one_time', description: 'Zwróć auto bez konieczności ładowania.' },
-    { id: 'wash', name: 'Pakiet myjnia', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 99, 'tesla-x': 119, 'tesla-cybertruck': 190 }, type: 'one_time', description: 'Moliwość zwrotu brudnego auta.' },
+    { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: { 'tesla-3-highland': 290, 'tesla-y-juniper': 320, 'tesla-x': 350, 'tesla-s': 370, 'tesla-cybertruck': 390 }, type: 'one_time', description: 'Zwróć auto bez konieczności ładowania.' },
+    { id: 'wash', name: 'Pakiet myjnia', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 99, 'tesla-x': 119, 'tesla-s': 140, 'tesla-cybertruck': 190 }, type: 'one_time', description: 'Moliwość zwrotu brudnego auta.' },
 ] as const;
 
 /** Dostępne sloty godzin (cała doba, co 30 min). Godziny pracy biura i dopłata poza nimi: `workConfig.ts`. */

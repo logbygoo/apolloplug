@@ -4,6 +4,34 @@ export type LandingPageImageEntry = {
   alt: string;
 };
 
+/** Ikony w sekcji „Dlaczego” na landing wynajmu — mapowanie w `RentalCarLandingPage`. */
+export type RentalLandingFeatureIconKey = 'bolt' | 'sparkles' | 'shieldCheck' | 'key';
+
+export type RentalLandingFeatureBlock = {
+  icon: RentalLandingFeatureIconKey;
+  title: string;
+  desc: string;
+};
+
+/** Treść marketingowa landing `/wypozycz/:carId` (per auto w `rentalLandingPageContent.ts`). */
+export type RentalLandingPageContent = {
+  /** Pod H1 w hero; domyślnie z fallbacku. */
+  heroSubtitle?: string;
+  /** Nagłówek sekcji; domyślnie „Dlaczego {nazwa z floty}?”. */
+  whyHeading?: string;
+  /** Akapit pod „Dlaczego”. */
+  whyLead: string;
+  /** Dokładnie 4 karty zalet. */
+  features: [
+    RentalLandingFeatureBlock,
+    RentalLandingFeatureBlock,
+    RentalLandingFeatureBlock,
+    RentalLandingFeatureBlock,
+  ];
+  /** Dolny blok SEO — bezpieczny HTML (np. `<p>`, `<h3>`, `<ul>`). */
+  longDescriptionHtml: string;
+};
+
 export interface Car {
   id: string;
   name: string;
@@ -21,6 +49,8 @@ export interface Car {
     version?: string;
   };
   available?: boolean;
+  /** `false` = nie pokazuj karty w „Wybierz model” na /wypozyczalnia (auto nadal w konfigu, landingi itd.). Domyślnie jak `true`. */
+  visible?: boolean;
   priceTiers?: {
     days: string;
     pricePerDay: number;

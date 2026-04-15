@@ -152,7 +152,7 @@ const TransfersPage: React.FC = () => {
     pickupAddress: null,
     destinationAddress: null,
     transferType: 'someone',
-    selectedCar: RENTAL_CARS.find(c => c.available) || null,
+    selectedCar: RENTAL_CARS.find((c) => c.available && c.visible !== false) || null,
     selectedPackage: null,
     customerName: '',
     customerPhone: '',
@@ -536,7 +536,7 @@ const TransfersPage: React.FC = () => {
                                     </div>
                                 </section>
                             )}
-                            <section><h2 className="text-2xl font-bold tracking-tight mb-6">Wybór auta</h2><div className="grid grid-cols-2 sm:grid-cols-4 gap-4">{RENTAL_CARS.filter(c => c.available).map(car => (<ModelCard key={car.id} car={car} isSelected={formData.selectedCar?.id === car.id} onSelect={() => setFormValue('selectedCar', car)} />))}</div></section>
+                            <section><h2 className="text-2xl font-bold tracking-tight mb-6">Wybór auta</h2><div className="grid grid-cols-2 sm:grid-cols-4 gap-4">{RENTAL_CARS.filter((c) => c.available && c.visible !== false).map((car) => (<ModelCard key={car.id} car={car} isSelected={formData.selectedCar?.id === car.id} onSelect={() => setFormValue('selectedCar', car)} />))}</div></section>
                         </>
                     )}
                     {step === 'customer' && (

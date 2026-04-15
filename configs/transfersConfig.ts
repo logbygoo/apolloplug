@@ -7,6 +7,7 @@ export const TRANSFERS_CONFIG = {
     'tesla-3-highland': 9.50,
     'tesla-y-juniper': 11.00,
     'tesla-x': 15.50,
+    'tesla-s': 14.00,
     'tesla-cybertruck': 27.00,
   } as Record<string, number>,
 };

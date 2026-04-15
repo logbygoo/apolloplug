@@ -12,6 +12,8 @@ import { Input, Label, PageHeader } from '../components/ui';
 import {
   ADDITIONAL_OPTIONS,
   RENTAL_CARS,
+  firstVisibleRentalCarId,
+  rentalCarsForModelPicker,
   RENTAL_PERIOD_DATE_INPUT_CLASSNAME,
   RENTAL_PERIOD_DATETIME_GRID,
   RENTAL_PERIOD_FIELD_CELL,
@@ -152,7 +154,7 @@ function loadRentalV2Session(): RentalV2Session | null {
 }
 
 function buildFirstVisitState(): RentalV2Session {
-  const carId = RENTAL_CARS[0]?.id ?? '';
+  const carId = firstVisibleRentalCarId();
   const brandId = BRANDS.find((b) => carId.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
   const now = new Date();
   const pickupDate = formatDate(now);
@@ -174,9 +176,11 @@ function buildFirstVisitState(): RentalV2Session {
 }
 
 function hydrateFromSession(stored: RentalV2Session): RentalV2Session {
-  const carId = RENTAL_CARS.some((c) => c.id === stored.selectedId)
-    ? stored.selectedId
-    : (RENTAL_CARS[0]?.id ?? '');
+  const storedCar = RENTAL_CARS.find((c) => c.id === stored.selectedId);
+  const carId =
+    storedCar && storedCar.visible !== false
+      ? stored.selectedId
+      : firstVisibleRentalCarId();
   let brandId = stored.selectedBrandId;
   if (!BRANDS.some((b) => b.id === brandId)) {
     brandId = BRANDS.find((b) => carId.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
@@ -584,9 +588,10 @@ const RentalV2Page: React.FC = () => {
 
   const handleSelectBrand = (brandId: string) => {
     setSelectedBrandId(brandId);
+    const picker = rentalCarsForModelPicker();
     const car =
-      RENTAL_CARS.find((c) => c.id.includes(brandId) && c.available !== false) ??
-      RENTAL_CARS.find((c) => c.id.includes(brandId));
+      picker.find((c) => c.id.includes(brandId) && c.available !== false) ??
+      picker.find((c) => c.id.includes(brandId));
     if (car) setSelectedId(car.id);
   };
 
@@ -622,7 +627,10 @@ const RentalV2Page: React.FC = () => {
     return () => io.disconnect();
   }, []);
 
-  const selected = RENTAL_CARS.find((c) => c.id === selectedId) ?? RENTAL_CARS[0];
+  const selected =
+    RENTAL_CARS.find((c) => c.id === selectedId) ??
+    RENTAL_CARS.find((c) => c.visible !== false) ??
+    RENTAL_CARS[0];
 
   const summary = useMemo(
     () => computeRentalV2Summary(rentalPeriod, selected, additionalOptions),
@@ -707,7 +715,7 @@ const RentalV2Page: React.FC = () => {
                 <h2 className="text-2xl font-bold tracking-tight">Wybierz Model</h2>
                 <div className="mt-3">
                   <div className="hidden gap-4 lg:grid lg:grid-cols-2 xl:grid-cols-4">
-                    {RENTAL_CARS.map((car) => (
+                    {rentalCarsForModelPicker().map((car) => (
                       <V2ModelCard
                         key={car.id}
                         car={car}
@@ -718,7 +726,7 @@ const RentalV2Page: React.FC = () => {
                     ))}
                   </div>
                   <RentalV2E2ESlider>
-                    {RENTAL_CARS.map((car) => (
+                    {rentalCarsForModelPicker().map((car) => (
                       <V2ModelCard
                         key={car.id}
                         car={car}

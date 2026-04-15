@@ -56,6 +56,9 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-y-juniper',
     name: 'Model Y Juniper',
     imageUrl: [
+      'https://img.apolloidea.com/img/tesla-y-375x250.png',
+    ],
+    landingPageImages: [
       { src: 'https://img.apolloidea.com/tesla-y/1.jpg', alt: 'Tylna kamera nad rejestracją w białej tesli 3 highland' },
       { src: 'https://img.apolloidea.com/tesla-y/2.jpg', alt: 'Tylne światło reflektor w białej tesli 3 highland' },
       { src: 'https://img.apolloidea.com/tesla-y/3.jpg', alt: 'Przedni reflektor w białej tesli 3 highland' },

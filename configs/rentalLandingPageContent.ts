@@ -76,13 +76,13 @@ const TESLA_3_HIGHLAND: RentalLandingPageContent = {
       icon: 'bolt',
       title: 'Zasięg i ładowanie',
       desc:
-        'Najnowszy Model 3 Highland w wersji Long Range osiąga realny zasięg do 629 km (WLTP). W 15 minut doładujesz około 280 km, a sieć Supercharger w Polsce i Europie pozwala szybko uzupełnić energię w trasie.',
+        'Najnowszy Model 3 Highland w wersji Long Range osiąga realny zasięg do 660 km (WLTP). W 15 minut doładujesz około 280 km, a sieć Supercharger w Polsce i Europie pozwala szybko uzupełnić energię w trasie.',
     },
     {
       icon: 'sparkles',
       title: 'Komfort Highland',
       desc:
-        'Standardowo wentylowane fotele chłodzą w upalne dni, a akustyczne szyby i dodatkowe wygłuszenie sprawiają, że kabina jest nawet o 20 % cichsza. Lepsze materiały, oświetlenie ambient i 8‑calowy ekran dla pasażerów z tyłu tworzą relaksującą atmosferę.',
+        'Standardowo wentylowane fotele chłodzą w upalne dni, a akustyczne szyby i dodatkowe wygłuszenie sprawiają, że kabina jest nawet o 20% cichsza. Lepsze materiały, oświetlenie ambient i 8‑calowy ekran dla pasażerów z tyłu tworzą relaksującą atmosferę.',
     },
     {
       icon: 'shieldCheck',
@@ -103,7 +103,7 @@ const TESLA_3_HIGHLAND: RentalLandingPageContent = {
   Jeśli interesuje Cię <strong>tesla na wynajem w Warszawie</strong>, trafiłeś we właściwe miejsce.
   Nasz <strong>Tesla Model 3 Highland</strong> to odświeżona wersja bestsellera, która zachwyca cichszą kabiną,
   lepszym zawieszeniem i materiałami premium. <strong>Wypożyczalnia samochodów elektrycznych</strong> powinna oferować więcej
-  niż standardowy samochód – u nas dostajesz komputer na kołach o zasięgu godnym dalekich tras. Wynajem samochodu
+  niż standardowy samochód. U nas dostajesz komputer na kołach o zasięgu godnym dalekich tras. Wynajem samochodu
   elektrycznego to nie tylko ekologia, to także komfort i styl.
 </p>
 <p>
@@ -114,9 +114,9 @@ const TESLA_3_HIGHLAND: RentalLandingPageContent = {
 </p>
 <p>
   Nowa wersja Highland to nie tylko kosmetyka. Standardowo wentylowane fotele chłodzą w upalne dni, a akustyczne
-  szyby sprawiają, że w środku jest nawet 20 % ciszej niż w poprzedniej generacji.
+  szyby sprawiają, że w środku jest nawet 20% ciszej niż w poprzedniej generacji.
   Lepsze materiały, ambientowe oświetlenie i nowy 8‑calowy ekran dla pasażerów z tyłu dodają elegancji i wygody.
-  Model 3 Long Range ma zasięg do 629 km (WLTP), a w 15 minut uzupełnisz energię na około 280 km – idealne na spontaniczne wypady.
+  Model 3 Long Range ma zasięg do 660 km (WLTP), a w 15 minut uzupełnisz energię na około 280 km – idealne na spontaniczne wypady.
 </p>
 <p>
   Bezpieczeństwo to kolejny powód, dla którego <strong>wynajem tesli 3</strong> cieszy się tak dużą popularnością. Auto zdobyło pięć
@@ -127,7 +127,7 @@ const TESLA_3_HIGHLAND: RentalLandingPageContent = {
 <ul class="list-none pl-0 space-y-2 mt-4">
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla wynajem Warszawa:</strong> odbiór w centrum miasta lub na Lotnisku Chopina.</span>
+    <span><strong>Tesla wynajem Warszawa:</strong> odbiór w centrum miasta lub dowolnym punkcie.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
@@ -143,8 +143,8 @@ const TESLA_3_HIGHLAND: RentalLandingPageContent = {
   </li>
 </ul>
 <p class="mt-6">
-  Skontaktuj się z nami, aby zarezerwować <strong>teslę do wynajęcia</strong> w stolicy.
-  Możesz odebrać samochód w centrum Warszawy lub na Lotnisku Chopina, a my zadbamy o to, by auto było naładowane,
+  Skontaktuj się z nami, lub od razu przejdź do wybory terminu rezerwacji i zabookuj swoją <strong>teslę do wynajęcia</strong> w stolicy.
+  Możesz odebrać samochód w centrum Warszawy lub w dowolnym miejscu w całym mieście, a my zadbamy o to, by auto było naładowane,
   czyste i gotowe do drogi. Nasza <strong>wypożyczalnia tesla 3</strong> gwarantuje pełne wsparcie, instruktaż i aplikację,
   która zamieni Twój telefon w kluczyk i pilot do sterowania klimatem. Przekonaj się,
   jak proste może być wynajęcie samochodu elektrycznego w Warszawie.

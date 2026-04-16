@@ -70,7 +70,7 @@ export const DEFAULT_RENTAL_LANDING_PAGE_CONTENT: RentalLandingPageContent = {
 const TESLA_3_HIGHLAND: RentalLandingPageContent = {
   heroSubtitle: DEFAULT_HERO_SUBTITLE,
   whyLead:
-    'Tesla Model 3 Highland to więcej niż auto — to komputer na kołach oferujący prawdziwie elektryczne emocje. Idealny na weekendowy wypad, ważne spotkanie biznesowe lub próbę przed zakupem. Oferujemy krótkoterminowy wynajem Tesli w Warszawie na dni, tygodnie, weekendy, święta albo miesiące, z elastycznymi pakietami dopasowanymi do Twoich potrzeb.',
+    'Tesla Model 3 Highland to więcej niż auto - to komputer na kołach oferujący prawdziwie elektryczne emocje. Idealny na weekendowy wypad, ważne spotkanie biznesowe lub próbę przed zakupem. Oferujemy krótkoterminowy wynajem Tesli w Warszawie na dni, tygodnie, weekendy, święta albo miesiące, z elastycznymi pakietami dopasowanymi do Twoich potrzeb.',
   features: [
     {
       icon: 'bolt',

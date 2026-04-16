@@ -157,13 +157,6 @@ const RentalCarLandingPage: React.FC = () => {
         return carRental.pricePerDay;
     }, [carRental]);
 
-    const maxPrice = useMemo(() => {
-        if (carRental.priceTiers && carRental.priceTiers.length > 0) {
-            return Math.max(...carRental.priceTiers.map((tier) => tier.pricePerDay));
-        }
-        return carRental.pricePerDay;
-    }, [carRental]);
-
     const kmLimitLabel = useMemo(() => {
         const tiers = carRental.priceTiers;
         if (!tiers?.length) return '—';
@@ -512,15 +505,11 @@ const RentalCarLandingPage: React.FC = () => {
                             <div className="lg:sticky lg:top-24">
                                 <div className="rounded-lg bg-secondary p-6">
                                     <p className="text-sm text-muted-foreground">Cena za dobę</p>
-                                    <p className="mt-1 text-4xl font-bold tracking-tight text-foreground tabular-nums">
-                                        {maxPrice.toLocaleString('pl-PL')}{' '}
+                                    <p className="mt-1 flex flex-wrap items-baseline gap-x-1.5 gap-y-0 text-4xl font-bold tracking-tight text-foreground tabular-nums">
+                                        <span className="text-sm font-medium text-muted-foreground">od</span>
+                                        <span>{minPrice.toLocaleString('pl-PL')}</span>
                                         <span className="text-2xl font-semibold">zł</span>
                                     </p>
-                                    {maxPrice !== minPrice && (
-                                        <p className="mt-2 text-sm text-muted-foreground">
-                                            od {minPrice.toLocaleString('pl-PL')} zł przy dłuższym wynajmie
-                                        </p>
-                                    )}
                                     <dl className="mt-6 space-y-2.5 text-sm">
                                         <div className="flex justify-between gap-4">
                                             <dt className="text-muted-foreground shrink-0">Kaucja:</dt>

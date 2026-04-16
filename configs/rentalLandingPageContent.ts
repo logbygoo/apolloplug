@@ -149,7 +149,7 @@ const TESLA_3_HIGHLAND: RentalLandingPageContent = {
   która zamieni Twój telefon w kluczyk i pilot do sterowania klimatem. Przekonaj się,
   jak proste może być wynajęcie samochodu elektrycznego w Warszawie.
 </p>
-  `.trim(),
+`.trim(),
 };
 
 const TESLA_Y_JUNIPER: RentalLandingPageContent = {

@@ -70,67 +70,86 @@ export const DEFAULT_RENTAL_LANDING_PAGE_CONTENT: RentalLandingPageContent = {
 const TESLA_3_HIGHLAND: RentalLandingPageContent = {
   heroSubtitle: DEFAULT_HERO_SUBTITLE,
   whyLead:
-    'To nie jest zwykły samochód. To komputer na kołach, który definiuje na nowo pojęcie komfortu i osiągów. ' +
-    'Idealny wybór na weekendowy wyjazd, test przed zakupem lub podróż biznesową.',
+    'Tesla Model 3 Highland to więcej niż auto — to komputer na kołach oferujący prawdziwie elektryczne emocje. Idealny na weekendowy wypad, ważne spotkanie biznesowe lub próbę przed zakupem. Oferujemy krótkoterminowy wynajem Tesli w Warszawie na dni, tygodnie, weekendy, święta albo miesiące, z elastycznymi pakietami dopasowanymi do Twoich potrzeb.',
   features: [
     {
       icon: 'bolt',
       title: 'Zasięg i ładowanie',
-      desc: 'Realny zasięg do 629 km (WLTP). Dostęp do sieci Supercharger.',
+      desc:
+        'Najnowszy Model 3 Highland w wersji Long Range osiąga realny zasięg do 629 km (WLTP) [oai_citation:6‡teslaoracle.com](https://www.teslaoracle.com/2023/09/01/tesla-launches-model-3-highland-refresh-in-china-and-europe-with-improved-range-charging-new-wheels-and-rear-screen-as-standard/#:~:text=Tesla%20is%20offering%202%20variants,the%20Model%203%20Highland%20yet). W 15 minut doładujesz około 280 km [oai_citation:7‡teslaoracle.com](https://www.teslaoracle.com/2023/09/01/tesla-launches-model-3-highland-refresh-in-china-and-europe-with-improved-range-charging-new-wheels-and-rear-screen-as-standard/#:~:text=The%20other%20more%20interesting%20spec,in%20just%2015%20minutes), a sieć Supercharger w Polsce i Europie pozwala szybko uzupełnić energię w trasie.',
     },
     {
       icon: 'sparkles',
       title: 'Komfort Highland',
-      desc: 'Wentylowane fotele, cichsza kabina i ekran dla pasażerów z tyłu.',
+      desc:
+        'Standardowo wentylowane fotele chłodzą w upalne dni, a akustyczne szyby i dodatkowe wygłuszenie sprawiają, że kabina jest nawet 20 % cichsza [oai_citation:8‡motortrend.com](https://www.motortrend.com/reviews/2024-tesla-model-3-highland-interior-review#:~:text=Ventilated%20Seats%20and%20Premium%20Material). Lepsze materiały, oświetlenie ambient i 8‑calowy ekran dla pasażerów z tyłu tworzą relaksującą atmosferę [oai_citation:9‡motortrend.com](https://www.motortrend.com/reviews/2024-tesla-model-3-highland-interior-review#:~:text=Ventilated%20Seats%20and%20Premium%20Material).',
     },
     {
       icon: 'shieldCheck',
       title: 'Bezpieczeństwo',
-      desc: 'Najwyższa ocena bezpieczeństwa Euro NCAP. Pełen pakiet Autopilot.',
+      desc:
+        'Model 3 zdobył pięć gwiazdek w testach Euro NCAP i NHTSA [oai_citation:10‡recharged.com](https://recharged.com/articles/tesla-model-3-safety-rating-crash-test#:~:text=The%20Tesla%20Model%203%20has,new%20or%20used%20in%202026). Zaawansowane systemy wspomagające kierowcę, w tym Autopilot, aktywne hamowanie awaryjne oraz asystent utrzymania pasa, pomagają unikać kolizji i dbają o bezpieczeństwo pasażerów.',
     },
     {
       icon: 'key',
       title: 'Dostęp przez aplikację',
-      desc: 'Steruj klimatem, zamkiem i statusem ładowania z telefonu.',
+      desc:
+        'Telefon zastępuje kluczyk — możesz zablokować i odblokować auto, ustawić klimatyzację przed jazdą, sprawdzić zasięg i włączyć tryb Dog Mode. Aplikacja Tesla pozwala też monitorować ładowanie i zapewnia zdalne wsparcie [oai_citation:11‡tesla.com](https://www.tesla.com/model3#:~:text=,phone%20with%20the%20Tesla%20app).',
     },
   ],
   longDescriptionHtml: `
-<h2 class="text-2xl font-bold text-foreground">Wypożyczalnia Tesla 3 Highland — przyszłość w zasięgu ręki</h2>
+<h2 class="text-2xl font-bold text-foreground">Wypożyczalnia Tesla 3 Highland w Warszawie — przyszłość w zasięgu ręki</h2>
 <p>
-  Jeśli interesuje Cię <strong>tesla na wynajem</strong> w Warszawie, trafiłeś w idealne miejsce.
-  Nasz <strong>Tesla Model 3 Highland</strong> to najnowsza odsłona bestsellera, która zachwyca wyciszeniem,
-  lepszym zawieszeniem i materiałami premium. Jako profesjonalna <strong>wypożyczalnia samochodów Tesla</strong>,
-  oferujemy przejrzyste warunki i auta dostępne od ręki.
+  Jeśli interesuje Cię <strong>tesla na wynajem w Warszawie</strong>, trafiłeś we właściwe miejsce.
+  Nasz <strong>Tesla Model 3 Highland</strong> to odświeżona wersja bestsellera, która zachwyca cichszą kabiną,
+  lepszym zawieszeniem i materiałami premium. <strong>Wypożyczalnia samochodów elektrycznych</strong> powinna oferować więcej
+  niż standardowy samochód – u nas dostajesz komputer na kołach o zasięgu godnym dalekich tras. Wynajem samochodu
+  elektrycznego to nie tylko ekologia, to także komfort i styl.
 </p>
 <p>
-  <strong>Wypożyczenie tesli model 3</strong> to świetny sposób, aby sprawdzić, jak auto elektryczne sprawdza się na co dzień.
-  Czy to <strong>wynajem krótkoterminowy</strong> na weekend, czy <strong>tesla na miesiąc</strong> w ramach testu przed zakupem
-  — nasza oferta jest elastyczna.
+  Krótkoterminowe <strong>wypożyczenie tesli model 3</strong> pozwala sprawdzić, jak auto elektryczne spisuje się na co dzień.
+  Oferujemy <strong>tesla wynajem na doby</strong>, weekendy, tygodnie czy całe miesiące, dzięki czemu możesz dobrać okres do swoich
+  planów. Niezależnie czy chcesz pojechać w góry, zaskoczyć gości podczas ślubu, czy poznać wrażenia z jazdy przed
+  zakupem, <strong>wynajem tesli</strong> to elastyczna opcja bez zobowiązań.
+</p>
+<p>
+  Nowa wersja Highland to nie tylko kosmetyka. Standardowo wentylowane fotele chłodzą w upalne dni, a akustyczne
+  szyby sprawiają, że w środku jest nawet 20 % ciszej, niż w poprzedniej generacji<strong> [oai_citation:12‡motortrend.com](https://www.motortrend.com/reviews/2024-tesla-model-3-highland-interior-review#:~:text=Ventilated%20Seats%20and%20Premium%20Material)</strong>.
+  Lepsze materiały, ambientowe oświetlenie i nowy 8‑calowy ekran dla pasażerów z tyłu dodają elegancji i wygody<strong> [oai_citation:13‡motortrend.com](https://www.motortrend.com/reviews/2024-tesla-model-3-highland-interior-review#:~:text=Ventilated%20Seats%20and%20Premium%20Material)</strong>.
+  Model 3 Long Range ma zasięg do 629 km (WLTP)<strong> [oai_citation:14‡teslaoracle.com](https://www.teslaoracle.com/2023/09/01/tesla-launches-model-3-highland-refresh-in-china-and-europe-with-improved-range-charging-new-wheels-and-rear-screen-as-standard/#:~:text=Tesla%20is%20offering%202%20variants,the%20Model%203%20Highland%20yet)</strong>, a w 15 minut uzupełnisz energię na około 280 km<strong> [oai_citation:15‡teslaoracle.com](https://www.teslaoracle.com/2023/09/01/tesla-launches-model-3-highland-refresh-in-china-and-europe-with-improved-range-charging-new-wheels-and-rear-screen-as-standard/#:~:text=The%20other%20more%20interesting%20spec,in%20just%2015%20minutes)</strong> – idealne na spontaniczne wypady.
+</p>
+<p>
+  Bezpieczeństwo to kolejny powód, dla którego <strong>wynajem tesli 3</strong> cieszy się tak dużą popularnością. Auto zdobyło pięć
+  gwiazdek w testach Euro NCAP i NHTSA<strong> [oai_citation:16‡recharged.com](https://recharged.com/articles/tesla-model-3-safety-rating-crash-test#:~:text=The%20Tesla%20Model%203%20has,new%20or%20used%20in%202026)</strong>, a systemy wspomagające kierowcę pomagają uniknąć kolizji.
+  Autopilot, aktywne hamowanie awaryjne oraz system utrzymania pasa czynią podróż pewną i relaksującą.
 </p>
 <h3 class="text-xl font-bold text-foreground mt-6">Dlaczego warto wybrać naszą ofertę?</h3>
 <ul class="list-none pl-0 space-y-2 mt-4">
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla wynajem warszawa</strong> — odbiór w centrum lub na lotnisku.</span>
+    <span><strong>Tesla wynajem Warszawa</strong> — odbiór w centrum miasta lub na Lotnisku Chopina.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla na doby</strong> — idealne na śluby, eventy czy wycieczki.</span>
+    <span><strong>Tesla na doby</strong> — idealna na śluby, eventy, weekendy czy wakacje.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Wypożyczalnia ev</strong> z pełnym wsparciem i instruktażem.</span>
+    <span><strong>Wypożyczalnia EV</strong> z pełnym wsparciem, szkoleniem i odpowiedziami na pytania.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span>Możliwość opcji <strong>tesla w abonamencie</strong> dla firm.</span>
+    <span>Możliwość opcji <strong>tesla w abonamencie</strong> dla firm — wygodna forma dłuższego wynajmu.</span>
   </li>
 </ul>
 <p class="mt-6">
-  Nie czekaj. Sprawdź, dlaczego <strong>wynajem tesli 3</strong> to doświadczenie, którego nie zapomnisz.
-  Nasza <strong>wypożyczalnia tesla 3</strong> gwarantuje naładowane auto, czystość i pełną gotowość do drogi.
+  Skontaktuj się z nami, aby zarezerwować <strong>teslę do wynajęcia</strong> w stolicy.
+  Możesz odebrać samochód w centrum Warszawy lub na Lotnisku Chopina, a my zadbamy o to, by auto było naładowane,
+  czyste i gotowe do drogi. Nasza <strong>wypożyczalnia tesla 3</strong> gwarantuje pełne wsparcie, instruktaż i aplikację,
+  która zamieni Twój telefon w kluczyk i pilot do sterowania klimatem<strong> [oai_citation:17‡tesla.com](https://www.tesla.com/model3#:~:text=,phone%20with%20the%20Tesla%20app)</strong>. Przekonaj się,
+  jak proste może być wynajęcie samochodu elektrycznego w Warszawie.
 </p>
-`.trim(),
+  `.trim(),
 };
 
 const TESLA_Y_JUNIPER: RentalLandingPageContent = {

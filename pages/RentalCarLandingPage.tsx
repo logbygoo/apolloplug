@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { getShuffledLandingGallery, landingImageThumbSrc } from '../configs/landingPageImages';
-import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
+import {
+    RENTAL_LANDING_FAQ,
+    RENTAL_LANDING_FAQ_CATEGORIES,
+    type RentalLandingFaqCategory,
+} from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
@@ -460,9 +464,14 @@ const RentalCarLandingPage: React.FC = () => {
     }, [galleryItems]);
 
     const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
+    const [selectedFaqCategory, setSelectedFaqCategory] = useState<RentalLandingFaqCategory>(
+        RENTAL_LANDING_FAQ_CATEGORIES[0],
+    );
+    const [isFaqCategoryAnimating, setIsFaqCategoryAnimating] = useState(false);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [tiktokModalVideoId, setTiktokModalVideoId] = useState<string | null>(null);
     const [mobileRentSheetOpen, setMobileRentSheetOpen] = useState(true);
+    const faqCategorySwitchTimeoutRef = useRef<number | null>(null);
     const tiktokIframeRef = useRef<HTMLIFrameElement | null>(null);
     const themeColorOnEnterRef = useRef<string | null>(null);
     const galleryCount = galleryItems.length;
@@ -487,6 +496,39 @@ const RentalCarLandingPage: React.FC = () => {
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
     }, [lightboxIndex, closeLightbox, goNextLightbox, goPrevLightbox]);
+
+    const filteredFaqItems = useMemo(
+        () => RENTAL_LANDING_FAQ.filter((item) => item.categories.includes(selectedFaqCategory)),
+        [selectedFaqCategory],
+    );
+
+    const handleFaqCategoryChange = useCallback(
+        (category: RentalLandingFaqCategory) => {
+            if (category === selectedFaqCategory || isFaqCategoryAnimating) return;
+
+            if (faqCategorySwitchTimeoutRef.current != null) {
+                window.clearTimeout(faqCategorySwitchTimeoutRef.current);
+            }
+
+            setIsFaqCategoryAnimating(true);
+            faqCategorySwitchTimeoutRef.current = window.setTimeout(() => {
+                setSelectedFaqCategory(category);
+                setOpenFaqIndex(0);
+                setIsFaqCategoryAnimating(false);
+                faqCategorySwitchTimeoutRef.current = null;
+            }, 140);
+        },
+        [selectedFaqCategory, isFaqCategoryAnimating],
+    );
+
+    useEffect(
+        () => () => {
+            if (faqCategorySwitchTimeoutRef.current != null) {
+                window.clearTimeout(faqCategorySwitchTimeoutRef.current);
+            }
+        },
+        [],
+    );
 
     useEffect(() => {
         if (lightboxIndex === null) return;
@@ -1001,11 +1043,18 @@ const RentalCarLandingPage: React.FC = () => {
                             <p className="mt-2 text-muted-foreground">
                                 Krótkie odpowiedzi o autach elektrycznych i wynajmie — wspólne dla naszych modeli.
                             </p>
-                            <div className="mt-8 space-y-2">
-                                {RENTAL_LANDING_FAQ.map((item, index) => {
+                            <div
+                                className={`mt-8 space-y-2 transition-all duration-200 ${
+                                    isFaqCategoryAnimating ? 'translate-y-1 opacity-60' : 'translate-y-0 opacity-100'
+                                }`}
+                            >
+                                {filteredFaqItems.map((item, index) => {
                                     const isOpen = openFaqIndex === index;
                                     return (
-                                        <div key={item.question} className="overflow-hidden rounded-lg border border-border bg-card">
+                                        <div
+                                            key={`${selectedFaqCategory}-${item.question}`}
+                                            className="overflow-hidden rounded-lg border border-border bg-card"
+                                        >
                                             <button
                                                 type="button"
                                                 className="flex w-full items-center justify-between gap-4 px-4 py-3 text-left text-base font-medium text-foreground transition-colors hover:bg-secondary/50"
@@ -1026,6 +1075,38 @@ const RentalCarLandingPage: React.FC = () => {
                                         </div>
                                     );
                                 })}
+                                {filteredFaqItems.length === 0 && (
+                                    <div className="rounded-lg border border-border bg-card px-4 py-4 text-sm text-muted-foreground">
+                                        Brak pytań w tej kategorii.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div className="mt-8 lg:col-span-1 lg:mt-0">
+                            <div className="lg:sticky lg:top-24">
+                                <div className="rounded-lg border border-border bg-card p-4">
+                                    <p className="text-sm font-semibold text-foreground">Kategorie FAQ</p>
+                                    <div className="mt-3 space-y-2">
+                                        {RENTAL_LANDING_FAQ_CATEGORIES.map((category) => {
+                                            const isActive = selectedFaqCategory === category;
+                                            return (
+                                                <button
+                                                    key={category}
+                                                    type="button"
+                                                    onClick={() => handleFaqCategoryChange(category)}
+                                                    className={`w-full rounded-md border px-3 py-2 text-left text-sm transition-colors ${
+                                                        isActive
+                                                            ? 'border-foreground bg-foreground text-background'
+                                                            : 'border-border bg-background text-foreground hover:bg-secondary/70'
+                                                    }`}
+                                                    aria-pressed={isActive}
+                                                >
+                                                    {category}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

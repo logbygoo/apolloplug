@@ -109,6 +109,43 @@ const CAR_LANDING_E2E_STYLES = `
       line-height: 2.25rem;
     }
   }
+
+  .rental-car-landing .tiktok-social-slider {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-x pan-y;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 0;
+  }
+  .rental-car-landing .tiktok-social-slider::-webkit-scrollbar {
+    height: 0;
+    display: none;
+  }
+  .rental-car-landing .tiktok-social-track {
+    display: flex;
+    align-items: stretch;
+    gap: 0.75rem;
+    width: max-content;
+    min-height: 0;
+    padding: 0.15rem 0 0.35rem;
+  }
+  .rental-car-landing .tiktok-social-slide {
+    flex: 0 0 auto;
+    width: min(11.5rem, 48vw);
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+  @media (min-width: 1024px) {
+    .rental-car-landing .tiktok-social-slide {
+      width: 11.75rem;
+    }
+  }
 `;
 
 const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
@@ -469,8 +506,8 @@ const RentalCarLandingPage: React.FC = () => {
             <section className="border-b border-border">
                 <div className="container mx-auto px-4 md:px-6 py-8">
                     {TIKTOK_LANDING_TILES.length > 0 ? (
-                        <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-8 xl:gap-10">
-                            <div className="min-w-0 flex-1">
+                        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start lg:gap-6">
+                            <div className="min-w-0 w-full">
                                 <div className="grid grid-cols-2 gap-3 md:gap-4">
                                     <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
                                         <p className="text-sm font-medium text-foreground">0-100 km/h</p>
@@ -498,44 +535,53 @@ const RentalCarLandingPage: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
-                            <aside className="mx-auto w-full max-w-sm shrink-0 lg:mx-0 lg:w-72">
-                                <h3 className="mb-4 text-center text-lg font-bold lg:text-left">
+                            <aside
+                                className="min-w-0 w-full"
+                                aria-label="Filmy z TikToka"
+                            >
+                                <h3 className="mb-3 text-center text-lg font-bold lg:mb-4 lg:text-left">
                                     Zobacz nasze social media
                                 </h3>
-                                <ul className="mx-auto flex max-w-[280px] flex-col gap-3 lg:mx-0">
-                                    {TIKTOK_LANDING_TILES.map((tile) => (
-                                        <li key={tile.videoId}>
-                                            <button
-                                                type="button"
-                                                onClick={() => setTiktokModalVideoId(tile.videoId)}
-                                                className="group relative aspect-[9/16] w-full max-h-[min(70vh,420px)] min-h-[200px] overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                            >
-                                                <img
-                                                    src={tile.thumbSrc}
-                                                    alt={tile.alt ?? 'Miniatura filmu TikTok'}
-                                                    className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
-                                                    loading="lazy"
-                                                    decoding="async"
-                                                />
-                                                <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
-                                                <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-lg transition-transform group-hover:scale-105">
-                                                    <svg
-                                                        className="ml-0.5 h-7 w-7"
-                                                        viewBox="0 0 24 24"
-                                                        fill="currentColor"
-                                                        aria-hidden
-                                                    >
-                                                        <path d="M8 5.14v13.72L19 12 8 5.14z" />
-                                                    </svg>
-                                                </span>
-                                                <span className="absolute bottom-0 left-0 right-0 flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium text-white">
-                                                    <TikTokViewIcon />
-                                                    {tile.viewCountLabel}
-                                                </span>
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
+                                <p className="mb-2 text-center text-xs text-muted-foreground lg:text-left">
+                                    Przesuń palcem w poziomie, aby zobaczyć więcej
+                                </p>
+                                <div className="tiktok-social-slider scroll-smooth">
+                                    <div className="tiktok-social-track">
+                                        {TIKTOK_LANDING_TILES.map((tile) => (
+                                            <div key={tile.videoId} className="tiktok-social-slide">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setTiktokModalVideoId(tile.videoId)}
+                                                    className="group relative h-full w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                    style={{ aspectRatio: '9 / 16', maxHeight: 'min(52vh, 22rem)' }}
+                                                >
+                                                    <img
+                                                        src={tile.thumbSrc}
+                                                        alt={tile.alt ?? 'Miniatura filmu TikTok'}
+                                                        className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                    <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
+                                                    <span className="absolute left-1/2 top-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-lg transition-transform group-hover:scale-105 sm:h-14 sm:w-14">
+                                                        <svg
+                                                            className="ml-0.5 h-6 w-6 sm:h-7 sm:w-7"
+                                                            viewBox="0 0 24 24"
+                                                            fill="currentColor"
+                                                            aria-hidden
+                                                        >
+                                                            <path d="M8 5.14v13.72L19 12 8 5.14z" />
+                                                        </svg>
+                                                    </span>
+                                                    <span className="absolute bottom-0 left-0 right-0 flex items-center gap-1.5 px-2 py-2 text-[0.7rem] font-medium text-white sm:px-3 sm:py-2.5 sm:text-xs">
+                                                        <TikTokViewIcon />
+                                                        <span className="line-clamp-1">{tile.viewCountLabel}</span>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             </aside>
                         </div>
                     ) : (

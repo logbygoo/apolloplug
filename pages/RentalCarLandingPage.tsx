@@ -241,35 +241,70 @@ const RentalCarLandingPage: React.FC = () => {
         setKeyMetricsBlockHeight(Math.round(el.getBoundingClientRect().height));
     }, []);
 
-    const tiktokDrag = useRef({
+    const tiktokDrag = useRef<{
+        down: boolean;
+        pointerId: number;
+        startX: number;
+        startScroll: number;
+        blockClick: boolean;
+        /** Z kafelka: przewijanie na `window` (bez `setPointerCapture` na sliderze, żeby `click` na button działał). */
+        mode: 'window' | 'capture';
+    }>({
         down: false,
         pointerId: -1,
         startX: 0,
         startScroll: 0,
         blockClick: false,
+        mode: 'capture',
     });
 
     const onTiktokSliderPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
         if (e.pointerType === 'touch') return;
         if (e.button !== 0) return;
-        // Nie przechwytuj wskaźnika, gdy klik jest w kafelek (button) — setPointerCapture
-        // blokuje wtedy prawidłowe "click" na przycisku i modal TikToka się nie otworzy.
-        if ((e.target as HTMLElement | null)?.closest('button')) return;
         const el = e.currentTarget;
-        tiktokDrag.current = {
+        const start = {
             down: true,
             pointerId: e.pointerId,
             startX: e.clientX,
             startScroll: el.scrollLeft,
             blockClick: false,
         };
+        const fromButton = (e.target as HTMLElement | null)?.closest('button');
+
+        if (fromButton) {
+            /** `setPointerCapture` na sliderze gdy wskaźnik startuje na `button` — psuje późne `click` → modal. */
+            tiktokDrag.current = { ...start, mode: 'window' };
+            el.style.cursor = 'grabbing';
+            const onWinMove = (ev: PointerEvent) => {
+                const t = tiktokDrag.current;
+                if (!t.down || ev.pointerId !== t.pointerId) return;
+                const dx = ev.clientX - t.startX;
+                if (Math.abs(dx) > 4) t.blockClick = true;
+                el.scrollLeft = t.startScroll - dx;
+            };
+            const onWinEnd = (ev: PointerEvent) => {
+                if (ev.pointerId !== start.pointerId) return;
+                window.removeEventListener('pointermove', onWinMove, true);
+                window.removeEventListener('pointerup', onWinEnd, true);
+                window.removeEventListener('pointercancel', onWinEnd, true);
+                tiktokDrag.current.down = false;
+                tiktokDrag.current.mode = 'capture';
+                el.style.cursor = '';
+            };
+            window.addEventListener('pointermove', onWinMove, true);
+            window.addEventListener('pointerup', onWinEnd, true);
+            window.addEventListener('pointercancel', onWinEnd, true);
+            return;
+        }
+
+        tiktokDrag.current = { ...start, mode: 'capture' };
         el.setPointerCapture(e.pointerId);
         el.style.cursor = 'grabbing';
     }, []);
 
     const onTiktokSliderPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
         const s = tiktokDrag.current;
-        if (!s.down || e.pointerId !== s.pointerId) return;
+        if (!s.down || e.pointerId !== s.pointerId || s.mode === 'window') return;
         const el = e.currentTarget;
         const dx = e.clientX - s.startX;
         if (Math.abs(dx) > 4) s.blockClick = true;
@@ -278,7 +313,7 @@ const RentalCarLandingPage: React.FC = () => {
 
     const onTiktokSliderPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
         const s = tiktokDrag.current;
-        if (!s.down || e.pointerId !== s.pointerId) return;
+        if (!s.down || e.pointerId !== s.pointerId || s.mode === 'window') return;
         s.down = false;
         const el = e.currentTarget;
         el.style.cursor = '';

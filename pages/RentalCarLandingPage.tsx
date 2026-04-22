@@ -465,66 +465,38 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             )}
 
-            {/* KEY METRICS — te same dane co na /wypozyczalnia (RENTAL_CARS / carRental.specs) */}
+            {/* KEY METRICS + TikTok: lewo 2×2 kafle (przyspieszenie, zasięg, miejsca, cena), prawo social */}
             <section className="border-b border-border">
                 <div className="container mx-auto px-4 md:px-6 py-8">
-                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
-                            <p className="text-sm font-medium text-foreground">0-100 km/h</p>
-                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
-                                {carRental.specs?.acceleration ?? '—'}
-                            </p>
-                        </div>
-                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
-                            <p className="text-sm font-medium text-foreground">Zasięg</p>
-                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
-                                {carRental.specs?.range ?? '—'}
-                            </p>
-                        </div>
-                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
-                            <p className="text-sm font-medium text-foreground">Miejsca</p>
-                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
-                                {carRental.specs?.seating ?? '—'}
-                            </p>
-                        </div>
-                        <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
-                            <p className="text-sm font-medium text-foreground">Cena od / doba</p>
-                            <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
-                                {minPrice.toLocaleString('pl-PL')} zł
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* WHY THIS CAR + TikTok (2 kolumny na lg) */}
-            <section className="py-16 md:py-24 bg-secondary/30">
-                <div className="container mx-auto px-4 md:px-6">
-                    <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">{landingContent.whyHeading}</h2>
-                        <p className="text-muted-foreground text-lg">{landingContent.whyLead}</p>
-                    </div>
-
                     {TIKTOK_LANDING_TILES.length > 0 ? (
-                        <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:gap-10 xl:gap-12">
-                            <div className="grid min-w-0 flex-1 grid-cols-2 gap-4 md:gap-6">
-                                {landingContent.features.map((feature, idx) => {
-                                    const FeatureIcon = RENTAL_LANDING_ICONS[feature.icon];
-                                    return (
-                                        <Card
-                                            key={idx}
-                                            className="border-none shadow-md transition-all duration-300 hover:shadow-xl"
-                                        >
-                                            <CardContent className="pt-6">
-                                                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                                    <FeatureIcon className="h-6 w-6" aria-hidden />
-                                                </div>
-                                                <h3 className="mb-2 text-base font-bold md:text-lg">{feature.title}</h3>
-                                                <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                                            </CardContent>
-                                        </Card>
-                                    );
-                                })}
+                        <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-8 xl:gap-10">
+                            <div className="min-w-0 flex-1">
+                                <div className="grid grid-cols-2 gap-3 md:gap-4">
+                                    <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                        <p className="text-sm font-medium text-foreground">0-100 km/h</p>
+                                        <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                            {carRental.specs?.acceleration ?? '—'}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                        <p className="text-sm font-medium text-foreground">Zasięg</p>
+                                        <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                            {carRental.specs?.range ?? '—'}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                        <p className="text-sm font-medium text-foreground">Miejsca</p>
+                                        <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                            {carRental.specs?.seating ?? '—'}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                        <p className="text-sm font-medium text-foreground">Cena od / doba</p>
+                                        <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                            {minPrice.toLocaleString('pl-PL')} zł
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             <aside className="mx-auto w-full max-w-sm shrink-0 lg:mx-0 lg:w-72">
                                 <h3 className="mb-4 text-center text-lg font-bold lg:text-left">
@@ -567,26 +539,60 @@ const RentalCarLandingPage: React.FC = () => {
                             </aside>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 gap-4 md:gap-6">
-                            {landingContent.features.map((feature, idx) => {
-                                const FeatureIcon = RENTAL_LANDING_ICONS[feature.icon];
-                                return (
-                                    <Card
-                                        key={idx}
-                                        className="border-none shadow-md transition-all duration-300 hover:shadow-xl"
-                                    >
-                                        <CardContent className="pt-6">
-                                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                                <FeatureIcon className="h-6 w-6" aria-hidden />
-                                            </div>
-                                            <h3 className="mb-2 text-lg font-bold">{feature.title}</h3>
-                                            <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                                        </CardContent>
-                                    </Card>
-                                );
-                            })}
+                        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+                            <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                <p className="text-sm font-medium text-foreground">0-100 km/h</p>
+                                <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                    {carRental.specs?.acceleration ?? '—'}
+                                </p>
+                            </div>
+                            <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                <p className="text-sm font-medium text-foreground">Zasięg</p>
+                                <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                    {carRental.specs?.range ?? '—'}
+                                </p>
+                            </div>
+                            <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                <p className="text-sm font-medium text-foreground">Miejsca</p>
+                                <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                    {carRental.specs?.seating ?? '—'}
+                                </p>
+                            </div>
+                            <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
+                                <p className="text-sm font-medium text-foreground">Cena od / doba</p>
+                                <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">
+                                    {minPrice.toLocaleString('pl-PL')} zł
+                                </p>
+                            </div>
                         </div>
                     )}
+                </div>
+            </section>
+
+            {/* WHY THIS CAR */}
+            <section className="py-16 md:py-24 bg-secondary/30">
+                <div className="container mx-auto px-4 md:px-6">
+                    <div className="text-center max-w-2xl mx-auto mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">{landingContent.whyHeading}</h2>
+                        <p className="text-muted-foreground text-lg">{landingContent.whyLead}</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {landingContent.features.map((feature, idx) => {
+                            const FeatureIcon = RENTAL_LANDING_ICONS[feature.icon];
+                            return (
+                                <Card key={idx} className="border-none shadow-md hover:shadow-xl transition-all duration-300">
+                                    <CardContent className="pt-6">
+                                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
+                                            <FeatureIcon className="w-6 h-6" aria-hidden />
+                                        </div>
+                                        <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                                        <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
+                    </div>
                 </div>
             </section>
 

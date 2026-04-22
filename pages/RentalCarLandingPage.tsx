@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { getShuffledLandingGallery, landingImageThumbSrc } from '../configs/landingPageImages';
 import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
@@ -113,6 +113,7 @@ const CAR_LANDING_E2E_STYLES = `
   .rental-car-landing .tiktok-social-slider {
     width: 100%;
     max-width: 100%;
+    height: 100%;
     min-height: 0;
     overflow-x: auto;
     overflow-y: hidden;
@@ -139,25 +140,26 @@ const CAR_LANDING_E2E_STYLES = `
   }
   .rental-car-landing .tiktok-social-track {
     display: flex;
-    align-items: center;
+    align-items: stretch;
+    align-self: stretch;
     gap: 0.75rem;
     width: max-content;
     min-height: 0;
+    height: 100%;
     padding: 0.1rem 0 0.2rem;
   }
   .rental-car-landing .tiktok-social-slide {
     flex: 0 0 auto;
     display: flex;
-    align-items: center;
-    width: min(11.5rem, 48vw);
+    align-items: stretch;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 9 / 16;
+    max-height: 100%;
     min-height: 0;
+    min-width: 0;
     scroll-snap-align: start;
     scroll-snap-stop: normal;
-  }
-  @media (min-width: 1024px) {
-    .rental-car-landing .tiktok-social-slide {
-      width: 11.75rem;
-    }
   }
 `;
 
@@ -175,9 +177,9 @@ const MagnifyingGlassIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
   </svg>
 );
 
-const TikTokViewIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+const TikTokViewIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...props }) => (
   <svg
-    className="h-3.5 w-3.5 shrink-0 opacity-90"
+    className={['h-3.5 w-3.5 shrink-0 text-current opacity-90', className].filter(Boolean).join(' ')}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -194,8 +196,14 @@ const TikTokViewIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-const TikTokMarkIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
+const TikTokMarkIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...props }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden
+    className={className}
+    {...props}
+  >
     <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.84 2.84 0 0 1 .9.14V9.4a6.1 6.1 0 0 0-1-.05A6.15 6.15 0 0 0 4 20.66a6.15 6.15 0 0 0 10.48-4.32v-7.17a8.2 8.2 0 0 0 4.99 1.7v-3.45a4.8 4.8 0 0 1-1.88-.15z" />
   </svg>
 );
@@ -232,6 +240,15 @@ const RentalCarLandingPage: React.FC = () => {
         }
         return carRental.pricePerDay;
     }, [carRental]);
+
+    const keyMetricsBlockRef = useRef<HTMLDivElement>(null);
+    const [keyMetricsBlockHeight, setKeyMetricsBlockHeight] = useState<number | null>(null);
+
+    const syncKeyMetricsBlockHeight = useCallback(() => {
+        const el = keyMetricsBlockRef.current;
+        if (!el) return;
+        setKeyMetricsBlockHeight(Math.round(el.getBoundingClientRect().height));
+    }, []);
 
     const kmLimitLabel = useMemo(() => {
         const tiers = carRental.priceTiers;
@@ -303,6 +320,22 @@ const RentalCarLandingPage: React.FC = () => {
             window.removeEventListener('keydown', onKey);
         };
     }, [tiktokModalVideoId]);
+
+    useLayoutEffect(() => {
+        if (TIKTOK_LANDING_TILES.length === 0) return;
+        const el = keyMetricsBlockRef.current;
+        if (!el) return;
+        const ro = new ResizeObserver(() => {
+            syncKeyMetricsBlockHeight();
+        });
+        ro.observe(el);
+        syncKeyMetricsBlockHeight();
+        window.addEventListener('resize', syncKeyMetricsBlockHeight);
+        return () => {
+            ro.disconnect();
+            window.removeEventListener('resize', syncKeyMetricsBlockHeight);
+        };
+    }, [carRental, minPrice, syncKeyMetricsBlockHeight]);
 
     useEffect(() => {
         const m = document.querySelector('meta[name="theme-color"]');
@@ -432,14 +465,6 @@ const RentalCarLandingPage: React.FC = () => {
                                             decoding="async"
                                         />
                                     </span>
-                                    {index === 0 && TIKTOK_LANDING_TILES.length > 0 && (
-                                        <span
-                                            className="pointer-events-none absolute right-2 top-2 z-[2] flex h-8 w-8 items-center justify-center rounded-lg bg-black/50 text-white shadow-sm backdrop-blur-[1px]"
-                                            aria-hidden
-                                        >
-                                            <TikTokMarkIcon className="h-4 w-4" />
-                                        </span>
-                                    )}
                                     <span
                                         className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center rounded-[30px] bg-black/0 transition-colors group-hover:bg-black/25"
                                         aria-hidden
@@ -534,7 +559,7 @@ const RentalCarLandingPage: React.FC = () => {
                 <div className="container mx-auto px-4 md:px-6 py-8">
                     {TIKTOK_LANDING_TILES.length > 0 ? (
                         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start lg:gap-6">
-                            <div className="min-w-0 w-full">
+                            <div ref={keyMetricsBlockRef} className="min-w-0 w-full">
                                 <div className="grid grid-cols-2 gap-3 md:gap-4">
                                     <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
                                         <p className="text-sm font-medium text-foreground">0-100 km/h</p>
@@ -563,18 +588,19 @@ const RentalCarLandingPage: React.FC = () => {
                                 </div>
                             </div>
                             <aside
-                                className="flex w-full min-w-0 flex-col justify-center"
+                                className="flex min-h-0 w-full min-w-0 flex-col"
+                                style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
-                                <div className="w-full rounded-lg bg-muted/50 p-[5px]">
-                                    <div className="tiktok-social-slider w-full scroll-smooth">
+                                <div className="flex h-full min-h-0 w-full min-w-0 flex-1 flex-col rounded-lg bg-muted/50 p-[5px]">
+                                    <div className="tiktok-social-slider min-h-0 w-full flex-1 scroll-smooth">
                                         <div className="tiktok-social-track">
                                             {TIKTOK_LANDING_TILES.map((tile) => (
                                                 <div key={tile.videoId} className="tiktok-social-slide">
                                                     <button
                                                         type="button"
                                                         onClick={() => setTiktokModalVideoId(tile.videoId)}
-                                                        className="group relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                        className="group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                                     >
                                                         <img
                                                             src={tile.thumbSrc}
@@ -583,6 +609,9 @@ const RentalCarLandingPage: React.FC = () => {
                                                             loading="lazy"
                                                             decoding="async"
                                                         />
+                                                        <span className="absolute right-1.5 top-1.5 z-[2] text-white drop-shadow">
+                                                            <TikTokMarkIcon className="h-3.5 w-3.5" />
+                                                        </span>
                                                         <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
                                                         <span className="absolute left-1/2 top-1/2 z-[1] flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md transition-transform group-hover:scale-105">
                                                             <svg
@@ -594,9 +623,9 @@ const RentalCarLandingPage: React.FC = () => {
                                                                 <path d="M8 5.14v13.72L19 12 8 5.14z" />
                                                             </svg>
                                                         </span>
-                                                        <span className="absolute bottom-0 left-0 right-0 z-[1] flex items-center gap-1.5 px-2 py-1.5 text-[0.7rem] font-medium text-white sm:px-3 sm:py-2 sm:text-xs">
-                                                            <TikTokViewIcon className="shrink-0" />
-                                                            <span className="line-clamp-1">{tile.viewCountLabel}</span>
+                                                        <span className="absolute bottom-0 left-0 right-0 z-[1] flex min-w-0 items-center gap-1.5 px-2 py-1.5 text-[0.7rem] font-medium text-white sm:px-3 sm:py-2 sm:text-xs">
+                                                            <TikTokViewIcon />
+                                                            <span className="line-clamp-1 min-w-0">{tile.viewCountLabel}</span>
                                                         </span>
                                                     </button>
                                                 </div>

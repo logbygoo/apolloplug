@@ -9,7 +9,7 @@ export type TikTokLandingTile = {
   /** Miniatura w kaflu przed odtworzeniem */
   thumbSrc: string;
   alt?: string;
-  /** Np. „48,2 tys. wyświetleń” */
+  /** Tylko liczby / skrót, np. „6,2 tys.” (bez słowa „wyświetleń”) */
   viewCountLabel: string;
 };
 
@@ -18,37 +18,37 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
     videoId: '7627939875727150369',
     thumbSrc: 'https://img.apolloidea.com/img/social-media/7627939875727150369.jpeg',
     alt: 'Klip TikTok @apolloidea Od kilku dni testuję teslę',
-    viewCountLabel: '6,2 tys. wyświetleń',
+    viewCountLabel: '6,2 tys.',
   },
   {
     videoId: '7631466839964519713',
     thumbSrc: 'https://img.apolloidea.com/tesla-y/1.jpg',
     alt: 'Klip TikTok @apolloidea Policja Wrap',
-    viewCountLabel: '10,2 tys. wyświetleń',
+    viewCountLabel: '10,2 tys.',
   },
   {
     videoId: '7631277152431820065',
     thumbSrc: 'https://img.apolloidea.com/tesla-y/1.jpg',
     alt: 'Klip TikTok @apolloidea Kiedy jutro odbieram teslę',
-    viewCountLabel: '1,1 tys. wyświetleń',
+    viewCountLabel: '1,1 tys.',
   },
   {
     videoId: '7629617463453338912',
     thumbSrc: 'https://img.apolloidea.com/tesla-y/1.jpg',
     alt: 'Klip TikTok @apolloidea Dlaczgo ludzie dziwnie patrzą na teslarzy',
-    viewCountLabel: '998 wyświetleń',
+    viewCountLabel: '998',
   },
   {
     videoId: '7628301388006575392',
     thumbSrc: 'https://img.apolloidea.com/tesla-y/1.jpg',
     alt: 'Klip TikTok @apolloidea Elon Tesla Wrap',
-    viewCountLabel: '503 tys. wyświetleń',
+    viewCountLabel: '503.',
   },
   {
     videoId: '7625350083407629600',
     thumbSrc: 'https://img.apolloidea.com/tesla-y/1.jpg',
     alt: 'Klip TikTok @apolloidea Tesla 3',
-    viewCountLabel: '334 tys. wyświetleń',
+    viewCountLabel: '334.',
   },
 ];
 

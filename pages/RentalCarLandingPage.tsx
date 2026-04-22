@@ -892,7 +892,6 @@ const RentalCarLandingPage: React.FC = () => {
                                 title="TikTok"
                                 src={tiktokEmbedSrc(tiktokModalVideoId)}
                                 className="absolute left-0 top-0 h-full w-full border-0"
-                                /* Bez `fullscreen` / allowFullScreen — host nie pozwala playerowi wchodzić w prawdziwy fullscreen. */
                                 allow="autoplay; encrypted-media; picture-in-picture; web-share; clipboard-write"
                                 loading="eager"
                                 onLoad={() => {

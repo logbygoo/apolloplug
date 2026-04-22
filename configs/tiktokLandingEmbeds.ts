@@ -74,18 +74,16 @@ export function postTiktokPlayerCommand(
 }
 
 /**
- * Iframe: oficjalny `player/v1` z parametrami (dokumentacja TikTok).
+ * Iframe: `player/v1` — `fullscreen_button=0` (bez pełnego ekranu),
+ * `music_info=0` / `description=0` (mniej klikalnych elementów do TikToka).
  * @see https://developers.tiktok.com/doc/embed-player
  */
 export function tiktokEmbedSrc(videoId: string): string {
   const q = new URLSearchParams({
     autoplay: '1',
     muted: '0',
-    /** Ukryj przycisk / możliwość wejścia w fullscreen z UI playera. */
     fullscreen_button: '0',
-    /** Bez linków do dźwięku / UGC na TikTok. */
     music_info: '0',
-    /** Bez opisu (często z linkami w treści). */
     description: '0',
   });
   return `https://www.tiktok.com/player/v1/${videoId}?${q.toString()}`;

@@ -156,7 +156,7 @@ const TESLA_Y_JUNIPER: RentalLandingPageContent = {
   heroSubtitle: DEFAULT_HERO_SUBTITLE,
   whyLead:
     'Model Y po liftingu Juniper to elektryczny SUV z dużą kabiną i bagażnikiem, który udźwignie rodzinny wyjazd, transport sprzętu albo kilka dni testu przed zakupem. ' +
-    'W środku jest ciszej niż w wcześniejszych wersjach, a układ deski rozdzielczej i ekranów jest bliższy temu, co znasz z odświeżonego Modelu 3.',
+    'W środku jest ciszej niż we wcześniejszych wersjach, a układ deski rozdzielczej i ekranów jest bliższy temu, co znasz z odświeżonego Modelu 3.',
   features: [
     {
       icon: 'bolt',
@@ -168,7 +168,7 @@ const TESLA_Y_JUNIPER: RentalLandingPageContent = {
       icon: 'sparkles',
       title: 'Juniper w środku i na zewnątrz',
       desc:
-        'Nowsza stylistyka z wyraźnymi pasami świateł, lepsza aerodynamika i cichsza kabina dzięki m.in. szkle akustycznemu. W środku są przyjemniejsze materiały, ambientowe światło, większy centralny ekran i drugi ekran dla pasażerów z tyłu.',
+        'Nowsza stylistyka z wyraźnymi pasami świateł, lepsza aerodynamika i cichsza kabina między innymi dzięki szybom akustycznym. W środku są przyjemniejsze materiały, ambientowe światło, większy centralny ekran i drugi ekran dla pasażerów z tyłu.',
     },
     {
       icon: 'shieldCheck',
@@ -188,18 +188,18 @@ const TESLA_Y_JUNIPER: RentalLandingPageContent = {
 <p class="text-muted-foreground">
   <strong>Tesla Model Y</strong> w wersji po liftingu <strong>Juniper</strong> to praktyczny <strong>wynajem tesli</strong> w formie SUV-a:
   dużo miejsca na ludzi i bagaż, szybkie ładowanie i obsługa bliska temu, co oferuje odświeżony Model 3. Jeśli szukasz
-  <strong>auta elektrycznego na wynajem w Warszawie</strong> albo <strong>wypożyczalni EV</strong> z realnym wsparciem przy pierwszym kontakcie z Teslą, ten model jest czytelnym wyborem.
+  <strong>auta elektrycznego na wynajem w Warszawie</strong> albo <strong>wypożyczalni EV</strong> z realnym wsparciem przy pierwszym kontakcie z Teslą, przy odbiorze przechodzimy po kolei ładowanie i aplikację, żeby pierwszy dzień z autem był spokojny.
 </p>
 <p>
-  <strong>Wynajem tesli bez kierowcy</strong> oznacza u nas standardowe zasady: prowadzisz sam na swoim prawie jazdy, a my przygotowujemy samochód do drogi.
+  <strong>Wynajem tesli bez kierowcy</strong> oznacza u nas standardowe zasady: prowadzisz sam z ważnym prawem jazdy, a my przygotowujemy samochód do drogi.
   To dobra opcja na <strong>teslę na weekend</strong>, <strong>teslę na kilka dni</strong> albo <strong>wynajem tesli na tydzień</strong>, gdy chcesz sprawdzić codzienne ładowanie, bagażnik i komfort na dłuższym odcinku.
   Dla osób z zagranicy ta sama usługa to po prostu <strong>Tesla rental Warsaw</strong> i <strong>electric car rental Warsaw</strong> z jasnymi zasadami i odbiorem w mieście.
 </p>
 <h3 class="text-xl font-bold text-foreground mt-8">Co dokładnie zmienia Juniper w Modelu Y</h3>
 <p>
-  Juniper to większy lifting niż kosmetyka lamp. Auto jest pod kątem aerodynamiki, w kabinie jest zwykle wyraźnie ciszej,
-  a wnętrze wygląda i dotyka się jak w nowszej Tesli: lepsze detale, pasek ambientowego światła, szybszy i czytelniejszy układ menu na dużym ekranie oraz dodatkowy ekran z tyłu dla pasażerów.
-  Z zewnątrz widać nowy język świateł, który od razu odróżnia tę generację od wcześniejszej.
+  Juniper to większy lifting niż kosmetyka lamp. Nadwozie dopracowano pod aerodynamikę, dlatego przy wyższych prędkościach w kabinie jest ciszej, a auto zużywa mniej energii na trasie.
+  Wnętrze ma lepsze materiały, ambientowe podświetlenie, czytelniejszy układ menu na dużym ekranie i dodatkowy ekran z tyłu dla pasażerów.
+  Z zewnątrz od razu widać nową sygnaturę świateł z przodu i z tyłu, więc tę wersję łatwo odróżnić od wcześniejszej.
 </p>
 <p>
   Nadal dostajesz to, po co ludzie wybierają Model Y w <strong>wypożyczalni samochodów elektrycznych</strong>: wysoki bagażnik, możliwość złożenia kanapy do przewozu dłuższych rzeczy oraz drugi schowek pod maską.
@@ -209,7 +209,7 @@ const TESLA_Y_JUNIPER: RentalLandingPageContent = {
 <ul class="list-none pl-0 space-y-3 mt-4">
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Rodzinny wyjazd i bagaż:</strong> dużo miejsca na fotelach i w bagażniku bez kombinowania z klasą auta.</span>
+    <span><strong>Rodzinny wyjazd i bagaż:</strong> dużo miejsca na fotelach i w bagażniku bez potrzeby zmiany klasy pojazdu.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
@@ -229,13 +229,13 @@ const TESLA_Y_JUNIPER: RentalLandingPageContent = {
   <strong>Czy to wynajem z kierowcą?</strong> Nie. To <strong>tesla bez kierowcy w Warszawie</strong> w rozumieniu klasycznej wypożyczalni: Ty prowadzisz, my oddajemy auto gotowe do jazdy.
 </p>
 <p>
-  <strong>Ile trwa sensowny test?</strong> <strong>Tesla na 2 dni</strong> bywa minimum, żeby złapać i miasto, i kawałek trasy poza nim. Jeśli chcesz ocenić koszt energii i komfort na dłużej, <strong>wynajem tesli na tydzień</strong> daje spokojniejszy obraz niż jeden wieczór.
+  <strong>Ile trwa sensowny test?</strong> <strong>Tesla na 2 dni</strong> bywa minimum, żeby sprawdzić auto i w mieście, i na trasie. Jeśli chcesz ocenić koszt energii i komfort na dłużej, <strong>wynajem tesli na tydzień</strong> daje spokojniejszy obraz niż jeden wieczór.
 </p>
 <p>
   <strong>Na co zwrócić uwagę przy wyborze wypożyczalni?</strong> Porównując <strong>rent Tesla Warsaw</strong>, <strong>tesla wypożyczalnia</strong> albo <strong>wypożyczalnia tesli Warszawa</strong>, sprawdź przede wszystkim przejrzystość warunków i przygotowanie auta. To przekłada się na spokój przy odbiorze i pierwszym ładowaniu, a nie tylko na cenę za dobę.
 </p>
 <p class="mt-6">
-  Zarezerwuj termin w naszej <strong>wypożyczalni Tesla</strong> i zobacz w praktyce, jak <strong>tesla wynajem Warszawa</strong> sprawdza się w codziennym ruchu, na parkingu pod centrum handlowym i na szybkim postoju przy ładowarce.
+  Zarezerwuj termin w naszej <strong>wypożyczalni Tesla</strong> i zobacz w praktyce, jak <strong>tesla wynajem Warszawa</strong> sprawdza się w codziennym ruchu, na trasie i podczas szybkiego postoju przy ładowarce.
 </p>
 `.trim(),
 };

@@ -668,6 +668,9 @@ const RentalCarLandingPage: React.FC = () => {
                                 style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
+                                <p className="mb-2 shrink-0 text-sm font-bold text-foreground">
+                                    Ostatnio w naszych social mediach
+                                </p>
                                 <div
                                     className="tiktok-social-slider min-h-0 w-full min-w-0 flex-1 cursor-grab select-none rounded-lg bg-muted/50 py-[5px]"
                                     onPointerDownCapture={onTiktokSliderPointerDown}

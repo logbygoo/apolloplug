@@ -16,7 +16,7 @@ export type TikTokLandingTile = {
 export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
   {
     videoId: '7627939875727150369',
-    thumbSrc: 'https://img.apolloidea.com/tesla-y/1.jpg',
+    thumbSrc: 'https://img.apolloidea.com/img/social-media/7627939875727150369.jpeg',
     alt: 'Klip TikTok @apolloidea Od kilku dni testuję teslę',
     viewCountLabel: '6,2 tys. wyświetleń',
   },

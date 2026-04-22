@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { getShuffledLandingGallery, landingImageThumbSrc } from '../configs/landingPageImages';
 import { RENTAL_LANDING_FAQ } from '../configs/rentalLandingFaq';
 import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
@@ -113,6 +113,8 @@ const CAR_LANDING_E2E_STYLES = `
   .rental-car-landing .tiktok-social-slider {
     width: 100%;
     max-width: 100%;
+    height: 100%;
+    min-height: 0;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -122,6 +124,15 @@ const CAR_LANDING_E2E_STYLES = `
     touch-action: pan-x pan-y;
     scroll-snap-type: x mandatory;
     scroll-padding-left: 0;
+    border-radius: 0.5rem;
+    box-shadow:
+      inset 1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16),
+      inset -1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16);
+  }
+  .dark .rental-car-landing .tiktok-social-slider {
+    box-shadow:
+      inset 1.25rem 0 1.5rem -0.65rem rgba(0, 0, 0, 0.55),
+      inset -1.25rem 0 1.5rem -0.65rem rgba(0, 0, 0, 0.55);
   }
   .rental-car-landing .tiktok-social-slider::-webkit-scrollbar {
     height: 0;
@@ -130,14 +141,19 @@ const CAR_LANDING_E2E_STYLES = `
   .rental-car-landing .tiktok-social-track {
     display: flex;
     align-items: stretch;
+    align-self: stretch;
     gap: 0.75rem;
     width: max-content;
     min-height: 0;
-    padding: 0.15rem 0 0.35rem;
+    height: 100%;
+    padding: 0.15rem 0 0.25rem;
   }
   .rental-car-landing .tiktok-social-slide {
     flex: 0 0 auto;
+    align-self: stretch;
+    display: flex;
     width: min(11.5rem, 48vw);
+    min-height: 0;
     scroll-snap-align: start;
     scroll-snap-stop: normal;
   }
@@ -214,6 +230,15 @@ const RentalCarLandingPage: React.FC = () => {
         return carRental.pricePerDay;
     }, [carRental]);
 
+    const keyMetricsBlockRef = useRef<HTMLDivElement>(null);
+    const [keyMetricsBlockHeight, setKeyMetricsBlockHeight] = useState<number | null>(null);
+
+    const syncKeyMetricsBlockHeight = useCallback(() => {
+        const el = keyMetricsBlockRef.current;
+        if (!el) return;
+        setKeyMetricsBlockHeight(Math.round(el.getBoundingClientRect().height));
+    }, []);
+
     const kmLimitLabel = useMemo(() => {
         const tiers = carRental.priceTiers;
         if (!tiers?.length) return '—';
@@ -284,6 +309,22 @@ const RentalCarLandingPage: React.FC = () => {
             window.removeEventListener('keydown', onKey);
         };
     }, [tiktokModalVideoId]);
+
+    useLayoutEffect(() => {
+        if (TIKTOK_LANDING_TILES.length === 0) return;
+        const el = keyMetricsBlockRef.current;
+        if (!el) return;
+        const ro = new ResizeObserver(() => {
+            syncKeyMetricsBlockHeight();
+        });
+        ro.observe(el);
+        syncKeyMetricsBlockHeight();
+        window.addEventListener('resize', syncKeyMetricsBlockHeight);
+        return () => {
+            ro.disconnect();
+            window.removeEventListener('resize', syncKeyMetricsBlockHeight);
+        };
+    }, [carRental, minPrice, syncKeyMetricsBlockHeight]);
 
     useEffect(() => {
         const m = document.querySelector('meta[name="theme-color"]');
@@ -507,7 +548,7 @@ const RentalCarLandingPage: React.FC = () => {
                 <div className="container mx-auto px-4 md:px-6 py-8">
                     {TIKTOK_LANDING_TILES.length > 0 ? (
                         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-start lg:gap-6">
-                            <div className="min-w-0 w-full">
+                            <div ref={keyMetricsBlockRef} className="min-w-0 w-full">
                                 <div className="grid grid-cols-2 gap-3 md:gap-4">
                                     <div className="rounded-lg border border-border bg-background px-4 py-4 text-left">
                                         <p className="text-sm font-medium text-foreground">0-100 km/h</p>
@@ -536,24 +577,18 @@ const RentalCarLandingPage: React.FC = () => {
                                 </div>
                             </div>
                             <aside
-                                className="min-w-0 w-full"
+                                className="flex min-h-0 w-full min-w-0 flex-col"
+                                style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
-                                <h3 className="mb-3 text-center text-lg font-bold lg:mb-4 lg:text-left">
-                                    Zobacz nasze social media
-                                </h3>
-                                <p className="mb-2 text-center text-xs text-muted-foreground lg:text-left">
-                                    Przesuń palcem w poziomie, aby zobaczyć więcej
-                                </p>
-                                <div className="tiktok-social-slider scroll-smooth">
+                                <div className="tiktok-social-slider min-h-0 w-full flex-1 scroll-smooth">
                                     <div className="tiktok-social-track">
                                         {TIKTOK_LANDING_TILES.map((tile) => (
                                             <div key={tile.videoId} className="tiktok-social-slide">
                                                 <button
                                                     type="button"
                                                     onClick={() => setTiktokModalVideoId(tile.videoId)}
-                                                    className="group relative h-full w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                                    style={{ aspectRatio: '9 / 16', maxHeight: 'min(52vh, 22rem)' }}
+                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                                 >
                                                     <img
                                                         src={tile.thumbSrc}

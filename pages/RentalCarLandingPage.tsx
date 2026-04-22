@@ -122,8 +122,7 @@ const CAR_LANDING_E2E_STYLES = `
     scrollbar-width: none;
     -ms-overflow-style: none;
     touch-action: pan-x pan-y;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: 0;
+    scroll-behavior: auto;
     box-shadow:
       inset 1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16),
       inset -1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16);
@@ -145,6 +144,8 @@ const CAR_LANDING_E2E_STYLES = `
     width: max-content;
     min-height: 0;
     height: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
   }
   .rental-car-landing .tiktok-social-slide {
     flex: 0 0 auto;
@@ -156,8 +157,6 @@ const CAR_LANDING_E2E_STYLES = `
     max-height: 100%;
     min-height: 0;
     min-width: 0;
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
   }
 `;
 
@@ -247,6 +246,64 @@ const RentalCarLandingPage: React.FC = () => {
         if (!el) return;
         setKeyMetricsBlockHeight(Math.round(el.getBoundingClientRect().height));
     }, []);
+
+    const tiktokDrag = useRef({
+        down: false,
+        pointerId: -1,
+        startX: 0,
+        startScroll: 0,
+        blockClick: false,
+    });
+
+    const onTiktokSliderPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        if (e.pointerType === 'touch') return;
+        if (e.button !== 0) return;
+        const el = e.currentTarget;
+        tiktokDrag.current = {
+            down: true,
+            pointerId: e.pointerId,
+            startX: e.clientX,
+            startScroll: el.scrollLeft,
+            blockClick: false,
+        };
+        el.setPointerCapture(e.pointerId);
+        el.style.cursor = 'grabbing';
+    }, []);
+
+    const onTiktokSliderPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        const s = tiktokDrag.current;
+        if (!s.down || e.pointerId !== s.pointerId) return;
+        const el = e.currentTarget;
+        const dx = e.clientX - s.startX;
+        if (Math.abs(dx) > 4) s.blockClick = true;
+        el.scrollLeft = s.startScroll - dx;
+    }, []);
+
+    const onTiktokSliderPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        const s = tiktokDrag.current;
+        if (!s.down || e.pointerId !== s.pointerId) return;
+        s.down = false;
+        const el = e.currentTarget;
+        el.style.cursor = '';
+        try {
+            el.releasePointerCapture(e.pointerId);
+        } catch {
+            /* no-op */
+        }
+    }, []);
+
+    const onTiktokTileClick = useCallback(
+        (videoId: string) => (e: React.MouseEvent) => {
+            if (tiktokDrag.current.blockClick) {
+                e.preventDefault();
+                e.stopPropagation();
+                tiktokDrag.current.blockClick = false;
+                return;
+            }
+            setTiktokModalVideoId(videoId);
+        },
+        [],
+    );
 
     const kmLimitLabel = useMemo(() => {
         const tiers = carRental.priceTiers;
@@ -590,13 +647,19 @@ const RentalCarLandingPage: React.FC = () => {
                                 style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
-                                <div className="tiktok-social-slider min-h-0 w-full min-w-0 flex-1 scroll-smooth rounded-lg bg-muted/50 p-[5px]">
+                                <div
+                                    className="tiktok-social-slider min-h-0 w-full min-w-0 flex-1 cursor-grab select-none rounded-lg bg-muted/50 py-[5px]"
+                                    onPointerDownCapture={onTiktokSliderPointerDown}
+                                    onPointerMove={onTiktokSliderPointerMove}
+                                    onPointerUp={onTiktokSliderPointerUp}
+                                    onPointerCancel={onTiktokSliderPointerUp}
+                                >
                                     <div className="tiktok-social-track">
                                         {TIKTOK_LANDING_TILES.map((tile) => (
                                             <div key={tile.videoId} className="tiktok-social-slide">
                                                 <button
                                                     type="button"
-                                                    onClick={() => setTiktokModalVideoId(tile.videoId)}
+                                                    onClick={onTiktokTileClick(tile.videoId)}
                                                     className="group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                                 >
                                                     <img

@@ -5,7 +5,12 @@ import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { getRentalLandingPageContent } from '../configs/rentalLandingPageContent';
-import { TIKTOK_LANDING_TILES, tiktokEmbedSrc } from '../configs/tiktokLandingEmbeds';
+import {
+  TIKTOK_LANDING_TILES,
+  TIKTOK_PLAYER_ORIGIN,
+  postTiktokPlayerCommand,
+  tiktokEmbedSrc,
+} from '../configs/tiktokLandingEmbeds';
 import { Card, CardContent } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
@@ -321,6 +326,7 @@ const RentalCarLandingPage: React.FC = () => {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [tiktokModalVideoId, setTiktokModalVideoId] = useState<string | null>(null);
     const [mobileRentSheetOpen, setMobileRentSheetOpen] = useState(true);
+    const tiktokIframeRef = useRef<HTMLIFrameElement | null>(null);
     const themeColorOnEnterRef = useRef<string | null>(null);
     const galleryCount = galleryItems.length;
     const lightboxTouchStartX = useRef<number | null>(null);
@@ -365,6 +371,29 @@ const RentalCarLandingPage: React.FC = () => {
         return () => {
             document.body.style.overflow = prev;
             window.removeEventListener('keydown', onKey);
+        };
+    }, [tiktokModalVideoId]);
+
+    /** Odciszenie: autoplay w iframe często startuje wyciszony; dokumentacja: postMessage `unMute` po `onPlayerReady`. */
+    useEffect(() => {
+        if (tiktokModalVideoId === null) return;
+        const unmute = () => postTiktokPlayerCommand(tiktokIframeRef.current, 'unMute');
+        const onMessage = (ev: MessageEvent) => {
+            if (ev.origin !== TIKTOK_PLAYER_ORIGIN) return;
+            const d = ev.data as { type?: string } | null;
+            if (d && typeof d === 'object' && d.type === 'onPlayerReady') {
+                unmute();
+            }
+        };
+        window.addEventListener('message', onMessage);
+        const t0 = window.setTimeout(unmute, 400);
+        const t1 = window.setTimeout(unmute, 1000);
+        const t2 = window.setTimeout(unmute, 2200);
+        return () => {
+            window.removeEventListener('message', onMessage);
+            clearTimeout(t0);
+            clearTimeout(t1);
+            clearTimeout(t2);
         };
     }, [tiktokModalVideoId]);
 
@@ -858,6 +887,7 @@ const RentalCarLandingPage: React.FC = () => {
                         </button>
                         <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg bg-black">
                             <iframe
+                                ref={tiktokIframeRef}
                                 key={tiktokModalVideoId}
                                 title="TikTok"
                                 src={tiktokEmbedSrc(tiktokModalVideoId)}
@@ -865,6 +895,9 @@ const RentalCarLandingPage: React.FC = () => {
                                 allow="autoplay; encrypted-media; fullscreen; picture-in-picture; web-share; clipboard-write"
                                 allowFullScreen
                                 loading="eager"
+                                onLoad={() => {
+                                    postTiktokPlayerCommand(tiktokIframeRef.current, 'unMute');
+                                }}
                             />
                         </div>
                     </div>

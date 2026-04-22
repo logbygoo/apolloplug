@@ -52,9 +52,29 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
   },
 ];
 
+/** Origin docelowy dla `postMessage` do playera TikTok w iframe. */
+export const TIKTOK_PLAYER_ORIGIN = 'https://www.tiktok.com' as const;
+
 /**
- * Iframe: oficjalny `player/v1` z parametrami (autoplay — dokumentacja TikTok;
- * `embed/v2` zazwyczaj sam nie startuje odtwarzania z query).
+ * Sterowanie playerem osadzonym (Host → player). W praktyce autoplay bywa wyciszony
+ * mimo `muted=0` w URL — wtedy po interakcji / `onPlayerReady` wywołaj `unMute`.
+ * @see https://developers.tiktok.com/doc/embed-player
+ */
+export function postTiktokPlayerCommand(
+  iframe: HTMLIFrameElement | null,
+  command: 'play' | 'pause' | 'mute' | 'unMute',
+): void {
+  const w = iframe?.contentWindow;
+  if (!w) return;
+  try {
+    w.postMessage({ type: command, 'x-tiktok-player': true }, TIKTOK_PLAYER_ORIGIN);
+  } catch {
+    /* no-op */
+  }
+}
+
+/**
+ * Iframe: oficjalny `player/v1` z parametrami (dokumentacja TikTok).
  */
 export function tiktokEmbedSrc(videoId: string): string {
   const q = new URLSearchParams({

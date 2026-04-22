@@ -247,6 +247,9 @@ const RentalCarLandingPage: React.FC = () => {
     const onTiktokSliderPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
         if (e.pointerType === 'touch') return;
         if (e.button !== 0) return;
+        // Nie przechwytuj wskaźnika, gdy klik jest w kafelek (button) — setPointerCapture
+        // blokuje wtedy prawidłowe "click" na przycisku i modal TikToka się nie otworzy.
+        if ((e.target as HTMLElement | null)?.closest('button')) return;
         const el = e.currentTarget;
         tiktokDrag.current = {
             down: true,
@@ -649,7 +652,7 @@ const RentalCarLandingPage: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     onClick={onTiktokTileClick(tile.videoId)}
-                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded-lg border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                                 >
                                                     <img
                                                         src={tile.thumbSrc}
@@ -832,7 +835,7 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* TikTok: modal — tylko tu ładuje się iframe `player/v1` (bez embed.js w index / na wejściu) */}
+            {/* TikTok: modal — iframe `embed/v2` ładuje się dopiero po otwarciu (bez embed.js w index) */}
             {tiktokModalVideoId && (
                 <div
                     className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/75 p-4"
@@ -842,7 +845,7 @@ const RentalCarLandingPage: React.FC = () => {
                     aria-label="Film TikTok"
                 >
                     <div
-                        className="relative my-auto w-full max-w-[min(100%,325px)] shrink-0 overflow-hidden rounded-2xl bg-background p-1 shadow-2xl"
+                        className="relative my-auto w-full max-w-[min(100%,325px)] shrink-0 overflow-hidden rounded-lg bg-background p-1 shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
@@ -853,7 +856,7 @@ const RentalCarLandingPage: React.FC = () => {
                         >
                             <XMarkIcon className="h-5 w-5" />
                         </button>
-                        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[12px] bg-black">
+                        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg bg-black">
                             <iframe
                                 key={tiktokModalVideoId}
                                 title="TikTok"

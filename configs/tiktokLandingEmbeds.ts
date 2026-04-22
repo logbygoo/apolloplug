@@ -53,17 +53,9 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
 ];
 
 /**
- * Oficjalny lekki player (iframe) — bez `embed.js` na stronie; iframe montujemy dopiero w modalu.
- * @see https://developers.tiktok.com/doc/embed-player
- * – `autoplay=1` po otwarciu modału (w ramach interakcji użytkownika),
- * – `muted=0` — dźwięk włączony (o ile przeglądarka i TikTok to pozwolą),
- * – `rel=0` — mniej „polecanych” pod filmem w embedzie.
+ * Iframe `embed/v2` — strona do osadzania; ładowana dopiero po otwarciu modala (bez `embed.js` w index).
+ * `player/v1` potrafił w iframe dawać pusty ekran; v2 jest standardem z udostępniania w TikToku.
  */
 export function tiktokEmbedSrc(videoId: string): string {
-  const q = new URLSearchParams({
-    autoplay: '1',
-    muted: '0',
-    rel: '0',
-  });
-  return `https://www.tiktok.com/player/v1/${videoId}?${q.toString()}`;
+  return `https://www.tiktok.com/embed/v2/${videoId}`;
 }

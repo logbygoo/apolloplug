@@ -16,6 +16,7 @@ import InsurancePage from './pages/InsurancePage';
 import DocumentationPage from './pages/DocumentationPage';
 import RentalCarLandingPage from './pages/RentalCarLandingPage'; // Import new page
 import PdfViewerPage from './pages/PdfViewerPage'; // Import new PDF viewer page
+import DashPage from './pages/DashPage';
 import CookieBanner from './components/CookieBanner';
 import ExitIntentModal from './components/ExitIntentModal';
 import { ApolloPlugLogo } from './constants';
@@ -189,6 +190,8 @@ const App: React.FC = () => {
         <Routes>
            {/* PDF Viewer route is completely separate to allow clean printing */}
            <Route path="/pdf/:slug.pdf" element={<PdfViewerPage />} />
+           {/* Pulpit Tesla / centrum — bez layoutu głównej strony */}
+           <Route path="/dash" element={<DashPage />} />
            
            {/* Main App Layout for everything else */}
            <Route path="*" element={

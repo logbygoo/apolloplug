@@ -130,7 +130,7 @@ const CAR_LANDING_E2E_STYLES = `
     }
   }
 
-  /* Pasek przewijania kafelków — tylko tu cienie; wrapper ma jedno tło (jak wcześniej jeden box ze sliderem). */
+  /* Cienie inset na przewijaku przyciemniały boki vs. tło pod nagłówkiem; zostawiam jednolite tło rodzica. */
   .rental-car-landing .tiktok-social-hscroll {
     width: 100%;
     max-width: 100%;
@@ -145,14 +145,6 @@ const CAR_LANDING_E2E_STYLES = `
     -ms-overflow-style: none;
     touch-action: pan-x pan-y;
     scroll-behavior: auto;
-    box-shadow:
-      inset 1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16),
-      inset -1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16);
-  }
-  .dark .rental-car-landing .tiktok-social-hscroll {
-    box-shadow:
-      inset 1.25rem 0 1.5rem -0.65rem rgba(0, 0, 0, 0.55),
-      inset -1.25rem 0 1.5rem -0.65rem rgba(0, 0, 0, 0.55);
   }
   .rental-car-landing .tiktok-social-hscroll::-webkit-scrollbar {
     height: 0;
@@ -755,7 +747,7 @@ const RentalCarLandingPage: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     onClick={onTiktokTileClick(tile.videoId)}
-                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded-lg border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded-lg border border-border/60 bg-background text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                                 >
                                                     <img
                                                         src={tile.thumbSrc}

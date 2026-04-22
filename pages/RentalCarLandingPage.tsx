@@ -1041,7 +1041,7 @@ const RentalCarLandingPage: React.FC = () => {
                         <div className="lg:col-span-2 not-prose">
                             <h2 className="text-2xl font-bold text-foreground">Najczęściej zadawane pytania</h2>
                             <p className="mt-2 text-muted-foreground">
-                                Krótkie odpowiedzi o autach elektrycznych i wynajmie — wspólne dla naszych modeli.
+                                Najważniejsze pytania i odpowiedzi na temat wypożyczenia aut elektrycznych
                             </p>
                             <div
                                 className={`mt-8 space-y-2 transition-all duration-200 ${
@@ -1106,6 +1106,12 @@ const RentalCarLandingPage: React.FC = () => {
                                             );
                                         })}
                                     </div>
+                                    <p className="mt-4 text-sm text-muted-foreground">
+                                        Masz więcej pytań? Przejdź na{' '}
+                                        <Link to="/kontakt" className="font-medium text-foreground underline underline-offset-2">
+                                            /kontakt
+                                        </Link>
+                                    </p>
                                 </div>
                             </div>
                         </div>

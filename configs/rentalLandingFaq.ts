@@ -25,6 +25,24 @@ export const RENTAL_LANDING_FAQ: RentalLandingFaqItem[] = [
     categories: ['Rezerwacja'],
   },
   {
+    question: 'Czy wysłanie formularza rezerwacji jest jednoznaczne z tym, że auto będzie dla mnie zarezerwowane?',
+    answer:
+      'Tak, jeśli w kalendarzu dostępności wybrany termin jest wolny, dane w formularzu są poprawne, a płatność została skutecznie opłacona. Po standardowej weryfikacji zastrzegamy sobie prawo do odmowy wynajmu zgodnie z regulaminem.',
+    categories: ['Rezerwacja'],
+  },
+  {
+    question: 'W jaki sposób zapłacę za wynajem?',
+    answer:
+      'Po wysłaniu formularza przechodzisz do płatności online PayU i wybierasz wygodną metodę. Dopuszczamy też przelew bankowy oraz BLIK na numer firmowy. Opłata za najem pobierana jest z góry, a kaucja jest blokowana w dniu wydania auta.',
+    categories: ['Rezerwacja', 'Kaucja'],
+  },
+  {
+    question: 'Czy mogę anulować opłaconą rezerwację?',
+    answer:
+      'Tak. Zwrot zależy od tego, ile czasu zostało do rozpoczęcia najmu i na jakich warunkach została zawarta rezerwacja. Szczegółowe zasady anulacji opisuje regulamin.',
+    categories: ['Rezerwacja'],
+  },
+  {
     question: 'Jakie dokumenty wymagane są do wynajęcia samochodu?',
     answer:
       'Przy odbiorze potrzebujesz ważnego prawa jazdy, dokumentu tożsamości oraz karty płatniczej wystawionej na dane najemcy.',
@@ -145,14 +163,20 @@ export const RENTAL_LANDING_FAQ: RentalLandingFaqItem[] = [
   {
     question: 'Co obejmuje ubezpieczenie w cenie wynajmu?',
     answer:
-      'Zakres podstawowy obejmuje pakiet zgodny z aktualną umową i regulaminem. Przed odbiorem auta pokazujemy, co dokładnie zawiera ochrona i jakie są dostępne opcje rozszerzenia.',
+      'Zakres podstawowy obejmuje pakiet zgodny z aktualną umową i regulaminem. Pełny zakres ochrony i dostępne opcje rozszerzenia możesz sprawdzić na etapie rezerwacji oraz w regulaminie wypożyczalni.',
     categories: ['Przed wynajmem', 'Ubezpieczenie'],
   },
   {
     question: 'Gdzie i jak mogę się ładować?',
     answer:
-      'Auto naładujesz na publicznych stacjach AC i DC, w tym w sieci Tesla Supercharger, oraz w domu ze zwykłego gniazdka, jeśli masz odpowiedni przewód. Przy odbiorze podpowiemy aplikacje i najwygodniejsze punkty ładowania na trasie.',
+      'Auto naładujesz na publicznych stacjach AC i DC, w tym w sieci Tesla Supercharger, a także w domu ze zwykłego gniazdka. W każdym aucie otrzymujesz fabryczne przewody Tesla, więc możesz ładować auto od razu po odbiorze.',
     categories: ['W trakcie wynajmu'],
+  },
+  {
+    question: 'Czy otrzymam dostęp do auta przez aplikację Tesla?',
+    answer:
+      'Tak. Jeśli masz własne konto Tesla, podczas wydania pojazdu udostępnimy Ci auto w aplikacji, dzięki czemu możesz korzystać z funkcji zdalnych, takich jak otwieranie, klimatyzacja czy podgląd ładowania.',
+    categories: ['Przed wynajmem', 'W trakcie wynajmu'],
   },
   {
     question: 'Jak zapłacić za ładowanie na Supercharger?',
@@ -161,9 +185,15 @@ export const RENTAL_LANDING_FAQ: RentalLandingFaqItem[] = [
     categories: ['W trakcie wynajmu', 'Po wynajmie'],
   },
   {
+    question: 'Czy auto jest zabezpieczone GPS?',
+    answer:
+      'Tak. Auta mają systemy lokalizacji i dodatkowe zabezpieczenia antykradzieżowe, które pomagają chronić pojazd przed nieautoryzowanym użyciem. Rozwiązania działają w tle i służą wyłącznie bezpieczeństwu auta i najmu.',
+    categories: ['Przed wynajmem', 'W trakcie wynajmu', 'Ubezpieczenie'],
+  },
+  {
     question: 'Kto ma dostęp do kamer w aucie?',
     answer:
-      'Kamery zewnętrzne służą do funkcji bezpieczeństwa i rejestracji zdarzeń drogowych. Kamera wewnętrzna nie służy do podglądu kierowcy w trakcie jazdy. Dane są przetwarzane zgodnie z polityką prywatności i obowiązującymi przepisami.',
+      'Kamery zewnętrzne rejestrują otoczenie auta dla bezpieczeństwa i dokumentacji zdarzeń drogowych. Nie prowadzimy podglądu wnętrza samochodu, gdy auto jest użytkowane przez klienta. W trakcie najmu nikt z naszej strony nie ma dostępu do podglądu kierowcy podczas jazdy.',
     categories: ['W trakcie wynajmu', 'Ubezpieczenie'],
   },
   {

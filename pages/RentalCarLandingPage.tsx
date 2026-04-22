@@ -345,6 +345,100 @@ const RentalCarLandingPage: React.FC = () => {
         [],
     );
 
+    const e2eSliderDrag = useRef<{
+        down: boolean;
+        pointerId: number;
+        startX: number;
+        startScroll: number;
+        blockClick: boolean;
+        mode: 'window' | 'capture';
+    }>({
+        down: false,
+        pointerId: -1,
+        startX: 0,
+        startScroll: 0,
+        blockClick: false,
+        mode: 'capture',
+    });
+
+    const onE2eSliderPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        if (e.pointerType === 'touch') return;
+        if (e.button !== 0) return;
+        const el = e.currentTarget;
+        const start = {
+            down: true,
+            pointerId: e.pointerId,
+            startX: e.clientX,
+            startScroll: el.scrollLeft,
+            blockClick: false,
+        };
+        const fromInteractive = (e.target as HTMLElement | null)?.closest('button, a');
+
+        if (fromInteractive) {
+            e2eSliderDrag.current = { ...start, mode: 'window' };
+            el.style.cursor = 'grabbing';
+            const onWinMove = (ev: PointerEvent) => {
+                const t = e2eSliderDrag.current;
+                if (!t.down || ev.pointerId !== t.pointerId) return;
+                const dx = ev.clientX - t.startX;
+                if (Math.abs(dx) > 4) t.blockClick = true;
+                el.scrollLeft = t.startScroll - dx;
+            };
+            const onWinEnd = (ev: PointerEvent) => {
+                if (ev.pointerId !== start.pointerId) return;
+                window.removeEventListener('pointermove', onWinMove, true);
+                window.removeEventListener('pointerup', onWinEnd, true);
+                window.removeEventListener('pointercancel', onWinEnd, true);
+                e2eSliderDrag.current.down = false;
+                e2eSliderDrag.current.mode = 'capture';
+                el.style.cursor = '';
+            };
+            window.addEventListener('pointermove', onWinMove, true);
+            window.addEventListener('pointerup', onWinEnd, true);
+            window.addEventListener('pointercancel', onWinEnd, true);
+            return;
+        }
+
+        e2eSliderDrag.current = { ...start, mode: 'capture' };
+        el.setPointerCapture(e.pointerId);
+        el.style.cursor = 'grabbing';
+    }, []);
+
+    const onE2eSliderPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        const s = e2eSliderDrag.current;
+        if (!s.down || e.pointerId !== s.pointerId || s.mode === 'window') return;
+        const el = e.currentTarget;
+        const dx = e.clientX - s.startX;
+        if (Math.abs(dx) > 4) s.blockClick = true;
+        el.scrollLeft = s.startScroll - dx;
+    }, []);
+
+    const onE2eSliderPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+        const s = e2eSliderDrag.current;
+        if (!s.down || e.pointerId !== s.pointerId || s.mode === 'window') return;
+        s.down = false;
+        const el = e.currentTarget;
+        el.style.cursor = '';
+        try {
+            el.releasePointerCapture(e.pointerId);
+        } catch {
+            /* no-op */
+        }
+    }, []);
+
+    const onGalleryPhotoClick = useCallback(
+        (index: number) => (e: React.MouseEvent) => {
+            if (e2eSliderDrag.current.blockClick) {
+                e.preventDefault();
+                e.stopPropagation();
+                e2eSliderDrag.current.blockClick = false;
+                return;
+            }
+            setLightboxIndex(index);
+        },
+        [],
+    );
+
     const kmLimitLabel = useMemo(() => {
         const tiers = carRental.priceTiers;
         if (!tiers?.length) return '—';
@@ -509,7 +603,14 @@ const RentalCarLandingPage: React.FC = () => {
             {/* Galeria E2E: pierwszy slajd = szary box z okruszkami + h1 (jak header), potem zdjęcia; reszta paska biała */}
             <section className="w-full bg-white">
                 <RentalLandingEdgeScroller>
-                    <section className="e2e-slider scroll-smooth pt-4" style={sliderGapStyle}>
+                    <section
+                        className="e2e-slider scroll-smooth cursor-grab select-none pt-4"
+                        style={sliderGapStyle}
+                        onPointerDownCapture={onE2eSliderPointerDown}
+                        onPointerMove={onE2eSliderPointerMove}
+                        onPointerUp={onE2eSliderPointerUp}
+                        onPointerCancel={onE2eSliderPointerUp}
+                    >
                         <div className="e2e-track">
                             <div
                                 className="e2e-slide pointer-events-none w-max max-w-[70vw] shrink-0 snap-center flex flex-col justify-center overflow-x-hidden overflow-y-auto md:max-w-[min(92vw,920px)]"
@@ -571,7 +672,7 @@ const RentalCarLandingPage: React.FC = () => {
                                 <button
                                     key={item.src}
                                     type="button"
-                                    onClick={() => setLightboxIndex(index)}
+                                    onClick={onGalleryPhotoClick(index)}
                                     className="e2e-slide e2e-slide--photo group relative flex h-full min-h-0 shrink-0 snap-center cursor-zoom-in flex-col overflow-hidden rounded-[30px] border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                     aria-label={`Powiększ: ${item.alt}`}
                                 >

@@ -53,9 +53,13 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
 ];
 
 /**
- * Iframe `embed/v2` — strona do osadzania; ładowana dopiero po otwarciu modala (bez `embed.js` w index).
- * `player/v1` potrafił w iframe dawać pusty ekran; v2 jest standardem z udostępniania w TikToku.
+ * Iframe: oficjalny `player/v1` z parametrami (autoplay — dokumentacja TikTok;
+ * `embed/v2` zazwyczaj sam nie startuje odtwarzania z query).
  */
 export function tiktokEmbedSrc(videoId: string): string {
-  return `https://www.tiktok.com/embed/v2/${videoId}`;
+  const q = new URLSearchParams({
+    autoplay: '1',
+    muted: '0',
+  });
+  return `https://www.tiktok.com/player/v1/${videoId}?${q.toString()}`;
 }

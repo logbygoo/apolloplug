@@ -835,7 +835,7 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* TikTok: modal — iframe `embed/v2` ładuje się dopiero po otwarciu (bez embed.js w index) */}
+            {/* TikTok: modal — `player/v1` + autoplay; iframe tylko po otwarciu (bez embed.js w index) */}
             {tiktokModalVideoId && (
                 <div
                     className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/75 p-4"
@@ -845,12 +845,12 @@ const RentalCarLandingPage: React.FC = () => {
                     aria-label="Film TikTok"
                 >
                     <div
-                        className="relative my-auto w-full max-w-[min(100%,325px)] shrink-0 overflow-hidden rounded-lg bg-background p-1 shadow-2xl"
+                        className="relative my-auto w-full max-w-[min(100%,325px)] shrink-0 rounded-lg bg-background p-2 shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             type="button"
-                            className="absolute -right-1 -top-1 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md transition-colors hover:bg-secondary"
+                            className="absolute right-2 top-2 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md transition-colors hover:bg-secondary"
                             onClick={() => setTiktokModalVideoId(null)}
                             aria-label="Zamknij"
                         >

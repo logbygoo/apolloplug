@@ -124,7 +124,6 @@ const CAR_LANDING_E2E_STYLES = `
     touch-action: pan-x pan-y;
     scroll-snap-type: x mandatory;
     scroll-padding-left: 0;
-    border-radius: 0.5rem;
     box-shadow:
       inset 1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16),
       inset -1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16);
@@ -146,7 +145,6 @@ const CAR_LANDING_E2E_STYLES = `
     width: max-content;
     min-height: 0;
     height: 100%;
-    padding: 0.1rem 0 0.2rem;
   }
   .rental-car-landing .tiktok-social-slide {
     flex: 0 0 auto;
@@ -592,45 +590,43 @@ const RentalCarLandingPage: React.FC = () => {
                                 style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
-                                <div className="flex h-full min-h-0 w-full min-w-0 flex-1 flex-col rounded-lg bg-muted/50 p-[5px]">
-                                    <div className="tiktok-social-slider min-h-0 w-full flex-1 scroll-smooth">
-                                        <div className="tiktok-social-track">
-                                            {TIKTOK_LANDING_TILES.map((tile) => (
-                                                <div key={tile.videoId} className="tiktok-social-slide">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setTiktokModalVideoId(tile.videoId)}
-                                                        className="group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                                                    >
-                                                        <img
-                                                            src={tile.thumbSrc}
-                                                            alt={tile.alt ?? 'Miniatura filmu TikTok'}
-                                                            className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
-                                                            loading="lazy"
-                                                            decoding="async"
-                                                        />
-                                                        <span className="absolute right-1.5 top-1.5 z-[2] text-white drop-shadow">
-                                                            <TikTokMarkIcon className="h-3.5 w-3.5" />
-                                                        </span>
-                                                        <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
-                                                        <span className="absolute left-1/2 top-1/2 z-[1] flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md transition-transform group-hover:scale-105">
-                                                            <svg
-                                                                className="ml-0.5 h-4 w-4"
-                                                                viewBox="0 0 24 24"
-                                                                fill="currentColor"
-                                                                aria-hidden
-                                                            >
-                                                                <path d="M8 5.14v13.72L19 12 8 5.14z" />
-                                                            </svg>
-                                                        </span>
-                                                        <span className="absolute bottom-0 left-0 right-0 z-[1] flex min-w-0 items-center gap-1.5 px-2 py-1.5 text-[0.7rem] font-medium text-white sm:px-3 sm:py-2 sm:text-xs">
-                                                            <TikTokViewIcon />
-                                                            <span className="line-clamp-1 min-w-0">{tile.viewCountLabel}</span>
-                                                        </span>
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
+                                <div className="tiktok-social-slider min-h-0 w-full min-w-0 flex-1 scroll-smooth rounded-lg bg-muted/50 p-[5px]">
+                                    <div className="tiktok-social-track">
+                                        {TIKTOK_LANDING_TILES.map((tile) => (
+                                            <div key={tile.videoId} className="tiktok-social-slide">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setTiktokModalVideoId(tile.videoId)}
+                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                >
+                                                    <img
+                                                        src={tile.thumbSrc}
+                                                        alt={tile.alt ?? 'Miniatura filmu TikTok'}
+                                                        className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                    <span className="absolute right-1.5 top-1.5 z-[2] text-white drop-shadow">
+                                                        <TikTokMarkIcon className="h-3.5 w-3.5" />
+                                                    </span>
+                                                    <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
+                                                    <span className="absolute left-1/2 top-1/2 z-[1] flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md transition-transform group-hover:scale-105">
+                                                        <svg
+                                                            className="ml-0.5 h-4 w-4"
+                                                            viewBox="0 0 24 24"
+                                                            fill="currentColor"
+                                                            aria-hidden
+                                                        >
+                                                            <path d="M8 5.14v13.72L19 12 8 5.14z" />
+                                                        </svg>
+                                                    </span>
+                                                    <span className="absolute bottom-0 left-0 right-0 z-[1] flex min-w-0 items-center gap-1.5 px-2 py-1.5 text-[0.7rem] font-medium text-white sm:px-3 sm:py-2 sm:text-xs">
+                                                        <TikTokViewIcon />
+                                                        <span className="line-clamp-1 min-w-0">{tile.viewCountLabel}</span>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </aside>

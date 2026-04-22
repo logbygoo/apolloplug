@@ -17,8 +17,9 @@ import {
   ArrowRightIcon,
   HomeIcon,
   XMarkIcon,
+  TikTokIcon,
+  ChevronDownIcon,
 } from '../icons';
-import { ChevronDownIcon } from '../components/HeroIcons';
 import type { RentalLandingFeatureIconKey, SeoData } from '../types';
 
 const RENTAL_LANDING_ICONS: Record<
@@ -190,18 +191,6 @@ const TikTokViewIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ..
       d="M2.25 12s3.5-6.75 9.75-6.75S21.75 12 21.75 12s-3.5 6.75-9.75 6.75S2.25 12 2.25 12Z"
     />
     <path strokeLinecap="round" strokeLinejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-  </svg>
-);
-
-const TikTokMarkIcon: React.FC<React.SVGProps<SVGSVGElement>> = ({ className, ...props }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    aria-hidden
-    className={className}
-    {...props}
-  >
-    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.84 2.84 0 0 1 .9.14V9.4a6.1 6.1 0 0 0-1-.05A6.15 6.15 0 0 0 4 20.66a6.15 6.15 0 0 0 10.48-4.32v-7.17a8.2 8.2 0 0 0 4.99 1.7v-3.45a4.8 4.8 0 0 1-1.88-.15z" />
   </svg>
 );
 
@@ -669,9 +658,9 @@ const RentalCarLandingPage: React.FC = () => {
                                                         loading="lazy"
                                                         decoding="async"
                                                     />
-                                                    <span className="absolute right-1.5 top-1.5 z-[2] text-white drop-shadow">
-                                                        <TikTokMarkIcon className="h-3.5 w-3.5" />
-                                                    </span>
+                                                        <span className="absolute right-1.5 top-1.5 z-[2] text-white drop-shadow">
+                                                            <TikTokIcon className="h-3.5 w-3.5" aria-hidden />
+                                                        </span>
                                                     <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
                                                     <span className="absolute left-1/2 top-1/2 z-[1] flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md transition-transform group-hover:scale-105">
                                                         <svg

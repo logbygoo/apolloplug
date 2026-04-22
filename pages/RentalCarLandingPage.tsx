@@ -5,6 +5,7 @@ import { useParams, Navigate, Link, NavLink } from 'react-router-dom';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { getRentalLandingPageContent } from '../configs/rentalLandingPageContent';
+import { TIKTOK_LANDING_TILES, tiktokEmbedSrc } from '../configs/tiktokLandingEmbeds';
 import { Card, CardContent } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
@@ -124,6 +125,25 @@ const MagnifyingGlassIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
   </svg>
 );
 
+const TikTokViewIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    className="h-3.5 w-3.5 shrink-0 opacity-90"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    aria-hidden
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M2.25 12s3.5-6.75 9.75-6.75S21.75 12 21.75 12s-3.5 6.75-9.75 6.75S2.25 12 2.25 12Z"
+    />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+  </svg>
+);
+
 /** Safari/WebKit: sama zmiana content na meta theme-color często nie odświeża paska adresu — klon wymusza ponowne odczytanie. */
 function applyThemeColorMeta(content: string) {
     let el = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
@@ -179,6 +199,7 @@ const RentalCarLandingPage: React.FC = () => {
 
     const [openFaqIndex, setOpenFaqIndex] = useState<number>(0);
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const [tiktokModalVideoId, setTiktokModalVideoId] = useState<string | null>(null);
     const [mobileRentSheetOpen, setMobileRentSheetOpen] = useState(true);
     const themeColorOnEnterRef = useRef<string | null>(null);
     const galleryCount = galleryItems.length;
@@ -212,6 +233,20 @@ const RentalCarLandingPage: React.FC = () => {
             document.body.style.overflow = prev;
         };
     }, [lightboxIndex]);
+
+    useEffect(() => {
+        if (tiktokModalVideoId === null) return;
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setTiktokModalVideoId(null);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = prev;
+            window.removeEventListener('keydown', onKey);
+        };
+    }, [tiktokModalVideoId]);
 
     useEffect(() => {
         const m = document.querySelector('meta[name="theme-color"]');
@@ -462,30 +497,96 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* WHY THIS CAR */}
+            {/* WHY THIS CAR + TikTok (2 kolumny na lg) */}
             <section className="py-16 md:py-24 bg-secondary/30">
                 <div className="container mx-auto px-4 md:px-6">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
+                    <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4">{landingContent.whyHeading}</h2>
                         <p className="text-muted-foreground text-lg">{landingContent.whyLead}</p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {landingContent.features.map((feature, idx) => {
-                            const FeatureIcon = RENTAL_LANDING_ICONS[feature.icon];
-                            return (
-                                <Card key={idx} className="border-none shadow-md hover:shadow-xl transition-all duration-300">
-                                    <CardContent className="pt-6">
-                                        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
-                                            <FeatureIcon className="w-6 h-6" aria-hidden />
-                                        </div>
-                                        <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                                        <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                                    </CardContent>
-                                </Card>
-                            );
-                        })}
-                    </div>
+                    {TIKTOK_LANDING_TILES.length > 0 ? (
+                        <div className="flex flex-col gap-10 lg:flex-row lg:items-stretch lg:gap-10 xl:gap-12">
+                            <div className="grid min-w-0 flex-1 grid-cols-2 gap-4 md:gap-6">
+                                {landingContent.features.map((feature, idx) => {
+                                    const FeatureIcon = RENTAL_LANDING_ICONS[feature.icon];
+                                    return (
+                                        <Card
+                                            key={idx}
+                                            className="border-none shadow-md transition-all duration-300 hover:shadow-xl"
+                                        >
+                                            <CardContent className="pt-6">
+                                                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                                    <FeatureIcon className="h-6 w-6" aria-hidden />
+                                                </div>
+                                                <h3 className="mb-2 text-base font-bold md:text-lg">{feature.title}</h3>
+                                                <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                                            </CardContent>
+                                        </Card>
+                                    );
+                                })}
+                            </div>
+                            <aside className="mx-auto w-full max-w-sm shrink-0 lg:mx-0 lg:w-72">
+                                <h3 className="mb-4 text-center text-lg font-bold lg:text-left">
+                                    Zobacz nasze social media
+                                </h3>
+                                <ul className="mx-auto flex max-w-[280px] flex-col gap-3 lg:mx-0">
+                                    {TIKTOK_LANDING_TILES.map((tile) => (
+                                        <li key={tile.videoId}>
+                                            <button
+                                                type="button"
+                                                onClick={() => setTiktokModalVideoId(tile.videoId)}
+                                                className="group relative aspect-[9/16] w-full max-h-[min(70vh,420px)] min-h-[200px] overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                            >
+                                                <img
+                                                    src={tile.thumbSrc}
+                                                    alt={tile.alt ?? 'Miniatura filmu TikTok'}
+                                                    className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                />
+                                                <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
+                                                <span className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-lg transition-transform group-hover:scale-105">
+                                                    <svg
+                                                        className="ml-0.5 h-7 w-7"
+                                                        viewBox="0 0 24 24"
+                                                        fill="currentColor"
+                                                        aria-hidden
+                                                    >
+                                                        <path d="M8 5.14v13.72L19 12 8 5.14z" />
+                                                    </svg>
+                                                </span>
+                                                <span className="absolute bottom-0 left-0 right-0 flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium text-white">
+                                                    <TikTokViewIcon />
+                                                    {tile.viewCountLabel}
+                                                </span>
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </aside>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 gap-4 md:gap-6">
+                            {landingContent.features.map((feature, idx) => {
+                                const FeatureIcon = RENTAL_LANDING_ICONS[feature.icon];
+                                return (
+                                    <Card
+                                        key={idx}
+                                        className="border-none shadow-md transition-all duration-300 hover:shadow-xl"
+                                    >
+                                        <CardContent className="pt-6">
+                                            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                                <FeatureIcon className="h-6 w-6" aria-hidden />
+                                            </div>
+                                            <h3 className="mb-2 text-lg font-bold">{feature.title}</h3>
+                                            <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -579,6 +680,38 @@ const RentalCarLandingPage: React.FC = () => {
                     </div>
                 </div>
             </section>
+
+            {/* TikTok: modal (iframe `embed/v2` — ten sam player co oficjalne osadzanie) */}
+            {tiktokModalVideoId && (
+                <div
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4"
+                    onClick={() => setTiktokModalVideoId(null)}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Film TikTok"
+                >
+                    <div
+                        className="relative w-full max-w-lg rounded-2xl bg-background p-1 shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            type="button"
+                            className="absolute -right-1 -top-1 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md transition-colors hover:bg-secondary md:-right-2 md:-top-2"
+                            onClick={() => setTiktokModalVideoId(null)}
+                            aria-label="Zamknij"
+                        >
+                            <XMarkIcon className="h-5 w-5" />
+                        </button>
+                        <iframe
+                            title="TikTok"
+                            src={tiktokEmbedSrc(tiktokModalVideoId)}
+                            className="h-[min(80vh,720px)] w-full rounded-[14px] border-0"
+                            allow="encrypted-media; fullscreen; picture-in-picture; autoplay"
+                            allowFullScreen
+                        />
+                    </div>
+                </div>
+            )}
 
             {/* Mobile: pływający pasek CTA (tylko karta ma bg-white; zamknięcie = slide w dół + theme-color) */}
             <div

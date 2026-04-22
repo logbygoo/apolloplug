@@ -14,6 +14,7 @@ import {
 import { Card, CardContent } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { SOCIAL_MEDIA_LINKS } from '../configs/socialLinks';
 import {
   BoltIcon,
   SparklesIcon,
@@ -23,6 +24,9 @@ import {
   HomeIcon,
   XMarkIcon,
   TikTokIcon,
+  InstagramIcon,
+  FacebookIcon,
+  YoutubeIcon,
   ChevronDownIcon,
 } from '../icons';
 import type { RentalLandingFeatureIconKey, SeoData } from '../types';
@@ -35,6 +39,16 @@ const RENTAL_LANDING_ICONS: Record<
   sparkles: SparklesIcon,
   shieldCheck: ShieldCheckIcon,
   key: KeyIcon,
+};
+
+const SOCIAL_HEADER_ICONS: Record<
+  (typeof SOCIAL_MEDIA_LINKS)[number]['id'],
+  React.FC<React.SVGProps<SVGSVGElement>>
+> = {
+  tiktok: TikTokIcon,
+  instagram: InstagramIcon,
+  facebook: FacebookIcon,
+  youtube: YoutubeIcon,
 };
 
 /** Te same reguły co `.rental-v2` na /wypozyczalnia — scrollbar ukryty, tor z gutterem jak `.container`. */
@@ -703,11 +717,31 @@ const RentalCarLandingPage: React.FC = () => {
                                 style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
-                                <p className="mb-2 shrink-0 text-sm font-bold text-foreground">
-                                    Ostatnio w naszych social mediach
-                                </p>
+                                <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-muted/50 p-2">
+                                    <div className="mb-2 flex min-w-0 shrink-0 items-center justify-between gap-2">
+                                        <p className="min-w-0 pr-1 text-sm font-bold leading-tight text-foreground">
+                                            Ostatnio w naszych social mediach
+                                        </p>
+                                        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5" aria-label="Profile w social mediach">
+                                            {SOCIAL_MEDIA_LINKS.map(({ id, href, label }) => {
+                                                const Icon = SOCIAL_HEADER_ICONS[id];
+                                                return (
+                                                    <a
+                                                        key={id}
+                                                        href={href}
+                                                        target="_blank"
+                                                        rel="nofollow noopener noreferrer"
+                                                        className="rounded-sm text-foreground/80 transition-colors hover:text-foreground"
+                                                        aria-label={label}
+                                                    >
+                                                        <Icon className="h-4 w-4" />
+                                                    </a>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                 <div
-                                    className="tiktok-social-slider min-h-0 w-full min-w-0 flex-1 cursor-grab select-none rounded-lg bg-muted/50 py-[5px]"
+                                    className="tiktok-social-slider min-h-0 w-full min-w-0 flex-1 cursor-grab select-none py-[5px]"
                                     onPointerDownCapture={onTiktokSliderPointerDown}
                                     onPointerMove={onTiktokSliderPointerMove}
                                     onPointerUp={onTiktokSliderPointerUp}
@@ -750,6 +784,7 @@ const RentalCarLandingPage: React.FC = () => {
                                             </div>
                                         ))}
                                     </div>
+                                </div>
                                 </div>
                             </aside>
                         </div>

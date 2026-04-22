@@ -53,15 +53,17 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
 ];
 
 /**
- * URL iframe w modalu (oficjalny player TikTok — ten sam wideo co w osadzaniu przez „Osadź”).
- * Pełny markup `<blockquote class="tiktok-embed" …>…</blockquote>` + `embed.js` bywa kapryśny
- * w dynamicznym React; iframe jest w praktyce równoważny podglądowi z kodu.
- *
- * Przykładowy fragment z osadzania (np. wideo 7627939875727150369) — w razie ręcznego testu w HTML:
- * <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@apolloidea/video/7627939875727150369"
- *   data-video-id="7627939875727150369" style="max-width: 605px; min-width: 325px">…</blockquote>
- * <script async src="https://www.tiktok.com/embed.js"></script>
+ * Oficjalny lekki player (iframe) — bez `embed.js` na stronie; iframe montujemy dopiero w modalu.
+ * @see https://developers.tiktok.com/doc/embed-player
+ * – `autoplay=1` po otwarciu modału (w ramach interakcji użytkownika),
+ * – `muted=0` — dźwięk włączony (o ile przeglądarka i TikTok to pozwolą),
+ * – `rel=0` — mniej „polecanych” pod filmem w embedzie.
  */
 export function tiktokEmbedSrc(videoId: string): string {
-  return `https://www.tiktok.com/embed/v2/${videoId}`;
+  const q = new URLSearchParams({
+    autoplay: '1',
+    muted: '0',
+    rel: '0',
+  });
+  return `https://www.tiktok.com/player/v1/${videoId}?${q.toString()}`;
 }

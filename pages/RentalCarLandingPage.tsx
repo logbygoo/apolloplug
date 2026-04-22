@@ -843,34 +843,38 @@ const RentalCarLandingPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* TikTok: modal (iframe `embed/v2` — ten sam player co oficjalne osadzanie) */}
+            {/* TikTok: modal — tylko tu ładuje się iframe `player/v1` (bez embed.js w index / na wejściu) */}
             {tiktokModalVideoId && (
                 <div
-                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4"
+                    className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/75 p-4"
                     onClick={() => setTiktokModalVideoId(null)}
                     role="dialog"
                     aria-modal="true"
                     aria-label="Film TikTok"
                 >
                     <div
-                        className="relative w-full max-w-lg rounded-2xl bg-background p-1 shadow-2xl"
+                        className="relative my-auto w-full max-w-[min(100%,325px)] shrink-0 overflow-hidden rounded-2xl bg-background p-1 shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             type="button"
-                            className="absolute -right-1 -top-1 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md transition-colors hover:bg-secondary md:-right-2 md:-top-2"
+                            className="absolute -right-1 -top-1 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-background text-foreground shadow-md transition-colors hover:bg-secondary"
                             onClick={() => setTiktokModalVideoId(null)}
                             aria-label="Zamknij"
                         >
                             <XMarkIcon className="h-5 w-5" />
                         </button>
-                        <iframe
-                            title="TikTok"
-                            src={tiktokEmbedSrc(tiktokModalVideoId)}
-                            className="h-[min(80vh,720px)] w-full rounded-[14px] border-0"
-                            allow="encrypted-media; fullscreen; picture-in-picture; autoplay"
-                            allowFullScreen
-                        />
+                        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[12px] bg-black">
+                            <iframe
+                                key={tiktokModalVideoId}
+                                title="TikTok"
+                                src={tiktokEmbedSrc(tiktokModalVideoId)}
+                                className="absolute left-0 top-0 h-full w-full border-0"
+                                allow="autoplay; encrypted-media; fullscreen; picture-in-picture; web-share; clipboard-write"
+                                allowFullScreen
+                                loading="eager"
+                            />
+                        </div>
                     </div>
                 </div>
             )}

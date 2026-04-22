@@ -660,7 +660,7 @@ const RentalCarLandingPage: React.FC = () => {
                                                 <button
                                                     type="button"
                                                     onClick={onTiktokTileClick(tile.videoId)}
-                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded-2xl border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                                    className="group relative h-full min-h-0 w-full overflow-hidden rounded border border-border/60 bg-muted text-left shadow-md transition-all hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                                                 >
                                                     <img
                                                         src={tile.thumbSrc}

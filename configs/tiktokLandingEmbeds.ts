@@ -21,6 +21,12 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
     viewCountLabel: '6,2 tys.',
   },
   {
+    videoId: '7625350083407629600',
+    thumbSrc: 'https://img.apolloidea.com/img/social-media/7625350083407629600.jpeg',
+    alt: 'Klip TikTok @apolloidea Tesla 3',
+    viewCountLabel: '334',
+  },
+  {
     videoId: '7631466839964519713',
     thumbSrc: 'https://img.apolloidea.com/img/social-media/7631466839964519713.jpeg',
     alt: 'Klip TikTok @apolloidea Policja Wrap',
@@ -43,12 +49,6 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
     thumbSrc: 'https://img.apolloidea.com/img/social-media/7628301388006575392.jpeg',
     alt: 'Klip TikTok @apolloidea Elon Tesla Wrap',
     viewCountLabel: '503',
-  },
-  {
-    videoId: '7625350083407629600',
-    thumbSrc: 'https://img.apolloidea.com/img/social-media/7625350083407629600.jpeg',
-    alt: 'Klip TikTok @apolloidea Tesla 3',
-    viewCountLabel: '334',
   },
 ];
 

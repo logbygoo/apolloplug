@@ -130,11 +130,13 @@ const CAR_LANDING_E2E_STYLES = `
     }
   }
 
-  .rental-car-landing .tiktok-social-slider {
+  /* Pasek przewijania kafelków — tylko tu cienie; wrapper ma jedno tło (jak wcześniej jeden box ze sliderem). */
+  .rental-car-landing .tiktok-social-hscroll {
     width: 100%;
     max-width: 100%;
     height: 100%;
     min-height: 0;
+    flex: 1 1 0;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -147,12 +149,12 @@ const CAR_LANDING_E2E_STYLES = `
       inset 1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16),
       inset -1.25rem 0 1.25rem -0.65rem rgba(0, 0, 0, 0.16);
   }
-  .dark .rental-car-landing .tiktok-social-slider {
+  .dark .rental-car-landing .tiktok-social-hscroll {
     box-shadow:
       inset 1.25rem 0 1.5rem -0.65rem rgba(0, 0, 0, 0.55),
       inset -1.25rem 0 1.5rem -0.65rem rgba(0, 0, 0, 0.55);
   }
-  .rental-car-landing .tiktok-social-slider::-webkit-scrollbar {
+  .rental-car-landing .tiktok-social-hscroll::-webkit-scrollbar {
     height: 0;
     display: none;
   }
@@ -717,13 +719,13 @@ const RentalCarLandingPage: React.FC = () => {
                                 style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
-                                <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-muted/50 p-2">
-                                    <div className="mb-2 flex min-w-0 shrink-0 items-center justify-between gap-2">
+                                <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-muted/50">
+                                    <div className="flex min-w-0 shrink-0 items-center justify-between gap-2 px-2 pt-2 pb-1.5">
                                         <p className="min-w-0 pr-1 text-sm font-bold leading-tight text-foreground">
                                             Ostatnio w naszych social mediach
                                         </p>
-                                        <div className="flex shrink-0 items-center gap-1 sm:gap-1.5" aria-label="Profile w social mediach">
-                                            {SOCIAL_MEDIA_LINKS.map(({ id, href, label }) => {
+                                        <div className="flex shrink-0 items-center" aria-label="TikTok">
+                                            {SOCIAL_MEDIA_LINKS.filter((l) => l.id === 'tiktok').map(({ id, href, label }) => {
                                                 const Icon = SOCIAL_HEADER_ICONS[id];
                                                 return (
                                                     <a
@@ -731,22 +733,22 @@ const RentalCarLandingPage: React.FC = () => {
                                                         href={href}
                                                         target="_blank"
                                                         rel="nofollow noopener noreferrer"
-                                                        className="rounded-sm text-foreground/80 transition-colors hover:text-foreground"
-                                                        aria-label={label}
+                                                        className="flex items-center gap-1.5 rounded-sm text-foreground/80 transition-colors hover:text-foreground"
                                                     >
-                                                        <Icon className="h-4 w-4" />
+                                                        <Icon className="h-4 w-4 shrink-0" aria-hidden />
+                                                        <span className="text-sm font-medium">{label}</span>
                                                     </a>
                                                 );
                                             })}
                                         </div>
                                     </div>
-                                <div
-                                    className="tiktok-social-slider min-h-0 w-full min-w-0 flex-1 cursor-grab select-none py-[5px]"
-                                    onPointerDownCapture={onTiktokSliderPointerDown}
-                                    onPointerMove={onTiktokSliderPointerMove}
-                                    onPointerUp={onTiktokSliderPointerUp}
-                                    onPointerCancel={onTiktokSliderPointerUp}
-                                >
+                                    <div
+                                        className="tiktok-social-hscroll min-h-0 w-full cursor-grab select-none py-[5px]"
+                                        onPointerDownCapture={onTiktokSliderPointerDown}
+                                        onPointerMove={onTiktokSliderPointerMove}
+                                        onPointerUp={onTiktokSliderPointerUp}
+                                        onPointerCancel={onTiktokSliderPointerUp}
+                                    >
                                     <div className="tiktok-social-track">
                                         {TIKTOK_LANDING_TILES.map((tile) => (
                                             <div key={tile.videoId} className="tiktok-social-slide">

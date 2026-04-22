@@ -42,13 +42,13 @@ export const TIKTOK_LANDING_TILES: TikTokLandingTile[] = [
     videoId: '7628301388006575392',
     thumbSrc: 'https://img.apolloidea.com/img/social-media/7628301388006575392.jpeg',
     alt: 'Klip TikTok @apolloidea Elon Tesla Wrap',
-    viewCountLabel: '503.',
+    viewCountLabel: '503',
   },
   {
     videoId: '7625350083407629600',
     thumbSrc: 'https://img.apolloidea.com/img/social-media/7625350083407629600.jpeg',
     alt: 'Klip TikTok @apolloidea Tesla 3',
-    viewCountLabel: '334.',
+    viewCountLabel: '334',
   },
 ];
 

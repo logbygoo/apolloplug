@@ -16,6 +16,7 @@ import {
   tiktokEmbedSrc,
 } from '../configs/tiktokLandingEmbeds';
 import { RentalAvailabilityCalendar } from '../components/RentalAvailabilityCalendar';
+import RentalPriceTable from '../components/RentalPriceTable';
 import { Card, CardContent } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
@@ -172,6 +173,9 @@ const CAR_LANDING_E2E_STYLES = `
     max-height: 100%;
     min-height: 0;
     min-width: 0;
+  }
+  .rental-car-landing .tiktok-social-track .tiktok-social-slide:last-child {
+    margin-right: 20px;
   }
   @media (max-width: 1023px) {
     /* Gdy box TikToka wpada pod metryki (układ 1 kolumny), box i kafelki rosną proporcjonalnie. */
@@ -1014,9 +1018,17 @@ const RentalCarLandingPage: React.FC = () => {
                     <div className="grid lg:grid-cols-3 lg:gap-12">
                         <div className="lg:col-span-2">
                             <div
-                                className="prose prose-zinc max-w-none"
+                                className="prose prose-zinc max-w-none [&_h2]:mt-0"
                                 dangerouslySetInnerHTML={{ __html: landingContent.longDescriptionHtml }}
                             />
+                            {carRental.priceTiers && carRental.priceTiers.length > 0 && (
+                                <div className="not-prose mt-10">
+                                    <h2 className="m-0 text-2xl font-bold text-foreground">
+                                        Cennik Wypożyczenia {carFleet.name}
+                                    </h2>
+                                    <RentalPriceTable car={carRental} className="mt-4" showHeading={false} />
+                                </div>
+                            )}
                         </div>
 
                         {/* Prawa kolumna: karta ceny + kalendarz (bez sticky — kalendarz nie wjeżdża pod kartę) */}
@@ -1261,7 +1273,7 @@ const RentalCarLandingPage: React.FC = () => {
                                 <span className="h-[50px] w-[50px] shrink-0" aria-hidden />
                             )}
                             <p className="min-w-0 flex-1 text-sm font-medium leading-snug text-foreground">
-                                Wybierz termin wynajmu
+                                Rozpocznij proces wypożyczenia
                             </p>
                             <button
                                 type="button"

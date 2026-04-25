@@ -77,4 +77,18 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     ogType: 'website',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
+  '/fb': {
+    title: 'Apollo Idea — linki (Facebook)',
+    description:
+      'Szybkie linki z Facebooka: strona główna Apollo, wypożyczalnia EV, zamówienie Tesla, kontakt. Apollo Idea, Warszawa.',
+    ogType: 'website',
+    ogImage: 'https://img.apolloidea.com/og/default.jpg',
+  },
+  '/yt': {
+    title: 'Apollo Idea — linki (YouTube)',
+    description:
+      'Szybkie linki z YouTube: strona główna Apollo, wypożyczalnia EV, zamówienie Tesla, kontakt. Apollo Idea, Warszawa.',
+    ogType: 'website',
+    ogImage: 'https://img.apolloidea.com/og/default.jpg',
+  },
 };

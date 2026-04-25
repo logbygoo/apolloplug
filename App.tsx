@@ -15,7 +15,7 @@ import PurchasePage from './pages/PurchasePage';
 import InsurancePage from './pages/InsurancePage';
 import DocumentationPage from './pages/DocumentationPage';
 import RentalCarLandingPage from './pages/RentalCarLandingPage';
-import InstagramLinksPage from './pages/InstagramLinksPage';
+import SocialBioLinksPage from './pages/SocialBioLinksPage';
 import PdfViewerPage from './pages/PdfViewerPage'; // Import new PDF viewer page
 import DashPage from './pages/DashPage';
 import CookieBanner from './components/CookieBanner';
@@ -209,7 +209,9 @@ const App: React.FC = () => {
                     <Route path="/flota" element={<FleetPage />} />
                     <Route path="/flota/:carId" element={<CarDetailPage />} />
                     <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
-                    <Route path="/ig" element={<InstagramLinksPage />} />
+                    <Route path="/ig" element={<SocialBioLinksPage source="ig" />} />
+                    <Route path="/fb" element={<SocialBioLinksPage source="fb" />} />
+                    <Route path="/yt" element={<SocialBioLinksPage source="yt" />} />
                     <Route path="/kontakt" element={<ContactPage />} />
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/zakup" element={<PurchasePage />} />

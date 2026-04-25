@@ -60,32 +60,30 @@ const WrapPage: React.FC = () => {
         <ul className="m-0 grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 lg:grid-cols-3">
           {WRAP_GALLERY_ITEMS.map((item) => (
             <li key={item.id} className="flex flex-col">
-              <div className="overflow-hidden rounded-xl border-2 border-border shadow-sm">
-                <div className="flex flex-col bg-zinc-300/95 p-3 dark:bg-zinc-900/95">
-                  <img
-                    src={item.src}
-                    alt={`${item.label} — ${item.compatibleModel}`}
-                    className="mx-auto h-auto w-full rounded-md object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <p className="m-0 mt-3 line-clamp-2 text-center text-sm font-medium leading-snug text-foreground">
-                    {item.label}
-                  </p>
-                  <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
-                    <span className="inline-flex min-h-10 min-w-0 max-w-full items-center rounded-full border border-black/10 bg-white/70 px-3 text-xs font-semibold text-foreground dark:border-white/15 dark:bg-white/10">
-                      {item.compatibleModel}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => onDownload(item)}
-                      disabled={downloadingId === item.id}
-                      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white/90 text-foreground transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/20"
-                      aria-label={`Pobierz ${item.fileName} — ${item.compatibleModel}`}
-                    >
-                      <ArrowDownTrayIcon className="h-5 w-5" />
-                    </button>
-                  </div>
+              <div className="flex flex-col overflow-hidden rounded-xl bg-zinc-300/95 p-3 dark:bg-zinc-900/95">
+                <img
+                  src={item.src}
+                  alt={`${item.label} — ${item.compatibleModel}`}
+                  className="mx-auto h-auto w-full rounded-md object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <p className="m-0 mt-3 line-clamp-2 text-center text-sm font-medium leading-snug text-foreground">
+                  {item.label}
+                </p>
+                <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+                  <span className="inline-flex min-h-10 min-w-0 max-w-full items-center rounded-full border border-black/10 bg-white/70 px-3 text-xs font-semibold text-foreground dark:border-white/15 dark:bg-white/10">
+                    {item.compatibleModel}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => onDownload(item)}
+                    disabled={downloadingId === item.id}
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white/90 text-foreground transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/20"
+                    aria-label={`Pobierz ${item.fileName} — ${item.compatibleModel}`}
+                  >
+                    <ArrowDownTrayIcon className="h-5 w-5" />
+                  </button>
                 </div>
               </div>
             </li>

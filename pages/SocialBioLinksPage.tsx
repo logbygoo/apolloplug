@@ -77,6 +77,12 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
           >
             Zamów Teslę na tesla.com
           </a>
+          <Link
+            to="/wrap"
+            className={`${btnBase} border-2 border-black bg-white text-foreground hover:bg-secondary/60`}
+          >
+            Lakiernia Tesli
+          </Link>
         </nav>
 
         <div className="mt-4 pt-8 mb-10">

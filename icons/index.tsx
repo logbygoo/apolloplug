@@ -8,6 +8,8 @@ export * from './BuildingLibraryIcon';
 export * from './CalendarDaysIcon';
 export * from './CheckIcon';
 export * from './ChevronDownIcon';
+export * from './ChevronLeftIcon';
+export * from './ChevronRightIcon';
 export * from './ClockIcon';
 export * from './CreditCardIcon';
 export * from './CurrencyDollarIcon';

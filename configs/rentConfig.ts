@@ -105,7 +105,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-x',
     name: 'Model X',
     imageUrl: [
-      'https://img.apolloidea.com/img/tesla-x-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-model-x-440x248.png',
     ],
     pricePerDay: 450,
     available: false,
@@ -129,9 +129,9 @@ export const RENTAL_CARS: Car[] = [
   },
   {
     id: 'tesla-s',
-    name: 'Model S',
+    name: 'Model S Plaid',
     imageUrl: [
-      'https://img.apolloidea.com/tesla-s/main-cards-tesla-s.jpg',
+      'https://img.apolloidea.com/img/tesla-model-s-440 × 248.png',
     ],
     pricePerDay: 520,
     visible: false,
@@ -158,7 +158,7 @@ export const RENTAL_CARS: Car[] = [
     id: 'tesla-cybertruck',
     name: 'Cybertruck',
     imageUrl: [
-      'https://img.apolloidea.com/img/tesla-cybertruck-low-600x400.jpg',
+      'https://img.apolloidea.com/img/tesla-cybertruck-440x248.png',
     ],
     pricePerDay: 600,
     available: false,

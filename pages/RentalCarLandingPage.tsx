@@ -15,6 +15,7 @@ import {
   postTiktokPlayerCommand,
   tiktokEmbedSrc,
 } from '../configs/tiktokLandingEmbeds';
+import { RentalAvailabilityCalendar } from '../components/RentalAvailabilityCalendar';
 import { Card, CardContent } from '../components/ui';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
@@ -136,8 +137,6 @@ const CAR_LANDING_E2E_STYLES = `
 
   /* Cienie inset na przewijaku przyciemniały boki vs. tło pod nagłówkiem; zostawiam jednolite tło rodzica. */
   .rental-car-landing .tiktok-social-hscroll {
-    width: 100%;
-    max-width: 100%;
     height: 100%;
     min-height: 0;
     flex: 1 1 0;
@@ -162,8 +161,6 @@ const CAR_LANDING_E2E_STYLES = `
     width: max-content;
     min-height: 0;
     height: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
   }
   .rental-car-landing .tiktok-social-slide {
     flex: 0 0 auto;
@@ -175,6 +172,23 @@ const CAR_LANDING_E2E_STYLES = `
     max-height: 100%;
     min-height: 0;
     min-width: 0;
+  }
+  @media (max-width: 1023px) {
+    /* Gdy box TikToka wpada pod metryki (układ 1 kolumny), box i kafelki rosną proporcjonalnie. */
+    .rental-car-landing .tiktok-social-hscroll {
+      height: auto;
+      flex: 0 0 auto;
+    }
+    .rental-car-landing .tiktok-social-track {
+      height: auto;
+      align-items: flex-start;
+    }
+    .rental-car-landing .tiktok-social-slide {
+      width: clamp(150px, 34vw, 180px);
+      height: auto;
+      aspect-ratio: 9 / 16;
+      max-height: none;
+    }
   }
 `;
 
@@ -243,6 +257,17 @@ const RentalCarLandingPage: React.FC = () => {
         }
         return carRental.pricePerDay;
     }, [carRental]);
+
+    /** Trzy losowe inne auta z `RENTAL_CARS` (także `visible: false`), poza bieżącym `carId`. */
+    const otherElectricPicks = useMemo(() => {
+        const pool = RENTAL_CARS.filter((c) => c.id !== carId);
+        const a = [...pool];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j]!, a[i]!];
+        }
+        return a.slice(0, 3);
+    }, [carId]);
 
     const keyMetricsBlockRef = useRef<HTMLDivElement>(null);
     const [keyMetricsBlockHeight, setKeyMetricsBlockHeight] = useState<number | null>(null);
@@ -445,12 +470,12 @@ const RentalCarLandingPage: React.FC = () => {
 
     const kmLimitLabel = useMemo(() => {
         const tiers = carRental.priceTiers;
-        if (!tiers?.length) return '—';
+        if (!tiers?.length) return '-';
         const mins = tiers.map((t) => t.kmLimitPerDay);
         const lo = Math.min(...mins);
         const hi = Math.max(...mins);
-        if (lo === hi) return `${lo} km / dobę`;
-        return `${lo}–${hi} km / dobę`;
+        if (lo === hi) return `${lo} km/db`;
+        return `${lo}–${hi} km/db`;
     }, [carRental.priceTiers]);
 
     /** Galeria: miniatury `-min.jpg` w sliderze, pełne `src` w lightbox; kolejność losowa przy każdym zestawieniu. */
@@ -850,12 +875,12 @@ const RentalCarLandingPage: React.FC = () => {
                                 </div>
                             </div>
                             <aside
-                                className="flex min-h-0 w-full min-w-0 flex-col"
-                                style={keyMetricsBlockHeight != null ? { height: keyMetricsBlockHeight } : undefined}
+                                className="flex min-h-0 w-full min-w-0 flex-col lg:h-[var(--tiktok-box-height)]"
+                                style={keyMetricsBlockHeight != null ? { ['--tiktok-box-height' as string]: `${keyMetricsBlockHeight}px` } : undefined}
                                 aria-label="Filmy z TikToka"
                             >
-                                <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-muted/50">
-                                    <div className="flex min-w-0 shrink-0 items-center justify-between gap-2 px-2 pt-2 pb-1.5">
+                                <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-muted/50 px-5 pb-5 pt-2.5">
+                                    <div className="flex min-w-0 shrink-0 items-center justify-between gap-2 pb-2">
                                         <p className="min-w-0 pr-1 text-sm font-bold leading-tight text-foreground">
                                             Ostatnio w naszych social mediach
                                         </p>
@@ -878,7 +903,7 @@ const RentalCarLandingPage: React.FC = () => {
                                         </div>
                                     </div>
                                     <div
-                                        className="tiktok-social-hscroll min-h-0 w-full cursor-grab select-none py-[5px]"
+                                        className="tiktok-social-hscroll -mx-5 min-h-0 w-[calc(100%+40px)] cursor-grab select-none px-5 py-[5px]"
                                         onPointerDownCapture={onTiktokSliderPointerDown}
                                         onPointerMove={onTiktokSliderPointerMove}
                                         onPointerUp={onTiktokSliderPointerUp}
@@ -903,7 +928,7 @@ const RentalCarLandingPage: React.FC = () => {
                                                             <TikTokIcon className="h-3.5 w-3.5" aria-hidden />
                                                         </span>
                                                     <span className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/10" />
-                                                    <span className="absolute left-1/2 top-1/2 z-[1] flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-foreground shadow-md transition-transform group-hover:scale-105">
+                                                    <span className="absolute left-1/2 top-1/2 z-[1] flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/65 text-foreground shadow-md transition-transform group-hover:scale-105">
                                                         <svg
                                                             className="ml-0.5 h-4 w-4"
                                                             viewBox="0 0 24 24"
@@ -994,17 +1019,20 @@ const RentalCarLandingPage: React.FC = () => {
                             />
                         </div>
 
-                        {/* STICKY SIDEBAR — jak karta podsumowania na /rezerwacja */}
+                        {/* Prawa kolumna: karta ceny + kalendarz (bez sticky — kalendarz nie wjeżdża pod kartę) */}
                         <div className="lg:col-span-1 mt-10 lg:mt-0">
-                            <div className="lg:sticky lg:top-24">
-                                <div className="rounded-lg bg-secondary p-6">
-                                    <p className="text-sm text-muted-foreground">Cena za dobę</p>
-                                    <p className="mt-1 flex flex-wrap items-baseline gap-x-1.5 gap-y-0 text-4xl font-bold tracking-tight text-foreground tabular-nums">
-                                        <span className="text-sm font-medium text-muted-foreground">od</span>
-                                        <span>{minPrice.toLocaleString('pl-PL')}</span>
-                                        <span className="text-2xl font-semibold">zł</span>
-                                    </p>
-                                    <dl className="mt-6 space-y-2.5 text-sm">
+                            <div className="rounded-lg bg-secondary p-6">
+                                    <div className="flex w-full min-w-0 flex-nowrap items-end justify-between gap-3">
+                                        <p className="m-0 shrink-0 -translate-y-[6px] text-sm leading-none text-muted-foreground">
+                                            Cena za dobę
+                                        </p>
+                                        <p className="m-0 min-w-0 text-right text-4xl font-bold leading-none tracking-tight text-foreground tabular-nums whitespace-nowrap">
+                                            <span className="text-2xl font-semibold">od</span>{' '}
+                                            {minPrice.toLocaleString('pl-PL')}{' '}
+                                            <span className="text-2xl font-semibold">zł</span>
+                                        </p>
+                                    </div>
+                                    <dl className="mt-4 space-y-2.5 text-sm">
                                         <div className="flex justify-between gap-4">
                                             <dt className="text-muted-foreground shrink-0">Kaucja:</dt>
                                             <dd className="text-right font-medium text-foreground tabular-nums">
@@ -1020,7 +1048,7 @@ const RentalCarLandingPage: React.FC = () => {
                                         <div className="flex justify-between gap-4">
                                             <dt className="text-muted-foreground shrink-0">Koszt poza limitem:</dt>
                                             <dd className="text-right font-medium text-foreground tabular-nums">
-                                                {carRental.costPerKmOverLimit.toLocaleString('pl-PL')} zł / km
+                                                {carRental.costPerKmOverLimit.toLocaleString('pl-PL')} zł/km
                                             </dd>
                                         </div>
                                     </dl>
@@ -1028,11 +1056,14 @@ const RentalCarLandingPage: React.FC = () => {
                                         to={`/wypozyczalnia?model=${carId}`}
                                         className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
                                     >
-                                        Wybierz termin
+                                        Zarezerwuj
                                         <ArrowRightIcon className="h-5 w-5 shrink-0" aria-hidden />
                                     </Link>
-                                </div>
                             </div>
+                            <RentalAvailabilityCalendar
+                                className="mt-8 max-w-sm lg:ml-auto"
+                                carId={carId}
+                            />
                         </div>
                     </div>
 
@@ -1116,6 +1147,55 @@ const RentalCarLandingPage: React.FC = () => {
                             </div>
                         </div>
                     </div>
+
+                    {otherElectricPicks.length > 0 && (
+                        <div className="mt-14 not-prose border-t border-border pt-12">
+                            <h2 className="text-2xl font-bold text-foreground">Inne auta elektryczne</h2>
+                            <p className="mt-2 text-muted-foreground">
+                                Sprawdź nasze inne elektryczne auta na wynajem
+                            </p>
+                            <ul className="mt-8 grid list-none grid-cols-1 gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
+                                {otherElectricPicks.map((c) => {
+                                    const fleetMeta = CAR_FLEET.find((f) => f.id === c.id);
+                                    const title = fleetMeta?.name ?? c.name;
+                                    const fromPrice =
+                                        c.priceTiers && c.priceTiers.length > 0
+                                            ? Math.min(...c.priceTiers.map((t) => t.pricePerDay))
+                                            : c.pricePerDay;
+                                    return (
+                                        <li key={c.id} className="min-w-0">
+                                            <Link
+                                                to={`/wypozycz/${c.id}`}
+                                                className="group flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-border bg-white transition-colors hover:border-foreground/25 dark:bg-card"
+                                            >
+                                                <div className="box-border aspect-[5/3] w-full overflow-hidden bg-muted/40 p-3 sm:p-4">
+                                                    <img
+                                                        src={c.imageUrl[0]}
+                                                        alt={title}
+                                                        className="h-full w-full min-h-0 min-w-0 object-contain object-center transition-transform group-hover:scale-[1.02]"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                </div>
+                                                <div className="flex min-h-0 flex-1 flex-col p-4">
+                                                    <h3 className="text-base font-semibold leading-snug text-foreground">
+                                                        {title}
+                                                    </h3>
+                                                    <p className="mt-2 text-sm text-muted-foreground">
+                                                        Cena od{' '}
+                                                        <span className="font-semibold tabular-nums text-foreground">
+                                                            {fromPrice.toLocaleString('pl-PL')}
+                                                        </span>
+                                                        <span className="text-foreground/90"> zł / doba</span>
+                                                    </p>
+                                                </div>
+                                            </Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
                 </div>
             </section>
 

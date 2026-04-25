@@ -48,7 +48,7 @@ export const CAR_FLEET: Car[] = [
   },
   {
     id: 'tesla-s',
-    name: 'Tesla Model S',
+    name: 'Tesla Model S Plaid',
     description: 'Ikona elektromobilności w wersji Plaid. Niesamowite przyspieszenie, wolant zamiast kierownicy i komfort limuzyny.',
     imageUrl: [
       'https://img.apolloidea.com/tesla-s/main-cards-tesla-s.jpg',

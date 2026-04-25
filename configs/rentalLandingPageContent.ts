@@ -243,63 +243,68 @@ const TESLA_Y_JUNIPER: RentalLandingPageContent = {
 const TESLA_MODEL_X: RentalLandingPageContent = {
   heroSubtitle: DEFAULT_HERO_SUBTITLE,
   whyLead:
-    'Flagowy SUV Tesli z charakterystycznymi drzwiami Falcon Wing, miejscami dla całej rodziny i osiągami aut sportowych. ' +
-    'Na wyjazd z dziećmi, reprezentacyjny przejazd lub dłuższą trasę — z przestrzenią i widokiem przez panoramiczną szybę.',
+    'Tesla Model X to duży elektryczny SUV dla osób, które potrzebują miejsca dla pasażerów i bagażu, ale nie chcą rezygnować z dynamiki. ' +
+    'Sprawdza się na rodzinny wyjazd, dłuższą trasę i przejazdy, w których liczy się komfort wejścia, cisza w kabinie i pewne prowadzenie.',
   features: [
     {
       icon: 'bolt',
-      title: 'Zasięg i sieć ładowania',
-      desc: 'Zasięg do 576 km (WLTP) i szybkie sesje na Superchargerze — duży SUV bez kompromisu na trasie.',
+      title: 'Zasięg i ładowanie w trasie',
+      desc:
+        'Realny zasięg zależy od wersji i stylu jazdy, a sieć Supercharger pozwala planować dłuższe odcinki bez stresu. Nawigacja prowadzi do punktów ładowania i pomaga przewidzieć czas postoju.',
     },
     {
       icon: 'sparkles',
-      title: 'Falcon Wing i przestrzeń',
-      desc: 'Drzwi tylne ułatwiają wsiadanie w ciasnym miejscu; konfiguracja nawet na 7 osób i bagaż na długie wyjazdy.',
+      title: 'Przestrzeń i drzwi Falcon Wing',
+      desc:
+        'Duża kabina, wysoka pozycja i wygodny dostęp do tyłu auta. Drzwi Falcon Wing ułatwiają wsiadanie dzieci i pakowanie rzeczy, szczególnie na ciasnych parkingach.',
     },
     {
       icon: 'shieldCheck',
-      title: 'Bezpieczeństwo i Autopilot',
-      desc: 'Solidna konstrukcja, testy zderzeniowe i bogaty pakiet asyst — spokój przy pełnym obciążeniu auta.',
+      title: 'Bezpieczeństwo i asystenci jazdy',
+      desc:
+        'Model X korzysta z pakietu systemów wspomagania kierowcy i stabilnej konstrukcji nadwozia. To pomaga w spokojnej jeździe przy pełnym obciążeniu auta.',
     },
     {
       icon: 'key',
-      title: 'Aplikacja Tesla',
-      desc: 'Klimatyzacja przed jazdą, status ładowania i dostęp do auta — wszystko z poziomu smartfona.',
+      title: 'Aplikacja i codzienna obsługa',
+      desc:
+        'Z telefonu otworzysz auto, ustawisz temperaturę i sprawdzisz stan baterii. Dzięki temu łatwiej przygotować samochód przed ruszeniem i kontrolować ładowanie.',
     },
   ],
   longDescriptionHtml: `
-<h2 class="text-2xl font-bold text-foreground">Wynajem Tesla Model X — luksusowy SUV elektryczny</h2>
+<h2 class="text-2xl font-bold text-foreground">Tesla Model X na wynajem w Warszawie</h2>
 <p>
-  <strong>Tesla Model X</strong> to propozycja dla osób, które chcą łączyć elektryczną płynność jazdy z przestrzenią
-  i efektem „wow” przy otwieraniu drzwi. Jeśli szukasz <strong>tesli na wynajem</strong> w Warszawie z miejscami dla większej grupy
-  lub dużym bagażem, Model X sprawdzi się na weekendy, eventy i dłuższe trasy.
+  <strong>Tesla Model X</strong> to wybór dla kierowców, którzy chcą połączyć przestrzeń dużego SUV-a z kulturą jazdy auta elektrycznego.
+  Jeśli interesuje Cię <strong>wynajem tesli</strong> i potrzebujesz więcej miejsca niż w klasycznym sedanie, ten model daje komfort
+  dla rodziny, bagażu i dłuższej podróży. W naszej <strong>wypożyczalni EV</strong> przygotowujemy auto tak, żeby od pierwszych minut
+  wszystko było jasne, od aplikacji po ładowanie.
 </p>
 <p>
-  <strong>Wypożyczenie modelu X</strong> pozwala też realnie ocenić codzienne użytkowanie dużego SUV-a EV —
-  zasięg, ładowanie i komfort podczas dłuższej jazdy. W naszej <strong>wypożyczalni samochodów Tesla</strong> dbamy o to,
-  aby auto było przygotowane do drogi i zrozumiale w obsłudze od pierwszych minut.
+  <strong>Tesla na doby</strong> w wersji Model X dobrze sprawdza się przy wyjazdach rodzinnych, transferach i trasach biznesowych.
+  To też rozsądny test przed zakupem, bo możesz ocenić widoczność, promień skrętu, pracę zawieszenia i wygodę ładowania w realnych warunkach.
 </p>
-<h3 class="text-xl font-bold text-foreground mt-6">Dla kogo jest Model X?</h3>
+<h3 class="text-xl font-bold text-foreground mt-8">Dlaczego kierowcy wybierają Model X</h3>
 <ul class="list-none pl-0 space-y-2 mt-4">
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Rodzinne wyjazdy i bagaż</strong> — dużo miejsca na ludzi i rzeczy.</span>
+    <span><strong>Duża kabina i bagażnik</strong>, wygodna opcja na rodzinne trasy i więcej walizek.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla na doby</strong> — elastyczny wynajem pod konkretny plan.</span>
+    <span><strong>Tesla na doby Warszawa</strong>, elastyczny okres pod konkretny plan wyjazdu.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Wypożyczalnia EV</strong> z jasnymi zasadami i wsparciem dla kierowcy.</span>
+    <span><strong>Wypożyczalnia samochodów elektrycznych Warszawa</strong>, jasne zasady i szybkie wdrożenie.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla wynajem Warszawa</strong> — dogodne ustalenie terminu.</span>
+    <span><strong>Tesla rental Warsaw</strong>, wygodna rezerwacja i wsparcie na etapie odbioru auta.</span>
   </li>
 </ul>
 <p class="mt-6">
-  Zarezerwuj termin i poczuj, jak <strong>wynajem tesli Model X</strong> łączy przestrzeń, technologię i spokojną jazdę bez spalin.
+  Jeśli planujesz <strong>wynajem tesla warszawa</strong> i zależy Ci na maksymalnej przestrzeni, <strong>Tesla Model X</strong>
+  to model, który najłatwiej łączy komfort codziennej jazdy z praktycznością dużego auta.
 </p>
 `.trim(),
 };
@@ -307,63 +312,68 @@ const TESLA_MODEL_X: RentalLandingPageContent = {
 const TESLA_MODEL_S: RentalLandingPageContent = {
   heroSubtitle: DEFAULT_HERO_SUBTITLE,
   whyLead:
-    'Flagowy sedan z legendarnym przyspieszeniem Plaid, długim zasięgiem i limuzynowym komfortem — na reprezentacyjny przejazd, ' +
-    'długą trasę albo weekendowy test przed zakupem. Cicha kabina i moc od pierwszego dotknięcia pedału.',
+    'Tesla Model S Plaid to szybki sedan elektryczny dla kierowców, którzy chcą połączyć bardzo mocne osiągi z komfortem długiej trasy. ' +
+    'Sprawdza się tam, gdzie auto ma dawać emocje, ale jednocześnie pozostać wygodne i przewidywalne na co dzień.',
   features: [
     {
       icon: 'bolt',
       title: 'Zasięg i osiągi Plaid',
-      desc: 'Zasięg do 634 km (WLTP) i przyspieszenie na poziomie supersamochodu — bez hałasu silnika spalinowego.',
+      desc:
+        'Model S Plaid łączy bardzo szybkie przyspieszenie z wysoką efektywnością na trasie. Ostateczny zasięg zależy od warunków, ale ładowanie w sieci Tesla pozwala sprawnie planować dalsze odcinki.',
     },
     {
       icon: 'sparkles',
-      title: 'Limuzyna i ekran',
-      desc: 'Przestrzeń jak w klasie premium, duży ekran i sterowanie — nowoczesne wnętrze pod długie trasy.',
+      title: 'Komfort limuzyny',
+      desc:
+        'Wnętrze jest ciche, dobrze wyciszone i wygodne na długie godziny jazdy. Duży ekran, szybka reakcja systemu i dopracowane fotele poprawiają komfort zarówno w mieście, jak i na autostradzie.',
     },
     {
       icon: 'shieldCheck',
-      title: 'Bezpieczeństwo',
-      desc: 'Zaawansowane systemy wsparcia kierowcy i konstrukcja z myślą o ochronie pasażerów.',
+      title: 'Bezpieczeństwo i stabilność',
+      desc:
+        'Niski środek ciężkości i systemy wspomagania kierowcy pomagają utrzymać pewność prowadzenia. To ważne przy dynamicznej jeździe i przy dłuższych trasach autostradowych.',
     },
     {
       icon: 'key',
-      title: 'Aplikacja Tesla',
-      desc: 'Steruj klimatem, zamkami i ładowaniem z telefonu — auto pod kontrolą zanim wsiądziesz.',
+      title: 'Aplikacja i kontrola auta',
+      desc:
+        'Aplikacja Tesla pozwala zdalnie ustawić temperaturę, sprawdzić poziom baterii i otworzyć auto. To wygodne, gdy chcesz wejść do przygotowanego samochodu bez czekania.',
     },
   ],
   longDescriptionHtml: `
-<h2 class="text-2xl font-bold text-foreground">Wynajem Tesla Model S — flagowy sedan elektryczny</h2>
+<h2 class="text-2xl font-bold text-foreground">Tesla Model S Plaid na wynajem w Warszawie</h2>
 <p>
-  <strong>Tesla Model S</strong> w wersji <strong>Plaid</strong> to jedna z najbardziej rozpoznawalnych limuzyn elektrycznych na świecie.
-  Jeśli interesuje Cię <strong>tesla na wynajem</strong> z naciskiem na osiągi, komfort i długi zasięg, ten model pokazuje pełnię możliwości
-  marki — od dynamicznej jazdy po spokojną autostradę.
+  <strong>Tesla Model S Plaid</strong> to propozycja dla osób, które szukają czegoś więcej niż klasyczny sedan premium.
+  Jeśli interesuje Cię <strong>tesla na wynajem warszawa</strong> i chcesz sprawdzić połączenie bardzo szybkiego przyspieszenia,
+  ciszy w kabinie i stabilności przy wyższych prędkościach, ten model daje pełny obraz możliwości marki.
 </p>
 <p>
-  <strong>Wypożyczenie modelu S</strong> to także świetny sposób na <strong>test przed zakupem</strong>: poznasz zachowanie auta w mieście,
-  podczas ładowania i na dłuższym odcinku. Jako <strong>wypożyczalnia samochodów Tesla</strong> w Warszawie oferujemy przejrzyste warunki
-  i przygotowanie pojazdu do drogi.
+  <strong>Wynajem tesli bez kierowcy</strong> w wersji Plaid pozwala ocenić auto w codziennych warunkach, od miasta po trasę.
+  Możesz sprawdzić reakcję napędu, skuteczność rekuperacji, kulturę pracy zawieszenia i realny rytm ładowania.
+  To dobry wybór na weekendowy test, wyjazd służbowy i dłuższą podróż.
 </p>
-<h3 class="text-xl font-bold text-foreground mt-6">Dlaczego warto wybrać Model S?</h3>
+<h3 class="text-xl font-bold text-foreground mt-8">Co wyróżnia Model S Plaid w wynajmie</h3>
 <ul class="list-none pl-0 space-y-2 mt-4">
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Flagowe osiągi i cisza w kabinie</strong> — inna jakość jazdy niż w autach spalinowych.</span>
+    <span><strong>Bardzo szybkie przyspieszenie</strong> i pełna kontrola mocy od pierwszego dotknięcia pedału.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla na doby</strong> — od krótkiego weekendu po dłuższy okres testowy.</span>
+    <span><strong>Tesla na weekend</strong> lub na dłużej, gdy chcesz rzetelnie sprawdzić auto przed zakupem.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Wypożyczalnia EV</strong> z pomocą przy pierwszej jeździe i ładowaniu.</span>
+    <span><strong>Wypożyczalnia tesla warszawa</strong> z jasnym procesem odbioru i obsługi aplikacji.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla wynajem Warszawa</strong> — elastyczne terminy.</span>
+    <span><strong>Electric car rental Warsaw Tesla</strong>, wygodna opcja dla klientów z Polski i z zagranicy.</span>
   </li>
 </ul>
 <p class="mt-6">
-  Sprawdź, jak <strong>wynajem tesli Model S</strong> sprawdza się w praktyce — moment obrotowy, zasięg i sieć Supercharger w jednym pakiecie.
+  Zarezerwuj termin i sprawdź, jak <strong>tesla wynajem</strong> w wersji <strong>Model S Plaid</strong> wypada w codziennej jeździe
+  i na długim odcinku, gdy liczą się osiągi, cisza i pewność prowadzenia.
 </p>
 `.trim(),
 };
@@ -371,63 +381,68 @@ const TESLA_MODEL_S: RentalLandingPageContent = {
 const TESLA_CYBERTRUCK: RentalLandingPageContent = {
   heroSubtitle: DEFAULT_HERO_SUBTITLE,
   whyLead:
-    'Pikap elektryczny w nadwoziu ze stali nierdzewnej, z przestrzenną skrzynią ładunkową i futurystyczną sylwetką, której nie da się pomylić z niczym innym. ' +
-    'Na wyjazd z dużym bagażem, plan filmowy albo po prostu — żeby zobaczyć, jak jeździ legenda.',
+    'Tesla Cybertruck to elektryczny pickup dla osób, które potrzebują pojemnej przestrzeni ładunkowej i mocnego napędu bez spalin. ' +
+    'Sprawdza się przy wyjazdach ze sprzętem, realizacjach eventowych i wszędzie tam, gdzie auto ma łączyć użyteczność z wyrazistym stylem.',
   features: [
     {
       icon: 'bolt',
       title: 'Zasięg i ładowanie',
-      desc: 'Zasięg do 547 km (WLTP) i szybkie uzupełnianie energii w sieci Tesla — także przy cięższym obciążeniu.',
+      desc:
+        'Cybertruck pozwala realizować dłuższe odcinki, a dzięki ładowaniu DC i sieci Supercharger łatwiej utrzymać rytm trasy. To ważne przy pracy z ładunkiem i przy intensywnym planie dnia.',
     },
     {
       icon: 'sparkles',
-      title: 'Skrzynia i użyteczność',
-      desc: 'Duży bagażnik zamykany, płaska podłoga ładunkowa — transport sprzętu, rowerów czy materiałów bez kompromisu.',
+      title: 'Skrzynia ładunkowa i praktyka',
+      desc:
+        'Zamykana przestrzeń ładunkowa i duża powierzchnia robocza ułatwiają przewóz sprzętu, rowerów i cięższych rzeczy. To model, który realnie zastępuje klasyczny pickup w codziennych zadaniach.',
     },
     {
       icon: 'shieldCheck',
-      title: 'Konstrukcja i bezpieczeństwo',
-      desc: 'Szczególna karoseria i nowoczesne systemy wsparcia — auto zaprojektowane inaczej niż klasyczne pickupy.',
+      title: 'Systemy bezpieczeństwa',
+      desc:
+        'Auto ma nowoczesne systemy wsparcia kierowcy, które pomagają manewrować i kontrolować samochód o większych gabarytach. To ważne szczególnie w mieście i na ciasnych parkingach.',
     },
     {
       icon: 'key',
-      title: 'Aplikacja Tesla',
-      desc: 'Pełna kontrola z aplikacji: klimat, zamek, status baterii — także przy przyczepie czy ładunku.',
+      title: 'Aplikacja i zdalny dostęp',
+      desc:
+        'Aplikacja Tesla pozwala zarządzać autem przed ruszeniem, od klimatyzacji po status baterii. Dzięki temu łatwiej zaplanować dzień, gdy auto pracuje intensywnie od rana.',
     },
   ],
   longDescriptionHtml: `
-<h2 class="text-2xl font-bold text-foreground">Wynajem Tesla Cybertruck — elektryczny pikap jak żaden inny</h2>
+<h2 class="text-2xl font-bold text-foreground">Tesla Cybertruck na wynajem w Warszawie</h2>
 <p>
-  <strong>Tesla Cybertruck</strong> to pojazd, który budzi emocje jeszcze zanim ruszy z miejsca. Jeśli szukasz
-  <strong>tesli na wynajem</strong> z maksymalną użytecznością i charakterem — Cybertruck łączy elektryczny napęd,
-  dużą skrzynię ładunkową i design, którego nie powstydziłaby się przyszłościowa flota.
+  <strong>Tesla Cybertruck</strong> to wybór dla osób, które chcą połączyć efektowny wygląd z realną funkcją auta użytkowego.
+  Jeśli interesuje Cię <strong>wynajem auta elektrycznego warszawa</strong> i potrzebujesz modelu pod przewóz sprzętu,
+  zdjęcia, event albo nietypowy wyjazd, Cybertruck daje dużą przestrzeń ładunkową i wyraźnie inny charakter jazdy.
 </p>
 <p>
-  <strong>Wypożyczenie Cybertrucka</strong> sprawdza się przy wyjazdach z dużym bagażem, planach wymagających przestrzeni ładunkowej
-  oraz jako wyjątkowa atrakcja na event. W naszej <strong>wypożyczalni samochodów Tesla</strong> pomagamy w obsłudze auta,
-  żeby pierwsze kilometry były spokojne mimo nietypowych wymiarów nadwozia.
+  <strong>Wypożyczenie tesli</strong> w tej wersji sprawdza się tam, gdzie zwykły SUV bywa za mały.
+  Przed wyjazdem omawiamy obsługę auta i podstawy manewrowania, żeby pierwsze kilometry były spokojne mimo większych wymiarów nadwozia.
+  To ważne szczególnie wtedy, gdy planujesz jazdę po mieście i częste postoje.
 </p>
-<h3 class="text-xl font-bold text-foreground mt-6">Co wyróżnia Cybertrucka?</h3>
+<h3 class="text-xl font-bold text-foreground mt-8">Kiedy Cybertruck jest dobrym wyborem</h3>
 <ul class="list-none pl-0 space-y-2 mt-4">
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Elektryczny pikap</strong> — moment obrotowy i brak spalin przy dużej masie.</span>
+    <span><strong>Transport większego sprzętu</strong>, kiedy potrzebujesz praktycznej skrzyni ładunkowej.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla na doby</strong> — dopasuj okres do planu wyjazdu.</span>
+    <span><strong>Tesla na doby</strong>, elastyczny okres najmu pod konkretny projekt lub trasę.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Wypożyczalnia EV</strong> z przejrzystymi zasadami i wsparciem kierowcy.</span>
+    <span><strong>Wypożyczalnia tesla</strong> z prostymi zasadami i wsparciem przy odbiorze auta.</span>
   </li>
   <li class="flex items-start gap-2">
     <span class="mt-0.5 inline-block h-5 w-5 shrink-0 rounded-full bg-green-500/20 text-center text-sm leading-5 text-green-600">✓</span>
-    <span><strong>Tesla wynajem Warszawa</strong> — dogodne ustalenie terminu.</span>
+    <span><strong>Tesla for rent Warsaw</strong>, szybka rezerwacja i jasny proces wydania samochodu.</span>
   </li>
 </ul>
 <p class="mt-6">
-  Zarezerwuj i przekonaj się na własne oczy, jak <strong>wynajem tesli Cybertruck</strong> zmienia perspektywę na elektryczne auta użytkowe.
+  Zarezerwuj termin i zobacz, jak <strong>tesla na wynajem warszawa</strong> w wersji Cybertruck sprawdza się w praktyce,
+  gdy liczy się pojemność, wygodna obsługa i mocny napęd elektryczny.
 </p>
 `.trim(),
 };

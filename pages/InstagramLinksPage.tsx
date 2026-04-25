@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { TESLA_REFERRAL_LINK } from '../configs/purchaseConfig';
 import { LandingTiktokSocialBlock } from '../components/LandingTiktokSocialBlock';
 
 const btnBase =
@@ -25,7 +26,7 @@ const InstagramLinksPage: React.FC = () => (
           Wypożycz Auto EV
         </Link>
         <a
-          href="https://www.tesla.com"
+          href={TESLA_REFERRAL_LINK}
           target="_blank"
           rel="noopener noreferrer"
           className={`${btnBase} border-2 border-[#E31937] bg-white text-foreground hover:bg-[#E31937]/5`}

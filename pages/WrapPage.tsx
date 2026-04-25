@@ -66,7 +66,7 @@ const WrapPage: React.FC = () => {
               >
                 <img
                   src={item.src}
-                  alt={item.label}
+                  alt={`${item.label} — ${item.compatibleModel}`}
                   className="mx-auto h-auto w-full object-contain"
                   loading="lazy"
                   decoding="async"
@@ -75,13 +75,16 @@ const WrapPage: React.FC = () => {
               <p className="mt-2 line-clamp-2 text-center text-sm font-medium text-foreground">
                 {item.label}
               </p>
-              <div className="mt-2 flex justify-center">
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+                <span className="inline-flex min-h-12 min-w-0 max-w-full items-center rounded-full border border-border bg-muted/50 px-4 text-sm font-semibold text-foreground">
+                  {item.compatibleModel}
+                </span>
                 <button
                   type="button"
                   onClick={() => onDownload(item)}
                   disabled={downloadingId === item.id}
-                  className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-                  aria-label={`Pobierz: ${item.fileName}`}
+                  className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                  aria-label={`Pobierz ${item.fileName} — ${item.compatibleModel}`}
                 >
                   <ArrowDownTrayIcon className="h-6 w-6" />
                 </button>

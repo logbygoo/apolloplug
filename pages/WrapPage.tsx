@@ -9,29 +9,29 @@ import {
 import { tiktokEmbedSrc } from '../configs/tiktokLandingEmbeds';
 import { ArrowDownTrayIcon } from '../icons';
 
-async function downloadImage(url: string, fileName: string): Promise<void> {
-  try {
-    const res = await fetch(url, { mode: 'cors' });
-    if (!res.ok) throw new Error('fetch failed');
-    const blob = await res.blob();
-    const objectUrl = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = objectUrl;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(objectUrl);
-  } catch {
-    const a = document.createElement('a');
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+function wrapDownloadRequestUrl(fileName: string): string {
+  return `/api/wrap-download?file=${encodeURIComponent(fileName)}`;
+}
+
+/**
+ * Pobieranie przez `/api/wrap-download` (ten sam host → brak CORS) z nagłówkiem
+ * `Content-Disposition: attachment` po stronie serwera (CF Pages + dev: proxy w vite.config).
+ */
+async function downloadImageFile(fileName: string): Promise<void> {
+  const res = await fetch(wrapDownloadRequestUrl(fileName), { credentials: 'same-origin' });
+  if (!res.ok) {
+    throw new Error('Pobieranie nie powiodło się');
   }
+  const blob = await res.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = objectUrl;
+  a.download = fileName;
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.setTimeout(() => URL.revokeObjectURL(objectUrl), 2000);
 }
 
 const WrapPage: React.FC = () => {
@@ -43,7 +43,7 @@ const WrapPage: React.FC = () => {
       if (downloadingId) return;
       setDownloadingId(item.id);
       try {
-        await downloadImage(item.src, item.fileName);
+        await downloadImageFile(item.fileName);
       } finally {
         setDownloadingId(null);
       }
@@ -60,34 +60,35 @@ const WrapPage: React.FC = () => {
         <ul className="m-0 grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 lg:grid-cols-3">
           {WRAP_GALLERY_ITEMS.map((item) => (
             <li key={item.id} className="flex flex-col">
-              <div
-                className="overflow-hidden rounded-xl border-2 border-border bg-secondary p-2 shadow-sm"
-                style={{ minHeight: '1px' }}
-              >
-                <img
-                  src={item.src}
-                  alt={`${item.label} — ${item.compatibleModel}`}
-                  className="mx-auto h-auto w-full object-contain"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-              <p className="mt-2 line-clamp-2 text-center text-sm font-medium text-foreground">
-                {item.label}
-              </p>
-              <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
-                <span className="inline-flex min-h-12 min-w-0 max-w-full items-center rounded-full border border-border bg-muted/50 px-4 text-sm font-semibold text-foreground">
-                  {item.compatibleModel}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => onDownload(item)}
-                  disabled={downloadingId === item.id}
-                  className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-                  aria-label={`Pobierz ${item.fileName} — ${item.compatibleModel}`}
-                >
-                  <ArrowDownTrayIcon className="h-6 w-6" />
-                </button>
+              <div className="overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm">
+                <div className="bg-secondary p-2">
+                  <img
+                    src={item.src}
+                    alt={`${item.label} — ${item.compatibleModel}`}
+                    className="mx-auto h-auto w-full object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div className="border-t border-black/10 bg-zinc-300/95 px-3 py-3 dark:border-white/10 dark:bg-zinc-900/95">
+                  <p className="m-0 line-clamp-2 text-center text-sm font-medium leading-snug text-foreground">
+                    {item.label}
+                  </p>
+                  <div className="mt-3 flex flex-wrap items-center justify-center gap-3">
+                    <span className="inline-flex min-h-10 min-w-0 max-w-full items-center rounded-full border border-black/10 bg-white/70 px-3 text-xs font-semibold text-foreground dark:border-white/15 dark:bg-white/10">
+                      {item.compatibleModel}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onDownload(item)}
+                      disabled={downloadingId === item.id}
+                      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-black/10 bg-white/90 text-foreground transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 dark:border-white/15 dark:bg-white/10 dark:hover:bg-white/20"
+                      aria-label={`Pobierz ${item.fileName} — ${item.compatibleModel}`}
+                    >
+                      <ArrowDownTrayIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </li>
           ))}

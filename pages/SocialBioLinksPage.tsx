@@ -7,12 +7,13 @@ import { BIO_LINKS_CONTACT } from '../configs/bioLinksConfig';
 import { LandingTiktokSocialBlock } from '../components/LandingTiktokSocialBlock';
 import { EnvelopeIcon, PhoneIcon } from '../icons';
 
-export type SocialBioLinksSource = 'ig' | 'fb' | 'yt';
+export type SocialBioLinksSource = 'ig' | 'fb' | 'yt' | 'tt';
 
 const NAV_ARIA: Record<SocialBioLinksSource, string> = {
   ig: 'Apollo — linki z Instagrama',
   fb: 'Apollo — linki z Facebooka',
   yt: 'Apollo — linki z YouTube',
+  tt: 'Apollo — linki z TikToka',
 };
 
 const btnBase =

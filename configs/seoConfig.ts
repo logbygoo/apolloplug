@@ -91,4 +91,11 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     ogType: 'website',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
+  '/tt': {
+    title: 'Apollo Idea — linki (TikTok)',
+    description:
+      'Szybkie linki z TikToka: strona główna Apollo, wypożyczalnia EV, zamówienie Tesla, kontakt. Apollo Idea, Warszawa.',
+    ogType: 'website',
+    ogImage: 'https://img.apolloidea.com/og/default.jpg',
+  },
 };

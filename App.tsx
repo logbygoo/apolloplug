@@ -212,6 +212,7 @@ const App: React.FC = () => {
                     <Route path="/ig" element={<SocialBioLinksPage source="ig" />} />
                     <Route path="/fb" element={<SocialBioLinksPage source="fb" />} />
                     <Route path="/yt" element={<SocialBioLinksPage source="yt" />} />
+                    <Route path="/tt" element={<SocialBioLinksPage source="tt" />} />
                     <Route path="/kontakt" element={<ContactPage />} />
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/zakup" element={<PurchasePage />} />

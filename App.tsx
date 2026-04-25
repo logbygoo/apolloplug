@@ -16,6 +16,7 @@ import InsurancePage from './pages/InsurancePage';
 import DocumentationPage from './pages/DocumentationPage';
 import RentalCarLandingPage from './pages/RentalCarLandingPage';
 import SocialBioLinksPage from './pages/SocialBioLinksPage';
+import WrapPage from './pages/WrapPage';
 import PdfViewerPage from './pages/PdfViewerPage'; // Import new PDF viewer page
 import DashPage from './pages/DashPage';
 import CookieBanner from './components/CookieBanner';
@@ -218,6 +219,7 @@ const App: React.FC = () => {
                     <Route path="/zakup" element={<PurchasePage />} />
                     <Route path="/ubezpieczenia" element={<InsurancePage />} />
                     <Route path="/dokumentacja" element={<DocumentationPage />} />
+                    <Route path="/wrap" element={<WrapPage />} />
                     
                     {/* Catch-all route for blog articles at root level */}
                     <Route path="/:articleSlug" element={<BlogArticlePage />} />

@@ -65,6 +65,13 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     description: '{articleExcerpt}',
     ogType: 'article',
   },
+  '/wrap': {
+    title: 'Galeria wrap — Lakiernia Tesla | Apollo Idea',
+    description:
+      'Pobierz gotowe wzory oklein (wrap) do konfiguratora Lakiernia w Tesli. Instrukcja: pendrive, aplikacja w samochodzie.',
+    ogType: 'website',
+    ogImage: 'https://img.apolloidea.com/img/wrap/wrap-cf-black-apolloidea.png',
+  },
   '/dokumentacja': {
     title: 'Dokumentacja',
     description: 'Zapoznaj się z regulaminami, polityką prywatności i innymi ważnymi dokumentami dotyczącymi usług Apollo Idea.',

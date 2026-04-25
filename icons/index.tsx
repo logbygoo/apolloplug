@@ -1,3 +1,4 @@
+export * from './ArrowDownTrayIcon';
 export * from './ArrowRightIcon';
 export * from './ArrowTopRightOnSquareIcon';
 export * from './BanknotesIcon';

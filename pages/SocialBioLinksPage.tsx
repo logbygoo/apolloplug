@@ -79,7 +79,7 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
           </a>
         </nav>
 
-        <div className="mt-4 pt-8">
+        <div className="mt-4 pt-8 mb-10">
           <h2 className="m-0 text-center text-xl font-semibold text-foreground">
             Skontaktuj się
           </h2>

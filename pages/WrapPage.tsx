@@ -57,6 +57,11 @@ const WrapPage: React.FC = () => {
       <PageHeader title="Wrap Galeria Tesla" breadcrumbs={breadcrumbs} />
 
       <div className="container mx-auto max-w-6xl px-4 pb-6 md:px-6">
+        <p className="mb-6 text-base leading-relaxed text-muted-foreground">
+          Na tej stronie udostępniamy galerię wrapów i naklejek do samochodów Tesla, które możesz
+          pobrać i zainstalować w aucie. Znajdziesz tu gotowe wzory zgodne z wybranymi modelami,
+          aby szybko zmienić wygląd samochodu bez ingerencji w lakier.
+        </p>
         <ul className="m-0 grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 lg:grid-cols-3">
           {WRAP_GALLERY_ITEMS.map((item) => (
             <li key={item.id} className="flex flex-col">

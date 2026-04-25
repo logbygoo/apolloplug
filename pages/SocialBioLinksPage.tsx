@@ -3,9 +3,28 @@ import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import { TESLA_REFERRAL_LINK } from '../configs/purchaseConfig';
+import { SOCIAL_MEDIA_LINKS } from '../configs/socialLinks';
 import { BIO_LINKS_CONTACT } from '../configs/bioLinksConfig';
 import { LandingTiktokSocialBlock } from '../components/LandingTiktokSocialBlock';
-import { EnvelopeIcon, PhoneIcon } from '../icons';
+import { EnvelopeIcon, FacebookIcon, InstagramIcon, PhoneIcon, TikTokIcon, YoutubeIcon } from '../icons';
+
+const SOCIAL_ICONS: Record<
+  (typeof SOCIAL_MEDIA_LINKS)[number]['id'],
+  React.FC<React.SVGProps<SVGSVGElement>>
+> = {
+  tiktok: TikTokIcon,
+  instagram: InstagramIcon,
+  facebook: FacebookIcon,
+  youtube: YoutubeIcon,
+};
+
+/** Obramowania w kolorach marek (białe tło, tekst w kolorze treści). */
+const SOCIAL_BUTTON_CLASS: Record<(typeof SOCIAL_MEDIA_LINKS)[number]['id'], string> = {
+  tiktok: 'border-2 border-black text-foreground hover:bg-black/5',
+  instagram: 'border-2 border-[#E1306C] text-foreground hover:bg-[#E1306C]/5',
+  facebook: 'border-2 border-[#1877F2] text-foreground hover:bg-[#1877F2]/5',
+  youtube: 'border-2 border-[#FF0000] text-foreground hover:bg-red-500/5',
+};
 
 export type SocialBioLinksSource = 'ig' | 'fb' | 'yt' | 'tt';
 
@@ -31,7 +50,13 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
     <>
       <Seo {...seo} />
       <div className="container mx-auto max-w-lg px-4 pb-16 pt-6 md:px-6 md:pt-10">
-        <nav className="flex flex-col gap-3" aria-label={NAV_ARIA[source]}>
+        <h1 className="m-0 text-center text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+          Drzewo linków
+        </h1>
+        <nav
+          className="mt-6 flex flex-col gap-3"
+          aria-label={NAV_ARIA[source]}
+        >
           <Link
             to="/"
             className={`${btnBase} bg-black text-white hover:bg-black/90`}
@@ -55,10 +80,10 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
         </nav>
 
         <div className="mt-8 border-t border-border pt-8">
-          <p className="mb-4 text-center text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Kontakt
-          </p>
-          <div className="flex flex-col items-center gap-4">
+          <h2 className="m-0 text-center text-xl font-semibold text-foreground">
+            Skontaktuj się
+          </h2>
+          <div className="mt-5 flex flex-col items-center gap-4">
             <a
               href={BIO_LINKS_CONTACT.phoneTel}
               className="inline-flex items-center gap-2 text-lg font-semibold text-foreground transition-colors hover:text-primary"
@@ -73,18 +98,52 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
               <EnvelopeIcon className="h-5 w-5 shrink-0" aria-hidden />
               {BIO_LINKS_CONTACT.email}
             </a>
-            <Link
-              to="/kontakt"
-              className={`${btnBase} mt-1 max-w-sm border border-border bg-secondary/80 text-foreground hover:bg-secondary`}
-            >
-              Strona kontaktowa
-            </Link>
+            <p className="m-0 max-w-sm text-center text-sm leading-relaxed text-muted-foreground">
+              Inne formy kontaktu znajdziesz na{' '}
+              <Link
+                to="/kontakt"
+                className="font-medium text-foreground underline underline-offset-2 transition-colors hover:text-primary"
+              >
+                /kontakt
+              </Link>
+            </p>
           </div>
         </div>
 
         <div className="mt-10">
           <LandingTiktokSocialBlock />
         </div>
+
+        <section className="mt-10" aria-labelledby="social-bio-h2">
+          <h2
+            id="social-bio-h2"
+            className="m-0 text-center text-xl font-semibold text-foreground"
+          >
+            Nasze social media
+          </h2>
+          <ul className="mt-4 flex list-none flex-col gap-3 p-0">
+            {SOCIAL_MEDIA_LINKS.map(({ id, href, label }) => {
+              const Icon = SOCIAL_ICONS[id];
+              return (
+                <li key={id}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={[
+                      btnBase,
+                      'gap-2 bg-background',
+                      SOCIAL_BUTTON_CLASS[id],
+                    ].join(' ')}
+                  >
+                    <Icon className="h-5 w-5 shrink-0" aria-hidden />
+                    {label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
       </div>
     </>
   );

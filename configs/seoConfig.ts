@@ -70,4 +70,11 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     description: 'Zapoznaj się z regulaminami, polityką prywatności i innymi ważnymi dokumentami dotyczącymi usług Apollo Idea.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
+  '/ig': {
+    title: 'Apollo Idea — linki (Instagram)',
+    description:
+      'Szybkie linki: strona główna Apollo, wypożyczalnia aut elektrycznych i zamówienie Tesla. Apollo Idea, Warszawa.',
+    ogType: 'website',
+    ogImage: 'https://img.apolloidea.com/og/default.jpg',
+  },
 };

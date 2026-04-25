@@ -79,7 +79,7 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
           </a>
         </nav>
 
-        <div className="mt-8 border-t border-border pt-8">
+        <div className="mt-8 pt-8">
           <h2 className="m-0 text-center text-xl font-semibold text-foreground">
             Skontaktuj się
           </h2>
@@ -110,11 +110,11 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
           </div>
         </div>
 
-        <div className="mt-10">
+        <div className="mt-6">
           <LandingTiktokSocialBlock />
         </div>
 
-        <section className="mt-10" aria-labelledby="social-bio-h2">
+        <section className="mt-6" aria-labelledby="social-bio-h2">
           <h2
             id="social-bio-h2"
             className="m-0 text-center text-xl font-semibold text-foreground"

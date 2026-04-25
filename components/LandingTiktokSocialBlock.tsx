@@ -84,6 +84,25 @@ const LANDING_TIKTOK_STYLES = `
       max-height: none;
     }
   }
+
+  /* Strony biolinków (/ig, …) — bez wyrównania do metryk: tylko wysokość miniatur, bez pustki pod paskiem. */
+  .landing-tiktok-social--standalone .tiktok-social-hscroll {
+    height: auto;
+    min-height: 0;
+    flex: 0 0 auto;
+  }
+  .landing-tiktok-social--standalone .tiktok-social-track {
+    height: auto;
+    align-items: flex-start;
+    min-height: 0;
+  }
+  .landing-tiktok-social--standalone .tiktok-social-slide {
+    width: clamp(150px, 32vw, 200px);
+    height: auto;
+    aspect-ratio: 9 / 16;
+    max-height: 380px;
+    min-width: 0;
+  }
 `;
 
 export type LandingTiktokSocialBlockProps = {
@@ -256,6 +275,8 @@ export const LandingTiktokSocialBlock: React.FC<LandingTiktokSocialBlockProps> =
     return null;
   }
 
+  const standalone = !alignWithRef;
+
   const asideSyncStyle =
     alignWithRef && syncedBoxHeight != null
       ? ({ ['--tiktok-box-height' as string]: `${syncedBoxHeight}px` } as React.CSSProperties)
@@ -263,20 +284,33 @@ export const LandingTiktokSocialBlock: React.FC<LandingTiktokSocialBlockProps> =
 
   return (
     <div
-      className={['landing-tiktok-social w-full not-prose', className].filter(Boolean).join(' ')}
+      className={[
+        'landing-tiktok-social w-full not-prose',
+        standalone && 'landing-tiktok-social--standalone',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <style>{LANDING_TIKTOK_STYLES}</style>
       <aside
         className={[
           'flex min-h-0 w-full min-w-0 flex-col',
-          alignWithRef ? 'lg:h-[var(--tiktok-box-height)]' : 'h-[min(60vh,520px)] min-h-[320px] lg:min-h-0',
+          alignWithRef ? 'lg:h-[var(--tiktok-box-height)]' : 'h-auto',
         ]
           .filter(Boolean)
           .join(' ')}
         style={asideSyncStyle}
         aria-label="Filmy z TikToka"
       >
-        <div className="flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden rounded-lg bg-muted/50 px-5 pb-5 pt-2.5">
+        <div
+          className={[
+            'flex w-full min-w-0 flex-col overflow-hidden rounded-lg bg-muted/50 px-5 pb-5 pt-2.5',
+            standalone ? 'h-auto flex-none' : 'min-h-0 flex-1',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
           <div className="flex min-w-0 shrink-0 items-center justify-between gap-2 pb-2">
             <p className="min-w-0 pr-1 text-sm font-bold leading-tight text-foreground">
               Ostatnio w naszych social mediach

@@ -60,18 +60,16 @@ const WrapPage: React.FC = () => {
         <ul className="m-0 grid list-none grid-cols-1 gap-8 p-0 sm:grid-cols-2 lg:grid-cols-3">
           {WRAP_GALLERY_ITEMS.map((item) => (
             <li key={item.id} className="flex flex-col">
-              <div className="overflow-hidden rounded-xl border-2 border-border bg-background shadow-sm">
-                <div className="bg-secondary p-2">
+              <div className="overflow-hidden rounded-xl border-2 border-border shadow-sm">
+                <div className="flex flex-col bg-zinc-300/95 p-3 dark:bg-zinc-900/95">
                   <img
                     src={item.src}
                     alt={`${item.label} — ${item.compatibleModel}`}
-                    className="mx-auto h-auto w-full object-contain"
+                    className="mx-auto h-auto w-full rounded-md object-contain"
                     loading="lazy"
                     decoding="async"
                   />
-                </div>
-                <div className="border-t border-black/10 bg-zinc-300/95 px-3 py-3 dark:border-white/10 dark:bg-zinc-900/95">
-                  <p className="m-0 line-clamp-2 text-center text-sm font-medium leading-snug text-foreground">
+                  <p className="m-0 mt-3 line-clamp-2 text-center text-sm font-medium leading-snug text-foreground">
                     {item.label}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center justify-center gap-3">

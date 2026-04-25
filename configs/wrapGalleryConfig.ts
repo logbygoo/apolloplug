@@ -16,28 +16,28 @@ export type WrapGalleryItem = {
 export const WRAP_GALLERY_ITEMS: WrapGalleryItem[] = [
   {
     id: 'cf-black',
-    label: 'Cancer Fighters (ciemne tło)',
+    label: 'Cancer Fighters (black)',
     compatibleModel: 'Tesla 3',
     src: 'https://img.apolloidea.com/img/wrap/wrap-cf-black-apolloidea.png',
     fileName: 'wrap-cf-black-apolloidea.png',
   },
   {
     id: 'cf-white',
-    label: 'Cancer Fighters (jasne tło)',
+    label: 'Cancer Fighters (white)',
     compatibleModel: 'Tesla 3',
     src: 'https://img.apolloidea.com/img/wrap/wrap-cf-white-apolloidea.png',
     fileName: 'wrap-cf-white-apolloidea.png',
   },
   {
     id: 'policja',
-    label: 'Polska Policja (demo)',
+    label: 'Polska Policja',
     compatibleModel: 'Tesla 3',
     src: 'https://img.apolloidea.com/img/wrap/wrap-polska-policja-apolloidea.png',
     fileName: 'wrap-polska-policja-apolloidea.png',
   },
   {
     id: 'y-cf',
-    label: 'Cancer Fighters (Model Y)',
+    label: 'Cancer Fighters',
     compatibleModel: 'Tesla Y',
     src: 'https://img.apolloidea.com/img/wrap/wrap-y-cf-apolloidea.png',
     fileName: 'wrap-y-cf-apolloidea.png',

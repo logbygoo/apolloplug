@@ -34,6 +34,7 @@ import {
   CheckIcon,
   ChevronDownIcon,
   DocumentTextIcon,
+  XMarkIcon,
 } from '../icons';
 import type { Car } from '../types';
 
@@ -400,29 +401,28 @@ const RENTAL_V2_SZKIC_UMOWY_DOCS = [
 ] as const;
 
 /** Te same szerokości slajdu co `V2ModelCard`; wysokość z treści (bez min-h jak przy kartach modeli). */
-const V2LegalDocTile: React.FC<{ title: string; docSlug: string; layout?: 'slider' | 'grid' }> = ({
-  title,
-  docSlug,
-  layout = 'slider',
-}) => {
+const V2LegalDocTile: React.FC<{
+  title: string;
+  layout?: 'slider' | 'grid';
+  onOpen: () => void;
+}> = ({ title, layout = 'slider', onOpen }) => {
   const widthClass =
     layout === 'grid'
       ? 'min-w-0 w-full max-w-none'
       : 'w-[min(88vw,20rem)] shrink-0 sm:w-80';
 
   return (
-    <Link
-      to={`/dokumentacja?doc=${encodeURIComponent(docSlug)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`group flex min-w-0 items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-secondary ${widthClass}`}
+    <button
+      type="button"
+      onClick={onOpen}
+      className={`group flex min-w-0 items-center gap-4 rounded-lg border border-border bg-card p-4 text-left transition-colors hover:bg-secondary ${widthClass}`}
     >
       <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
       <div className="min-w-0">
         <p className="font-medium text-foreground">{title}</p>
-        <p className="text-sm text-muted-foreground">Otwórz w dokumentacji</p>
+        <p className="text-sm text-muted-foreground">Podgląd PDF (bez opuszczania strony)</p>
       </div>
-    </Link>
+    </button>
   );
 };
 
@@ -578,6 +578,8 @@ const RentalV2Page: React.FC = () => {
   const [summaryInView, setSummaryInView] = useState(false);
   const [modelDetailTab, setModelDetailTab] = useState<ModelDetailTabId>('spec');
   const modelTabPanelRef = useRef<HTMLDivElement>(null);
+  const [contractPdfPreview, setContractPdfPreview] = useState<{ title: string; docSlug: string } | null>(null);
+  const [mobileRentalCtaDismissed, setMobileRentalCtaDismissed] = useState(false);
 
   const selectModelDetailTab = (tab: ModelDetailTabId) => {
     setModelDetailTab(tab);
@@ -598,6 +600,28 @@ const RentalV2Page: React.FC = () => {
     };
     persistRentalV2Session(JSON.stringify(payload));
   }, [selectedId, selectedBrandId, rentalPeriod, additionalOptions]);
+
+  useEffect(() => {
+    setMobileRentalCtaDismissed(false);
+  }, [selectedId]);
+
+  useEffect(() => {
+    if (!contractPdfPreview) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [contractPdfPreview]);
+
+  useEffect(() => {
+    if (!contractPdfPreview) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setContractPdfPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [contractPdfPreview]);
 
   /** Stare `?model=` → kanoniczny URL `/rezerwacja/:carId` (tylko auta do rezerwacji). */
   useEffect(() => {
@@ -745,11 +769,6 @@ const RentalV2Page: React.FC = () => {
     [additionalOptions, selected]
   );
 
-  const floatingCtaSubline = useMemo(() => {
-    if (summary.rentalDays <= 0) return '-';
-    return `${formatDdMmFromIso(rentalPeriod.pickupDate)}-${formatDdMmFromIso(rentalPeriod.returnDate)} · ${formatPolishRentalDays(summary.rentalDays)} · ${summary.tierPricePerDay.toLocaleString('pl-PL')} zł/db`;
-  }, [summary.rentalDays, summary.tierPricePerDay, rentalPeriod.pickupDate, rentalPeriod.returnDate]);
-
   const breadcrumbs = useMemo(() => {
     const crumbs: { name: string; path?: string }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
     if (selected) {
@@ -763,6 +782,8 @@ const RentalV2Page: React.FC = () => {
     () => CAR_FLEET.find((c) => c.id === selected.id)?.description,
     [selected.id]
   );
+
+  const showMobileRentalCta = !summaryInView && !mobileRentalCtaDismissed;
 
   return (
     <>
@@ -900,13 +921,13 @@ const RentalV2Page: React.FC = () => {
                           <>
                             {fleetCarDescription}{' '}
                             <Link
-                              to={`/rezerwacja/${selected.id}`}
+                              to={`/wypozycz/${selected.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1.5 font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
-                              aria-label="Przeczytaj więcej w rezerwacji (otwiera się w nowej karcie)"
+                              aria-label="Przeczytaj więcej na stronie tego auta (otwiera się w nowej karcie)"
                             >
-                              <span>Przeczytaj więcej w rezerwacji</span>
+                              <span>Przeczytaj więcej</span>
                               <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
                             </Link>
                           </>
@@ -1074,8 +1095,8 @@ const RentalV2Page: React.FC = () => {
                       <V2LegalDocTile
                         key={doc.docSlug}
                         title={doc.title}
-                        docSlug={doc.docSlug}
                         layout="grid"
+                        onOpen={() => setContractPdfPreview({ title: doc.title, docSlug: doc.docSlug })}
                       />
                     ))}
                   </div>
@@ -1084,8 +1105,8 @@ const RentalV2Page: React.FC = () => {
                       <V2LegalDocTile
                         key={doc.docSlug}
                         title={doc.title}
-                        docSlug={doc.docSlug}
                         layout="slider"
+                        onOpen={() => setContractPdfPreview({ title: doc.title, docSlug: doc.docSlug })}
                       />
                     ))}
                   </RentalV2E2ESlider>
@@ -1226,29 +1247,97 @@ const RentalV2Page: React.FC = () => {
         </div>
       </div>
 
-      {/* Pływający CTA: tylko viewport < lg; pełna szerokość, bg do safe-area (pasek home / przeglądarka); ukryty gdy widać podsumowanie */}
+      {/* Mobile: ten sam pasek co /wypozycz/:id – ukryty gdy widać podsumowanie lub użytkownik zamknie X */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-50 w-full max-w-[100vw] rounded-t-3xl bg-foreground lg:hidden ${summaryInView ? 'hidden' : ''}`}
-        aria-hidden={summaryInView}
+        className={`fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ease-out motion-reduce:transition-none motion-reduce:duration-0 lg:hidden ${
+          showMobileRentalCta ? 'translate-y-0' : 'translate-y-full pointer-events-none'
+        }`}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        aria-hidden={!showMobileRentalCta}
       >
-        <div className="box-border w-full px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
-          <button
-            type="button"
-            onClick={() => {
-              summaryAsideRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }}
-            className="w-full bg-transparent px-0 text-left text-background"
+        <div className="rounded-t-3xl border border-border/60 border-b-0 bg-white px-4 pb-3 shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+          <div className="flex items-center gap-3">
+            {selected.imageUrl?.[0] ? (
+              <img
+                src={selected.imageUrl[0]}
+                alt=""
+                className="h-[50px] w-auto shrink-0 object-contain"
+                height={50}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <span className="h-[50px] w-[50px] shrink-0" aria-hidden />
+            )}
+            <p className="min-w-0 flex-1 truncate text-sm font-medium leading-snug text-foreground">
+              {summary.rentalDays > 0 ? (
+                <>
+                  {formatDdMmFromIso(rentalPeriod.pickupDate)}.{formatDdMmFromIso(rentalPeriod.returnDate)} -{' '}
+                  {formatPolishRentalDays(summary.rentalDays)} - {summary.tierPricePerDay.toLocaleString('pl-PL')}{' '}
+                  zł/db -{' '}
+                  <strong className="font-semibold text-foreground">
+                    {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
+                  </strong>
+                </>
+              ) : (
+                <span className="text-foreground/70">-</span>
+              )}
+            </p>
+            <button
+              type="button"
+              onClick={() => setMobileRentalCtaDismissed(true)}
+              className="-mr-1 -mt-1 shrink-0 rounded-md p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label="Zamknij"
+            >
+              <XMarkIcon className="h-5 w-5" />
+            </button>
+          </div>
+          <Link
+            to={`/rezerwacja/${selected.id}/zamowienie`}
+            className="flex h-9 w-full items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
           >
-            <div className="flex items-baseline justify-between gap-3 leading-tight">
-              <span className="text-sm font-semibold">Podsumowanie</span>
-              <span className="shrink-0 text-xl font-bold tabular-nums tracking-tight">
-                {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
-              </span>
-            </div>
-            <div className="mt-1.5 text-xs font-normal leading-snug text-background/85">{floatingCtaSubline}</div>
-          </button>
+            Zarezerwuj pojazd
+          </Link>
         </div>
       </div>
+
+      {contractPdfPreview && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="rental-contract-pdf-title"
+        >
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setContractPdfPreview(null)}
+            aria-hidden
+          />
+          <div className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl border border-border bg-background shadow-xl">
+            <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-3">
+              <h2 id="rental-contract-pdf-title" className="min-w-0 truncate text-base font-semibold sm:text-lg">
+                {contractPdfPreview.title}
+              </h2>
+              <button
+                type="button"
+                onClick={() => setContractPdfPreview(null)}
+                className="shrink-0 rounded-md p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                aria-label="Zamknij podgląd"
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="min-h-0 flex-1 bg-muted/30">
+              <iframe
+                key={contractPdfPreview.docSlug}
+                title={contractPdfPreview.title}
+                src={`/pdf/${contractPdfPreview.docSlug}.pdf`}
+                className="h-[min(75vh,720px)] w-full min-h-[50vh] border-0"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

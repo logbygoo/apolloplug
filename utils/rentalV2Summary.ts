@@ -54,14 +54,16 @@ export function computeRentalV2Summary(
   };
 
   if (!pickupDate || !returnDate || !pickupTime || !returnTime) {
-    return defaultReturn;
+    const dep = additionalOptions.deposit ? 0 : model.deposit || 5000;
+    return { ...defaultReturn, deposit: dep, totalWithDeposit: dep };
   }
 
   const start = new Date(`${pickupDate}T${pickupTime}`);
   const end = new Date(`${returnDate}T${returnTime}`);
 
   if (start >= end) {
-    return defaultReturn;
+    const dep = additionalOptions.deposit ? 0 : model.deposit || 5000;
+    return { ...defaultReturn, deposit: dep, totalWithDeposit: dep };
   }
 
   const diffTime = end.getTime() - start.getTime();
@@ -102,7 +104,8 @@ export function computeRentalV2Summary(
   const returnFee = returnLoc?.price || 0;
 
   const totalPrice = rentalPrice + optionsPrice + pickupFee + returnFee;
-  const deposit = model.deposit || 5000;
+  const baseDeposit = model.deposit || 5000;
+  const deposit = additionalOptions.deposit ? 0 : baseDeposit;
   const totalWithDeposit = totalPrice + deposit;
 
   return {

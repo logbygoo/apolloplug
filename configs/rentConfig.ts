@@ -265,6 +265,8 @@ export const ADDITIONAL_OPTIONS = [
         price: 190,
         type: 'one_time',
         description: 'Dostawa pojazdu pod wskazany adres na terenie Warszawy.',
+        is_free: 14,
+        is_free_checked: false,
     },
     {
         id: 'emptyBattery',
@@ -278,6 +280,8 @@ export const ADDITIONAL_OPTIONS = [
         },
         type: 'one_time',
         description: 'Zwróć auto bez konieczności ładowania.',
+        is_free: 10,
+        is_free_checked: true,
     },
     {
         id: 'wash',

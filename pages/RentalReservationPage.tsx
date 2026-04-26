@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
+import { BRANDS } from '../constants';
 import { Input, Label, PageHeader } from '../components/ui';
 import { CheckIcon, InformationCircleIcon } from '../icons';
 import { ADDITIONAL_OPTIONS, RENTAL_CARS, RENTAL_PERIOD_FIELD_CELL } from '../configs/rentConfig';
@@ -585,7 +586,8 @@ const RentalReservationPage: React.FC = () => {
     const key = flowStep === 'payment' ? '/rezerwacja/platnosc' : '/rezerwacja/zamowienie';
     const base = SEO_CONFIG[key];
     const name = selected.name;
-    const apply = (s: string) => s.split('{carName}').join(name);
+    const brand = BRANDS.find((b) => selected.id.includes(b.id))?.name ?? 'Tesla';
+    const apply = (s: string) => s.split('{carName}').join(name).split('{carBrand}').join(brand);
     return {
       ...base,
       title: apply(base.title),

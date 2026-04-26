@@ -819,9 +819,10 @@ const RentalV2Page: React.FC = () => {
 
   const rezerwacjaSeo = useMemo(() => {
     const base = carIdFromPath ? SEO_CONFIG['/rezerwacja/:carId'] : SEO_CONFIG['/rezerwacja'];
-    const name = selected.name;
     if (!carIdFromPath) return base;
-    const apply = (s: string) => s.split('{carName}').join(name);
+    const name = selected.name;
+    const brand = BRANDS.find((b) => selected.id.includes(b.id))?.name ?? 'Tesla';
+    const apply = (s: string) => s.split('{carName}').join(name).split('{carBrand}').join(brand);
     return {
       ...base,
       title: apply(base.title),

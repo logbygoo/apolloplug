@@ -2,6 +2,7 @@ import type { SeoData } from '../types';
 
 /**
  * Wpis = klucz logiczny (zwykle jak ścieżka) → treść do `<Seo />`.
+ * Rezerwacja z `:carId`: placeholdery `{carName}` i `{carBrand}` (z `constants.BRANDS`, fallback marka Tesla).
  * Przekierowania bez własnej treści: `/wypozyczalnia/:carId` → `/rezerwacja/...`, `/flota/:carId` → `/flota`.
  * Artykuły bloga: `BlogArticlePage` nadpisuje `'/blog/:articleSlug'`.
  * Strona tylko techniczna / poza tym plikiem: `UnderConstructionPage` (gdy strona „OFF”).
@@ -49,23 +50,23 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     description:
       'Wybierz model Tesla, ustaw terminy odbioru i zwrotu, opcje dodatkowe. Szybka rezerwacja online wynajmu auta elektrycznego w Warszawie.',
   },
-  /** `/rezerwacja/:carId` — w `RentalV2Page` zastąp `{carName}` (np. Model 3 Highland). */
+  /** `/rezerwacja/:carId` — w `RentalV2Page` zastąp `{carName}` (np. Model 3 Highland) i `{carBrand}` (np. Tesla). */
   '/rezerwacja/:carId': {
-    title: buildSeoTitle('Rezerwacja {carName} • wynajem auta elektrycznego'),
+    title: buildSeoTitle('Rezerwacja {carName} • {carBrand} • wynajem auta elektrycznego'),
     description:
-      '{carName}: wybierz terminy, opcje dodatkowe i złóż rezerwację wynajmu Tesli w Warszawie. Jasne zasady i rezerwacja online.',
+      '{carName} ({carBrand}): wybierz terminy, opcje dodatkowe i złóż rezerwację wynajmu w Warszawie. Jasne zasady i rezerwacja online.',
   },
   /** `/rezerwacja/:carId/zamowienie` — krok z formularzem kierowcy (flow `driver`). */
   '/rezerwacja/zamowienie': {
-    title: buildSeoTitle('Zamówienie wynajmu {carName}'),
+    title: buildSeoTitle('Zamówienie wynajmu {carName} • {carBrand}'),
     description:
-      'Uzupełnij dane kierowcy, adres i kontakt, zaakceptuj zgody. Potwierdź rezerwację wynajmu {carName}, następnie opłać rezerwację online.',
+      'Uzupełnij dane kierowcy, adres i kontakt, zaakceptuj zgody. Potwierdź rezerwację wynajmu {carName} ({carBrand}), następnie opłać rezerwację online.',
   },
   /** Ta sama ścieżka URL co zamówienie — krok płatności (flow `payment`). */
   '/rezerwacja/platnosc': {
-    title: buildSeoTitle('Płatność rezerwacji • {carName}'),
+    title: buildSeoTitle('Płatność rezerwacji • {carName} • {carBrand}'),
     description:
-      'Opłać rezerwację wynajmu auta elektrycznego bezpiecznie online. Po zaksięgowaniu płatności otrzymasz potwierdzenie rezerwacji {carName}.',
+      'Opłać rezerwację wynajmu {carBrand} {carName} bezpiecznie online. Po zaksięgowaniu płatności otrzymasz potwierdzenie rezerwacji {carName}.',
   },
   /** `/dash` — pulpit Tesli (poza głównym layoutem). */
   '/dash': {

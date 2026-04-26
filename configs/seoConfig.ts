@@ -2,67 +2,78 @@ import type { SeoData } from '../types';
 
 export const SEO_CONFIG: Record<string, SeoData> = {
   '/': {
-    title: 'Wynajem i transfery autami Tesla',
-    description: 'Doświadcz przyszłości motoryzacji. Wynajmuj Tesle, korzystaj z transferów VIP i inwestuj w elektromobilność. Apollo Idea – Twoje centrum EV.',
-    ogTitle: 'Apollo Idea – przyszłość motoryzacji już dziś',
-    ogDescription: 'Wynajem, transfery i kompleksowe wsparcie w zakupie aut elektrycznych Tesla.',
+    title: 'Apollo Idea • wypożyczalnia aut elektrycznych Warszawa',
+    description:
+      'Wynajem Tesli w Warszawie, Finansowanie, Ubezpieczenia, Zakup • oferta aut elektrycznych na doby i dłuższy okres, transfery oraz wsparcie przy zakupie EV.',
+    ogTitle: 'Apollo Idea • wynajem Tesli Warszawa',
+    ogDescription:
+      'Wypożyczalnia samochodów elektrycznych Warszawa, Finansowanie, Ubezpieczenia, Zakup • rezerwacja online, jasne zasady najmu i flota modeli Tesla.',
     ogImage: 'https://img.apolloidea.com/cybertruck/tesla-cybertruck-01.jpg',
     ogType: 'website',
   },
   '/flota': {
-    title: 'Flota Pojazdów Elektrycznych - Tesla',
-    description: 'Poznaj naszą flotę w 100% elektrycznych samochodów Tesla. Zobacz dostępne modele, specyfikacje i ceny wynajmu.',
+    title: 'Flota Tesla • auta elektryczne na wynajem Warszawa',
+    description:
+      'Sprawdź dostępne modele Tesla, porównaj zasięg i parametry, a potem wybierz auto elektryczne na wynajem w Warszawie.',
     ogImage: 'https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Homepage-Model-Y-Hero-Desktop',
   },
   '/flota/:carId': {
-    title: '{carName} - Dane techniczne i wynajem',
-    description: 'Wynajmij Teslę {carName}. Sprawdź specyfikację, osiągi, zasięg i cennik. Zarezerwuj online w Apollo Idea.',
+    title: '{carName} • dane techniczne i wynajem Warszawa',
+    description:
+      'Sprawdź specyfikację, zasięg i cennik modelu {carName}. Zarezerwuj Teslę online w Warszawie na dzień, weekend lub dłuższy okres.',
   },
   '/wypozycz/:carId': {
-    title: 'Wynajem {carName} Warszawa | Wypożyczalnia Tesla',
-    description: 'Oferujemy wynajem {carName} w Warszawie. Sprawdź cennik, dostępność i zarezerwuj online. Tesla na doby, miesiące i długi termin.',
-    ogTitle: 'Wynajem {carName} - Najlepsza oferta w Warszawie',
-    ogDescription: 'Chcesz wynająć Teslę? Sprawdź naszą ofertę na {carName}. Minimum formalności, pełne ubezpieczenie i nowe modele.',
+    title: 'Wynajem {carName} Warszawa • wypożyczalnia Tesla',
+    description:
+      'Wynajem {carName} bez kierowcy w Warszawie. Sprawdź cenę za dobę, dostępność i zarezerwuj Teslę online na krótki lub dłuższy okres.',
+    ogTitle: 'Wynajem {carName} Warszawa • Tesla na doby',
+    ogDescription:
+      'Zarezerwuj {carName} online i odbierz auto gotowe do drogi. Przejrzyste warunki najmu i wsparcie przy pierwszym kontakcie z Teslą.',
   },
   '/wypozyczalnia': {
-    title: 'Wypożyczalnia Tesla – wynajem aut elektrycznych Warszawa',
+    title: 'Wypożyczalnia Tesla Warszawa • wynajem aut elektrycznych',
     description:
-      'Oferta wynajmu Tesli: Modele 3, Y, S i inne. Sprawdź flotę, ceny dobowe, FAQ i rozpocznij rezerwację w kilku krokach.',
+      'Wypożyczalnia aut elektrycznych Warszawa, wynajem Tesli na dzień, weekend, tydzień lub miesiąc. Sprawdź modele i zarezerwuj online.',
     ogImage: 'https://img.apolloidea.com/img/tesla-3-low-600x400.jpg',
   },
   '/rezerwacja': {
-    title: 'Rezerwacja',
-    description: 'Wybierz model, terminy wynajmu i opcje. Potwierdzenie danych i płatność w kolejnym kroku.',
+    title: 'Rezerwacja Tesli • wynajem auta elektrycznego',
+    description:
+      'Wybierz model Tesla, ustaw terminy i potwierdź dane. Szybka rezerwacja online dla wynajmu auta elektrycznego w Warszawie.',
   },
   '/transfery': {
-    title: 'Auto z kierowcą',
-    description:
-      'Zamów auto z kierowcą w Warszawie – kierowca do zadań specjalnych.',
+    title: 'Transfery VIP Warszawa • auto z kierowcą',
+    description: 'Zamów auto z kierowcą w Warszawie na transfer lotniskowy, spotkanie biznesowe lub przejazd prywatny.',
     ogImage: 'https://img.apolloidea.com/tesla-y/tesla-y-01.jpg',
   },
   '/zakup': {
-    title: 'Zamów z nami swoje EV',
-    description: 'Kompleksowa pomoc w zakupie Twojego wymarzonego EV. Zajmujemy się całym procesem - od konfiguracji, przez finansowanie i ubezpieczenie, aż po odbiór.',
+    title: 'Zakup EV z Apollo Idea • wsparcie od A do Z',
+    description:
+      'Pomagamy w zakupie auta elektrycznego, od konfiguracji i finansowania po ubezpieczenie i odbiór samochodu.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/ubezpieczenia': {
-    title: 'Ubezpieczenia dla Samochodów Elektrycznych',
-    description: 'Znajdź najlepsze i najtańsze ubezpieczenie OC/AC dla Twojego samochodu elektrycznego. Porównujemy oferty wielu firm, gwarantując najniższą cenę.',
+    title: 'Ubezpieczenia aut elektrycznych • OC i AC',
+    description:
+      'Porównaj ubezpieczenie OC i AC dla samochodu elektrycznego i wybierz zakres ochrony dopasowany do sposobu użytkowania auta.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/finansowanie': {
-    title: 'Finansowanie Samochodów Elektrycznych',
-    description: 'Elastyczne opcje finansowania Twojego nowego EV. Oferujemy leasing, wynajem długoterminowy i kredyt. Znajdź rozwiązanie idealne dla siebie.',
+    title: 'Finansowanie EV • leasing, najem i kredyt',
+    description:
+      'Sprawdź finansowanie samochodów elektrycznych, leasing, najem długoterminowy i kredyt. Wybierz rozwiązanie dopasowane do budżetu.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/kontakt': {
-    title: 'Kontakt',
-    description: 'Skontaktuj się z nami w sprawie wynajmu Tesli, transferów VIP lub inwestycji. Jesteśmy dostępni telefonicznie, mailowo oraz w naszym biurze w Warszawie.',
+    title: 'Kontakt • Apollo Idea Warszawa',
+    description:
+      'Skontaktuj się z nami w sprawie wynajmu Tesli, transferów VIP i usług EV. Odpowiadamy telefonicznie, mailowo i przez formularz.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/blog': {
-    title: 'Blog o Elektromobilności',
-    description: 'Najnowsze wiadomości, porady i artykuły ze świata samochodów elektrycznych. Bądź na bieżąco z trendami dzięki blogowi Apollo Idea.',
+    title: 'Blog elektromobilności • porady i aktualności EV',
+    description:
+      'Przeczytaj artykuły o samochodach elektrycznych, ładowaniu, wynajmie Tesli i praktycznym użytkowaniu EV na co dzień.',
     ogImage: 'https://img.apolloidea.com/blog/wypozyczalnia-aut-elektrycznych-miniatura.jpg',
   },
   '/blog/:articleSlug': {
@@ -71,42 +82,43 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     ogType: 'article',
   },
   '/wrap': {
-    title: 'Galeria wrap — Lakiernia Tesla | Apollo Idea',
+    title: 'Galeria wrap Tesla • wzory do Lakierni',
     description:
-      'Pobierz gotowe wzory oklein (wrap) do konfiguratora Lakiernia w Tesli. Instrukcja: pendrive, aplikacja w samochodzie.',
+      'Pobierz gotowe wzory wrap i naklejek do Lakierni w Tesli. Zobacz galerię i sprawdź, jak zainstalować pliki w samochodzie.',
     ogType: 'website',
     ogImage: 'https://img.apolloidea.com/img/wrap/wrap-cf-black-apolloidea.png',
   },
   '/dokumentacja': {
-    title: 'Dokumentacja',
-    description: 'Zapoznaj się z regulaminami, polityką prywatności i innymi ważnymi dokumentami dotyczącymi usług Apollo Idea.',
+    title: 'Dokumentacja • regulaminy i polityki',
+    description:
+      'Sprawdź regulaminy, politykę prywatności i dokumenty dotyczące usług Apollo Idea, wynajmu oraz przetwarzania danych.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/ig': {
-    title: 'Apollo Idea — linki (Instagram)',
+    title: 'Apollo Idea • linki Instagram',
     description:
-      'Szybkie linki: strona główna Apollo, wypożyczalnia aut elektrycznych i zamówienie Tesla. Apollo Idea, Warszawa.',
+      'Szybkie linki do oferty Apollo Idea, wypożyczalni aut elektrycznych i rezerwacji Tesli w Warszawie.',
     ogType: 'website',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/fb': {
-    title: 'Apollo Idea — linki (Facebook)',
+    title: 'Apollo Idea • linki Facebook',
     description:
-      'Szybkie linki z Facebooka: strona główna Apollo, wypożyczalnia EV, zamówienie Tesla, kontakt. Apollo Idea, Warszawa.',
+      'Szybkie linki z Facebooka do oferty Apollo Idea, wypożyczalni EV, rezerwacji Tesli i kontaktu.',
     ogType: 'website',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/yt': {
-    title: 'Apollo Idea — linki (YouTube)',
+    title: 'Apollo Idea • linki YouTube',
     description:
-      'Szybkie linki z YouTube: strona główna Apollo, wypożyczalnia EV, zamówienie Tesla, kontakt. Apollo Idea, Warszawa.',
+      'Szybkie linki z YouTube do oferty Apollo Idea, wypożyczalni EV, rezerwacji Tesli i kontaktu.',
     ogType: 'website',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/tt': {
-    title: 'Apollo Idea — linki (TikTok)',
+    title: 'Apollo Idea • linki TikTok',
     description:
-      'Szybkie linki z TikToka: strona główna Apollo, wypożyczalnia EV, zamówienie Tesla, kontakt. Apollo Idea, Warszawa.',
+      'Szybkie linki z TikToka do oferty Apollo Idea, wypożyczalni EV, rezerwacji Tesli i kontaktu.',
     ogType: 'website',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },

@@ -1305,12 +1305,9 @@ const RentalV2Page: React.FC = () => {
             <p className="min-w-0 flex-1 truncate text-sm font-medium leading-snug text-foreground">
               {summary.rentalDays > 0 ? (
                 <>
-                  {formatDdMmFromIso(rentalPeriod.pickupDate)}.{formatDdMmFromIso(rentalPeriod.returnDate)} -{' '}
-                  {formatPolishRentalDays(summary.rentalDays)} - {summary.tierPricePerDay.toLocaleString('pl-PL')}{' '}
-                  zł/db -{' '}
-                  <strong className="font-semibold text-foreground">
-                    {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
-                  </strong>
+                  {formatDdMmFromIso(rentalPeriod.pickupDate)}.{formatDdMmFromIso(rentalPeriod.returnDate)} •{' '}
+                  {formatPolishRentalDays(summary.rentalDays)} • {summary.tierPricePerDay.toLocaleString('pl-PL')}{' '}
+                  zł/db
                 </>
               ) : (
                 <span className="text-foreground/70">-</span>
@@ -1327,9 +1324,11 @@ const RentalV2Page: React.FC = () => {
           </div>
           <Link
             to={`/rezerwacja/${selected.id}/zamowienie`}
-            className="flex h-9 w-full items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
+            className="flex h-9 w-full items-center justify-center gap-1 rounded-full bg-foreground text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
           >
-            Zarezerwuj pojazd
+            <span>Zarezerwuj</span>
+            <span aria-hidden>•</span>
+            <span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span>
           </Link>
         </div>
       </div>

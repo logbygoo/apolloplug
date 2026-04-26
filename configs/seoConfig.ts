@@ -52,19 +52,19 @@ export const SEO_CONFIG: Record<string, SeoData> = {
   },
   /** `/rezerwacja/:carId` — w `RentalV2Page` zastąp `{carName}` (np. Model 3 Highland) i `{carBrand}` (np. Tesla). */
   '/rezerwacja/:carId': {
-    title: buildSeoTitle('Rezerwacja {carName} • {carBrand} • wynajem auta elektrycznego'),
+    title: buildSeoTitle('Rezerwacja {carBrand} {carName} • Wynajem auta elektrycznego'),
     description:
-      '{carName} ({carBrand}): wybierz terminy, opcje dodatkowe i złóż rezerwację wynajmu w Warszawie. Jasne zasady i rezerwacja online.',
+      'Zarezerwuj {carBrand} {carName} wybierajac terminy, opcje dodatkowe i złóż rezerwację wynajmu w Warszawie. Jasne zasady i rezerwacja online.',
   },
   /** `/rezerwacja/:carId/zamowienie` — krok z formularzem kierowcy (flow `driver`). */
   '/rezerwacja/zamowienie': {
-    title: buildSeoTitle('Zamówienie wynajmu {carName} • {carBrand}'),
+    title: buildSeoTitle('Rezerwacja {carBrand} {carName} • Formularz rezerwacji'),
     description:
       'Uzupełnij dane kierowcy, adres i kontakt, zaakceptuj zgody. Potwierdź rezerwację wynajmu {carName} ({carBrand}), następnie opłać rezerwację online.',
   },
   /** Ta sama ścieżka URL co zamówienie — krok płatności (flow `payment`). */
   '/rezerwacja/platnosc': {
-    title: buildSeoTitle('Płatność rezerwacji • {carName} • {carBrand}'),
+    title: buildSeoTitle('Płatność za rezerwację • {carBrand} {carName}'),
     description:
       'Opłać rezerwację wynajmu {carBrand} {carName} bezpiecznie online. Po zaksięgowaniu płatności otrzymasz potwierdzenie rezerwacji {carName}.',
   },
@@ -76,15 +76,15 @@ export const SEO_CONFIG: Record<string, SeoData> = {
   /** `/pdf/:slug.pdf` — drukowalny podgląd PDF (bez głównego menu). */
   '/pdf': {
     title: buildSeoTitle('Dokument PDF'),
-    description: 'Podgląd dokumentu do wydruku lub zapisu. Treść generowana w przeglądarce.',
+    description: 'Podgląd dokumentu do wydruku lub zapisu.',
   },
   '/transfery': {
-    title: buildSeoTitle('Transfery VIP Warszawa • auto z kierowcą'),
-    description: 'Zamów auto z kierowcą w Warszawie na transfer lotniskowy, spotkanie biznesowe lub przejazd prywatny.',
+    title: buildSeoTitle('Auto z kierowcą • Warszawa'),
+    description: 'Zamów auto z kierowcą w Warszawie na transfer lotniskowy, przewóz dokumentów lub na godziny.',
     ogImage: 'https://img.apolloidea.com/tesla-y/tesla-y-01.jpg',
   },
   '/zakup': {
-    title: buildSeoTitle('Zakup EV • wsparcie od A do Z'),
+    title: buildSeoTitle('Zakup auta EV • Wsparcie od A do Z'),
     description:
       'Pomagamy w zakupie auta elektrycznego, od konfiguracji i finansowania po ubezpieczenie i odbiór samochodu.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
@@ -102,7 +102,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
   },
   '/kontakt': {
-    title: buildSeoTitle('Kontakt Warszawa'),
+    title: buildSeoTitle('Kontakt'),
     description:
       'Skontaktuj się z nami w sprawie wynajmu Tesli, transferów VIP i usług EV. Odpowiadamy telefonicznie, mailowo i przez formularz.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',

@@ -11,9 +11,8 @@ const Seo: React.FC<SeoData> = ({
   ogType = 'website',
 }) => {
   useEffect(() => {
-    const fullTitle = `${title} | ${SITE_DOMAIN}`;
-    if (document.title !== fullTitle) {
-      document.title = fullTitle;
+    if (document.title !== title) {
+      document.title = title;
     }
 
     const setMeta = (attr: 'name' | 'property', key: string, content: string) => {

@@ -36,7 +36,7 @@ export const purchaseHomeReferralSection = {
   ctaReadMore: 'Czytaj więcej',
   perks: [
     {
-      stat: '1000 km ładowania',
+      stat: '2000 km ładowania',
       subline: 'Prezent od Tesla',
     },
   ],

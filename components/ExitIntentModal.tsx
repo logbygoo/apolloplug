@@ -5,6 +5,9 @@ import { mailApiUrl } from '../configs/notifications/apiEndpoints';
 
 const STORAGE_KEY = 'apolloidea_exit_intent_shown';
 
+/** Ustaw `true`, aby znów pokazać blok z telefonem i e‑mailem. */
+const SHOW_OPTIONAL_CONTACT_SECTION = false;
+
 const ExitIntentModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEligible, setIsEligible] = useState(false);
@@ -157,38 +160,40 @@ const ExitIntentModal: React.FC = () => {
               />
             </div>
 
-            <div className="space-y-3">
-              <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wide">
-                Opcjonalnie
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Zostaw kontakt do siebie, abyśmy mogli zaproponować Ci coś, co Cię przekona.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="exit-phone">Telefon</Label>
-                  <Input
-                    id="exit-phone"
-                    type="tel"
-                    placeholder="Np. +48 500 000 000"
-                    value={contactPhone}
-                    onChange={e => setContactPhone(e.target.value)}
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="exit-email">E-mail</Label>
-                  <Input
-                    id="exit-email"
-                    type="email"
-                    placeholder="Np. imie@twojmail.pl"
-                    value={contactEmail}
-                    onChange={e => setContactEmail(e.target.value)}
-                    className="mt-1"
-                  />
+            {SHOW_OPTIONAL_CONTACT_SECTION ? (
+              <div className="space-y-3">
+                <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wide">
+                  Opcjonalnie
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Zostaw kontakt do siebie, abyśmy mogli zaproponować Ci coś, co Cię przekona.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="exit-phone">Telefon</Label>
+                    <Input
+                      id="exit-phone"
+                      type="tel"
+                      placeholder="Np. +48 500 000 000"
+                      value={contactPhone}
+                      onChange={e => setContactPhone(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="exit-email">E-mail</Label>
+                    <Input
+                      id="exit-email"
+                      type="email"
+                      placeholder="Np. imie@twojmail.pl"
+                      value={contactEmail}
+                      onChange={e => setContactEmail(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : null}
 
             <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
               <Button

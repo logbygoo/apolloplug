@@ -423,7 +423,7 @@ const V2LegalDocTile: React.FC<{
       <DocumentTextIcon className="h-8 w-8 shrink-0 text-muted-foreground" />
       <div className="min-w-0">
         <p className="font-medium text-foreground">{title}</p>
-        <p className="text-sm text-muted-foreground">Podgląd PDF (bez opuszczania strony)</p>
+        <p className="text-sm text-muted-foreground">Podgląd PDF</p>
       </div>
     </button>
   );

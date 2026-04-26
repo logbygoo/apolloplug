@@ -206,7 +206,7 @@ export const createReservationAdminEmailPayload = (
 
     const paymentContent = buildRentalCostSummaryTable(summary);
 
-    const optionLines = buildV2OptionLines(data.model, data.options);
+    const optionLines = buildV2OptionLines(data.model, data.options, summary.rentalDays);
     const optionsTableHtml =
         optionLines.length > 0
             ? generateDetailsTable(optionLines.map((line) => [line.fullName, line.detail]))

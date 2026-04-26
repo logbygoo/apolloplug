@@ -4,6 +4,9 @@ import {
   buildV2OptionLines,
   computeRentalV2Summary,
   formatPolishRentalDays,
+  getAdditionalOptionUnitPrice,
+  getFreeOptionProximityHint,
+  isAdditionalOptionFreeByRentalLength,
   type RentalPeriodState,
 } from '../utils/rentalV2Summary';
 import RentalPriceTable from '../components/RentalPriceTable';
@@ -523,16 +526,24 @@ const CheckboxOption: React.FC<{
   option: (typeof ADDITIONAL_OPTIONS)[number];
   isChecked: boolean;
   onToggle: () => void;
-}> = ({ car, option, isChecked, onToggle }) => {
-  const price = getPriceForCar(option.price, car.id);
-  const isFree = price === 0;
+  rentalDays: number;
+}> = ({ car, option, isChecked, onToggle, rentalDays }) => {
+  const listPrice = getPriceForCar(option.price, car.id);
+  const unit = getAdditionalOptionUnitPrice(option, car.id, rentalDays);
+  const isFree = unit === 0;
+  const isLockedByMinDays =
+    'is_free_checked' in option &&
+    option.is_free_checked === true &&
+    isAdditionalOptionFreeByRentalLength(option, rentalDays);
+  const isDisabled = isLockedByMinDays || listPrice === 0;
+  const hint = getFreeOptionProximityHint(option, rentalDays);
 
   return (
     <label
       htmlFor={`v2-${option.id}`}
       className={`flex items-center justify-between rounded-lg border p-4 transition-all ${
         isChecked ? 'border-foreground bg-secondary/50' : 'border-border bg-card'
-      } ${isFree ? 'cursor-default' : 'cursor-pointer'}`}
+      } ${isDisabled ? 'cursor-default' : 'cursor-pointer'}`}
     >
       <input
         id={`v2-${option.id}`}
@@ -540,9 +551,9 @@ const CheckboxOption: React.FC<{
         checked={isChecked}
         onChange={onToggle}
         className="absolute h-0 w-0 opacity-0"
-        disabled={isFree}
+        disabled={isDisabled}
       />
-      <div className="flex items-center gap-4">
+      <div className="flex min-w-0 flex-1 items-center gap-4 pr-2">
         <div
           className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-sm transition-all ${
             isChecked ? 'bg-foreground text-background' : 'bg-secondary'
@@ -550,14 +561,17 @@ const CheckboxOption: React.FC<{
         >
           {isChecked && <CheckIcon className="h-3.5 w-3.5" strokeWidth={3} />}
         </div>
-        <div>
+        <div className="min-w-0">
           <p className="font-medium">{option.name}</p>
           <p className="text-sm text-muted-foreground">{option.description}</p>
+          {hint ? <p className="text-sm text-green-700 dark:text-green-500">{hint}</p> : null}
         </div>
       </div>
-      <div className="text-right">
+      <div className="shrink-0 text-right">
         <span className="text-sm font-semibold">
-          {isFree ? 'Wliczone w cenę' : `${price} zł ${option.type === 'per_day' ? '/ dzień' : ''}`}
+          {isFree
+            ? 'Wliczone w cenę'
+            : `${listPrice} zł ${option.type === 'per_day' ? '/ dzień' : ''}`}
         </span>
       </div>
     </label>
@@ -764,9 +778,27 @@ const RentalV2Page: React.FC = () => {
     [rentalPeriod, additionalOptions, selected]
   );
 
+  /** Opcje z `is_free_checked`: po osiągnięciu progu dni auto-włączenie (jak ubezpieczenie przy cenie 0). */
+  useEffect(() => {
+    const days = summary.rentalDays;
+    setAdditionalOptions((prev) => {
+      let changed = false;
+      const next = { ...prev };
+      for (const o of ADDITIONAL_OPTIONS) {
+        if (!('is_free_checked' in o) || !o.is_free_checked) continue;
+        if (!('is_free' in o) || typeof o.is_free !== 'number') continue;
+        if (days >= o.is_free && !prev[o.id]) {
+          next[o.id] = true;
+          changed = true;
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [summary.rentalDays]);
+
   const v2OptionLines = useMemo(
-    () => buildV2OptionLines(selected, additionalOptions),
-    [additionalOptions, selected]
+    () => buildV2OptionLines(selected, additionalOptions, summary.rentalDays),
+    [additionalOptions, selected, summary.rentalDays]
   );
 
   const breadcrumbs = useMemo(() => {
@@ -1082,6 +1114,7 @@ const RentalV2Page: React.FC = () => {
                       car={selected}
                       isChecked={additionalOptions[opt.id]}
                       onToggle={() => handleOptionToggle(opt.id)}
+                      rentalDays={summary.rentalDays}
                     />
                   ))}
                 </div>

@@ -16,6 +16,61 @@ const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, car
   return price[carId] ?? 0;
 };
 
+/** Próg „do darmowej opcji” — komunikat pod opisem tylko gdy `1…MAX` dób brakuje do progu. */
+export const FREE_OPTION_HINT_MAX_GAP_DAYS = 4;
+
+export type AdditionalOption = (typeof ADDITIONAL_OPTIONS)[number];
+
+function optionHasIsFree(
+  opt: AdditionalOption
+): opt is AdditionalOption & { is_free: number } {
+  return 'is_free' in opt && typeof (opt as { is_free?: unknown }).is_free === 'number';
+}
+
+export function isAdditionalOptionFreeByRentalLength(
+  opt: AdditionalOption,
+  rentalDays: number
+): boolean {
+  if (rentalDays <= 0 || !optionHasIsFree(opt)) return false;
+  return rentalDays >= opt.is_free;
+}
+
+/** Cena jednostkowa (przed mnożnikiem dni) z uwzględnieniem progu darmowej opcji. */
+export function getAdditionalOptionUnitPrice(
+  opt: AdditionalOption,
+  carId: string,
+  rentalDays: number
+): number {
+  const base = getPriceForCar(opt.price, carId);
+  if (isAdditionalOptionFreeByRentalLength(opt, rentalDays)) return 0;
+  return base;
+}
+
+/** Mianownik: „1 dobę”, „2 doby”, „5 dób” (formalnie doby, nie „dni”). */
+export function formatDobyAccusative(n: number): string {
+  if (n < 1) return `${n} dób`;
+  if (n === 1) return '1 dobę';
+  const m10 = n % 10;
+  const m100 = n % 100;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return `${n} doby`;
+  return `${n} dób`;
+}
+
+/**
+ * Tekst zachęty: tylko gdy rezerwacja jest krótsza niż próg, a brak ≤ 4 dób do progu.
+ * Zwraca `null`, gdy brak `is_free` lub komunikat byłby nieadekwatny.
+ */
+export function getFreeOptionProximityHint(
+  opt: AdditionalOption,
+  rentalDays: number
+): string | null {
+  if (rentalDays <= 0 || !optionHasIsFree(opt)) return null;
+  if (rentalDays >= opt.is_free) return null;
+  const gap = opt.is_free - rentalDays;
+  if (gap < 1 || gap > FREE_OPTION_HINT_MAX_GAP_DAYS) return null;
+  return `Dodaj ${formatDobyAccusative(gap)} aby otrzymać tę opcję za darmo`;
+}
+
 export type RentalV2SummaryResult = {
   rentalDays: number;
   rentalPrice: number;
@@ -92,8 +147,8 @@ export function computeRentalV2Summary(
   let optionsPrice = 0;
   ADDITIONAL_OPTIONS.forEach((opt) => {
     if (additionalOptions[opt.id]) {
-      const price = getPriceForCar(opt.price, model.id);
-      optionsPrice += opt.type === 'per_day' ? price * rentalDays : price;
+      const unit = getAdditionalOptionUnitPrice(opt, model.id, rentalDays);
+      optionsPrice += opt.type === 'per_day' ? unit * rentalDays : unit;
     }
   });
 
@@ -133,10 +188,14 @@ export function formatPolishRentalDays(n: number): string {
 
 export function buildV2OptionLines(
   model: Car,
-  additionalOptions: Record<(typeof ADDITIONAL_OPTIONS)[number]['id'], boolean>
+  additionalOptions: Record<(typeof ADDITIONAL_OPTIONS)[number]['id'], boolean>,
+  rentalDays: number
 ) {
   return ADDITIONAL_OPTIONS.filter((opt) => additionalOptions[opt.id]).map((opt) => {
-    const unit = getPriceForCar(opt.price, model.id);
+    const unit = getAdditionalOptionUnitPrice(opt, model.id, rentalDays);
+    if (unit === 0) {
+      return { id: opt.id, fullName: opt.name, detail: 'Wliczone w cenę' };
+    }
     const detail =
       opt.type === 'per_day'
         ? `${unit.toLocaleString('pl-PL')} zł/db`

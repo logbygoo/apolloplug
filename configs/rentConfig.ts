@@ -200,15 +200,94 @@ export function firstSelectableRentalCarId(): string {
   return a?.id ?? firstVisibleRentalCarId();
 }
 
+/**
+ * Opcjonalnie: `is_free` = min. liczba dób najmu, od której opcja jest w cenie 0;
+ * `is_free_checked` = po osiągnięciu progu automatyczne zaznaczenie i brak możliwości odznaczenia (np. myjnia).
+ * Bez tych pól zachowanie jak dotąd. Podpowiedź „Dodaj N dób…” (max 4 do progu) w `getFreeOptionProximityHint`.
+ */
 export const ADDITIONAL_OPTIONS = [
-    { id: 'insurance', name: 'Ubezpieczenie OC AC NNW', price: 0, type: 'one_time', description: 'Zabezpiecza kierowcę przed kosztami szkód spowodowanymi przez innych uczestników ruchu.' },
-    { id: 'deductible', name: 'Zmniejszony udział własny w szkodzie', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 129, 'tesla-x': 149, 'tesla-s': 169, 'tesla-cybertruck': 199 }, type: 'per_day', description: 'Udział w szkodzie zmniejszony do wysokości standardoej kaucji.' },
-    { id: 'tires', name: 'Ubezpieczenie opon', price: { 'tesla-3-highland': 9, 'tesla-y-juniper': 12, 'tesla-x': 15, 'tesla-s': 16, 'tesla-cybertruck': 19 }, type: 'per_day', description: 'Pokrycie kosztów uszkodzenia opon.' },
-    { id: 'deposit', name: 'Wynajem bez Kaucji', price: { 'tesla-3-highland': 129, 'tesla-y-juniper': 159, 'tesla-x': 199, 'tesla-s': 249, 'tesla-cybertruck': 990 }, type: 'per_day', description: 'Nie musisz pozostawiać depozytu przy odbiorze auta.' },
-    { id: 'childSeat', name: 'Fotelik dziecięcy', price: 99, type: 'one_time', description: 'Bezpieczeństwo dla najmłodszych pasażerów.' },
-    { id: 'delivery', name: 'Dostawa pod dom', price: 190, type: 'one_time', description: 'Dostawa pojazdu pod wskazany adres na terenie Warszawy.' },
-    { id: 'emptyBattery', name: 'Możliwość zwrotu pustej baterii', price: { 'tesla-3-highland': 290, 'tesla-y-juniper': 320, 'tesla-x': 350, 'tesla-s': 370, 'tesla-cybertruck': 390 }, type: 'one_time', description: 'Zwróć auto bez konieczności ładowania.' },
-    { id: 'wash', name: 'Pakiet myjnia', price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 99, 'tesla-x': 119, 'tesla-s': 140, 'tesla-cybertruck': 190 }, type: 'one_time', description: 'Moliwość zwrotu brudnego auta.' },
+    {
+        id: 'insurance',
+        name: 'Ubezpieczenie OC AC NNW',
+        price: 0,
+        type: 'one_time',
+        description: 'Zabezpiecza kierowcę przed kosztami szkód spowodowanymi przez innych uczestników ruchu.',
+    },
+    {
+        id: 'deductible',
+        name: 'Zmniejszony udział własny w szkodzie',
+        price: {
+            'tesla-3-highland': 99,
+            'tesla-y-juniper': 129,
+            'tesla-x': 149,
+            'tesla-s': 169,
+            'tesla-cybertruck': 199,
+        },
+        type: 'per_day',
+        description: 'Udział w szkodzie zmniejszony do wysokości standardoej kaucji.',
+    },
+    {
+        id: 'tires',
+        name: 'Ubezpieczenie opon',
+        price: {
+            'tesla-3-highland': 9,
+            'tesla-y-juniper': 12,
+            'tesla-x': 15,
+            'tesla-s': 16,
+            'tesla-cybertruck': 19,
+        },
+        type: 'per_day',
+        description: 'Pokrycie kosztów uszkodzenia opon.',
+    },
+    {
+        id: 'deposit',
+        name: 'Wynajem bez Kaucji',
+        price: {
+            'tesla-3-highland': 129,
+            'tesla-y-juniper': 159,
+            'tesla-x': 199,
+            'tesla-s': 249,
+            'tesla-cybertruck': 990,
+        },
+        type: 'per_day',
+        description: 'Nie musisz pozostawiać depozytu przy odbiorze auta.',
+    },
+    {
+        id: 'childSeat',
+        name: 'Fotelik dziecięcy',
+        price: 99,
+        type: 'one_time',
+        description: 'Bezpieczeństwo dla najmłodszych pasażerów.',
+    },
+    {
+        id: 'delivery',
+        name: 'Dostawa pod dom',
+        price: 190,
+        type: 'one_time',
+        description: 'Dostawa pojazdu pod wskazany adres na terenie Warszawy.',
+    },
+    {
+        id: 'emptyBattery',
+        name: 'Możliwość zwrotu pustej baterii',
+        price: {
+            'tesla-3-highland': 290,
+            'tesla-y-juniper': 320,
+            'tesla-x': 350,
+            'tesla-s': 370,
+            'tesla-cybertruck': 390,
+        },
+        type: 'one_time',
+        description: 'Zwróć auto bez konieczności ładowania.',
+    },
+    {
+        id: 'wash',
+        name: 'Pakiet myjnia',
+        price: { 'tesla-3-highland': 99, 'tesla-y-juniper': 99, 'tesla-x': 119, 'tesla-s': 140, 'tesla-cybertruck': 190 },
+        type: 'one_time',
+        description: 'Moliwość zwrotu brudnego auta.',
+        is_free: 7,
+        is_free_checked: true,
+    },
 ] as const;
 
 /** Dostępne sloty godzin (cała doba, co 30 min). Godziny pracy biura i dopłata poza nimi: `workConfig.ts`. */

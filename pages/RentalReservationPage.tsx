@@ -462,8 +462,8 @@ const RentalReservationPage: React.FC = () => {
 
   const v2OptionLines = useMemo(() => {
     if (!additionalOptions) return [];
-    return buildV2OptionLines(selected, additionalOptions);
-  }, [additionalOptions, selected]);
+    return buildV2OptionLines(selected, additionalOptions, summary.rentalDays);
+  }, [additionalOptions, selected, summary.rentalDays]);
 
   /** Ten sam obraz co karty „Wybierz model” (pierwsze zdjęcie z konfiguracji modelu). */
   const modelCardImage = selected.imageUrl[0];

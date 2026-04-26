@@ -48,7 +48,7 @@ const FleetPage: React.FC = () => {
                   </div>
                 </CardContent>
                 <CardFooter className="flex gap-4">
-                  <Link to={`/wypozyczalnia?model=${car.id}`} className="w-full">
+                  <Link to={`/rezerwacja/${car.id}`} className="w-full">
                     <Button className="w-full" variant="primary">Wypożycz</Button>
                   </Link>
                   <Link to="/transfery" className="w-full">

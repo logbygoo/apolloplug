@@ -1,11 +1,11 @@
 /** Klucz stanu formularza wypożyczalni (marka, model, daty, godziny, adresy, opcje) — localStorage + sessionStorage. */
 export const RENTAL_V2_SESSION_KEY = 'rentalV2FormState';
 
-/** Dane kierowcy na stronie `/rezerwacja/:carId`. */
+/** Dane kierowcy — krok 2 pod `/rezerwacja/:carId/zamowienie`. */
 export const RENTAL_V2_RESERVATION_DRIVER_KEY = 'rentalV2ReservationDriver';
 
 /**
- * Odczyt zapisanego JSON stanu wypożyczalni: najpierw localStorage (powrót na /wypozyczalnia),
+ * Odczyt zapisanego JSON stanu wypożyczalni: najpierw localStorage (powrót na /rezerwacja),
  * potem sessionStorage. Jeśli jest tylko w session, jednorazowo kopiuje do local (migracja).
  */
 export function getPersistedRentalV2SessionJson(): string | null {

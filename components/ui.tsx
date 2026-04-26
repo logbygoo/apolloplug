@@ -128,9 +128,24 @@ export const PageHeader: React.FC<{
   title: string;
   subtitle?: string;
   breadcrumbs: PageHeaderBreadcrumb[];
-}> = ({ title, subtitle, breadcrumbs }) => {
+  /** Akcje w bloku head (np. CTA) — ten sam `container` co tytuł. */
+  actions?: React.ReactNode;
+  className?: string;
+  /**
+   * Maks. szerokość leadu (subtitle) i bloku `actions` względem kontenera.
+   * Na stronach wyrównanych do `max-w-5xl` ustaw np. `max-w-none`, żeby łamanie było jak w reszcie kolumny.
+   */
+  introMaxWidthClassName?: string;
+}> = ({
+  title,
+  subtitle,
+  breadcrumbs,
+  actions,
+  className = '',
+  introMaxWidthClassName = 'max-w-3xl',
+}) => {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-14">
+    <div className={['container mx-auto px-4 md:px-6 py-14', className].filter(Boolean).join(' ')}>
       <nav aria-label="breadcrumb" className="mb-4 overflow-hidden">
         <ol className="flex items-center gap-2 text-sm">
           <li className="flex-shrink-0">
@@ -160,8 +175,11 @@ export const PageHeader: React.FC<{
       </nav>
       <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{title}</h1>
       {subtitle && (
-        <p className="mt-4 max-w-3xl text-lg text-muted-foreground">{subtitle}</p>
+        <p className={['mt-4 text-lg text-muted-foreground', introMaxWidthClassName].filter(Boolean).join(' ')}>
+          {subtitle}
+        </p>
       )}
+      {actions && <div className={['mt-4', introMaxWidthClassName].filter(Boolean).join(' ')}>{actions}</div>}
     </div>
   );
 };

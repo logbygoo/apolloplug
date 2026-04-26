@@ -1,9 +1,9 @@
-
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation, useParams } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import TransfersPage from './pages/TransfersPage';
 import RentalV2Page from './pages/RentalV2Page';
+import RentalWypozyczalniaLandingPage from './pages/RentalWypozyczalniaLandingPage';
 import RentalReservationPage from './pages/RentalReservationPage';
 import FinancingPage from './pages/FinancingPage';
 import FleetPage from './pages/FleetPage';
@@ -22,23 +22,45 @@ import DashPage from './pages/DashPage';
 import CookieBanner from './components/CookieBanner';
 import ExitIntentModal from './components/ExitIntentModal';
 import { ApolloPlugLogo } from './constants';
-import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon } from './icons';
+import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon, ChevronDownIcon } from './icons';
 import { CONFIG } from './config';
 import UnderConstructionPage from './pages/UnderConstructionPage';
 import ScrollToTop from './components/ScrollToTop';
 import { SITE_DOMAIN } from './configs/site';
 
-const mainNavLinks = [
+/** Paralela do `/wypozycz/:carId` — wybór modelu tylko na `/rezerwacja/...` */
+function RedirectWypozyczalniaToRezerwacja() {
+  const { carId } = useParams<{ carId: string }>();
+  return <Navigate to={`/rezerwacja/${carId}`} replace />;
+}
+
+const NAV_CORE = [
   { path: '/flota', name: 'Pojazdy' },
   { path: '/wypozyczalnia', name: 'Wypożyczalnia' },
   { path: '/transfery', name: 'Auto z kierowcą' },
+] as const;
+
+const OFERTA_LINKS = [
   { path: '/zakup', name: 'Zakup' },
   { path: '/ubezpieczenia', name: 'Ubezpieczenia' },
   { path: '/finansowanie', name: 'Finansowanie' },
-];
+] as const;
+
+function isOfertaPath(pathname: string): boolean {
+  return OFERTA_LINKS.some(
+    ({ path }) => pathname === path || pathname.startsWith(`${path}/`)
+  );
+}
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileOfertaOpen, setMobileOfertaOpen] = useState(false);
+  const location = useLocation();
+  const isOfertaActive = isOfertaPath(location.pathname);
+
+  useEffect(() => {
+    if (!isOpen) setMobileOfertaOpen(false);
+  }, [isOpen]);
 
   const activeLinkClass = "font-semibold text-foreground";
   const inactiveLinkClass = "text-foreground/70 transition-colors hover:text-foreground";
@@ -51,47 +73,95 @@ const Header: React.FC = () => {
             <ApolloPlugLogo />
           </a>
           
-          <nav className="hidden lg:flex flex-1 justify-center gap-6 text-sm font-medium">
-            {mainNavLinks.map((link) => (
+          <nav className="hidden min-h-0 flex-1 items-center justify-center gap-6 text-sm font-medium lg:flex">
+            {NAV_CORE.map((link) => (
               <NavLink
                 key={link.path}
                 to={link.path}
-                className={({ isActive }) => (isActive ? activeLinkClass : inactiveLinkClass)}
+                className={({ isActive }) =>
+                  `inline-flex h-14 items-center ${isActive ? activeLinkClass : inactiveLinkClass}`
+                }
               >
                 {link.name}
               </NavLink>
             ))}
+            <div className="group relative flex h-14 items-center">
+              <button
+                type="button"
+                className={`inline-flex h-full items-center gap-0.5 ${isOfertaActive ? activeLinkClass : inactiveLinkClass}`}
+                aria-haspopup="menu"
+                aria-label="Oferta Apollo, otwórz menu"
+              >
+                Oferta
+                <ChevronDownIcon className="h-4 w-4 opacity-70" aria-hidden />
+              </button>
+              <div className="absolute left-0 top-full z-50 pt-1 opacity-0 transition-all duration-200 invisible group-hover:visible group-hover:opacity-100">
+                <div className="min-w-[12.5rem] overflow-hidden rounded-md border border-border bg-card shadow-lg">
+                  <div className="border-b border-border px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Oferta Apollo
+                  </div>
+                  {OFERTA_LINKS.map((link) => (
+                    <NavLink
+                      key={link.path}
+                      to={link.path}
+                      role="menuitem"
+                      className={({ isActive }) =>
+                        `block px-4 py-2 text-sm transition-colors ${
+                          isActive
+                            ? 'bg-secondary font-semibold text-foreground'
+                            : 'text-foreground hover:bg-secondary'
+                        }`
+                      }
+                    >
+                      {link.name}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            </div>
           </nav>
 
-          <div className="hidden lg:flex items-center gap-4">
-             <a href="tel:500308400" aria-label="Support"><PhoneIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></a>
-             
-             {/* Language Dropdown */}
-             <div className="relative group h-14 flex items-center">
-                <button className="flex items-center focus:outline-none" aria-label="Language">
-                   <FlagIcon className="h-6 w-6 text-foreground/70 group-hover:text-foreground transition-colors" />
-                </button>
-                <div className="absolute right-0 top-12 w-40 bg-card border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right">
-                   <div className="px-4 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                      Wybierz język
-                   </div>
-                   <div className="h-px bg-border my-0"></div>
-                   <a href="#" className="block px-4 py-2 text-sm text-foreground hover:bg-secondary transition-colors">
-                      Polski
-                   </a>
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2 lg:gap-4">
+            <a
+              href="tel:500308400"
+              className="flex shrink-0 p-1.5 text-foreground/70 transition-colors hover:text-foreground"
+              aria-label="Zadzwoń"
+            >
+              <PhoneIcon className="h-6 w-6" />
+            </a>
+            <div className="relative group flex h-14 shrink-0 items-center">
+              <button type="button" className="flex items-center p-1.5 focus:outline-none" aria-label="Język">
+                <FlagIcon className="h-6 w-6 text-foreground/70 transition-colors group-hover:text-foreground" />
+              </button>
+              <div className="absolute right-0 top-12 z-50 w-40 origin-top-right transform rounded-md border border-border bg-card opacity-0 shadow-lg transition-all duration-200 invisible group-hover:visible group-hover:opacity-100">
+                <div className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Wybierz język
                 </div>
-             </div>
-
-             <NavLink to="/kontakt" aria-label="Contact"><EnvelopeIcon className="h-6 w-6 text-foreground/70 hover:text-foreground" /></NavLink>
+                <div className="h-px bg-border" />
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-sm text-foreground transition-colors hover:bg-secondary"
+                >
+                  Polski
+                </a>
+              </div>
+            </div>
+            <NavLink
+              to="/kontakt"
+              className="flex shrink-0 p-1.5 text-foreground/70 transition-colors hover:text-foreground"
+              aria-label="Kontakt"
+            >
+              <EnvelopeIcon className="h-6 w-6" />
+            </NavLink>
+            <button
+              type="button"
+              className="shrink-0 p-2 lg:hidden"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label="Otwórz menu"
+            >
+              <Bars3Icon className="h-6 w-6" />
+            </button>
           </div>
-
-          <button
-            className="lg:hidden ml-auto p-2"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            <Bars3Icon className="h-6 w-6" />
-          </button>
         </div>
       </header>
 
@@ -106,17 +176,67 @@ const Header: React.FC = () => {
             <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
-        <nav className="flex flex-col items-start gap-2 p-4">
-          {[...mainNavLinks, { path: '/kontakt', name: 'Kontakt' }].map((link) => (
+        <nav className="flex flex-col items-stretch gap-1 p-4">
+          {NAV_CORE.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               onClick={() => setIsOpen(false)}
-              className={({ isActive }) => `text-base w-full p-2 rounded-md ${isActive ? "font-semibold bg-secondary" : "hover:bg-secondary"}`}
+              className={({ isActive }) =>
+                `text-base w-full p-2 rounded-md ${isActive ? 'font-semibold bg-secondary' : 'hover:bg-secondary'}`
+              }
             >
               {link.name}
             </NavLink>
           ))}
+          <div className="w-full">
+            <button
+              type="button"
+              onClick={() => setMobileOfertaOpen((o) => !o)}
+              className={`flex w-full items-center justify-between rounded-md p-2 text-left text-base ${
+                isOfertaActive ? 'font-semibold bg-secondary' : 'hover:bg-secondary'
+              }`}
+              aria-expanded={mobileOfertaOpen}
+              aria-controls="mobile-oferta-submenu"
+            >
+              <span>Oferta</span>
+              <ChevronDownIcon
+                className={`h-5 w-5 shrink-0 transition-transform ${mobileOfertaOpen ? 'rotate-180' : ''}`}
+                aria-hidden
+              />
+            </button>
+            <div
+              id="mobile-oferta-submenu"
+              className={`mt-1 space-y-0.5 border-l-2 border-border pl-3 ml-2 ${mobileOfertaOpen ? '' : 'hidden'}`}
+            >
+              {OFERTA_LINKS.map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setMobileOfertaOpen(false);
+                  }}
+                  className={({ isActive }) =>
+                    `block rounded-md py-2.5 pl-3 pr-2 text-base ${
+                      isActive ? 'font-semibold bg-secondary' : 'hover:bg-secondary/80'
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+          <NavLink
+            to="/kontakt"
+            onClick={() => setIsOpen(false)}
+            className={({ isActive }) =>
+              `text-base w-full p-2 rounded-md ${isActive ? 'font-semibold bg-secondary' : 'hover:bg-secondary'}`
+            }
+          >
+            Kontakt
+          </NavLink>
         </nav>
       </div>
        {isOpen && <div className="fixed inset-0 bg-black/30 z-40 lg:hidden" onClick={() => setIsOpen(false)} />}
@@ -126,7 +246,6 @@ const Header: React.FC = () => {
 
 const Footer: React.FC = () => {
     const footerLinks = [
-        { path: '/dokumentacja?doc=protokol-wydania-zwrotu', name: 'Protokół wydania/zwrotu' },
         { path: '/dokumentacja', name: 'Polityka prywatności' },
         { path: '/dokumentacja', name: 'Regulamin' },
         { path: '/kontakt', name: 'Kontakt' },
@@ -203,9 +322,12 @@ const App: React.FC = () => {
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/transfery" element={<TransfersPage />} />
-                    <Route path="/wypozyczalnia" element={<RentalV2Page />} />
+                    <Route path="/wypozyczalnia/:carId" element={<RedirectWypozyczalniaToRezerwacja />} />
+                    <Route path="/wypozyczalnia" element={<RentalWypozyczalniaLandingPage />} />
                     <Route path="/wypozyczalnia-v2" element={<Navigate to="/wypozyczalnia" replace />} />
-                    <Route path="/rezerwacja/:carId" element={<RentalReservationPage />} />
+                    <Route path="/rezerwacja/:carId/zamowienie" element={<RentalReservationPage />} />
+                    <Route path="/rezerwacja/:carId" element={<RentalV2Page />} />
+                    <Route path="/rezerwacja" element={<RentalV2Page />} />
                     <Route path="/finansowanie" element={<FinancingPage />} />
                     <Route path="/flota" element={<FleetPage />} />
                     <Route path="/flota/:carId" element={<CarDetailPage />} />

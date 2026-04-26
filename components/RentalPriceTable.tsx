@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Car } from '../types';
 
-/** Cennik progów dziennych — ten sam układ co na /wypozyczalnia. */
+/** Cennik progów dziennych — ten sam układ co w kroku rezerwacji. */
 const RentalPriceTable: React.FC<{ car: Car; className?: string; showHeading?: boolean }> = ({
   car,
   className = 'mt-6',

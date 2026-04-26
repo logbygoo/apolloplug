@@ -4,6 +4,8 @@ export const CAR_FLEET: Car[] = [
   {
     id: 'tesla-3-highland',
     name: 'Tesla Model 3',
+    /** W konfigu logicznie: `available_in_1h: yes` — pozostałe bez pola = nie. */
+    availableIn1h: true,
     description: 'Najnowsza odsłona bestsellera. Cichsza kabina, lepsze zawieszenie i jeszcze większy zasięg. Idealny sedan do miasta i w trasę.',
     imageUrl: [
       'https://img.apolloidea.com/tesla-3/main-cards-tesla-3.jpg',

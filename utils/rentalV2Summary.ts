@@ -123,7 +123,7 @@ export function computeRentalV2Summary(
 
 /** Podsumowanie v2: „1 dzień”, „2 dni”, „5 dni” itd. */
 export function formatPolishRentalDays(n: number): string {
-  if (n <= 0) return '—';
+  if (n <= 0) return '-';
   if (n === 1) return '1 dzień';
   return `${n} dni`;
 }

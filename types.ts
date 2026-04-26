@@ -49,7 +49,11 @@ export interface Car {
     version?: string;
   };
   available?: boolean;
-  /** `false` = nie pokazuj karty w „Wybierz model” na /wypozyczalnia (auto nadal w konfigu, landingi itd.). Domyślnie jak `true`. */
+  /**
+   * Tylko w `CAR_FLEET`: auto możliwe do odbioru w ~1h (pasek „online” na listingach). Domyślnie `false` / brak = nie.
+   */
+  availableIn1h?: boolean;
+  /** `false` = nie pokazuj karty w „Wybierz model” na kroku 1 rezerwacji (auto nadal w konfigu, landingi itd.). Domyślnie jak `true`. */
   visible?: boolean;
   priceTiers?: {
     days: string;

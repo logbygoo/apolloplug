@@ -27,6 +27,9 @@ import {
   ChevronDownIcon,
 } from '../icons';
 import type { RentalLandingFeatureIconKey, SeoData } from '../types';
+import { RENTAL_CAR_LANDING_E2E_STYLES, RENTAL_GALLERY_E2E_SLIDER_GAP } from '../configs/rentalGalleryE2eStyles';
+import { RentalGalleryEdgeScroller } from '../components/RentalGalleryEdgeScroller';
+import { useRentalE2ePointerSlider } from '../hooks/useRentalE2ePointerSlider';
 
 const RENTAL_LANDING_ICONS: Record<
   RentalLandingFeatureIconKey,
@@ -37,94 +40,6 @@ const RENTAL_LANDING_ICONS: Record<
   shieldCheck: ShieldCheckIcon,
   key: KeyIcon,
 };
-
-/** Te same reguły co `.rental-v2` na /wypozyczalnia — scrollbar ukryty, tor z gutterem jak `.container`. */
-const CAR_LANDING_E2E_STYLES = `
-  .rental-car-landing {
-    --container-width: 100%;
-    --slider-gap: 1.25rem;
-    --e2e-edge-fuzz: 15px;
-  }
-  @media (min-width: 640px) {
-    .rental-car-landing { --container-width: 40rem; }
-  }
-  @media (min-width: 768px) {
-    .rental-car-landing { --container-width: 48rem; }
-  }
-  @media (min-width: 1024px) {
-    .rental-car-landing { --container-width: 64rem; }
-  }
-  @media (min-width: 1280px) {
-    .rental-car-landing { --container-width: 80rem; }
-  }
-  @media (min-width: 1536px) {
-    .rental-car-landing { --container-width: 96rem; }
-  }
-
-  .rental-car-landing .e2e-slider {
-    width: 100%;
-    position: relative;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    touch-action: pan-x pan-y;
-  }
-  .rental-car-landing .e2e-slider::-webkit-scrollbar {
-    height: 0;
-    display: none;
-  }
-  .rental-car-landing .e2e-track {
-    display: inline-flex;
-    align-items: stretch;
-    width: max-content;
-    gap: var(--slider-gap, 20px);
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
-    padding-right: max(1rem, calc((100% - var(--container-width)) / 2 + var(--e2e-edge-fuzz)));
-  }
-  /* Jeden rząd: wszystkie slajdy jak najwyższy box; stała wysokość 300px */
-  .rental-car-landing .e2e-slide {
-    min-height: 300px;
-    max-height: 300px;
-    align-self: stretch;
-  }
-  .rental-car-landing .e2e-slide--photo {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-  }
-  /* Mobile: box ze zdjęciem max 80vw — wysokość wiersza nadal z .e2e-slide (300px), obraz object-cover dopasowuje kadrowanie */
-  @media (max-width: 767px) {
-    .rental-car-landing .e2e-slide--photo {
-      width: 80vw;
-      max-width: 80vw;
-    }
-  }
-  @media (min-width: 768px) {
-    .rental-car-landing .e2e-track {
-      padding-left: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
-      padding-right: max(1.5rem, calc((100% - var(--container-width)) / 2 + 1.5rem));
-    }
-  }
-
-  @media (max-width: 767px) {
-    .rental-car-landing .rental-v2-page-header h1 {
-      font-size: 1.875rem;
-      line-height: 2.25rem;
-    }
-  }
-`;
-
-const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
-
-const RentalLandingEdgeScroller: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className="relative ml-[calc(50%-50vw)] w-[100vw] max-w-[100vw] shrink-0 overflow-x-visible">
-    {children}
-  </div>
-);
 
 const MagnifyingGlassIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
@@ -177,87 +92,7 @@ const RentalCarLandingPage: React.FC = () => {
     }, [carId]);
 
     const keyMetricsBlockRef = useRef<HTMLDivElement>(null);
-
-    const e2eSliderDrag = useRef<{
-        down: boolean;
-        pointerId: number;
-        startX: number;
-        startScroll: number;
-        blockClick: boolean;
-        mode: 'window' | 'capture';
-    }>({
-        down: false,
-        pointerId: -1,
-        startX: 0,
-        startScroll: 0,
-        blockClick: false,
-        mode: 'capture',
-    });
-
-    const onE2eSliderPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-        if (e.pointerType === 'touch') return;
-        if (e.button !== 0) return;
-        const el = e.currentTarget;
-        const start = {
-            down: true,
-            pointerId: e.pointerId,
-            startX: e.clientX,
-            startScroll: el.scrollLeft,
-            blockClick: false,
-        };
-        const fromInteractive = (e.target as HTMLElement | null)?.closest('button, a');
-
-        if (fromInteractive) {
-            e2eSliderDrag.current = { ...start, mode: 'window' };
-            el.style.cursor = 'grabbing';
-            const onWinMove = (ev: PointerEvent) => {
-                const t = e2eSliderDrag.current;
-                if (!t.down || ev.pointerId !== t.pointerId) return;
-                const dx = ev.clientX - t.startX;
-                if (Math.abs(dx) > 4) t.blockClick = true;
-                el.scrollLeft = t.startScroll - dx;
-            };
-            const onWinEnd = (ev: PointerEvent) => {
-                if (ev.pointerId !== start.pointerId) return;
-                window.removeEventListener('pointermove', onWinMove, true);
-                window.removeEventListener('pointerup', onWinEnd, true);
-                window.removeEventListener('pointercancel', onWinEnd, true);
-                e2eSliderDrag.current.down = false;
-                e2eSliderDrag.current.mode = 'capture';
-                el.style.cursor = '';
-            };
-            window.addEventListener('pointermove', onWinMove, true);
-            window.addEventListener('pointerup', onWinEnd, true);
-            window.addEventListener('pointercancel', onWinEnd, true);
-            return;
-        }
-
-        e2eSliderDrag.current = { ...start, mode: 'capture' };
-        el.setPointerCapture(e.pointerId);
-        el.style.cursor = 'grabbing';
-    }, []);
-
-    const onE2eSliderPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-        const s = e2eSliderDrag.current;
-        if (!s.down || e.pointerId !== s.pointerId || s.mode === 'window') return;
-        const el = e.currentTarget;
-        const dx = e.clientX - s.startX;
-        if (Math.abs(dx) > 4) s.blockClick = true;
-        el.scrollLeft = s.startScroll - dx;
-    }, []);
-
-    const onE2eSliderPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-        const s = e2eSliderDrag.current;
-        if (!s.down || e.pointerId !== s.pointerId || s.mode === 'window') return;
-        s.down = false;
-        const el = e.currentTarget;
-        el.style.cursor = '';
-        try {
-            el.releasePointerCapture(e.pointerId);
-        } catch {
-            /* no-op */
-        }
-    }, []);
+    const { e2eSliderDrag, onPointerDownCapture, onPointerMove, onPointerUp } = useRentalE2ePointerSlider();
 
     const onGalleryPhotoClick = useCallback(
         (index: number) => (e: React.MouseEvent) => {
@@ -413,19 +248,19 @@ const RentalCarLandingPage: React.FC = () => {
         <div
             className={`rental-car-landing bg-background${mobileRentSheetOpen ? ' max-md:pb-[7.5rem]' : ''}`}
         >
-            <style>{CAR_LANDING_E2E_STYLES}</style>
+            <style>{RENTAL_CAR_LANDING_E2E_STYLES}</style>
             <Seo {...seoData} />
 
             {/* Galeria E2E: pierwszy slajd = szary box z okruszkami + h1 (jak header), potem zdjęcia; reszta paska biała */}
             <section className="w-full bg-white">
-                <RentalLandingEdgeScroller>
+                <RentalGalleryEdgeScroller>
                     <section
                         className="e2e-slider scroll-smooth cursor-grab select-none pt-4"
-                        style={sliderGapStyle}
-                        onPointerDownCapture={onE2eSliderPointerDown}
-                        onPointerMove={onE2eSliderPointerMove}
-                        onPointerUp={onE2eSliderPointerUp}
-                        onPointerCancel={onE2eSliderPointerUp}
+                        style={RENTAL_GALLERY_E2E_SLIDER_GAP}
+                        onPointerDownCapture={onPointerDownCapture}
+                        onPointerMove={onPointerMove}
+                        onPointerUp={onPointerUp}
+                        onPointerCancel={onPointerUp}
                     >
                         <div className="e2e-track">
                             <div
@@ -468,7 +303,7 @@ const RentalCarLandingPage: React.FC = () => {
                                         </p>
                                         <div className="mt-5 flex flex-wrap items-center justify-start gap-x-4 gap-y-2">
                                             <Link
-                                                to={`/wypozyczalnia?model=${carId}`}
+                                                to={`/rezerwacja/${carId}`}
                                                 className="inline-flex h-12 shrink-0 items-center justify-center rounded-md bg-foreground px-8 text-base font-semibold text-background transition-colors hover:bg-foreground/90"
                                             >
                                                 Zarezerwuj pojazd
@@ -511,7 +346,7 @@ const RentalCarLandingPage: React.FC = () => {
                             ))}
                         </div>
                     </section>
-                </RentalLandingEdgeScroller>
+                </RentalGalleryEdgeScroller>
             </section>
 
             {/* Lightbox: tło lub zdjęcie zamyka; strzałki / klawisze zmieniają slajd */}
@@ -736,7 +571,7 @@ const RentalCarLandingPage: React.FC = () => {
                                         </div>
                                     </dl>
                                     <Link
-                                        to={`/wypozyczalnia?model=${carId}`}
+                                        to={`/rezerwacja/${carId}`}
                                         className="mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
                                     >
                                         Zarezerwuj
@@ -917,7 +752,7 @@ const RentalCarLandingPage: React.FC = () => {
                             </button>
                         </div>
                         <Link
-                            to={`/wypozyczalnia?model=${carId}`}
+                            to={`/rezerwacja/${carId}`}
                             className="flex h-9 w-full items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
                         >
                             Zarezerwuj

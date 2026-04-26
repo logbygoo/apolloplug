@@ -585,7 +585,7 @@ const RentalReservationPage: React.FC = () => {
   }
 
   if (!carId || !car || !session || !rentalPeriod || !additionalOptions) {
-    return <Navigate to="/wypozyczalnia" replace />;
+    return <Navigate to="/rezerwacja" replace />;
   }
 
   const breadcrumbs = [
@@ -595,7 +595,7 @@ const RentalReservationPage: React.FC = () => {
 
   return (
     <>
-      <Seo title={`Rezerwacja — ${selected.name}`} description="Dane kierowcy i podsumowanie rezerwacji." />
+      <Seo title={`Rezerwacja - ${selected.name}`} description="Dane kierowcy i podsumowanie rezerwacji." />
       <style>{RENTAL_V2_SHELL_STYLES}</style>
       <div className="rental-v2 min-h-screen overflow-x-hidden bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">
@@ -644,7 +644,7 @@ const RentalReservationPage: React.FC = () => {
                     <div className="space-y-2 border-t border-border pt-4">
                       <div className="flex justify-between gap-3">
                         <span className="text-muted-foreground">Numer rezerwacji</span>
-                        <span className="shrink-0 text-right font-medium tabular-nums">{reservationNumber || '—'}</span>
+                        <span className="shrink-0 text-right font-medium tabular-nums">{reservationNumber || '-'}</span>
                       </div>
                       {summary.pickupFee > 0 && (
                         <div className="flex justify-between text-sm">
@@ -660,7 +660,7 @@ const RentalReservationPage: React.FC = () => {
                       )}
                       <div className="mt-2 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                         <span>Cena łącznie</span>
-                        <span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}</span>
+                        <span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Kaucja (płatna przy odbiorze)</span>
@@ -924,7 +924,10 @@ const RentalReservationPage: React.FC = () => {
               <div className="lg:sticky lg:top-24">
                 <div className="rounded-lg bg-secondary p-6">
                   <p className="mb-3 text-center">
-                    <Link to="/wypozyczalnia" className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground">
+                    <Link
+                      to={`/rezerwacja/${carId}`}
+                      className="text-sm font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
+                    >
                       Zmodyfikuj rezerwację
                     </Link>
                   </p>
@@ -956,7 +959,7 @@ const RentalReservationPage: React.FC = () => {
                           : ''}
                       </span>
                       <span className="shrink-0 text-right font-medium">
-                        {summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                        {summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}
                       </span>
                     </div>
                     {summary.pickupFee > 0 && (
@@ -988,7 +991,7 @@ const RentalReservationPage: React.FC = () => {
                           : ''}
                       </span>
                       <span className="shrink-0 text-right font-medium">
-                        {summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '—'}
+                        {summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '-'}
                       </span>
                     </div>
                     <div className="flex justify-between gap-3">
@@ -999,7 +1002,7 @@ const RentalReservationPage: React.FC = () => {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             })} zł/km`
-                          : '—'}
+                          : '-'}
                       </span>
                     </div>
                   </div>
@@ -1032,7 +1035,7 @@ const RentalReservationPage: React.FC = () => {
                   <div className="mt-6 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                     <span>Do zapłaty dziś</span>
                     <span>
-                      {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                      {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
                     </span>
                   </div>
                   <div className="mt-2 flex justify-between text-sm">

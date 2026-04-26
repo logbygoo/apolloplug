@@ -1,0 +1,8 @@
+---
+description: W polskim UI nie używaj półpauzy (U+2014, —). Stosuj zwykły minus ASCII (-) w tytułach, p, podsumowaniach i meta.
+globs: **/*.{tsx,ts,html}
+---
+
+# Typografia: brak em dash w treści
+
+W widocznej treści, nagłówkach SEO i podsumowaniach używaj **`-`** (U+002D), nie **—** (U+2014). To samo dotyczy placeholderów typu "brak wartości" (np. `-` zamiast `—`).

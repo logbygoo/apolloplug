@@ -188,9 +188,16 @@ export function firstVisibleRentalCarId(): string {
   return v?.id ?? RENTAL_CARS[0]?.id ?? '';
 }
 
-/** Karty modeli na /wypozyczalnia — pomija `visible: false`. */
+/** Karty modeli na kroku 1 (`/rezerwacja` lub `/rezerwacja/:carId`) — pomija `visible: false`. */
 export function rentalCarsForModelPicker(): Car[] {
   return RENTAL_CARS.filter((c) => c.visible !== false);
+}
+
+/** Pierwszy model z pickera, który można zarezerwować (`available !== false`). */
+export function firstSelectableRentalCarId(): string {
+  const pick = rentalCarsForModelPicker();
+  const a = pick.find((c) => c.available !== false);
+  return a?.id ?? firstVisibleRentalCarId();
 }
 
 export const ADDITIONAL_OPTIONS = [

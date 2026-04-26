@@ -25,9 +25,14 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     ogDescription: 'Chcesz wynająć Teslę? Sprawdź naszą ofertę na {carName}. Minimum formalności, pełne ubezpieczenie i nowe modele.',
   },
   '/wypozyczalnia': {
-    title: 'Wynajem Samochodów Elektrycznych Tesla',
-    description: 'Zarezerwuj Teslę Model 3, Y, lub X. Oferujemy elastyczny wynajem krótkoterminowy i długoterminowy. Sprawdź cennik i dostępność online.',
+    title: 'Wypożyczalnia Tesla – wynajem aut elektrycznych Warszawa',
+    description:
+      'Oferta wynajmu Tesli: Modele 3, Y, S i inne. Sprawdź flotę, ceny dobowe, FAQ i rozpocznij rezerwację w kilku krokach.',
     ogImage: 'https://img.apolloidea.com/img/tesla-3-low-600x400.jpg',
+  },
+  '/rezerwacja': {
+    title: 'Rezerwacja',
+    description: 'Wybierz model, terminy wynajmu i opcje. Potwierdzenie danych i płatność w kolejnym kroku.',
   },
   '/transfery': {
     title: 'Auto z kierowcą',

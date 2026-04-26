@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   buildV2OptionLines,
   computeRentalV2Summary,
@@ -12,7 +12,7 @@ import { Input, Label, PageHeader } from '../components/ui';
 import {
   ADDITIONAL_OPTIONS,
   RENTAL_CARS,
-  firstVisibleRentalCarId,
+  firstSelectableRentalCarId,
   rentalCarsForModelPicker,
   RENTAL_PERIOD_DATE_INPUT_CLASSNAME,
   RENTAL_PERIOD_DATETIME_GRID,
@@ -28,7 +28,13 @@ import { CAR_FLEET } from '../configs/fleetConfig';
 import { getPersistedRentalV2SessionJson, persistRentalV2Session } from '../configs/rentalV2Session';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import { BRANDS } from '../constants';
-import { CalendarDaysIcon, CheckIcon, ChevronDownIcon, DocumentTextIcon } from '../icons';
+import {
+  ArrowTopRightOnSquareIcon,
+  CalendarDaysIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  DocumentTextIcon,
+} from '../icons';
 import type { Car } from '../types';
 
 type RentalBrand = (typeof BRANDS)[number];
@@ -59,6 +65,42 @@ function normalizeRentalPeriodDates(rp: RentalPeriodState, todayIso: string): Re
   if (!pickup || pickup < todayIso) pickup = todayIso;
   if (!ret || ret < pickup) ret = pickup;
   return { ...rp, pickupDate: pickup, returnDate: ret };
+}
+
+function defaultRentalPeriodState(): RentalPeriodState {
+  const now = new Date();
+  const pickupDate = formatDate(now);
+  const returnDate = formatDate(addDays(now, 3));
+  const t = computeDefaultTimeOneHourAhead();
+  return {
+    pickupDate,
+    pickupTime: t,
+    pickupLocation: LOCATIONS[0]?.title ?? '',
+    returnDate,
+    returnTime: t,
+    returnLocation: LOCATIONS[0]?.title ?? '',
+  };
+}
+
+function isRentalPeriodChronologyOk(rp: RentalPeriodState): boolean {
+  if (!rp.pickupDate || !rp.returnDate || !rp.pickupTime || !rp.returnTime) return false;
+  const start = new Date(`${rp.pickupDate}T${rp.pickupTime}`);
+  const end = new Date(`${rp.returnDate}T${rp.returnTime}`);
+  return start < end;
+}
+
+/** Wczytanie z localStorage: popraw przeszłe daty, a gdy i tak brak poprawnego zakresu (0 dni, start ≥ koniec), ustaw dziś + 3 dni. */
+function ensureSessionRentalPeriodOrDefault(stored: RentalPeriodState): RentalPeriodState {
+  let rp: RentalPeriodState = { ...stored };
+  if (!isValidLocationTitle(rp.pickupLocation)) rp.pickupLocation = LOCATIONS[0]?.title ?? '';
+  if (!isValidLocationTitle(rp.returnLocation)) rp.returnLocation = LOCATIONS[0]?.title ?? '';
+  rp.pickupTime = snapTimeToRentalSlot(rp.pickupTime);
+  rp.returnTime = snapTimeToRentalSlot(rp.returnTime);
+  rp = normalizeRentalPeriodDates(rp, getTodayIso());
+  if (!isRentalPeriodChronologyOk(rp)) {
+    return defaultRentalPeriodState();
+  }
+  return rp;
 }
 
 const getPriceForCar = (price: number | Readonly<{ [key: string]: number }>, carId: string): number => {
@@ -154,7 +196,7 @@ function loadRentalV2Session(): RentalV2Session | null {
 }
 
 function buildFirstVisitState(): RentalV2Session {
-  const carId = firstVisibleRentalCarId();
+  const carId = firstSelectableRentalCarId();
   const brandId = BRANDS.find((b) => carId.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
   const now = new Date();
   const pickupDate = formatDate(now);
@@ -178,19 +220,14 @@ function buildFirstVisitState(): RentalV2Session {
 function hydrateFromSession(stored: RentalV2Session): RentalV2Session {
   const storedCar = RENTAL_CARS.find((c) => c.id === stored.selectedId);
   const carId =
-    storedCar && storedCar.visible !== false
+    storedCar && storedCar.visible !== false && storedCar.available !== false
       ? stored.selectedId
-      : firstVisibleRentalCarId();
+      : firstSelectableRentalCarId();
   let brandId = stored.selectedBrandId;
   if (!BRANDS.some((b) => b.id === brandId)) {
     brandId = BRANDS.find((b) => carId.includes(b.id))?.id ?? BRANDS[0]?.id ?? '';
   }
-  let rp: RentalPeriodState = { ...stored.rentalPeriod };
-  if (!isValidLocationTitle(rp.pickupLocation)) rp.pickupLocation = LOCATIONS[0]?.title ?? '';
-  if (!isValidLocationTitle(rp.returnLocation)) rp.returnLocation = LOCATIONS[0]?.title ?? '';
-  rp.pickupTime = snapTimeToRentalSlot(rp.pickupTime);
-  rp.returnTime = snapTimeToRentalSlot(rp.returnTime);
-  rp = normalizeRentalPeriodDates(rp, getTodayIso());
+  const rp = ensureSessionRentalPeriodOrDefault(stored.rentalPeriod);
   return {
     selectedId: carId,
     selectedBrandId: brandId,
@@ -199,7 +236,7 @@ function hydrateFromSession(stored: RentalV2Session): RentalV2Session {
   };
 }
 
-/** Bez cache modułu — przy każdym wejściu na /wypozyczalnia czytamy z localStorage / sessionStorage. */
+/** Bez cache modułu — przy każdym wejściu na /rezerwacja czytamy z localStorage / sessionStorage. */
 function getInitialRentalV2State(): RentalV2Session {
   if (typeof window === 'undefined') {
     return buildFirstVisitState();
@@ -300,7 +337,7 @@ const sliderGapStyle = { '--slider-gap': '1.25rem' } as React.CSSProperties;
 
 /**
  * Wychodzi z szerokości kolumny / .container — pełna szerokość viewportu.
- * Bez resetu md: (w przeciwieństwie do RentalEdgeScroller na /wypozyczalnia), żeby
+ * Bez resetu md: (w przeciwieństwie do RentalEdgeScroller na innych stronach), żeby
  * .e2e-track miał poprawne 100% przy calc paddingu i nic nie obcinało z overflow rodziców.
  */
 const RentalV2EdgeScroller: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -427,7 +464,7 @@ const V2ModelCard: React.FC<{
           Wkrótce
         </div>
       )}
-      <img src={car.imageUrl[0]} alt={car.name} className="mb-4 h-32 w-full object-contain" />
+      <img src={car.imageUrl[0]} alt={car.name} className="mb-2 h-32 w-full object-contain" />
       <div className="mt-auto text-center">
         <h3 className="font-semibold">{car.name}</h3>
         {isAvailable ? (
@@ -440,7 +477,7 @@ const V2ModelCard: React.FC<{
   );
 };
 
-/** Pigułki specyfikacji — ten sam zestaw pól co na /wypozyczalnia (krok szczegóły). */
+/** Pigułki specyfikacji — ten sam zestaw pól co na kroku rezerwacji (krok szczegóły). */
 const RentalCarSpecPills: React.FC<{ car: Car }> = ({ car }) => {
   if (!car.specs) return null;
   const s = car.specs;
@@ -529,6 +566,9 @@ const CheckboxOption: React.FC<{
 
 const RentalV2Page: React.FC = () => {
   const initialV2 = useMemo(() => getInitialRentalV2State(), []);
+  const navigate = useNavigate();
+  const { carId: carIdFromPath } = useParams<{ carId?: string }>();
+  const [searchParams] = useSearchParams();
   const [selectedId, setSelectedId] = useState(initialV2.selectedId);
   const [selectedBrandId, setSelectedBrandId] = useState(initialV2.selectedBrandId);
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriodState>(initialV2.rentalPeriod);
@@ -559,14 +599,73 @@ const RentalV2Page: React.FC = () => {
     persistRentalV2Session(JSON.stringify(payload));
   }, [selectedId, selectedBrandId, rentalPeriod, additionalOptions]);
 
-  /** Po wczytaniu sesji / nowym dniu: podbij przeszłe daty do dziś i uzgodnij zwrot z odbiorem. */
+  /** Stare `?model=` → kanoniczny URL `/rezerwacja/:carId` (tylko auta do rezerwacji). */
+  useEffect(() => {
+    const q = searchParams.get('model');
+    if (!q) return;
+    if (q === carIdFromPath) return;
+    const car = RENTAL_CARS.find((c) => c.id === q);
+    const ok = car && car.visible !== false && car.available !== false;
+    if (ok) {
+      navigate(`/rezerwacja/${encodeURIComponent(q)}`, { replace: true });
+      return;
+    }
+    const fid = firstSelectableRentalCarId();
+    if (fid) navigate(`/rezerwacja/${encodeURIComponent(fid)}`, { replace: true });
+    else navigate('/rezerwacja', { replace: true });
+  }, [searchParams, carIdFromPath, navigate]);
+
+  /** `/rezerwacja/:carId` — wstępny wybór modelu (jak stary `?model=`). Niedostępne: pierwsze auto z listy. */
+  useEffect(() => {
+    if (!carIdFromPath) return;
+    const car = RENTAL_CARS.find((c) => c.id === carIdFromPath);
+    if (!car) {
+      navigate('/rezerwacja', { replace: true });
+      return;
+    }
+    if (car.visible === false || car.available === false) {
+      const fid = firstSelectableRentalCarId();
+      if (fid) navigate(`/rezerwacja/${encodeURIComponent(fid)}`, { replace: true });
+      else navigate('/rezerwacja', { replace: true });
+      return;
+    }
+    setSelectedId(car.id);
+    const b = BRANDS.find((br) => car.id.includes(br.id));
+    if (b) setSelectedBrandId(b.id);
+    setAdditionalOptions(getDefaultOptionsForCar(car.id));
+  }, [carIdFromPath, navigate]);
+
+  /** Sesja z przeszłymi datami / zerowym okresem: dziś + 3 dni, jak pierwsze wejście. */
   useEffect(() => {
     setRentalPeriod((prev) => {
-      const n = normalizeRentalPeriodDates(prev, getTodayIso());
-      if (n.pickupDate === prev.pickupDate && n.returnDate === prev.returnDate) return prev;
+      const n = ensureSessionRentalPeriodOrDefault(prev);
+      if (
+        n.pickupDate === prev.pickupDate &&
+        n.returnDate === prev.returnDate &&
+        n.pickupTime === prev.pickupTime &&
+        n.returnTime === prev.returnTime &&
+        n.pickupLocation === prev.pickupLocation &&
+        n.returnLocation === prev.returnLocation
+      ) {
+        return prev;
+      }
       return n;
     });
   }, []);
+
+  /** Stan z localStorage wskazuje na Wkrótce / ukryte: wybierz pierwsze dostępne auto. */
+  useEffect(() => {
+    const c = RENTAL_CARS.find((x) => x.id === selectedId);
+    if (c && (c.visible === false || c.available === false)) {
+      const fid = firstSelectableRentalCarId();
+      if (fid && fid !== selectedId) {
+        setSelectedId(fid);
+        const b = BRANDS.find((br) => fid.includes(br.id));
+        if (b) setSelectedBrandId(b.id);
+        setAdditionalOptions(getDefaultOptionsForCar(fid));
+      }
+    }
+  }, [selectedId]);
 
   const handleRentalPeriodChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
@@ -577,6 +676,8 @@ const RentalV2Page: React.FC = () => {
   };
 
   const handleSelectCar = (carId: string) => {
+    const car = RENTAL_CARS.find((c) => c.id === carId);
+    if (!car || car.visible === false || car.available === false) return;
     setSelectedId(carId);
     const b = BRANDS.find((br) => carId.includes(br.id));
     if (b) setSelectedBrandId(b.id);
@@ -627,10 +728,12 @@ const RentalV2Page: React.FC = () => {
     return () => io.disconnect();
   }, []);
 
-  const selected =
-    RENTAL_CARS.find((c) => c.id === selectedId) ??
-    RENTAL_CARS.find((c) => c.visible !== false) ??
-    RENTAL_CARS[0];
+  const selected = useMemo(() => {
+    const byId = RENTAL_CARS.find((c) => c.id === selectedId);
+    if (byId && byId.visible !== false && byId.available !== false) return byId;
+    const fb = RENTAL_CARS.find((c) => c.id === firstSelectableRentalCarId());
+    return fb ?? RENTAL_CARS.find((c) => c.visible !== false) ?? RENTAL_CARS[0];
+  }, [selectedId]);
 
   const summary = useMemo(
     () => computeRentalV2Summary(rentalPeriod, selected, additionalOptions),
@@ -643,8 +746,8 @@ const RentalV2Page: React.FC = () => {
   );
 
   const floatingCtaSubline = useMemo(() => {
-    if (summary.rentalDays <= 0) return '—';
-    return `${formatDdMmFromIso(rentalPeriod.pickupDate)}–${formatDdMmFromIso(rentalPeriod.returnDate)} · ${formatPolishRentalDays(summary.rentalDays)} · ${summary.tierPricePerDay.toLocaleString('pl-PL')} zł/db`;
+    if (summary.rentalDays <= 0) return '-';
+    return `${formatDdMmFromIso(rentalPeriod.pickupDate)}-${formatDdMmFromIso(rentalPeriod.returnDate)} · ${formatPolishRentalDays(summary.rentalDays)} · ${summary.tierPricePerDay.toLocaleString('pl-PL')} zł/db`;
   }, [summary.rentalDays, summary.tierPricePerDay, rentalPeriod.pickupDate, rentalPeriod.returnDate]);
 
   const breadcrumbs = useMemo(() => {
@@ -663,7 +766,7 @@ const RentalV2Page: React.FC = () => {
 
   return (
     <>
-      <Seo {...SEO_CONFIG['/wypozyczalnia']} />
+      <Seo {...SEO_CONFIG['/rezerwacja']} />
       <style>{RENTAL_PERIOD_FIELD_STYLES}</style>
       <style>{RENTAL_V2_E2E_STYLES}</style>
       <div
@@ -672,11 +775,7 @@ const RentalV2Page: React.FC = () => {
       >
         <div className="mb-8 w-full border-b border-border bg-secondary">
           <div className="rental-v2-page-header">
-            <PageHeader
-              title="Wypożyczalnia EV"
-              subtitle="Wypożycz Auto Elektryczne wypełniając poniższy formularz"
-              breadcrumbs={breadcrumbs}
-            />
+            <PageHeader title="Rezerwacja" breadcrumbs={breadcrumbs} />
           </div>
         </div>
 
@@ -801,12 +900,14 @@ const RentalV2Page: React.FC = () => {
                           <>
                             {fleetCarDescription}{' '}
                             <Link
-                              to={`/wypozycz/${selected.id}`}
+                              to={`/rezerwacja/${selected.id}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
+                              className="inline-flex items-center gap-1.5 font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground"
+                              aria-label="Przeczytaj więcej w rezerwacji (otwiera się w nowej karcie)"
                             >
-                              Przeczytaj więcej
+                              <span>Przeczytaj więcej w rezerwacji</span>
+                              <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
                             </Link>
                           </>
                         ) : (
@@ -1017,7 +1118,7 @@ const RentalV2Page: React.FC = () => {
                           : ''}
                       </span>
                       <span className="shrink-0 text-right font-medium">
-                        {summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                        {summary.rentalPrice > 0 ? `${summary.rentalPrice.toLocaleString('pl-PL')} zł` : '-'}
                       </span>
                     </div>
                     {summary.pickupFee > 0 && (
@@ -1049,7 +1150,7 @@ const RentalV2Page: React.FC = () => {
                           : ''}
                       </span>
                       <span className="shrink-0 text-right font-medium">
-                        {summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '—'}
+                        {summary.totalKmLimit > 0 ? `${summary.totalKmLimit.toLocaleString('pl-PL')} km` : '-'}
                       </span>
                     </div>
                     <div className="flex justify-between gap-3">
@@ -1060,7 +1161,7 @@ const RentalV2Page: React.FC = () => {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             })} zł/km`
-                          : '—'}
+                          : '-'}
                       </span>
                     </div>
                   </div>
@@ -1094,7 +1195,7 @@ const RentalV2Page: React.FC = () => {
                   <div className="mt-6 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                     <span>Do zapłaty dziś</span>
                     <span>
-                      {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                      {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
                     </span>
                   </div>
                   <div className="mt-2 flex justify-between text-sm">
@@ -1103,7 +1204,7 @@ const RentalV2Page: React.FC = () => {
                   </div>
 
                   <Link
-                    to={`/rezerwacja/${selected.id}`}
+                    to={`/rezerwacja/${selected.id}/zamowienie`}
                     className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
                   >
                     Zarezerwuj pojazd
@@ -1141,7 +1242,7 @@ const RentalV2Page: React.FC = () => {
             <div className="flex items-baseline justify-between gap-3 leading-tight">
               <span className="text-sm font-semibold">Podsumowanie</span>
               <span className="shrink-0 text-xl font-bold tabular-nums tracking-tight">
-                {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '—'}
+                {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
               </span>
             </div>
             <div className="mt-1.5 text-xs font-normal leading-snug text-background/85">{floatingCtaSubline}</div>

@@ -759,6 +759,47 @@ const RentalReservationPage: React.FC = () => {
                     </div>
                   )}
 
+                  <div className={RENTAL_PERIOD_FIELD_CELL}>
+                    <ReservationLabelHint
+                      htmlFor="address"
+                      tooltip="Pełny adres zamieszkania z ulicą, numerem budynku i numerem mieszkania"
+                      ariaLabel="Pełny adres zamieszkania z ulicą, numerem budynku i numerem mieszkania"
+                    >
+                      Adres zamieszkania
+                    </ReservationLabelHint>
+                    <Input id="address" value={driver.address} onChange={handleDriverChange} required className="mt-1" />
+                  </div>
+
+                  <div className={RESERVATION_PAIR_GRID}>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="postalCode" className={FORM_LABEL_CLASS}>
+                        Kod pocztowy
+                      </Label>
+                      <Input id="postalCode" value={driver.postalCode} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="city" className={FORM_LABEL_CLASS}>
+                        Miejscowość
+                      </Label>
+                      <Input id="city" value={driver.city} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
+                  </div>
+
+                  <div className={RESERVATION_PAIR_GRID}>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="email" className={FORM_LABEL_CLASS}>
+                        E-mail
+                      </Label>
+                      <Input id="email" type="email" value={driver.email} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
+                    <div className={RENTAL_PERIOD_FIELD_CELL}>
+                      <Label htmlFor="phone" className={FORM_LABEL_CLASS}>
+                        Telefon
+                      </Label>
+                      <Input id="phone" type="tel" value={driver.phone} onChange={handleDriverChange} required className="mt-1" />
+                    </div>
+                  </div>
+
                   <div className={RESERVATION_PAIR_GRID}>
                     <div className={RENTAL_PERIOD_FIELD_CELL}>
                       <ReservationLabelHint
@@ -820,47 +861,6 @@ const RentalReservationPage: React.FC = () => {
                         required
                         className="mt-1"
                       />
-                    </div>
-                  </div>
-
-                  <div className={RENTAL_PERIOD_FIELD_CELL}>
-                    <ReservationLabelHint
-                      htmlFor="address"
-                      tooltip="Pełny adres zamieszkania z ulicą, numerem budynku i numerem mieszkania"
-                      ariaLabel="Pełny adres zamieszkania z ulicą, numerem budynku i numerem mieszkania"
-                    >
-                      Adres zamieszkania
-                    </ReservationLabelHint>
-                    <Input id="address" value={driver.address} onChange={handleDriverChange} required className="mt-1" />
-                  </div>
-
-                  <div className={RESERVATION_PAIR_GRID}>
-                    <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="postalCode" className={FORM_LABEL_CLASS}>
-                        Kod pocztowy
-                      </Label>
-                      <Input id="postalCode" value={driver.postalCode} onChange={handleDriverChange} required className="mt-1" />
-                    </div>
-                    <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="city" className={FORM_LABEL_CLASS}>
-                        Miejscowość
-                      </Label>
-                      <Input id="city" value={driver.city} onChange={handleDriverChange} required className="mt-1" />
-                    </div>
-                  </div>
-
-                  <div className={RESERVATION_PAIR_GRID}>
-                    <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="email" className={FORM_LABEL_CLASS}>
-                        E-mail
-                      </Label>
-                      <Input id="email" type="email" value={driver.email} onChange={handleDriverChange} required className="mt-1" />
-                    </div>
-                    <div className={RENTAL_PERIOD_FIELD_CELL}>
-                      <Label htmlFor="phone" className={FORM_LABEL_CLASS}>
-                        Telefon
-                      </Label>
-                      <Input id="phone" type="tel" value={driver.phone} onChange={handleDriverChange} required className="mt-1" />
                     </div>
                   </div>
                 </div>

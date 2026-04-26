@@ -1,11 +1,6 @@
 import type { HeroCar } from '../types';
 
-export const SEO_TITLE_BRAND = 'Apollo Idea';
-
-export function buildSeoTitle(baseTitle: string): string {
-  return `${baseTitle} • ${SEO_TITLE_BRAND}`;
-}
-
+/** Slidery / hero na stronie głównej — tylko treści UI, nie SEO (patrz `seoConfig.ts`). */
 export const HERO_CARS: HeroCar[] = [
   {
     id: '1',

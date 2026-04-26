@@ -1,5 +1,11 @@
 import type { SeoData } from '../types';
-import { buildSeoTitle } from './homeConfig';
+
+/** Marka w sufiksie `<title>` (np. `… • Apollo Idea`). */
+export const SEO_TITLE_BRAND = 'Apollo Idea';
+
+export function buildSeoTitle(baseTitle: string): string {
+  return `${baseTitle} • ${SEO_TITLE_BRAND}`;
+}
 
 export const SEO_CONFIG: Record<string, SeoData> = {
   '/': {

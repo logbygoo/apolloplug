@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { SITE_LOGO_URL, SITE_ORIGIN } from '../configs/site';
 import { loadGoogleMapsScript } from '../utils/maps';
 import Seo from '../components/Seo';
+import { SEO_CONFIG } from '../configs/seoConfig';
 import './dash/dash.css';
 
 type MapsMap = {
@@ -348,10 +349,7 @@ const DashPage: React.FC = () => {
 
   return (
     <div className="dash-shell fixed inset-0 z-[100] flex flex-col overflow-hidden">
-      <Seo
-        title="Pulpit"
-        description="Pulpit Apollo — telemetria w przeglądarce, mapa, czujniki"
-      />
+      <Seo {...SEO_CONFIG['/dash']} />
       <header className="dash-header">
         <a className="dash-logo-link" href={SITE_ORIGIN} target="_blank" rel="noreferrer">
           <img src={SITE_LOGO_URL} alt="Apollo" className="dash-logo-img" width={160} height={40} />

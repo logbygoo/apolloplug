@@ -1,6 +1,7 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Seo from '../components/Seo';
+import { buildSeoTitle, SEO_CONFIG } from '../configs/seoConfig';
 import { DOCUMENTS_DATA } from '../configs/documentsConfig';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -146,9 +147,12 @@ const PdfViewerPage: React.FC = () => {
 
   if (!documentData) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-muted-foreground">Dokument nie został znalezion.</p>
-      </div>
+      <>
+        <Seo {...SEO_CONFIG['/pdf']} />
+        <div className="flex min-h-screen items-center justify-center bg-gray-100">
+          <p className="text-muted-foreground">Dokument nie został znalezion.</p>
+        </div>
+      </>
     );
   }
 
@@ -157,7 +161,11 @@ const PdfViewerPage: React.FC = () => {
     : <div ref={contentRef}>{documentData.content}</div>;
 
   return (
-    <div className="w-full h-screen bg-secondary flex items-center justify-center overflow-hidden relative">
+    <div className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-secondary">
+      <Seo
+        title={buildSeoTitle(documentData.title)}
+        description={SEO_CONFIG['/pdf'].description}
+      />
       {isGenerating && !pdfUrl && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-50">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>

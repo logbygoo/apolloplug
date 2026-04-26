@@ -7,7 +7,6 @@ import RentalWypozyczalniaLandingPage from './pages/RentalWypozyczalniaLandingPa
 import RentalReservationPage from './pages/RentalReservationPage';
 import FinancingPage from './pages/FinancingPage';
 import FleetPage from './pages/FleetPage';
-import CarDetailPage from './pages/CarDetailPage';
 import ContactPage from './pages/ContactPage';
 import BlogPage from './pages/BlogPage';
 import BlogArticlePage from './pages/BlogArticlePage';
@@ -330,7 +329,7 @@ const App: React.FC = () => {
                     <Route path="/rezerwacja" element={<RentalV2Page />} />
                     <Route path="/finansowanie" element={<FinancingPage />} />
                     <Route path="/flota" element={<FleetPage />} />
-                    <Route path="/flota/:carId" element={<CarDetailPage />} />
+                    <Route path="/flota/:carId" element={<Navigate to="/flota" replace />} />
                     <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
                     <Route path="/ig" element={<SocialBioLinksPage source="ig" />} />
                     <Route path="/fb" element={<SocialBioLinksPage source="fb" />} />

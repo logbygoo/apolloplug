@@ -1,5 +1,11 @@
 import type { SeoData } from '../types';
 
+/**
+ * Wpis = klucz logiczny (zwykle jak ścieżka) → treść do `<Seo />`.
+ * Przekierowania bez własnej treści: `/wypozyczalnia/:carId` → `/rezerwacja/...`, `/flota/:carId` → `/flota`.
+ * Artykuły bloga: `BlogArticlePage` nadpisuje `'/blog/:articleSlug'`.
+ * Strona tylko techniczna / poza tym plikiem: `UnderConstructionPage` (gdy strona „OFF”).
+ */
 /** Marka w sufiksie `<title>` (np. `… • Apollo Idea`). */
 export const SEO_TITLE_BRAND = 'Apollo Idea';
 
@@ -19,18 +25,13 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     ogType: 'website',
   },
   '/flota': {
-    title: buildSeoTitle('Flota Tesla • auta elektryczne na wynajem Warszawa'),
+    title: buildSeoTitle('Flota aut elektrycznych'),
     description:
-      'Sprawdź dostępne modele Tesla, porównaj zasięg i parametry, a potem wybierz auto elektryczne na wynajem w Warszawie.',
+      'Sprawdź dostępne modele, porównaj zasięg i parametry, a potem wybierz auto elektryczne na wynajem w Warszawie.',
     ogImage: 'https://digitalassets.tesla.com/tesla-contents/image/upload/h_1800,w_2880,c_fit,f_auto,q_auto:best/Homepage-Model-Y-Hero-Desktop',
   },
-  '/flota/:carId': {
-    title: buildSeoTitle('{carName} • dane techniczne i wynajem Warszawa'),
-    description:
-      'Sprawdź specyfikację, zasięg i cennik modelu {carName}. Zarezerwuj Teslę online w Warszawie na dzień, weekend lub dłuższy okres.',
-  },
   '/wypozycz/:carId': {
-    title: buildSeoTitle('Wynajem {carName} Warszawa • wypożyczalnia Tesla'),
+    title: buildSeoTitle('Wynajem {carName} Warszawa • Wypożyczalnia EV'),
     description:
       'Wynajem {carName} bez kierowcy w Warszawie. Sprawdź cenę za dobę, dostępność i zarezerwuj Teslę online na krótki lub dłuższy okres.',
     ogTitle: 'Wynajem {carName} Warszawa • Tesla na doby',
@@ -38,15 +39,43 @@ export const SEO_CONFIG: Record<string, SeoData> = {
       'Zarezerwuj {carName} online i odbierz auto gotowe do drogi. Przejrzyste warunki najmu i wsparcie przy pierwszym kontakcie z Teslą.',
   },
   '/wypozyczalnia': {
-    title: buildSeoTitle('Wypożyczalnia Tesla Warszawa • wynajem aut elektrycznych'),
+    title: buildSeoTitle('Wypożyczalnia samochodów EV Warszawa • wynajem aut elektrycznych'),
     description:
       'Wypożyczalnia aut elektrycznych Warszawa, wynajem Tesli na dzień, weekend, tydzień lub miesiąc. Sprawdź modele i zarezerwuj online.',
     ogImage: 'https://img.apolloidea.com/img/tesla-3-low-600x400.jpg',
   },
   '/rezerwacja': {
-    title: buildSeoTitle('Rezerwacja Tesli • wynajem auta elektrycznego'),
+    title: buildSeoTitle('Rezerwacja • wynajem auta elektrycznego'),
     description:
-      'Wybierz model Tesla, ustaw terminy i potwierdź dane. Szybka rezerwacja online dla wynajmu auta elektrycznego w Warszawie.',
+      'Wybierz model Tesla, ustaw terminy odbioru i zwrotu, opcje dodatkowe. Szybka rezerwacja online wynajmu auta elektrycznego w Warszawie.',
+  },
+  /** `/rezerwacja/:carId` — w `RentalV2Page` zastąp `{carName}` (np. Model 3 Highland). */
+  '/rezerwacja/:carId': {
+    title: buildSeoTitle('Rezerwacja {carName} • wynajem auta elektrycznego'),
+    description:
+      '{carName}: wybierz terminy, opcje dodatkowe i złóż rezerwację wynajmu Tesli w Warszawie. Jasne zasady i rezerwacja online.',
+  },
+  /** `/rezerwacja/:carId/zamowienie` — krok z formularzem kierowcy (flow `driver`). */
+  '/rezerwacja/zamowienie': {
+    title: buildSeoTitle('Zamówienie wynajmu {carName}'),
+    description:
+      'Uzupełnij dane kierowcy, adres i kontakt, zaakceptuj zgody. Potwierdź rezerwację wynajmu {carName}, następnie opłać rezerwację online.',
+  },
+  /** Ta sama ścieżka URL co zamówienie — krok płatności (flow `payment`). */
+  '/rezerwacja/platnosc': {
+    title: buildSeoTitle('Płatność rezerwacji • {carName}'),
+    description:
+      'Opłać rezerwację wynajmu auta elektrycznego bezpiecznie online. Po zaksięgowaniu płatności otrzymasz potwierdzenie rezerwacji {carName}.',
+  },
+  /** `/dash` — pulpit Tesli (poza głównym layoutem). */
+  '/dash': {
+    title: buildSeoTitle('Pulpit Apollo'),
+    description: 'Wewnętrzny pulpit: telemetria w przeglądarce, mapa, czujniki i skrót do apolloidea.com.',
+  },
+  /** `/pdf/:slug.pdf` — drukowalny podgląd PDF (bez głównego menu). */
+  '/pdf': {
+    title: buildSeoTitle('Dokument PDF'),
+    description: 'Podgląd dokumentu do wydruku lub zapisu. Treść generowana w przeglądarce.',
   },
   '/transfery': {
     title: buildSeoTitle('Transfery VIP Warszawa • auto z kierowcą'),

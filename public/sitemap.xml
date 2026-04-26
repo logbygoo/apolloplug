@@ -29,23 +29,6 @@
     <loc>https://apolloidea.com/blog</loc>
   </url>
 
-  <!-- Strony floty -->
-  <url>
-    <loc>https://apolloidea.com/flota/tesla-3-highland</loc>
-  </url>
-  <url>
-    <loc>https://apolloidea.com/flota/tesla-y-juniper</loc>
-  </url>
-  <url>
-    <loc>https://apolloidea.com/flota/tesla-x</loc>
-  </url>
-  <url>
-    <loc>https://apolloidea.com/flota/tesla-s</loc>
-  </url>
-  <url>
-    <loc>https://apolloidea.com/flota/tesla-cybertruck</loc>
-  </url>
-
   <!-- Landing pages wynajmu konkretnych aut -->
   <url>
     <loc>https://apolloidea.com/wypozycz/tesla-3-highland</loc>

@@ -817,9 +817,24 @@ const RentalV2Page: React.FC = () => {
 
   const showMobileRentalCta = !summaryInView && !mobileRentalCtaDismissed;
 
+  const rezerwacjaSeo = useMemo(() => {
+    const base = carIdFromPath ? SEO_CONFIG['/rezerwacja/:carId'] : SEO_CONFIG['/rezerwacja'];
+    const name = selected.name;
+    if (!carIdFromPath) return base;
+    const apply = (s: string) => s.split('{carName}').join(name);
+    return {
+      ...base,
+      title: apply(base.title),
+      description: apply(base.description),
+      ogTitle: apply(base.ogTitle || base.title),
+      ogDescription: apply(base.ogDescription || base.description),
+      ogImage: base.ogImage ?? selected.imageUrl[0],
+    };
+  }, [carIdFromPath, selected.id, selected.name]);
+
   return (
     <>
-      <Seo {...SEO_CONFIG['/rezerwacja']} />
+      <Seo {...rezerwacjaSeo} />
       <style>{RENTAL_PERIOD_FIELD_STYLES}</style>
       <style>{RENTAL_V2_E2E_STYLES}</style>
       <div

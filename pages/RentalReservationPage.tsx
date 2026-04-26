@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
+import { SEO_CONFIG } from '../configs/seoConfig';
 import { Input, Label, PageHeader } from '../components/ui';
 import { CheckIcon, InformationCircleIcon } from '../icons';
 import { ADDITIONAL_OPTIONS, RENTAL_CARS, RENTAL_PERIOD_FIELD_CELL } from '../configs/rentConfig';
@@ -580,6 +581,21 @@ const RentalReservationPage: React.FC = () => {
   const paymentName = reservationNumber || `AP-${Date.now()}`;
   const payuPaymentUrl = `https://rent.ffgroup.pl/pay/?name=${encodeURIComponent(paymentName)}&amount=${encodeURIComponent(paymentAmount)}`;
 
+  const reservationOrderSeo = useMemo(() => {
+    const key = flowStep === 'payment' ? '/rezerwacja/platnosc' : '/rezerwacja/zamowienie';
+    const base = SEO_CONFIG[key];
+    const name = selected.name;
+    const apply = (s: string) => s.split('{carName}').join(name);
+    return {
+      ...base,
+      title: apply(base.title),
+      description: apply(base.description),
+      ogTitle: apply(base.ogTitle || base.title),
+      ogDescription: apply(base.ogDescription || base.description),
+      ogImage: base.ogImage ?? selected.imageUrl[0],
+    };
+  }, [flowStep, selected.id, selected.name]);
+
   if (!ready) {
     return null;
   }
@@ -595,7 +611,7 @@ const RentalReservationPage: React.FC = () => {
 
   return (
     <>
-      <Seo title={`Rezerwacja - ${selected.name}`} description="Dane kierowcy i podsumowanie rezerwacji." />
+      <Seo {...reservationOrderSeo} />
       <style>{RENTAL_V2_SHELL_STYLES}</style>
       <div className="rental-v2 min-h-screen overflow-x-hidden bg-background pb-16 text-foreground">
         <div className="mb-8 w-full border-b border-border bg-secondary">

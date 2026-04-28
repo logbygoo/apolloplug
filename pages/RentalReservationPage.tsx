@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import {
+  buildReservationAnalyticsParams,
+  pushReservationPayed,
+  pushReservationSent,
+  pushReservationStart,
+} from '../analytics';
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import { BRANDS } from '../constants';
@@ -28,12 +34,6 @@ import {
 import type { Car } from '../types';
 
 const reservationNumberStorageKey = (id: string) => `rentalV2ReservationNumber_${id}`;
-
-declare global {
-  interface Window {
-    dataLayer?: Record<string, unknown>[];
-  }
-}
 
 type RentalV2SessionStored = {
   selectedId: string;
@@ -354,6 +354,7 @@ const RESERVATION_PAIR_GRID =
   'grid w-full min-w-0 grid-cols-1 gap-4 min-[350px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] min-[350px]:items-end';
 
 const RentalReservationPage: React.FC = () => {
+  const { pathname } = useLocation();
   const { carId } = useParams<{ carId: string }>();
   const [ready, setReady] = useState(false);
 
@@ -556,16 +557,22 @@ const RentalReservationPage: React.FC = () => {
         body: JSON.stringify(customerSmsPayload),
       }).catch((err) => console.warn('SMS do klienta:', err));
 
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'conversion',
-        send_to: 'AW-17760954062/WQuYCP6q7McbEM7NipVC',
-        value: 1.0,
-        currency: 'PLN',
-      });
-
       const num = reservationNumber.trim() || `AP-${Date.now()}`;
       setReservationNumber(num);
+      pushReservationSent({
+        ...buildReservationAnalyticsParams({
+          car: selected,
+          carBrand: BRANDS.find((b) => selected.id.includes(b.id))?.name ?? 'Tesla',
+          selectedBrandId: session.selectedBrandId,
+          rentalPeriod,
+          additionalOptions,
+          summary,
+          page_path: pathname,
+        }),
+        reservation_number: num,
+        value: summary.totalPrice,
+        currency: 'PLN',
+      });
       setFlowStep('payment');
       window.scrollTo(0, 0);
     } catch (err) {
@@ -597,6 +604,23 @@ const RentalReservationPage: React.FC = () => {
       ogImage: base.ogImage ?? selected.imageUrl[0],
     };
   }, [flowStep, selected.id, selected.name]);
+
+  /** Przy każdym wczytaniu widoku (świeży mount lub zmiana auta / ścieżki), nie przy każdej zmianie sesji w locie. */
+  useEffect(() => {
+    if (!ready) return;
+    if (!carId || !car || !session || !rentalPeriod || !additionalOptions) return;
+    pushReservationStart(
+      buildReservationAnalyticsParams({
+        car: selected,
+        carBrand: BRANDS.find((b) => selected.id.includes(b.id))?.name ?? 'Tesla',
+        selectedBrandId: session.selectedBrandId,
+        rentalPeriod,
+        additionalOptions,
+        summary,
+        page_path: pathname,
+      })
+    );
+  }, [ready, carId, pathname]);
 
   if (!ready) {
     return null;
@@ -689,6 +713,20 @@ const RentalReservationPage: React.FC = () => {
                       type="button"
                       disabled={summary.totalPrice <= 0}
                       onClick={() => {
+                        pushReservationPayed({
+                          ...buildReservationAnalyticsParams({
+                            car: selected,
+                            carBrand: BRANDS.find((b) => selected.id.includes(b.id))?.name ?? 'Tesla',
+                            selectedBrandId: session.selectedBrandId,
+                            rentalPeriod,
+                            additionalOptions,
+                            summary,
+                            page_path: pathname,
+                          }),
+                          reservation_number: paymentName,
+                          value: Number(paymentAmount),
+                          currency: 'PLN',
+                        });
                         window.location.href = payuPaymentUrl;
                       }}
                       className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90 disabled:cursor-not-allowed disabled:opacity-50"

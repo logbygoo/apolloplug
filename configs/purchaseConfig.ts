@@ -6,26 +6,29 @@ export const TESLA_REFERRAL_LINK = 'http://ts.la/rafa70624';
 
 export const purchaseReferralBanner = {
   eyebrow: 'Program poleceń Tesla',
-  headline: 'Zamów Teslę z naszego linku — zyskaj więcej',
+  headline: 'Zamów Teslę z naszego linku i odbierz voucher od Apollo Idea',
   description:
-    'Skorzystaj z oficjalnego linku polecającego poniżej przy składaniu zamówienia u Tesli. Dzięki temu łączysz korzyści programu Tesla z bonusem od nas — idealnym startem przed odbiorem własnego auta.',
+    'Podczas zamówienia auta użyj naszego linku polecającego. Otrzymasz korzyści programu Tesla oraz dodatkowy voucher na wynajem w Apollo Idea.',
   benefits: [
     {
-      title: '1 doba wynajmu u nas — gratis',
+      title: '1 doba wynajmu gratis',
       detail:
-        'Po złożeniu zamówienia Tesli przez nasz link otrzymasz voucher na jedną dobę wynajmu wybranego auta z naszej floty (na zasadach potwierdzonych przy odbiorze vouchera).',
+        'Po zakupie Tesli przez nasz link otrzymasz voucher na jedną dobę wynajmu wybranego auta z naszej floty. Szczegóły wykorzystania vouchera potwierdzimy po weryfikacji zamówienia.',
     },
     {
       title: 'Korzyści programu Tesla',
-      detail: 'Nadal przysługują Ci nagrody przewidziane aktualnym regulaminem programu poleceń Tesla.',
+      detail:
+        'Zachowujesz korzyści wynikające z aktualnego regulaminu programu poleceń Tesla. Voucher od Apollo Idea działa dodatkowo.',
     },
     {
-      title: 'Spójna obsługa z /zakup',
-      detail: 'Chętnie poprowadzimy Cię dalej: konfiguracja, finansowanie, ubezpieczenie i odbiór — tak jak na reszcie tej strony.',
+      title: 'Pomoc na kolejnych etapach',
+      detail:
+        'Jeśli chcesz, pomożemy w konfiguracji auta, finansowaniu, ubezpieczeniu i przygotowaniu odbioru.',
     },
   ],
   ctaLabel: 'Przejdź do zamówienia Tesli',
-  footnote: 'Link otwiera stronę Tesla w nowej karcie. Zachowaj potwierdzenie zamówienia — pomoże przy realizacji vouchera.',
+  footnote:
+    'Link otwiera stronę Tesla w nowej karcie. Zachowaj potwierdzenie zamówienia, będzie potrzebne przy realizacji vouchera.',
 } as const;
 
 /** Sekcja pod sliderem na stronie głównej (jak blok „Punkty w całym mieście” nad stopką). */

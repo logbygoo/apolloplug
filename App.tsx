@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation, useParams } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import TransfersPage from './pages/TransfersPage';
-import RentalV2Page from './pages/RentalV2Page';
-import RentalWypozyczalniaLandingPage from './pages/RentalWypozyczalniaLandingPage';
-import RentalReservationPage from './pages/RentalReservationPage';
-import FinancingPage from './pages/FinancingPage';
-import FleetPage from './pages/FleetPage';
-import ContactPage from './pages/ContactPage';
-import BlogPage from './pages/BlogPage';
-import BlogArticlePage from './pages/BlogArticlePage';
-import PurchasePage from './pages/PurchasePage';
-import InsurancePage from './pages/InsurancePage';
-import DocumentationPage from './pages/DocumentationPage';
-import RentalCarLandingPage from './pages/RentalCarLandingPage';
-import SocialBioLinksPage from './pages/SocialBioLinksPage';
-import WrapPage from './pages/WrapPage';
-import PdfViewerPage from './pages/PdfViewerPage'; // Import new PDF viewer page
-import DashPage from './pages/DashPage';
 import CookieBanner from './components/CookieBanner';
 import ExitIntentModal from './components/ExitIntentModal';
 import { ApolloPlugLogo } from './constants';
 import { Bars3Icon, XMarkIcon, PhoneIcon, FlagIcon, EnvelopeIcon, ChevronDownIcon } from './icons';
 import { CONFIG } from './config';
-import UnderConstructionPage from './pages/UnderConstructionPage';
 import ScrollToTop from './components/ScrollToTop';
 import { SITE_DOMAIN } from './configs/site';
+
+const HomePage = lazy(() => import('./pages/HomePage'));
+const TransfersPage = lazy(() => import('./pages/TransfersPage'));
+const RentalV2Page = lazy(() => import('./pages/RentalV2Page'));
+const RentalWypozyczalniaLandingPage = lazy(() => import('./pages/RentalWypozyczalniaLandingPage'));
+const RentalReservationPage = lazy(() => import('./pages/RentalReservationPage'));
+const FinancingPage = lazy(() => import('./pages/FinancingPage'));
+const FleetPage = lazy(() => import('./pages/FleetPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const BlogPage = lazy(() => import('./pages/BlogPage'));
+const BlogArticlePage = lazy(() => import('./pages/BlogArticlePage'));
+const PurchasePage = lazy(() => import('./pages/PurchasePage'));
+const InsurancePage = lazy(() => import('./pages/InsurancePage'));
+const DocumentationPage = lazy(() => import('./pages/DocumentationPage'));
+const RentalCarLandingPage = lazy(() => import('./pages/RentalCarLandingPage'));
+const SocialBioLinksPage = lazy(() => import('./pages/SocialBioLinksPage'));
+const WrapPage = lazy(() => import('./pages/WrapPage'));
+const PdfViewerPage = lazy(() => import('./pages/PdfViewerPage'));
+const DashPage = lazy(() => import('./pages/DashPage'));
+const UnderConstructionPage = lazy(() => import('./pages/UnderConstructionPage'));
+
+const RouteLoadingScreen: React.FC = () => (
+  <div className="flex min-h-[40vh] items-center justify-center">
+    <div className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-foreground" />
+  </div>
+);
 
 /** Paralela do `/wypozycz/:carId` — wybór modelu tylko na `/rezerwacja/...` */
 function RedirectWypozyczalniaToRezerwacja() {
@@ -300,58 +307,64 @@ const App: React.FC = () => {
   };
 
   if (CONFIG.siteStatus === 'OFF' && !isAuthenticated) {
-    return <UnderConstructionPage onAuthenticated={handleAuthentication} />;
+    return (
+      <Suspense fallback={<RouteLoadingScreen />}>
+        <UnderConstructionPage onAuthenticated={handleAuthentication} />
+      </Suspense>
+    );
   }
 
   return (
     <BrowserRouter>
       <ScrollToTop />
       <div className="flex min-h-screen flex-col bg-background text-foreground font-sans">
-        <Routes>
-           {/* PDF Viewer route is completely separate to allow clean printing */}
-           <Route path="/pdf/:slug.pdf" element={<PdfViewerPage />} />
-           {/* Pulpit Tesla / centrum — bez layoutu głównej strony */}
-           <Route path="/dash" element={<DashPage />} />
-           
-           {/* Main App Layout for everything else */}
-           <Route path="*" element={
-             <>
-                <Header />
-                <main className="min-w-0 flex-grow overflow-x-visible pt-14">
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/transfery" element={<TransfersPage />} />
-                    <Route path="/wypozyczalnia/:carId" element={<RedirectWypozyczalniaToRezerwacja />} />
-                    <Route path="/wypozyczalnia" element={<RentalWypozyczalniaLandingPage />} />
-                    <Route path="/wypozyczalnia-v2" element={<Navigate to="/wypozyczalnia" replace />} />
-                    <Route path="/rezerwacja/:carId/zamowienie" element={<RentalReservationPage />} />
-                    <Route path="/rezerwacja/:carId" element={<RentalV2Page />} />
-                    <Route path="/rezerwacja" element={<RentalV2Page />} />
-                    <Route path="/finansowanie" element={<FinancingPage />} />
-                    <Route path="/flota" element={<FleetPage />} />
-                    <Route path="/flota/:carId" element={<Navigate to="/flota" replace />} />
-                    <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
-                    <Route path="/ig" element={<SocialBioLinksPage source="ig" />} />
-                    <Route path="/fb" element={<SocialBioLinksPage source="fb" />} />
-                    <Route path="/yt" element={<SocialBioLinksPage source="yt" />} />
-                    <Route path="/tt" element={<SocialBioLinksPage source="tt" />} />
-                    <Route path="/kontakt" element={<ContactPage />} />
-                    <Route path="/blog" element={<BlogPage />} />
-                    <Route path="/zakup" element={<PurchasePage />} />
-                    <Route path="/ubezpieczenia" element={<InsurancePage />} />
-                    <Route path="/dokumentacja" element={<DocumentationPage />} />
-                    <Route path="/wrap" element={<WrapPage />} />
-                    
-                    {/* Catch-all route for blog articles at root level */}
-                    <Route path="/:articleSlug" element={<BlogArticlePage />} />
-                  </Routes>
-                </main>
-                <Footer />
-                <CookieBanner />
-                <ExitIntentModal />
-             </>
-           } />
-        </Routes>
+        <Suspense fallback={<RouteLoadingScreen />}>
+          <Routes>
+            {/* PDF Viewer route is completely separate to allow clean printing */}
+            <Route path="/pdf/:slug.pdf" element={<PdfViewerPage />} />
+            {/* Pulpit Tesla / centrum — bez layoutu głównej strony */}
+            <Route path="/dash" element={<DashPage />} />
+            
+            {/* Main App Layout for everything else */}
+            <Route path="*" element={
+              <>
+                  <Header />
+                  <main className="min-w-0 flex-grow overflow-x-visible pt-14">
+                    <Routes>
+                      <Route path="/" element={<HomePage />} />
+                      <Route path="/transfery" element={<TransfersPage />} />
+                      <Route path="/wypozyczalnia/:carId" element={<RedirectWypozyczalniaToRezerwacja />} />
+                      <Route path="/wypozyczalnia" element={<RentalWypozyczalniaLandingPage />} />
+                      <Route path="/wypozyczalnia-v2" element={<Navigate to="/wypozyczalnia" replace />} />
+                      <Route path="/rezerwacja/:carId/zamowienie" element={<RentalReservationPage />} />
+                      <Route path="/rezerwacja/:carId" element={<RentalV2Page />} />
+                      <Route path="/rezerwacja" element={<RentalV2Page />} />
+                      <Route path="/finansowanie" element={<FinancingPage />} />
+                      <Route path="/flota" element={<FleetPage />} />
+                      <Route path="/flota/:carId" element={<Navigate to="/flota" replace />} />
+                      <Route path="/wypozycz/:carId" element={<RentalCarLandingPage />} />
+                      <Route path="/ig" element={<SocialBioLinksPage source="ig" />} />
+                      <Route path="/fb" element={<SocialBioLinksPage source="fb" />} />
+                      <Route path="/yt" element={<SocialBioLinksPage source="yt" />} />
+                      <Route path="/tt" element={<SocialBioLinksPage source="tt" />} />
+                      <Route path="/kontakt" element={<ContactPage />} />
+                      <Route path="/blog" element={<BlogPage />} />
+                      <Route path="/zakup" element={<PurchasePage />} />
+                      <Route path="/ubezpieczenia" element={<InsurancePage />} />
+                      <Route path="/dokumentacja" element={<DocumentationPage />} />
+                      <Route path="/wrap" element={<WrapPage />} />
+                      
+                      {/* Catch-all route for blog articles at root level */}
+                      <Route path="/:articleSlug" element={<BlogArticlePage />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                  <CookieBanner />
+                  <ExitIntentModal />
+              </>
+            } />
+          </Routes>
+        </Suspense>
       </div>
     </BrowserRouter>
   );

@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { buildSeoTitle, SEO_CONFIG } from '../configs/seoConfig';
 import { DOCUMENTS_DATA } from '../configs/documentsConfig';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const PdfViewerPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -96,6 +94,11 @@ const PdfViewerPage: React.FC = () => {
       try {
         const element = contentRef.current;
         if (!element) return;
+
+        const [{ jsPDF }, { default: html2canvas }] = await Promise.all([
+          import('jspdf'),
+          import('html2canvas'),
+        ]);
 
         // Run smart pagination
         autoPaginate(element);

@@ -8,7 +8,7 @@ import Seo from '../components/Seo';
 import { createTransferAdminEmailPayload, createTransferCustomerEmailPayload } from '../configs/notifications/emailTemplates';
 import { createTransferAdminSmsPayload, createTransferCustomerSmsPayload } from '../configs/notifications/smsTemplates';
 import { mailApiUrl, smsApiUrl } from '../configs/notifications/apiEndpoints';
-import { loadGoogleMapsScript } from '../utils/maps';
+import { createPinMarker, loadGoogleMapsScript, removeMapMarker } from '../utils/maps';
 import { SEO_CONFIG } from '../configs/seoConfig';
 
 // Declare the global 'google' object to fix TypeScript errors.
@@ -307,13 +307,25 @@ const TransfersPage: React.FC = () => {
 
   useEffect(() => {
     if (map) {
-        mapMarkers.pickup?.setMap(null);
-        mapMarkers.destination?.setMap(null);
+        removeMapMarker(mapMarkers.pickup);
+        removeMapMarker(mapMarkers.destination);
         const newMarkers: { pickup: any | null, destination: any | null } = { pickup: null, destination: null };
-        const pickupIcon = { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: '#6b7280', fillOpacity: 1, strokeWeight: 0 };
-        const destinationIcon = { path: 'M-4 -4 H 4 V 4 H -4 Z', scale: 2, fillColor: '#111827', fillOpacity: 1, strokeWeight: 0, anchor: new google.maps.Point(0, 0) };
-        if(formData.pickupAddress?.geometry?.location) newMarkers.pickup = new google.maps.Marker({ position: formData.pickupAddress.geometry.location, map: map, title: "Odbiór", icon: pickupIcon });
-        if(formData.destinationAddress?.geometry?.location) newMarkers.destination = new google.maps.Marker({ position: formData.destinationAddress.geometry.location, map: map, title: "Cel", icon: destinationIcon });
+        if (formData.pickupAddress?.geometry?.location) {
+          newMarkers.pickup = createPinMarker(google, {
+            position: formData.pickupAddress.geometry.location,
+            map,
+            title: 'Odbiór',
+            background: '#6b7280',
+          });
+        }
+        if (formData.destinationAddress?.geometry?.location) {
+          newMarkers.destination = createPinMarker(google, {
+            position: formData.destinationAddress.geometry.location,
+            map,
+            title: 'Cel',
+            background: '#111827',
+          });
+        }
         setMapMarkers(newMarkers);
     }
     calculateRoute();

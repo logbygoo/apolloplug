@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PageHeader } from '../components/ui';
 import { 
   PhoneIcon,
@@ -15,11 +15,11 @@ import {
   greenwayMapIconSvg,
   pickupPointMapIconSvg,
   buildingCompanyMapIconSvg,
-  getMapIcon,
+  getMapIconSvg,
 } from '../icons/mapIcons';
 import Seo from '../components/Seo';
 import { LOCATIONS, Location } from '../configs/locationsConfig';
-import { loadGoogleMapsScript } from '../utils/maps';
+import { createAdvancedMarker, createSvgMarkerElement, loadGoogleMapsScript } from '../utils/maps';
 import { SEO_CONFIG } from '../configs/seoConfig';
 
 
@@ -28,8 +28,27 @@ declare const google: any;
 
 const ContactMap: React.FC = () => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!mapRef.current || isVisible) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(mapRef.current);
+    return () => observer.disconnect();
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     loadGoogleMapsScript(() => {
       if (!mapRef.current) return;
 
@@ -41,15 +60,15 @@ const ContactMap: React.FC = () => {
       });
 
       LOCATIONS.forEach(loc => {
-        new google.maps.Marker({
+        createAdvancedMarker(google, {
           position: { lat: loc.lat, lng: loc.lng },
           map: map,
           title: loc.title,
-          icon: getMapIcon(loc.type),
+          content: createSvgMarkerElement(getMapIconSvg(loc.type)),
         });
       });
-    });
-  }, []);
+    }, 'marker');
+  }, [isVisible]);
 
   return (
     <div ref={mapRef} className="w-full h-[500px] bg-secondary rounded-lg overflow-hidden relative" />

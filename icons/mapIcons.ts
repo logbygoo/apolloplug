@@ -50,8 +50,8 @@ export const buildingCompanyMapIconSvg = `
 </svg>
 `;
 
-export const getMapIcon = (type: Location['type']) => {
-  let svg;
+export const getMapIconSvg = (type: Location['type']) => {
+  let svg: string;
   switch (type) {
     case 'supercharger':
       svg = superchargerMapIconSvg;
@@ -69,6 +69,11 @@ export const getMapIcon = (type: Location['type']) => {
       svg = pickupPointMapIconSvg; 
   }
 
+  return svg;
+};
+
+export const getMapIcon = (type: Location['type']) => {
+  const svg = getMapIconSvg(type);
   return {
     url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
     scaledSize: new google.maps.Size(36, 36),

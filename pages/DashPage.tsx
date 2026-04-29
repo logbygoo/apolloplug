@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SITE_LOGO_URL, SITE_ORIGIN } from '../configs/site';
-import { loadGoogleMapsScript } from '../utils/maps';
+import { createAdvancedMarker, loadGoogleMapsScript } from '../utils/maps';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import './dash/dash.css';
@@ -11,7 +11,7 @@ type MapsMap = {
   setHeading: (h: number) => void;
 };
 
-type MapsMarker = { setPosition: (p: { lat: number; lng: number }) => void };
+type MapsMarker = { setPosition?: (p: { lat: number; lng: number }) => void; position?: { lat: number; lng: number } };
 
 type GeoState = {
   lat: number | null;
@@ -316,7 +316,7 @@ const DashPage: React.FC = () => {
           { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0e1626' }] },
         ],
       });
-      const marker = new g.maps.Marker({
+      const marker = createAdvancedMarker(g, {
         position: start,
         map,
         title: 'Pozycja',
@@ -334,7 +334,11 @@ const DashPage: React.FC = () => {
     if (!mapReady || !mapInstanceRef.current || !markerRef.current) return;
     if (geo.lat == null || geo.lng == null) return;
     const pos = { lat: geo.lat, lng: geo.lng };
-    markerRef.current.setPosition(pos);
+    if (typeof markerRef.current.setPosition === 'function') {
+      markerRef.current.setPosition(pos);
+    } else {
+      markerRef.current.position = pos;
+    }
     const map = mapInstanceRef.current;
     map.panTo(pos);
     if (geo.heading != null && !Number.isNaN(geo.heading) && typeof map.setHeading === 'function') {

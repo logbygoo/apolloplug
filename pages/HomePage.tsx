@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui';
 import { HERO_CARS } from '../configs/homeConfig';
 import { BoltIcon, PowerIcon, KeyIcon, ShieldCheckIcon, SparklesIcon, ClockIcon, PuzzlePiece, LightBulb, DocumentTextIcon } from '../icons';
-import { getMapIcon } from '../icons/mapIcons';
+import { getMapIconSvg } from '../icons/mapIcons';
 import Seo from '../components/Seo';
 import { LOCATIONS } from '../configs/locationsConfig';
-import { loadGoogleMapsScript } from '../utils/maps';
+import { createAdvancedMarker, createSvgMarkerElement, loadGoogleMapsScript } from '../utils/maps';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import { TESLA_REFERRAL_LINK, purchaseHomeReferralSection } from '../configs/purchaseConfig';
 
@@ -396,8 +396,27 @@ const AnimatedTimeline = () => {
 
 const GoogleMap = () => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!mapRef.current || isVisible) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(mapRef.current);
+    return () => observer.disconnect();
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     loadGoogleMapsScript(() => {
       if (!mapRef.current) return;
 
@@ -409,15 +428,15 @@ const GoogleMap = () => {
       });
       
       LOCATIONS.forEach(loc => {
-        new google.maps.Marker({
+        createAdvancedMarker(google, {
           position: { lat: loc.lat, lng: loc.lng },
           map: map,
           title: loc.title,
-          icon: getMapIcon(loc.type),
+          content: createSvgMarkerElement(getMapIconSvg(loc.type)),
         });
       });
-    });
-  }, []);
+    }, 'marker');
+  }, [isVisible]);
 
   return (
     <div ref={mapRef} className="w-full h-full bg-secondary relative" />

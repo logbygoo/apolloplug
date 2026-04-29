@@ -46,6 +46,20 @@ function wrapDownloadDevPlugin(): Plugin {
   };
 }
 
+function nonBlockingCssPlugin(): Plugin {
+  return {
+    name: 'non-blocking-css',
+    apply: 'build',
+    transformIndexHtml(html) {
+      return html.replace(
+        /<link rel="stylesheet"([^>]*?)href="(\/assets\/index-[^"]+\.css)"([^>]*)>/g,
+        (_match, beforeHref, href, afterHref) =>
+          `<link rel="preload" as="style"${beforeHref}href="${href}"${afterHref} onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet"${beforeHref}href="${href}"${afterHref}></noscript>`,
+      );
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
@@ -53,7 +67,7 @@ export default defineConfig(({ mode }) => {
         port: 3000,
         host: '0.0.0.0',
       },
-      plugins: [react(), wrapDownloadDevPlugin()],
+      plugins: [react(), wrapDownloadDevPlugin(), nonBlockingCssPlugin()],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)

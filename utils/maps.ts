@@ -119,7 +119,8 @@ export const createSvgMarkerElement = (svgMarkup: string) => {
 
 export const createAdvancedMarker = (googleMaps: any, options: { map: any; position: any; title: string; content?: HTMLElement }) => {
   const markerApi = googleMaps?.maps?.marker;
-  if (markerApi?.AdvancedMarkerElement) {
+  const mapId = options?.map?.get?.('mapId');
+  if (markerApi?.AdvancedMarkerElement && mapId) {
     return new markerApi.AdvancedMarkerElement(options);
   }
 
@@ -132,7 +133,8 @@ export const createAdvancedMarker = (googleMaps: any, options: { map: any; posit
 
 export const createPinMarker = (googleMaps: any, options: { map: any; position: any; title: string; background: string }) => {
   const markerApi = googleMaps?.maps?.marker;
-  if (markerApi?.AdvancedMarkerElement && markerApi?.PinElement) {
+  const mapId = options?.map?.get?.('mapId');
+  if (markerApi?.AdvancedMarkerElement && markerApi?.PinElement && mapId) {
     const pin = new markerApi.PinElement({
       background: options.background,
       borderColor: options.background,

@@ -117,18 +117,74 @@ export const createSvgMarkerElement = (svgMarkup: string) => {
   return wrapper;
 };
 
+const createOverlayMarker = (
+  googleMaps: any,
+  options: { map: any; position: any; title: string; content?: HTMLElement },
+) => {
+  class LegacyOverlayMarker extends googleMaps.maps.OverlayView {
+    private mapInstance: any;
+    private positionValue: any;
+    private titleValue: string;
+    private node: HTMLDivElement | null;
+    private contentValue: HTMLElement;
+
+    constructor(initOptions: { map: any; position: any; title: string; content?: HTMLElement }) {
+      super();
+      this.mapInstance = initOptions.map;
+      this.positionValue = initOptions.position;
+      this.titleValue = initOptions.title;
+      this.node = null;
+      this.contentValue = initOptions.content ?? createCircleMarkerElement('#111827');
+      this.setMap(this.mapInstance);
+    }
+
+    onAdd() {
+      const div = document.createElement('div');
+      div.style.position = 'absolute';
+      div.style.transform = 'translate(-50%, -100%)';
+      div.style.cursor = 'pointer';
+      div.setAttribute('title', this.titleValue);
+      div.setAttribute('aria-label', this.titleValue);
+      div.appendChild(this.contentValue);
+      this.node = div;
+      this.getPanes()?.overlayMouseTarget?.appendChild(div);
+    }
+
+    draw() {
+      if (!this.node) return;
+      const projection = this.getProjection();
+      if (!projection) return;
+      const latLng =
+        this.positionValue instanceof googleMaps.maps.LatLng
+          ? this.positionValue
+          : new googleMaps.maps.LatLng(this.positionValue);
+      const point = projection.fromLatLngToDivPixel(latLng);
+      if (!point) return;
+      this.node.style.left = `${point.x}px`;
+      this.node.style.top = `${point.y}px`;
+    }
+
+    onRemove() {
+      this.node?.remove();
+      this.node = null;
+    }
+
+    setPosition(nextPosition: any) {
+      this.positionValue = nextPosition;
+      this.draw();
+    }
+  }
+
+  return new LegacyOverlayMarker(options);
+};
+
 export const createAdvancedMarker = (googleMaps: any, options: { map: any; position: any; title: string; content?: HTMLElement }) => {
   const markerApi = googleMaps?.maps?.marker;
   const mapId = options?.map?.get?.('mapId');
   if (markerApi?.AdvancedMarkerElement && mapId) {
     return new markerApi.AdvancedMarkerElement(options);
   }
-
-  return new googleMaps.maps.Marker({
-    map: options.map,
-    position: options.position,
-    title: options.title,
-  });
+  return createOverlayMarker(googleMaps, options);
 };
 
 export const createPinMarker = (googleMaps: any, options: { map: any; position: any; title: string; background: string }) => {
@@ -147,10 +203,10 @@ export const createPinMarker = (googleMaps: any, options: { map: any; position: 
       content: pin.element,
     });
   }
-
-  return new googleMaps.maps.Marker({
-    position: options.position,
+  return createOverlayMarker(googleMaps, {
     map: options.map,
+    position: options.position,
     title: options.title,
+    content: createCircleMarkerElement(options.background),
   });
 };

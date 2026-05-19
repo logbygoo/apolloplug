@@ -8,6 +8,9 @@ import { CONFIG } from './config';
 import ScrollToTop from './components/ScrollToTop';
 import { SITE_DOMAIN } from './configs/site';
 
+const ELEVENLABS_AGENT_ID = 'agent_9501krzzhy08fz4bekqg06dsh1wr';
+const ELEVENLABS_WIDGET_SRC = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
+
 const HomePage = lazy(() => import('./pages/HomePage'));
 const TransfersPage = lazy(() => import('./pages/TransfersPage'));
 const RentalV2Page = lazy(() => import('./pages/RentalV2Page'));
@@ -39,6 +42,25 @@ function RedirectWypozyczalniaToRezerwacja() {
   const { carId } = useParams<{ carId: string }>();
   return <Navigate to={`/rezerwacja/${carId}`} replace />;
 }
+
+const ElevenLabsWidget: React.FC = () => {
+  const { pathname } = useLocation();
+  const hideOnReservationFlow = pathname.startsWith('/rezerwacja');
+
+  useEffect(() => {
+    const existing = document.querySelector(`script[src="${ELEVENLABS_WIDGET_SRC}"]`);
+    if (existing) return;
+    const script = document.createElement('script');
+    script.src = ELEVENLABS_WIDGET_SRC;
+    script.async = true;
+    script.type = 'text/javascript';
+    document.body.appendChild(script);
+  }, []);
+
+  if (hideOnReservationFlow) return null;
+
+  return React.createElement('elevenlabs-convai', { 'agent-id': ELEVENLABS_AGENT_ID });
+};
 
 const NAV_CORE = [
   { path: '/flota', name: 'Pojazdy' },
@@ -365,6 +387,7 @@ const App: React.FC = () => {
             } />
           </Routes>
         </Suspense>
+        <ElevenLabsWidget />
       </div>
     </BrowserRouter>
   );

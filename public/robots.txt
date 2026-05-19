@@ -2,6 +2,7 @@
 Allow: /
 Disallow: /dokumentacja
 Disallow: /agent-8gef9584fr1dvn74
+Disallow: /agent-8gef9584fr1dvn74.txt
 
 Sitemap: https://apolloidea.com/sitemap.xml
 

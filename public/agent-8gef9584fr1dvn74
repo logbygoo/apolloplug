@@ -1,0 +1,178 @@
+APOLLO IDEA - BAZA WIEDZY OFERTY
+Wersja: statyczny plik tekstowy (bez React, bez JS, bez CSS)
+Data: 2026-05-19
+
+=== OPIS O APOLLO ===
+apolloidea.com to marka uslug EV rozwijana przez forfinance sp. z o.o.
+Glowny profil: wynajem samochodow elektrycznych (Tesla), rezerwacje online, auto z kierowca, wsparcie zakupu EV, ubezpieczenia, finansowanie.
+Domena: https://apolloidea.com
+
+=== LISTA USLUG + KROTKI OPIS ===
+1) Wypozyczalnia ( /wypozyczalnia )
+   Wypozyczalnia aut elektrycznych Warszawa, wynajem Tesli na dzien, weekend, tydzien lub miesiac.
+2) Rezerwacja online ( /rezerwacja )
+   Wybor modelu, terminy odbioru/zwrotu, opcje dodatkowe, formularz i platnosc online.
+3) Auto z kierowca ( /transfery )
+   Transfer lotniskowy, przewoz dokumentow, auto na godziny.
+4) Zakup EV ( /zakup )
+   Wsparcie od konfiguracji i finansowania po ubezpieczenie i odbior.
+5) Ubezpieczenia EV ( /ubezpieczenia )
+   Dobor OC/AC dla samochodow elektrycznych.
+6) Finansowanie EV ( /finansowanie )
+   Leasing, najem dlugoterminowy i kredyt.
+7) Wrap / naklejki Tesla ( /wrap )
+   Galeria i wzory do pobrania.
+
+=== LISTA AUT DOSTEPNYCH DO WYPOZYCZENIA (AKTUALNIE WIDOCZNE I DOSTEPNE) ===
+- Model 3 Highland (id: tesla-3-highland), zasieg 660 km, 5 osob, 4.4s, naped 4x4
+- Model Y Juniper (id: tesla-y-juniper), zasieg 600 km, 5 osob, 4.8s, naped 4x4
+
+=== CENNIK AUT DOSTEPNYCH DO WYPOZYCZENIA ===
+Model 3 Highland (tesla-3-highland)
+- 1 dzien: 790 zl / dobe, limit 250 km/dobe
+- 2-3 dni: 590 zl / dobe, limit 200 km/dobe
+- 4-7 dni: 490 zl / dobe, limit 150 km/dobe
+- 8-30 dni: 420 zl / dobe, limit 110 km/dobe
+- 31+ dni: 330 zl / dobe, limit 90 km/dobe
+- Kaucja: 3000 zl
+- Koszt ponad limit: 2 zl/km
+
+Model Y Juniper (tesla-y-juniper)
+- 1 dzien: 890 zl / dobe, limit 250 km/dobe
+- 2-3 dni: 740 zl / dobe, limit 220 km/dobe
+- 4-7 dni: 660 zl / dobe, limit 200 km/dobe
+- 8-30 dni: 490 zl / dobe, limit 180 km/dobe
+- 31+ dni: 430 zl / dobe, limit 150 km/dobe
+- Kaucja: 3000 zl
+- Koszt ponad limit: 2.5 zl/km
+
+=== CENNIK USLUG DODATKOWYCH (REZERWACJA) ===
+- Ubezpieczenie OC AC NNW: 0 zl (one_time)
+- Zmniejszony udzial wlasny w szkodzie: od 99 zl/dobe (zalezne od modelu)
+- Ubezpieczenie opon: od 9 zl/dobe (zalezne od modelu)
+- Wynajem bez kaucji: od 129 zl/dobe (zalezne od modelu)
+- Fotelik dzieciecy: 99 zl (one_time)
+- Dostawa pod dom: 190 zl (one_time), gratis od 14 dob, auto-check: nie
+- Mozliwosc zwrotu pustej baterii: od 290 zl (one_time), gratis od 10 dob, auto-check: tak
+- Pakiet myjnia: od 99 zl (one_time), gratis od 7 dob, auto-check: tak
+
+=== CENNIK USLUGI AUTO Z KIEROWCA (TRANSFERY) ===
+Oplata startowa: 100 zl
+Cena za km:
+- tesla-3-highland: 9.50 zl/km
+- tesla-y-juniper: 11.00 zl/km
+- tesla-x: 15.50 zl/km
+- tesla-s: 14.00 zl/km
+- tesla-cybertruck: 27.00 zl/km
+
+=== LISTA AUT DOSTEPNYCH NA JUZ Z ODBIOREM W 30 MIN ===
+- Tesla Model 3 (id: tesla-3-highland) [availableIn1h = true]
+
+=== PELNA LISTA FAQ ===
+1. Jak zarezerwowac samochod?
+   Rezerwacje zrobisz przez formularz na stronie. Mozesz tez napisac mailowo lub przez komunikator.
+2. Czy wyslanie formularza rezerwacji oznacza gwarancje rezerwacji?
+   Tak, jesli termin jest wolny, dane poprawne i platnosc skuteczna. Firma zastrzega standardowa weryfikacje.
+3. W jaki sposob zaplace za wynajem?
+   Platnosc online PayU, mozliwy tez przelew i BLIK na numer firmowy.
+4. Czy moge anulowac oplacona rezerwacje?
+   Tak, warunki zwrotu zalezne od czasu do najmu i regulaminu.
+5. Jakie dokumenty sa wymagane?
+   Prawo jazdy, dokument tozsamosci, karta platnicza na dane najemcy.
+6. Jakie karty platnicze sa akceptowane?
+   Fizyczne karty platnicze. Bez kart wirtualnych i portfeli internetowych.
+7. Minimalny wiek najemcy?
+   Standardowo 21 lat.
+8. Czy mozliwy wynajem z kierowca?
+   Tak, po indywidualnej wycenie.
+9. Czy ceny sa brutto?
+   Tak.
+10. Czy trzeba doliczyc VAT?
+   Nie, VAT jest wliczony.
+11. W jakich godzinach mozna odebrac/zwrocic auto?
+   Godziny wybierane w rezerwacji, elastycznie wg dostepnosci.
+12. Czy odbior/zwrot mozliwy w niedziele?
+   Tak, po ustaleniu terminu.
+13. Czy mozliwe podstawienie auta pod wskazane miejsce?
+   Tak, koszt zalezy od modelu i lokalizacji.
+14. Czy dostarczacie auta do innych miast?
+   Tak, koszt zwykle liczony za km.
+15. Czy mozliwy wynajem z OC sprawcy?
+   Nie, brak bezposredniego rozliczenia z TU.
+16. Czy autem moze kierowac inna osoba niz najemca?
+   Tak, po dopisaniu do umowy.
+17. Czy mozna wyjechac autem za granice?
+   Tak, po pisemnej zgodzie firmy.
+18. Czy auta sa czyszczone przed wynajmem?
+   Tak.
+19. Czy auto jest wydawane naladowane do pelna?
+   Standardowo ok. 80%.
+20. Czym jest kaucja i czy jest wymagana?
+   Zalezy od wariantu oferty; kaucja to zabezpieczenie.
+21. W jakiej formie placona jest kaucja?
+   Preautoryzacja na karcie.
+22. Na czym polega udzial wlasny?
+   To maksymalna kwota odpowiedzialnosci wg umowy i pakietu.
+23. Czy mozliwe pelne zniesienie udzialu wlasnego?
+   Nie, ale mozna go znaczaco obnizyc pakietem.
+24. Czy wynajem bez kaucji oznacza brak udzialu wlasnego?
+   Nie, to osobne elementy umowy.
+25. Co obejmuje ubezpieczenie w cenie?
+   Zakres podstawowy wg aktualnej umowy i regulaminu.
+26. Gdzie i jak mozna ladowac auto?
+   Publiczne AC/DC, Tesla Supercharger, ladowanie domowe.
+27. Czy bedzie dostep przez aplikacje Tesla?
+   Tak, przy koncie Tesla i wydaniu pojazdu.
+28. Jak placic za Supercharger?
+   Rozliczenie automatyczne wg karty pod najmem.
+29. Czy auto jest zabezpieczone GPS?
+   Tak, systemy lokalizacji i zabezpieczenia antykradziezowe.
+30. Kto ma dostep do kamer w aucie?
+   Rejestrowane jest otoczenie; brak podgladu kierowcy podczas jazdy.
+31. Co robic w razie awarii lub wypadku?
+   Najpierw kontakt z infolinia i dalsza procedura.
+32. Dostalem mandat - co dalej?
+   Wskazanie kierujacego wg umowy, mozliwa oplata administracyjna.
+33. Czy mozna przedluzyc wynajem?
+   Tak, jesli auto jest dostepne.
+34. Jaki jest limit kilometrow?
+   Zalezy od modelu i umowy; po przekroczeniu doplata.
+35. Czy jest wynajem bez limitu km?
+   Nie.
+36. Czy mozna jezdzic po torze?
+   Nie.
+37. Czy trzeba oddac czyste auto?
+   Tak (lub wybrac pakiet mycia).
+38. Jak oceniany jest stan auta przy zwrocie?
+   Protokol + dokumentacja zdjeciowa.
+39. Kiedy otrzymam fakture?
+   Do 15 dnia miesiaca nastepujacego po miesiacu zakonczenia najmu.
+40. Kiedy zwalniana jest kaucja?
+   Zwykle do 1 dnia roboczego po poprawnym zakonczeniu najmu.
+41. Kiedy ponosze odpowiedzialnosc finansowa?
+   Przy szkodach z winy najemcy, naruszeniu umowy itp.
+42. Kiedy odpowiedzialnosc moze przekroczyc udzial wlasny?
+   Przy ciezkim naruszeniu umowy (np. jazda pod wplywem).
+43. Auto uszkodzone nie z mojej winy - co wtedy?
+   Co do zasady brak kosztu naprawy po poprawnym zgloszeniu i dokumentacji.
+
+=== DANE KONTAKTOWE ===
+Firma: forfinance sp. z o.o.
+Adres: ul. Grzybowska 87, 00-844 Warszawa
+NIP: 527-283-91-27
+REGON: 369507931
+KRS: 0000719398
+Kapital zakladowy: 5 000,00 PLN
+Telefon: +48 500 308 400
+Email: office@apolloidea.com
+WWW: apolloidea.com
+
+=== PUNKTY ODBIORU / ZWROTU ===
+- Supercharger, Aleja Krakowska 61, Warszawa (w cenie)
+- Greenway, Batalionow Chlopskich 73, Warszawa (w cenie)
+- Warszawa Centralna, Aleje Jerozolimskie 54, Warszawa (149 zl)
+- Supercharger, Radzyminska 334, Zabki (190 zl)
+- Lotnisko Chopina, Zwirki i Wigury 1, Warszawa (99 zl)
+- Lotnisko Babice, gen. S. Kaliskiego 57, Warszawa (99 zl)
+- Lotnisko Modlin, Generala Wiktora Thommee 1a, Nowy Dwor Mazowiecki (390 zl)
+- Biuro apolloidea.com, Grzybowska 87, Warszawa (w cenie)

@@ -27,6 +27,7 @@ const WrapPage = lazy(() => import('./pages/WrapPage'));
 const PdfViewerPage = lazy(() => import('./pages/PdfViewerPage'));
 const DashPage = lazy(() => import('./pages/DashPage'));
 const UnderConstructionPage = lazy(() => import('./pages/UnderConstructionPage'));
+const AgentKnowledgePage = lazy(() => import('./pages/AgentKnowledgePage'));
 
 const RouteLoadingScreen: React.FC = () => (
   <div className="flex min-h-[40vh] items-center justify-center">
@@ -324,6 +325,8 @@ const App: React.FC = () => {
             <Route path="/pdf/:slug.pdf" element={<PdfViewerPage />} />
             {/* Pulpit Tesla / centrum — bez layoutu głównej strony */}
             <Route path="/dash" element={<DashPage />} />
+            {/* Prywatny URL z bazą wiedzy dla zewnętrznego agenta AI */}
+            <Route path="/agent-8gef9584fr1dvn74" element={<AgentKnowledgePage />} />
             
             {/* Main App Layout for everything else */}
             <Route path="*" element={

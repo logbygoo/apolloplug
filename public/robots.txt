@@ -1,6 +1,7 @@
  User-agent: *
 Allow: /
 Disallow: /dokumentacja
+Disallow: /agent-8gef9584fr1dvn74
 
 Sitemap: https://apolloidea.com/sitemap.xml
 

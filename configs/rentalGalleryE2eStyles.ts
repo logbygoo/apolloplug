@@ -98,6 +98,24 @@ export const RENTAL_CAR_LANDING_E2E_STYLES = `
     }
   }
 
+  .rental-car-landing .e2e-slide--fleet-advantage {
+    min-height: 0;
+    max-height: none;
+    align-self: auto;
+  }
+  @media (max-width: 767px) {
+    .rental-car-landing .e2e-slide--fleet-advantage {
+      width: 80vw;
+      max-width: 80vw;
+    }
+  }
+  @media (min-width: 768px) {
+    .rental-car-landing .e2e-slide--fleet-advantage {
+      width: 350px;
+      max-width: 350px;
+    }
+  }
+
   /* Wyrównanie toru do .container.max-w-5xl (64rem) — ten sam lewy brzeg co nagłówki w treści */
   .rental-car-landing.rental-car-landing--align-max-5xl {
     --container-width: 64rem;

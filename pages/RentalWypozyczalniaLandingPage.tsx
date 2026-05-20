@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { RENTAL_CARS } from '../configs/rentConfig';
 import { CAR_FLEET } from '../configs/fleetConfig';
 import {
+  FLEET_OFFER_ADVANTAGE_CARDS,
   FLEET_OFFER_BENEFIT_BOXES,
   FLEET_OFFER_LANDING,
   FLEET_OFFER_SEO_LONG_HTML,
@@ -112,7 +113,39 @@ const RentalWypozyczalniaLandingPage: React.FC = () => {
 
       <section className="w-full py-8 md:py-10" aria-labelledby="fleet-offer-heading">
         <div className="container mx-auto max-w-5xl px-4 md:px-6">
-          <h2 id="fleet-offer-heading" className="text-2xl font-bold text-foreground md:text-3xl">
+          <h2 className="text-2xl font-bold text-foreground md:text-3xl">Dlaczego warto wynająć u nas</h2>
+        </div>
+
+        <div className="rental-car-landing rental-car-landing--align-max-5xl mt-4 w-full min-w-0">
+          <style>{RENTAL_CAR_LANDING_E2E_STYLES}</style>
+          <RentalGalleryEdgeScroller>
+            <section
+              className="e2e-slider scroll-smooth cursor-grab select-none"
+              style={RENTAL_GALLERY_E2E_SLIDER_GAP}
+              onPointerDownCapture={onPointerDownCapture}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerCancel={onPointerUp}
+              aria-label="Zalety wypożyczalni"
+            >
+              <div className="e2e-track">
+                {FLEET_OFFER_ADVANTAGE_CARDS.map((item) => (
+                  <article
+                    key={item.title}
+                    className="e2e-slide e2e-slide--fleet-advantage shrink-0 snap-center rounded-lg border border-border bg-background px-4 py-4 text-left"
+                  >
+                    <p className="text-sm font-medium text-foreground">{item.title}</p>
+                    <p className="mt-2 text-3xl font-bold tracking-tighter text-foreground">{item.value}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          </RentalGalleryEdgeScroller>
+        </div>
+
+        <div className="container mx-auto max-w-5xl px-4 md:px-6">
+          <h2 id="fleet-offer-heading" className="mt-10 text-2xl font-bold text-foreground md:text-3xl">
             Auta w ofercie wypożyczenia
           </h2>
           <p className="mt-2 text-muted-foreground">
@@ -122,7 +155,6 @@ const RentalWypozyczalniaLandingPage: React.FC = () => {
         </div>
 
         <div className="rental-car-landing rental-car-landing--align-max-5xl mt-6 w-full min-w-0">
-          <style>{RENTAL_CAR_LANDING_E2E_STYLES}</style>
           <RentalGalleryEdgeScroller>
             <section
               className="e2e-slider scroll-smooth cursor-grab select-none"

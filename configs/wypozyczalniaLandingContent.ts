@@ -26,6 +26,45 @@ export const FLEET_OFFER_BENEFIT_BOXES = [
   },
 ] as const;
 
+/** Kafle zalet wypożyczalni (poziomy E2E slider nad sekcją aut). */
+export const FLEET_OFFER_ADVANTAGE_CARDS = [
+  {
+    title: 'Kaucja od 0 zł',
+    value: 'BEZ KAUCJI',
+    description: 'Możesz wynająć auto bez kaucji wybierając tę opcję w dodatkach.',
+  },
+  {
+    title: 'Dostęp do auta',
+    value: 'APLIKACJA',
+    description: 'Otrzymasz dostęp do auta przez dedykowaną aplikację Tesli.',
+  },
+  {
+    title: 'Dostawa auta',
+    value: 'CAŁY KRAJ',
+    description: 'Możemy dostarczyć auto do dowolnego miasta w Polsce.',
+  },
+  {
+    title: 'Bezpieczeństwo',
+    value: 'OC/AC/NNW',
+    description: 'Wypożyczaj z pełnym pakietem bezpieczeństwa i o nic się nie martw.',
+  },
+  {
+    title: 'Świeża flota',
+    value: 'NOWE MODELE',
+    description: 'Tylko świeże auta, z niskimi przebiegami i perfekcyjnie przygotowane.',
+  },
+  {
+    title: 'Elastyczność',
+    value: '24/7',
+    description: 'Możesz ustawić wydanie oraz zwrot o dowolnej porze dnia i nocy.',
+  },
+  {
+    title: 'Wygoda',
+    value: 'BEZKONTAKTOWO',
+    description: 'Stali Klienci mogą zamówić odbiór i zwrot auta w opcji bezkontaktowej.',
+  },
+] as const;
+
 /** Opis pod SEO (kolumna lewa) */
 export const FLEET_OFFER_SEO_LONG_HTML = `
 <h2 class="text-2xl font-bold text-foreground">Wypożyczalnia samochodów elektrycznych Warszawa</h2>

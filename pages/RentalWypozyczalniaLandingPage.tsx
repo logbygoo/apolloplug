@@ -112,7 +112,7 @@ const RentalWypozyczalniaLandingPage: React.FC = () => {
       />
 
       <section className="w-full py-8 md:py-10" aria-labelledby="fleet-offer-heading">
-        <div className="rental-car-landing rental-car-landing--align-max-5xl mt-1 w-full min-w-0">
+        <div className="rental-car-landing rental-car-landing--align-max-5xl mt-0 w-full min-w-0">
           <style>{RENTAL_CAR_LANDING_E2E_STYLES}</style>
           <RentalGalleryEdgeScroller>
             <section

@@ -9,7 +9,7 @@ export const HERO_CARS: HeroCar[] = [
     subtitle: 'Sprawdź ofertę warszawskiej wypożyczalni aut elektrycznych i rezerwuj na doby lub dłużej.',
     secondaryBtnText: 'Zarezerwuj auto',
     secondaryBtnLink: '/wypozyczalnia',
-    theme: 'dark',
+    theme: 'light',
   },
   /*/{
     id: '2',
@@ -40,15 +40,4 @@ export const HERO_CARS: HeroCar[] = [
     secondaryBtnLink: '/flota',
     theme: 'dark',
   },
-  {
-    id: '4',
-    name: 'Podróżuj wygodnie',
-    imageUrl: 'https://img.apolloidea.com/tesla-y/tesla-y-01.jpg',
-    subtitle: 'Z profesjonalnym kierowcą',
-    primaryBtnText: 'Zamów przejazd',
-    primaryBtnLink: '/transfery',
-    secondaryBtnText: 'Zobacz flotę',
-    secondaryBtnLink: '/flota',
-    theme: 'dark',
-  }
 ];

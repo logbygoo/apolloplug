@@ -91,3 +91,19 @@ export const createTransferCustomerSmsPayload = (formData: TransferFormData): Sm
         from: SMS_SENDER
     };
 };
+
+// ============================================================================
+// === NEWSLETTER / KLUB APOLLO
+// ============================================================================
+
+/**
+ * NEWSLETTER (Klient): kod weryfikacyjny do wpisania na stronie.
+ */
+export const createNewsletterVerificationSmsPayload = (phone: string, code: string): SmsPayload => {
+  const message = `Kod weryfikacyjny Apollo: ${code}. Wpisz go na stronie, aby odebrac rabat. Kod wazny 15 minut.`;
+  return {
+    to: phone,
+    message,
+    from: SMS_SENDER,
+  };
+};

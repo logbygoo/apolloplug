@@ -472,6 +472,64 @@ export const createContactCustomerEmailPayload = (name: string, email: string, m
 };
 
 // ============================================================================
+// === NEWSLETTER / KLUB APOLLO
+// ============================================================================
+
+export type NewsletterSignupData = {
+  fullName: string;
+  email: string;
+  phone: string;
+  termsAccepted: boolean;
+  marketingAccepted: boolean;
+};
+
+/**
+ * NEWSLETTER (Klient): kod weryfikacyjny do wpisania na stronie.
+ */
+export const createNewsletterVerificationEmailPayload = (
+  email: string,
+  code: string
+): EmailPayload => {
+  const content = `
+    <p>Twój kod weryfikacyjny do Klubu Apollo:</p>
+    <p style="font-size: 28px; font-weight: 700; letter-spacing: 0.08em; margin: 10px 0 16px 0;">${code}</p>
+    <p>Kod jest ważny przez 15 minut.</p>
+  `;
+  const html = createSimpleLayout('Weryfikacja zapisu do Klubu Apollo', content);
+  return {
+    to: email,
+    from: "apolloidea.com <office@apolloidea.com>",
+    subject: 'Kod weryfikacyjny — Klub Apollo',
+    html,
+    reply_to: "office@apolloidea.com",
+  };
+};
+
+/**
+ * NEWSLETTER (Admin): dane użytkownika po poprawnej weryfikacji kodu.
+ */
+export const createNewsletterAdminEmailPayload = (
+  data: NewsletterSignupData
+): EmailPayload => {
+  const content = generateDetailsTable([
+    ['Imię i nazwisko', data.fullName],
+    ['E-mail', `<a href="mailto:${data.email}" style="color: #111827; text-decoration: none;">${data.email}</a>`],
+    ['Telefon', data.phone],
+    ['Akceptacja regulaminu', data.termsAccepted ? '&#9989; Tak' : '&#10060; Nie'],
+    ['Zgoda marketingowa', data.marketingAccepted ? '&#9989; Tak' : '&#10060; Nie'],
+    ['Data zapisu', new Date().toLocaleString('pl-PL')],
+  ]);
+  const html = createSimpleLayout('Nowy zapis do Klubu Apollo', content);
+  return {
+    to: "office@apolloidea.com",
+    from: "apolloidea.com <office@apolloidea.com>",
+    subject: `NEWSLETTER: ${data.fullName} (${data.email})`,
+    html,
+    reply_to: data.email,
+  };
+};
+
+// ============================================================================
 // === WYJŚCIE ZE STRONY (EXIT-INTENT)
 // ============================================================================
 

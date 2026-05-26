@@ -1350,9 +1350,21 @@ const RentalV2Page: React.FC = () => {
                       <p className="mt-2 text-sm text-red-600 dark:text-red-400">{discountCodeError}</p>
                     )}
                     {!discountCodeError && discountAmount > 0 && (
-                      <div className="mt-3 rounded-md border border-green-600/30 bg-green-600/10 p-3 text-sm">
-                        <p className="font-medium text-green-800 dark:text-green-300">
-                          Kod {appliedDiscountCode} aktywny
+                      <div className="relative mt-3 rounded-md border border-green-600/30 bg-green-600/10 p-3 text-sm">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAppliedDiscountCode(null);
+                            setDiscountCodeError(null);
+                          }}
+                          className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded-md text-green-800/80 transition-colors hover:bg-green-600/15 hover:text-green-900 dark:text-green-300/80 dark:hover:bg-green-500/20 dark:hover:text-green-200"
+                          aria-label="Usuń kod rabatowy"
+                          title="Usuń kod rabatowy"
+                        >
+                          <XMarkIcon className="h-4 w-4" />
+                        </button>
+                        <p className="pr-8 font-medium text-green-800 dark:text-green-300">
+                          Kod <strong>{appliedDiscountCode}</strong> aktywny
                         </p>
                         <p className="mt-1 text-green-800/90 dark:text-green-300/90">
                           Zniżka: -{discountAmount.toLocaleString('pl-PL')} zł

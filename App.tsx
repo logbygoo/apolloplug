@@ -16,6 +16,7 @@ const TransfersPage = lazy(() => import('./pages/TransfersPage'));
 const RentalV2Page = lazy(() => import('./pages/RentalV2Page'));
 const RentalWypozyczalniaLandingPage = lazy(() => import('./pages/RentalWypozyczalniaLandingPage'));
 const RentalReservationPage = lazy(() => import('./pages/RentalReservationPage'));
+const PromotionsPage = lazy(() => import('./pages/PromotionsPage'));
 const FinancingPage = lazy(() => import('./pages/FinancingPage'));
 const FleetPage = lazy(() => import('./pages/FleetPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
@@ -358,6 +359,7 @@ const App: React.FC = () => {
                       <Route path="/wypozyczalnia/:carId" element={<RedirectWypozyczalniaToRezerwacja />} />
                       <Route path="/wypozyczalnia" element={<RentalWypozyczalniaLandingPage />} />
                       <Route path="/wypozyczalnia-v2" element={<Navigate to="/wypozyczalnia" replace />} />
+                      <Route path="/promocje" element={<PromotionsPage />} />
                       <Route path="/rezerwacja/:carId/zamowienie" element={<RentalReservationPage />} />
                       <Route path="/rezerwacja/:carId" element={<RentalV2Page />} />
                       <Route path="/rezerwacja" element={<RentalV2Page />} />

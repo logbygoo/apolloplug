@@ -45,6 +45,12 @@ export const SEO_CONFIG: Record<string, SeoData> = {
       'Wypożyczalnia aut elektrycznych Warszawa, wynajem Tesli na dzień, weekend, tydzień lub miesiąc. Sprawdź modele i zarezerwuj online.',
     ogImage: 'https://img.apolloidea.com/img/tesla-3-low-600x400.jpg',
   },
+  '/promocje': {
+    title: buildSeoTitle('Promocje i Kody Rabatowe'),
+    description:
+      'Sprawdź aktualne promocje Apollo, oferty weekendowe i kody rabatowe. Dołącz do listy marketingowej i odbierz zniżkę na wynajem.',
+    ogImage: 'https://img.apolloidea.com/og/default.jpg',
+  },
   '/rezerwacja': {
     title: buildSeoTitle('Rezerwacja • wynajem auta elektrycznego'),
     description:

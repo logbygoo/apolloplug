@@ -75,8 +75,9 @@ export const loadGoogleMapsScript = (callback: () => void, libraries: string = '
       await loadRequestedLibraries(googleMaps, libraries);
       callback();
     })
-    .catch(() => {
-      // Keep behavior stable for callers that already guard against missing maps.
+    .catch((err) => {
+      // Ułatwia diagnozę, gdy biblioteka jest niepoprawna lub klucz API ma ograniczenia.
+      console.error('[maps] Failed to initialize Google Maps:', err);
     });
 };
 

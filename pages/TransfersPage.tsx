@@ -252,7 +252,7 @@ const TransfersPage: React.FC = () => {
           }, () => {}, { enableHighAccuracy: true }
         );
       }
-    }, 'places,directions,marker');
+    }, 'places,routes,marker');
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {

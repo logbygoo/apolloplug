@@ -1,5 +1,6 @@
 import { ADDITIONAL_OPTIONS } from '../configs/rentConfig';
 import { LOCATIONS } from '../configs/locationsConfig';
+import { isWithinOfficeHours, OUTSIDE_OFFICE_HOURS_SURCHARGE_PLN } from '../configs/workConfig';
 import type { Car } from '../types';
 
 export type RentalPeriodState = {
@@ -153,10 +154,18 @@ export function computeRentalV2Summary(
   });
 
   const pickupLoc = LOCATIONS.find((loc) => loc.title === pickupLocation);
-  const pickupFee = pickupLoc?.price || 0;
+  const pickupLocationFee = pickupLoc?.price || 0;
+  const pickupOutsideOfficeHoursFee = isWithinOfficeHours(pickupTime)
+    ? 0
+    : OUTSIDE_OFFICE_HOURS_SURCHARGE_PLN;
+  const pickupFee = pickupLocationFee + pickupOutsideOfficeHoursFee;
 
   const returnLoc = LOCATIONS.find((loc) => loc.title === returnLocation);
-  const returnFee = returnLoc?.price || 0;
+  const returnLocationFee = returnLoc?.price || 0;
+  const returnOutsideOfficeHoursFee = isWithinOfficeHours(returnTime)
+    ? 0
+    : OUTSIDE_OFFICE_HOURS_SURCHARGE_PLN;
+  const returnFee = returnLocationFee + returnOutsideOfficeHoursFee;
 
   const totalPrice = rentalPrice + optionsPrice + pickupFee + returnFee;
   const baseDeposit = model.deposit || 5000;

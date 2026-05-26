@@ -40,6 +40,11 @@ import {
   XMarkIcon,
 } from '../icons';
 import type { Car } from '../types';
+import {
+  computeDiscountAmount,
+  findActiveDiscountCode,
+  normalizeDiscountCode,
+} from '../configs/discountCodesConfig';
 
 type RentalBrand = (typeof BRANDS)[number];
 
@@ -594,6 +599,9 @@ const RentalV2Page: React.FC = () => {
   const modelTabPanelRef = useRef<HTMLDivElement>(null);
   const [contractPdfPreview, setContractPdfPreview] = useState<{ title: string; docSlug: string } | null>(null);
   const [mobileRentalCtaDismissed, setMobileRentalCtaDismissed] = useState(false);
+  const [discountCodeInput, setDiscountCodeInput] = useState('');
+  const [appliedDiscountCode, setAppliedDiscountCode] = useState<string | null>(null);
+  const [discountCodeError, setDiscountCodeError] = useState<string | null>(null);
 
   const selectModelDetailTab = (tab: ModelDetailTabId) => {
     setModelDetailTab(tab);
@@ -800,6 +808,37 @@ const RentalV2Page: React.FC = () => {
     () => buildV2OptionLines(selected, additionalOptions, summary.rentalDays),
     [additionalOptions, selected, summary.rentalDays]
   );
+
+  const activeDiscount = useMemo(
+    () => (appliedDiscountCode ? findActiveDiscountCode(appliedDiscountCode) : null),
+    [appliedDiscountCode]
+  );
+  const discountAmount = useMemo(
+    () => (activeDiscount ? computeDiscountAmount(summary.totalPrice, activeDiscount) : 0),
+    [activeDiscount, summary.totalPrice]
+  );
+  const totalAfterDiscount = Math.max(summary.totalPrice - discountAmount, 0);
+  const reservationOrderPath = appliedDiscountCode
+    ? `/rezerwacja/${selected.id}/zamowienie?discountCode=${encodeURIComponent(appliedDiscountCode)}`
+    : `/rezerwacja/${selected.id}/zamowienie`;
+
+  const handleApplyDiscountCode = () => {
+    const normalized = normalizeDiscountCode(discountCodeInput);
+    if (!normalized) {
+      setDiscountCodeError('Wpisz kod rabatowy.');
+      setAppliedDiscountCode(null);
+      return;
+    }
+    const found = findActiveDiscountCode(normalized);
+    if (!found) {
+      setDiscountCodeError('Nieprawidłowy lub nieaktywny kod rabatowy.');
+      setAppliedDiscountCode(null);
+      return;
+    }
+    setDiscountCodeError(null);
+    setAppliedDiscountCode(found.code);
+    setDiscountCodeInput(found.code);
+  };
 
   const breadcrumbs = useMemo(() => {
     const crumbs: { name: string; path?: string }[] = [{ name: 'Wypożyczalnia', path: '/wypozyczalnia' }];
@@ -1265,16 +1304,71 @@ const RentalV2Page: React.FC = () => {
                   <div className="mt-6 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                     <span>Do zapłaty dziś</span>
                     <span>
-                      {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
+                      {summary.totalPrice > 0 ? `${totalAfterDiscount.toLocaleString('pl-PL')} zł` : '-'}
                     </span>
                   </div>
+                  {discountAmount > 0 && (
+                    <div className="mt-2 flex justify-between text-sm">
+                      <span className="text-muted-foreground">Rabat ({appliedDiscountCode})</span>
+                      <span className="font-medium text-green-700 dark:text-green-500">
+                        -{discountAmount.toLocaleString('pl-PL')} zł
+                      </span>
+                    </div>
+                  )}
                   <div className="mt-2 flex justify-between text-sm">
                     <span className="text-muted-foreground">Kaucja (płatna w dniu odbioru)</span>
                     <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
                   </div>
 
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2">
+                      <Input
+                        value={discountCodeInput}
+                        onChange={(e) => {
+                          setDiscountCodeInput(e.target.value);
+                          if (discountCodeError) setDiscountCodeError(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleApplyDiscountCode();
+                          }
+                        }}
+                        placeholder="Mam kod rabatowy"
+                        aria-label="Kod rabatowy"
+                        className="h-11 bg-background"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleApplyDiscountCode}
+                        className="inline-flex h-11 shrink-0 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+                      >
+                        Zastosuj
+                      </button>
+                    </div>
+                    {discountCodeError && (
+                      <p className="mt-2 text-sm text-red-600 dark:text-red-400">{discountCodeError}</p>
+                    )}
+                    {!discountCodeError && discountAmount > 0 && (
+                      <div className="mt-3 rounded-md border border-green-600/30 bg-green-600/10 p-3 text-sm">
+                        <p className="font-medium text-green-800 dark:text-green-300">
+                          Kod {appliedDiscountCode} aktywny
+                        </p>
+                        <p className="mt-1 text-green-800/90 dark:text-green-300/90">
+                          Zniżka: -{discountAmount.toLocaleString('pl-PL')} zł
+                        </p>
+                        <p className="text-green-800/90 dark:text-green-300/90">
+                          Cena po zniżce: {totalAfterDiscount.toLocaleString('pl-PL')} zł
+                        </p>
+                        <p className="text-green-800/90 dark:text-green-300/90">
+                          Oszczędzasz: {discountAmount.toLocaleString('pl-PL')} zł
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   <Link
-                    to={`/rezerwacja/${selected.id}/zamowienie`}
+                    to={reservationOrderPath}
                     className="mt-6 flex h-14 w-full items-center justify-center rounded-md bg-foreground text-lg font-semibold text-background transition-colors hover:bg-foreground/90"
                   >
                     Zarezerwuj pojazd
@@ -1339,12 +1433,12 @@ const RentalV2Page: React.FC = () => {
             </button>
           </div>
           <Link
-            to={`/rezerwacja/${selected.id}/zamowienie`}
+            to={reservationOrderPath}
             className="flex h-9 w-full items-center justify-center gap-1 rounded-full bg-foreground text-sm font-semibold text-background transition-colors hover:bg-foreground/90"
           >
             <span>Zarezerwuj</span>
             <span aria-hidden>•</span>
-            <span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span>
+            <span>{summary.totalPrice > 0 ? `${totalAfterDiscount.toLocaleString('pl-PL')} zł` : '-'}</span>
           </Link>
         </div>
       </div>

@@ -5,7 +5,7 @@ import {
   pushReservationSent,
   pushReservationStart,
 } from '../analytics';
-import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { SEO_CONFIG } from '../configs/seoConfig';
 import { BRANDS } from '../constants';
@@ -32,6 +32,7 @@ import {
   type RentalPeriodState,
 } from '../utils/rentalV2Summary';
 import type { Car } from '../types';
+import { computeDiscountAmount, findActiveDiscountCode } from '../configs/discountCodesConfig';
 
 const reservationNumberStorageKey = (id: string) => `rentalV2ReservationNumber_${id}`;
 
@@ -356,6 +357,7 @@ const RESERVATION_PAIR_GRID =
 const RentalReservationPage: React.FC = () => {
   const { pathname } = useLocation();
   const { carId } = useParams<{ carId: string }>();
+  const [searchParams] = useSearchParams();
   const [ready, setReady] = useState(false);
 
   /** Na tej stronie wyłączamy pinch-zoom / auto-zoom przy focusie w polach (iOS). Przy opuszczeniu trasy przywracamy viewport. */
@@ -462,6 +464,17 @@ const RentalReservationPage: React.FC = () => {
     }
     return computeRentalV2Summary(rentalPeriod, selected, additionalOptions);
   }, [rentalPeriod, additionalOptions, selected]);
+
+  const discountCodeFromQuery = searchParams.get('discountCode') ?? '';
+  const activeDiscount = useMemo(
+    () => findActiveDiscountCode(discountCodeFromQuery),
+    [discountCodeFromQuery]
+  );
+  const discountAmount = useMemo(
+    () => (activeDiscount ? computeDiscountAmount(summary.totalPrice, activeDiscount) : 0),
+    [activeDiscount, summary.totalPrice]
+  );
+  const totalAfterDiscount = Math.max(summary.totalPrice - discountAmount, 0);
 
   const v2OptionLines = useMemo(() => {
     if (!additionalOptions) return [];
@@ -570,7 +583,7 @@ const RentalReservationPage: React.FC = () => {
           page_path: pathname,
         }),
         reservation_number: num,
-        value: summary.totalPrice,
+        value: totalAfterDiscount,
         currency: 'PLN',
       });
       setFlowStep('payment');
@@ -585,7 +598,7 @@ const RentalReservationPage: React.FC = () => {
     }
   };
 
-  const paymentAmount = summary.totalPrice > 0 ? summary.totalPrice.toFixed(2) : '0.00';
+  const paymentAmount = totalAfterDiscount > 0 ? totalAfterDiscount.toFixed(2) : '0.00';
   const paymentName = reservationNumber || `AP-${Date.now()}`;
   const payuPaymentUrl = `https://rent.ffgroup.pl/pay/?name=${encodeURIComponent(paymentName)}&amount=${encodeURIComponent(paymentAmount)}`;
 
@@ -702,8 +715,16 @@ const RentalReservationPage: React.FC = () => {
                       )}
                       <div className="mt-2 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                         <span>Cena łącznie</span>
-                        <span>{summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}</span>
+                        <span>{summary.totalPrice > 0 ? `${totalAfterDiscount.toLocaleString('pl-PL')} zł` : '-'}</span>
                       </div>
+                      {discountAmount > 0 && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Rabat ({activeDiscount?.code ?? discountCodeFromQuery})</span>
+                          <span className="font-medium text-green-700 dark:text-green-500">
+                            -{discountAmount.toLocaleString('pl-PL')} zł
+                          </span>
+                        </div>
+                      )}
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Kaucja (płatna przy odbiorze)</span>
                         <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>
@@ -1091,9 +1112,17 @@ const RentalReservationPage: React.FC = () => {
                   <div className="mt-6 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                     <span>Do zapłaty dziś</span>
                     <span>
-                      {summary.totalPrice > 0 ? `${summary.totalPrice.toLocaleString('pl-PL')} zł` : '-'}
+                      {summary.totalPrice > 0 ? `${totalAfterDiscount.toLocaleString('pl-PL')} zł` : '-'}
                     </span>
                   </div>
+                  {discountAmount > 0 && (
+                    <div className="mt-2 flex justify-between text-sm">
+                      <span className="text-muted-foreground">Rabat ({activeDiscount?.code ?? discountCodeFromQuery})</span>
+                      <span className="font-medium text-green-700 dark:text-green-500">
+                        -{discountAmount.toLocaleString('pl-PL')} zł
+                      </span>
+                    </div>
+                  )}
                   <div className="mt-2 flex justify-between text-sm">
                     <span className="text-muted-foreground">Kaucja (płatna w dniu odbioru)</span>
                     <span className="font-medium">{summary.deposit.toLocaleString('pl-PL')} zł</span>

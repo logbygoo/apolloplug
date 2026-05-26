@@ -51,8 +51,8 @@ const FleetPage: React.FC = () => {
                   <Link to={`/rezerwacja/${car.id}`} className="w-full">
                     <Button className="w-full" variant="primary">Wypożycz</Button>
                   </Link>
-                  <Link to="/transfery" className="w-full">
-                    <Button className="w-full" variant="secondary">Zamów TAXI</Button>
+                  <Link to={`/wypozycz/${car.id}`} className="w-full">
+                    <Button className="w-full" variant="secondary">Czytaj więcej</Button>
                   </Link>
                 </CardFooter>
               </div>

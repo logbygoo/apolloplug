@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Seo from '../components/Seo';
 import { Input, Label, PageHeader } from '../components/ui';
 import { SEO_CONFIG } from '../configs/seoConfig';
@@ -51,7 +52,18 @@ const PromotionsPage: React.FC = () => {
             podłączymy w kolejnym kroku.
           </p>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div>
+              <Label htmlFor="promoName" className="text-white">
+                Imię i nazwisko
+              </Label>
+              <Input
+                id="promoName"
+                type="text"
+                placeholder="Np. Jan Kowalski"
+                className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/50"
+              />
+            </div>
             <div>
               <Label htmlFor="promoPhone" className="text-white">
                 Telefon
@@ -82,7 +94,17 @@ const PromotionsPage: React.FC = () => {
               <span className={checkboxBaseClass}>
                 <CheckIcon className="absolute inset-[2px] h-3 w-3 text-white/30" />
               </span>
-              <span>Akceptuję regulamin i politykę prywatności.</span>
+              <span>
+                Akceptuję{' '}
+                <Link to="/dokumentacja?doc=regulamin-apolloidea" className="underline underline-offset-2 hover:text-white">
+                  regulamin
+                </Link>{' '}
+                i{' '}
+                <Link to="/dokumentacja?doc=polityka-prywatnosci" className="underline underline-offset-2 hover:text-white">
+                  politykę prywatności
+                </Link>
+                .
+              </span>
             </label>
             <label htmlFor="promoMarketing" className="flex cursor-pointer items-start text-sm text-white/85">
               <input id="promoMarketing" type="checkbox" className="absolute h-0 w-0 opacity-0" />
@@ -116,11 +138,7 @@ const PromotionsPage: React.FC = () => {
       <section className="pb-8 md:pb-10">
         <div className="container mx-auto grid max-w-5xl gap-8 px-4 md:px-6">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">Aktualnie aktywne promocje</h2>
-            <p className="mt-2 text-sm text-muted-foreground md:text-base">
-              Przegląd ofert specjalnych dostępnych teraz dla klientów Apollo.
-            </p>
-            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2">
               {ACTIVE_PROMOTIONS.map(({ title, description, Icon }) => (
                 <article key={title} className="rounded-lg border border-border bg-card p-5">
                   <div className="inline-flex h-11 w-11 items-center justify-center rounded-md bg-secondary text-foreground">

@@ -9,7 +9,7 @@ export const HERO_CARS: HeroCar[] = [
     subtitle: 'Sprawdź ofertę warszawskiej wypożyczalni aut elektrycznych i rezerwuj na doby lub dłużej.',
     secondaryBtnText: 'Zarezerwuj auto',
     secondaryBtnLink: '/wypozyczalnia',
-    theme: 'light',
+    theme: 'dark',
   },
   /*/{
     id: '2',

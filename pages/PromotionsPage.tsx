@@ -60,7 +60,8 @@ type NewsletterSession = {
   email: string;
   termsAccepted: boolean;
   marketingAccepted: boolean;
-  verificationCode: string;
+  emailVerificationCode: string;
+  smsVerificationCode: string;
   createdAt: number;
   verified: boolean;
   verifiedAt?: number;
@@ -119,7 +120,8 @@ const PromotionsPage: React.FC = () => {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [marketingAccepted, setMarketingAccepted] = useState(false);
   const [phase, setPhase] = useState<NewsletterPhase>('form');
-  const [verificationInput, setVerificationInput] = useState('');
+  const [emailVerificationInput, setEmailVerificationInput] = useState('');
+  const [smsVerificationInput, setSmsVerificationInput] = useState('');
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [statusError, setStatusError] = useState<string | null>(null);
   const [statusInfo, setStatusInfo] = useState<string | null>(null);
@@ -129,6 +131,10 @@ const PromotionsPage: React.FC = () => {
   useEffect(() => {
     const existing = loadNewsletterSession();
     if (!existing) return;
+    if ((!existing.emailVerificationCode || !existing.smsVerificationCode) && !existing.verified) {
+      window.sessionStorage.removeItem(NEWSLETTER_SESSION_KEY);
+      return;
+    }
     const isExpired = Date.now() - existing.createdAt > NEWSLETTER_VERIFICATION_TTL_MS;
     if (isExpired && !existing.verified) {
       window.sessionStorage.removeItem(NEWSLETTER_SESSION_KEY);
@@ -169,11 +175,12 @@ const PromotionsPage: React.FC = () => {
     setFormErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    const verificationCode = generateVerificationCode();
+    const emailVerificationCode = generateVerificationCode();
+    const smsVerificationCode = generateVerificationCode();
     setIsSubmitting(true);
     try {
-      const emailPayload = createNewsletterVerificationEmailPayload(normalizedEmail, verificationCode);
-      const smsPayload = createNewsletterVerificationSmsPayload(normalizedPhone, verificationCode);
+      const emailPayload = createNewsletterVerificationEmailPayload(normalizedEmail, emailVerificationCode);
+      const smsPayload = createNewsletterVerificationSmsPayload(normalizedPhone, smsVerificationCode);
 
       const [emailResponse, smsResponse] = await Promise.all([
         fetch(mailApiUrl(), {
@@ -198,14 +205,15 @@ const PromotionsPage: React.FC = () => {
         email: normalizedEmail,
         termsAccepted,
         marketingAccepted,
-        verificationCode,
+        emailVerificationCode,
+        smsVerificationCode,
         createdAt: Date.now(),
         verified: false,
         adminNotified: false,
       };
       saveNewsletterSession(sessionData);
       setPhase('verify');
-      setStatusInfo('Wysłaliśmy kod weryfikacyjny na SMS i e-mail.');
+      setStatusInfo('Wysłaliśmy dwa kody: osobny na SMS i osobny na e-mail.');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Nie udało się wysłać kodu.';
       setStatusError(message);
@@ -230,8 +238,18 @@ const PromotionsPage: React.FC = () => {
       setPhase('form');
       return;
     }
-    if (verificationInput.trim() !== sessionData.verificationCode) {
-      setStatusError('Nieprawidłowy kod weryfikacyjny.');
+    const normalizedEmailCode = emailVerificationInput.trim();
+    const normalizedSmsCode = smsVerificationInput.trim();
+    if (!normalizedEmailCode || !normalizedSmsCode) {
+      setStatusError('Wpisz oba kody weryfikacyjne.');
+      return;
+    }
+    if (normalizedEmailCode !== sessionData.emailVerificationCode) {
+      setStatusError('Nieprawidłowy kod e-mail.');
+      return;
+    }
+    if (normalizedSmsCode !== sessionData.smsVerificationCode) {
+      setStatusError('Nieprawidłowy kod SMS.');
       return;
     }
 
@@ -383,7 +401,7 @@ const PromotionsPage: React.FC = () => {
                 >
                   {isSubmitting ? 'Wysyłam kod...' : phase === 'verify' ? 'Wyślij kod ponownie' : 'Odbieram -15%'}
                 </button>
-                <span className="text-xs text-white/60">Kod wysyłamy jednocześnie SMS-em i e-mailem.</span>
+                <span className="text-xs text-white/60">Wysyłamy 2 różne kody: osobno SMS i osobno e-mail.</span>
               </div>
             </form>
           ) : (
@@ -397,31 +415,51 @@ const PromotionsPage: React.FC = () => {
           )}
 
           {phase === 'verify' && (
-            <div className="mt-5 max-w-md">
-              <Label htmlFor="promoVerifyCode" className="text-white">
-                Wpisz kod weryfikacyjny
-              </Label>
-              <div className="mt-2 flex items-center gap-2">
+            <div className="mt-5 grid max-w-2xl gap-4 md:grid-cols-2">
+              <div>
+                <Label htmlFor="promoVerifyEmailCode" className="text-white">
+                  Kod z e-maila
+                </Label>
                 <Input
-                  id="promoVerifyCode"
+                  id="promoVerifyEmailCode"
                   type="text"
                   inputMode="numeric"
-                  value={verificationInput}
+                  value={emailVerificationInput}
                   onChange={(e) =>
-                    setVerificationInput(
+                    setEmailVerificationInput(
                       e.target.value.replace(/\D/g, '').slice(0, NEWSLETTER_VERIFICATION_CODE_LENGTH)
                     )
                   }
-                  placeholder="Kod z SMS / e-mail"
-                  className="border-white/20 bg-white/10 text-white placeholder:text-white/50"
+                  placeholder="Kod z e-mail"
+                  className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/50"
                 />
+              </div>
+              <div>
+                <Label htmlFor="promoVerifySmsCode" className="text-white">
+                  Kod z SMS
+                </Label>
+                <Input
+                  id="promoVerifySmsCode"
+                  type="text"
+                  inputMode="numeric"
+                  value={smsVerificationInput}
+                  onChange={(e) =>
+                    setSmsVerificationInput(
+                      e.target.value.replace(/\D/g, '').slice(0, NEWSLETTER_VERIFICATION_CODE_LENGTH)
+                    )
+                  }
+                  placeholder="Kod z SMS"
+                  className="mt-2 border-white/20 bg-white/10 text-white placeholder:text-white/50"
+                />
+              </div>
+              <div className="md:col-span-2">
                 <button
                   type="button"
                   onClick={handleVerifyCode}
                   disabled={isVerifying}
-                  className="inline-flex h-11 shrink-0 items-center justify-center rounded-md border border-white/40 bg-white/10 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="inline-flex h-11 items-center justify-center rounded-md border border-white/40 bg-white/10 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {isVerifying ? 'Sprawdzam...' : 'Potwierdź'}
+                  {isVerifying ? 'Sprawdzam...' : 'Potwierdź oba kody'}
                 </button>
               </div>
             </div>

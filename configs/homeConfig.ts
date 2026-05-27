@@ -5,7 +5,7 @@ export const HERO_CARS: HeroCar[] = [
   {
     id: '1',
     name: 'Wypożyczalnia Aut Elektrycznych',
-    imageUrl: 'https://img.apolloidea.com/tesla-y/12.jpg',
+    imageUrl: 'https://img.apolloidea.com/tesla-y/16.jpg',
     subtitle: 'Sprawdź ofertę warszawskiej wypożyczalni aut elektrycznych i rezerwuj na doby lub dłużej.',
     secondaryBtnText: 'Zarezerwuj auto',
     secondaryBtnLink: '/wypozyczalnia',

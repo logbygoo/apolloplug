@@ -19,6 +19,12 @@ export const DISCOUNT_CODES: DiscountCodeConfig[] = [
     value: 15,
     active: true,
   },
+  {
+    code: 'APOLLOWGOOGLE',
+    type: 'percent',
+    value: 10,
+    active: true,
+  },
 ];
 
 export function normalizeDiscountCode(input: string): string {

@@ -818,6 +818,8 @@ const RentalV2Page: React.FC = () => {
     [activeDiscount, summary.totalPrice]
   );
   const totalAfterDiscount = Math.max(summary.totalPrice - discountAmount, 0);
+  const discountPercentLabel =
+    activeDiscount && activeDiscount.type === 'percent' ? `${activeDiscount.value}%` : null;
   const reservationOrderPath = appliedDiscountCode
     ? `/rezerwacja/${selected.id}/zamowienie?discountCode=${encodeURIComponent(appliedDiscountCode)}`
     : `/rezerwacja/${selected.id}/zamowienie`;
@@ -1303,13 +1305,25 @@ const RentalV2Page: React.FC = () => {
 
                   <div className="mt-6 flex justify-between border-t border-border pt-2 text-xl font-bold text-primary">
                     <span>Do zapłaty dziś</span>
-                    <span>
-                      {summary.totalPrice > 0 ? `${totalAfterDiscount.toLocaleString('pl-PL')} zł` : '-'}
-                    </span>
+                    {summary.totalPrice > 0 ? (
+                      <span className="flex items-baseline gap-2">
+                        {discountAmount > 0 && (
+                          <span className="text-sm font-medium text-muted-foreground line-through">
+                            {summary.totalPrice.toLocaleString('pl-PL')} zł
+                          </span>
+                        )}
+                        <span>{totalAfterDiscount.toLocaleString('pl-PL')} zł</span>
+                      </span>
+                    ) : (
+                      <span>-</span>
+                    )}
                   </div>
                   {discountAmount > 0 && (
                     <div className="mt-2 flex justify-between text-sm">
-                      <span className="text-muted-foreground">Rabat ({appliedDiscountCode})</span>
+                      <span className="text-muted-foreground">
+                        Rabat ({appliedDiscountCode}
+                        {discountPercentLabel ? ` • ${discountPercentLabel}` : ''})
+                      </span>
                       <span className="font-medium text-green-700 dark:text-green-500">
                         -{discountAmount.toLocaleString('pl-PL')} zł
                       </span>
@@ -1336,12 +1350,12 @@ const RentalV2Page: React.FC = () => {
                         }}
                         placeholder="Mam kod rabatowy"
                         aria-label="Kod rabatowy"
-                        className="h-11 bg-background"
+                        className="h-12 bg-background"
                       />
                       <button
                         type="button"
                         onClick={handleApplyDiscountCode}
-                        className="inline-flex h-11 shrink-0 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
+                        className="inline-flex h-12 shrink-0 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-semibold text-foreground transition-colors hover:bg-secondary"
                       >
                         Zastosuj
                       </button>
@@ -1367,13 +1381,7 @@ const RentalV2Page: React.FC = () => {
                           Kod <strong>{appliedDiscountCode}</strong> aktywny
                         </p>
                         <p className="mt-1 text-green-800/90 dark:text-green-300/90">
-                          Zniżka: -{discountAmount.toLocaleString('pl-PL')} zł
-                        </p>
-                        <p className="text-green-800/90 dark:text-green-300/90">
-                          Cena po zniżce: {totalAfterDiscount.toLocaleString('pl-PL')} zł
-                        </p>
-                        <p className="text-green-800/90 dark:text-green-300/90">
-                          Oszczędzasz: {discountAmount.toLocaleString('pl-PL')} zł
+                          Zniżka{discountPercentLabel ? ` (${discountPercentLabel})` : ''}: -{discountAmount.toLocaleString('pl-PL')} zł
                         </p>
                       </div>
                     )}

@@ -56,7 +56,6 @@ function buildExitIntentClientContext(): Record<string, string> {
 
 const ExitIntentModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isEligible, setIsEligible] = useState(false);
   const [reasons, setReasons] = useState<string[]>([]);
   const [message, setMessage] = useState('');
   const [contactEmail, setContactEmail] = useState('');
@@ -65,15 +64,7 @@ const ExitIntentModal: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
 
-  // Włącz wyświetlanie dopiero po kilku sekundach obecności na stronie
   useEffect(() => {
-    const timer = setTimeout(() => setIsEligible(true), 8000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!isEligible) return;
-
     const handler = (e: MouseEvent) => {
       const alreadyShown = sessionStorage.getItem(STORAGE_KEY);
       if (alreadyShown === 'true' || isOpen) return;
@@ -111,7 +102,7 @@ const ExitIntentModal: React.FC = () => {
       window.removeEventListener('mouseout', handler);
       document.removeEventListener('visibilitychange', visibilityHandler);
     };
-  }, [isOpen, isEligible]);
+  }, [isOpen]);
 
   const toggleReason = (value: string) => {
     setReasons(prev =>

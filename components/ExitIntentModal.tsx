@@ -6,7 +6,7 @@ import { mailApiUrl } from '../configs/notifications/apiEndpoints';
 const STORAGE_KEY = 'apolloidea_exit_intent_shown';
 
 /** Ustaw `true`, aby znów pokazać blok z telefonem i e‑mailem. */
-const SHOW_OPTIONAL_CONTACT_SECTION = false;
+const SHOW_OPTIONAL_CONTACT_SECTION = true;
 
 function buildExitIntentClientContext(): Record<string, string> {
   if (typeof window === 'undefined') return {};
@@ -61,6 +61,7 @@ const ExitIntentModal: React.FC = () => {
   const [message, setMessage] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
+  const [allowContactFollowup, setAllowContactFollowup] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -209,36 +210,50 @@ const ExitIntentModal: React.FC = () => {
 
             {SHOW_OPTIONAL_CONTACT_SECTION ? (
               <div className="space-y-3">
-                <p className="text-xs text-muted-foreground uppercase font-semibold tracking-wide">
-                  Opcjonalnie
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Zostaw kontakt do siebie, abyśmy mogli zaproponować Ci coś, co Cię przekona.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="exit-phone">Telefon</Label>
-                    <Input
-                      id="exit-phone"
-                      type="tel"
-                      placeholder="Np. +48 500 000 000"
-                      value={contactPhone}
-                      onChange={e => setContactPhone(e.target.value)}
-                      className="mt-1"
-                    />
+                <label htmlFor="exit-allow-followup" className="flex cursor-pointer items-start text-sm text-muted-foreground">
+                  <input
+                    id="exit-allow-followup"
+                    type="checkbox"
+                    checked={allowContactFollowup}
+                    onChange={(e) => setAllowContactFollowup(e.target.checked)}
+                    className="mt-0.5 mr-2 h-4 w-4"
+                  />
+                  <span>
+                    Chcę zostawić swoje dane w celu otrzymania odpowiedzi, kodu rabatowego lub rozwiązania problemu
+                  </span>
+                </label>
+
+                {allowContactFollowup ? (
+                  <div className="space-y-3 rounded-lg border border-border p-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <div>
+                        <Label htmlFor="exit-phone">Telefon</Label>
+                        <Input
+                          id="exit-phone"
+                          type="tel"
+                          placeholder="Np. +48 500 000 000"
+                          value={contactPhone}
+                          onChange={e => setContactPhone(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="exit-email">E-mail</Label>
+                        <Input
+                          id="exit-email"
+                          type="email"
+                          placeholder="Np. imie@twojmail.pl"
+                          value={contactEmail}
+                          onChange={e => setContactEmail(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Podane dane będą przetwarzane wyłącznie na potrzeby tego jednorazowego formularza kontaktowego.
+                    </p>
                   </div>
-                  <div>
-                    <Label htmlFor="exit-email">E-mail</Label>
-                    <Input
-                      id="exit-email"
-                      type="email"
-                      placeholder="Np. imie@twojmail.pl"
-                      value={contactEmail}
-                      onChange={e => setContactEmail(e.target.value)}
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
+                ) : null}
               </div>
             ) : null}
 

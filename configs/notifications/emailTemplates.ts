@@ -539,8 +539,13 @@ export const createExitIntentFeedbackEmailPayload = (data: {
   contactEmail: string;
   contactPhone: string;
   path: string;
+  clientContext?: Record<string, string>;
 }): EmailPayload => {
   const reasonsText = data.reasons.length ? data.reasons.join(', ') : 'Brak zaznaczonych powodów';
+  const contextEntries = Object.entries(data.clientContext ?? {}).filter(([, value]) => value != null && value !== '');
+  const contextRows = contextEntries.length
+    ? contextEntries.map(([key, value]) => [key.replace(/_/g, ' '), value] as [string, string])
+    : [];
 
   const content = `
     <p><b>Adres strony:</b> ${data.path}</p>
@@ -554,6 +559,12 @@ export const createExitIntentFeedbackEmailPayload = (data: {
       <li><b>E-mail:</b> ${data.contactEmail || '—'}</li>
       <li><b>Telefon:</b> ${data.contactPhone || '—'}</li>
     </ul>
+    <p><b>Kontekst urządzenia / przeglądarki:</b></p>
+    ${
+      contextRows.length > 0
+        ? generateDetailsTable(contextRows)
+        : '<p style="margin: 0;">Brak danych kontekstu klienta.</p>'
+    }
   `;
 
   const html = createSimpleLayout('Użytkownik chciał opuścić stronę', content);

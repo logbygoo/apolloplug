@@ -8,6 +8,52 @@ const STORAGE_KEY = 'apolloidea_exit_intent_shown';
 /** Ustaw `true`, aby znów pokazać blok z telefonem i e‑mailem. */
 const SHOW_OPTIONAL_CONTACT_SECTION = false;
 
+function buildExitIntentClientContext(): Record<string, string> {
+  if (typeof window === 'undefined') return {};
+  const nav = window.navigator;
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  const languageList = Array.isArray(nav.languages) ? nav.languages.join(', ') : '';
+  const connection = (nav as Navigator & { connection?: { effectiveType?: string; downlink?: number; rtt?: number; saveData?: boolean } }).connection;
+  const locationHref = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  const currentTimestamp = new Date().toISOString();
+
+  return {
+    timestamp_iso: currentTimestamp,
+    page_url: locationHref,
+    page_title: document.title || '',
+    referrer: document.referrer || '',
+    user_agent: nav.userAgent || '',
+    user_agent_data_brands:
+      (nav as Navigator & { userAgentData?: { brands?: { brand: string; version: string }[] } }).userAgentData?.brands
+        ?.map((item) => `${item.brand} ${item.version}`)
+        .join(', ') || '',
+    language: nav.language || '',
+    languages: languageList,
+    platform: nav.platform || '',
+    vendor: nav.vendor || '',
+    timezone: tz,
+    viewport_width: String(window.innerWidth),
+    viewport_height: String(window.innerHeight),
+    screen_width: String(window.screen.width),
+    screen_height: String(window.screen.height),
+    screen_available_width: String(window.screen.availWidth),
+    screen_available_height: String(window.screen.availHeight),
+    color_depth: String(window.screen.colorDepth),
+    pixel_ratio: String(window.devicePixelRatio || 1),
+    touch_points: String(nav.maxTouchPoints || 0),
+    hardware_concurrency: String(nav.hardwareConcurrency || ''),
+    device_memory_gb: String((nav as Navigator & { deviceMemory?: number }).deviceMemory || ''),
+    cookie_enabled: String(nav.cookieEnabled),
+    do_not_track: String(nav.doNotTrack || ''),
+    online: String(nav.onLine),
+    visibility_state: document.visibilityState,
+    connection_effective_type: connection?.effectiveType || '',
+    connection_downlink_mbps: String(connection?.downlink ?? ''),
+    connection_rtt_ms: String(connection?.rtt ?? ''),
+    connection_save_data: String(connection?.saveData ?? ''),
+  };
+}
+
 const ExitIntentModal: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEligible, setIsEligible] = useState(false);
@@ -83,6 +129,7 @@ const ExitIntentModal: React.FC = () => {
         contactEmail,
         contactPhone,
         path: window.location.pathname + window.location.search,
+        clientContext: buildExitIntentClientContext(),
       });
 
       await fetch(mailApiUrl(), {

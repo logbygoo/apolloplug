@@ -170,6 +170,7 @@ const ExitIntentModal: React.FC = () => {
                   'Za drogo',
                   'Nie znam was, nie ufam',
                   'Tylko się rozglądam',
+                  'Problem techniczny',
                   'Nie wiem czemu',
                 ].map(option => (
                   <button
@@ -193,7 +194,7 @@ const ExitIntentModal: React.FC = () => {
               <textarea
                 id="exit-message"
                 className="block w-full rounded-md bg-secondary px-3 py-2 text-sm ring-offset-background border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 min-h-[100px]"
-                placeholder="Daj znać co możemy poprawić"
+                placeholder="np.: nie wiem jak wypełnić formularz rezerwacji; przejdźcie na diesla itp"
                 value={message}
                 onChange={e => setMessage(e.target.value)}
               />

@@ -31,6 +31,12 @@ export const DISCOUNT_CODES: DiscountCodeConfig[] = [
     value: 10,
     active: true,
   },
+  {
+    code: '9832DF34FQ2',
+    type: 'amount',
+    value: 200,
+    active: true,
+  },
 ];
 
 export function normalizeDiscountCode(input: string): string {

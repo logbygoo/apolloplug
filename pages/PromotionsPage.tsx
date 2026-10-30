@@ -364,11 +364,11 @@ const PromotionsPage: React.FC = () => {
                   </span>
                   <span>
                     Akceptuję{' '}
-                    <Link to="/dokumentacja?doc=regulamin-apolloidea" className="underline underline-offset-2 hover:text-white">
+                    <Link to="/dokumentacja?doc=regulamin-apolloidea" rel="nofollow" className="underline underline-offset-2 hover:text-white">
                       regulamin
                     </Link>{' '}
                     i{' '}
-                    <Link to="/dokumentacja?doc=polityka-prywatnosci" className="underline underline-offset-2 hover:text-white">
+                    <Link to="/dokumentacja?doc=polityka-prywatnosci" rel="nofollow" className="underline underline-offset-2 hover:text-white">
                       politykę prywatności
                     </Link>
                     .

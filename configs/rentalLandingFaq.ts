@@ -68,12 +68,14 @@ export const RENTAL_LANDING_FAQ: RentalLandingFaqItem[] = [
   },
   {
     question: 'Czy podane ceny to kwoty brutto?',
-    answer: 'Tak, ceny na stronie są cenami brutto.',
+    answer:
+      'Ceny na stronie są kwotami należnymi za wynajem. Dokument sprzedaży wystawia Esoteric sp. z o.o., która korzysta ze zwolnienia podmiotowego z podatku VAT, więc do ceny nie dolicza się VAT.',
     categories: ['Rezerwacja'],
   },
   {
     question: 'Czy do cen podanych na stronie należy doliczyć podatek VAT?',
-    answer: 'Nie, podatek VAT jest już wliczony w cenę.',
+    answer:
+      'Nie. Operator wynajmu, Esoteric sp. z o.o. (ul. Marszałkowska 58, 00-545 Warszawa, NIP: 701-083-32-19), korzysta ze zwolnienia podmiotowego z podatku VAT i nie dolicza VAT do ceny.',
     categories: ['Rezerwacja'],
   },
   {
@@ -246,7 +248,7 @@ export const RENTAL_LANDING_FAQ: RentalLandingFaqItem[] = [
   {
     question: 'W jakim czasie otrzymam fakturę?',
     answer:
-      'Fakturę wysyłamy elektronicznie najpóźniej do 15 dnia miesiąca następującego po miesiącu, w którym zakończył się najem.',
+      'Dokument sprzedaży wystawia Esoteric sp. z o.o. Wysyłamy go elektronicznie najpóźniej do 15 dnia miesiąca następującego po miesiącu, w którym zakończył się najem. Dokument uwzględnia zwolnienie podmiotowe z podatku VAT.',
     categories: ['Po wynajmie'],
   },
   {

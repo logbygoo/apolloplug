@@ -1,5 +1,5 @@
 import React from 'react';
-import { COMPANY_DETAILS } from '../companyDetails';
+import { COMPANY_DETAILS, RENTAL_OPERATOR } from '../companyDetails';
 
 export const PrivacyPolicyContent = (
   <div className="privacy-content">
@@ -62,8 +62,14 @@ export const PrivacyPolicyContent = (
     <h2>1. Administrator danych osobowych</h2>
 
     <p>
-      1.1. Administratorem danych osobowych jest <strong>{COMPANY_DETAILS.name}</strong>, z siedzibą przy 
+      1.1. Administratorem danych osobowych w zakresie serwisu jest <strong>{COMPANY_DETAILS.name}</strong>, z siedzibą przy 
       <strong> {COMPANY_DETAILS.address}</strong>, e-mail: <strong>{COMPANY_DETAILS.email}</strong>, tel.: <strong>{COMPANY_DETAILS.phone}</strong>.
+      {COMPANY_DETAILS.name} jest leasingobiorcą pojazdów udostępnianych w najmie.
+    </p>
+    <p>
+      1.1a. Operatorem obsługi wynajmu pojazdów oraz wystawcą dokumentów sprzedaży za te usługi jest <strong>{RENTAL_OPERATOR.name}</strong>,
+      {RENTAL_OPERATOR.address}, NIP: <strong>{RENTAL_OPERATOR.nip}</strong>. Operator może przetwarzać dane osobowe najemców w celu wykonania umowy najmu
+      i wystawienia dokumentu sprzedaży. Operator stosuje {RENTAL_OPERATOR.vatStatus}.
     </p>
 
     <p>

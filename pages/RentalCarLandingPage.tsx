@@ -657,7 +657,7 @@ const RentalCarLandingPage: React.FC = () => {
                                     </div>
                                     <p className="mt-4 text-sm text-muted-foreground">
                                         Masz więcej pytań? Przejdź na{' '}
-                                        <Link to="/kontakt" className="font-medium text-foreground underline underline-offset-2">
+                                        <Link to="/kontakt" rel="nofollow" className="font-medium text-foreground underline underline-offset-2">
                                             /kontakt
                                         </Link>
                                     </p>

@@ -73,7 +73,7 @@ const FinancingPage: React.FC = () => {
             Skontaktuj się z naszym doradcą, który przygotuje spersonalizowaną kalkulację i pomoże wybrać najlepszą opcję finansowania.
           </p>
           <div className="mt-8">
-            <Link to="/kontakt">
+            <Link to="/kontakt" rel="nofollow">
               <Button size="lg">Zapytaj o finansowanie</Button>
             </Link>
           </div>

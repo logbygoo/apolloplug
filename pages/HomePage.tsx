@@ -375,7 +375,8 @@ const AnimatedTimeline = () => {
                                                 {step.buttons.map((button, btnIndex) => (
                                                     <Link 
                                                         key={btnIndex}
-                                                        to={button.url} 
+                                                        to={button.url}
+                                                        rel={button.url === '/kontakt' || button.url.startsWith('/dokumentacja') ? 'nofollow' : undefined}
                                                         className="inline-block bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium px-4 py-2 rounded-full"
                                                     >
                                                         {button.text}

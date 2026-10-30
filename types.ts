@@ -95,4 +95,5 @@ export interface SeoData {
   ogDescription?: string;
   ogImage?: string;
   ogType?: string;
+  robots?: string;
 }

@@ -163,7 +163,8 @@ const ContactPage: React.FC = () => {
             <section>
                 <h2 className="text-2xl font-bold tracking-tight mb-4">Podmiot odpowiedzialny</h2>
                 <div className="text-muted-foreground space-y-1">
-                    <p>apolloidea.com należy do forfinance sp. z o.o., ul. grzybowska 87, 00-844 warszawa, nip: 527-283-91-27, tel. 500-308-400, mail. office@apolloidea.com</p>
+                    <p>apolloidea.com należy do forfinance sp. z o.o., ul. Grzybowska 87, 00-844 Warszawa, NIP: 527-283-91-27, tel. 500-308-400, mail: office@apolloidea.com. forfinance sp. z o.o. jest leasingobiorcą pojazdów.</p>
+                    <p>Operatorem obsługi wynajmu i wystawcą dokumentów sprzedaży jest Esoteric sp. z o.o., ul. Marszałkowska 58, 00-545 Warszawa, NIP: 701-083-32-19. Esoteric sp. z o.o. korzysta ze zwolnienia podmiotowego z podatku VAT.</p>
                 </div>
             </section>
             <section>

@@ -83,6 +83,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
   '/pdf': {
     title: buildSeoTitle('Dokument PDF'),
     description: 'Podgląd dokumentu do wydruku lub zapisu.',
+    robots: 'nofollow',
   },
   '/transfery': {
     title: buildSeoTitle('Auto z kierowcą • Warszawa'),
@@ -112,6 +113,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     description:
       'Skontaktuj się z nami w sprawie wynajmu Tesli, transferów VIP i usług EV. Odpowiadamy telefonicznie, mailowo i przez formularz.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
+    robots: 'nofollow',
   },
   '/blog': {
     title: buildSeoTitle('Blog elektromobilności • porady i aktualności EV'),
@@ -136,6 +138,7 @@ export const SEO_CONFIG: Record<string, SeoData> = {
     description:
       'Sprawdź regulaminy, politykę prywatności i dokumenty dotyczące usług Apollo Idea, wynajmu oraz przetwarzania danych.',
     ogImage: 'https://img.apolloidea.com/og/default.jpg',
+    robots: 'nofollow',
   },
   '/ig': {
     title: buildSeoTitle('Linki Instagram'),

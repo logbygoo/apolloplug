@@ -9,6 +9,7 @@ const Seo: React.FC<SeoData> = ({
   ogDescription,
   ogImage,
   ogType = 'website',
+  robots,
 }) => {
   useEffect(() => {
     if (document.title !== title) {
@@ -36,7 +37,16 @@ const Seo: React.FC<SeoData> = ({
     setMeta('property', 'og:url', window.location.href);
     setMeta('property', 'og:site_name', SITE_DOMAIN);
 
-  }, [title, description, ogTitle, ogDescription, ogImage, ogType]);
+    if (robots) setMeta('name', 'robots', robots);
+
+    return () => {
+      if (!robots) return;
+      const el = document.querySelector('meta[name="robots"]');
+      if (el?.getAttribute('content') === robots) {
+        el.setAttribute('content', 'index, follow');
+      }
+    };
+  }, [title, description, ogTitle, ogDescription, ogImage, ogType, robots]);
 
   return null;
 };

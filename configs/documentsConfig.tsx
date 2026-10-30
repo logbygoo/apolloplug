@@ -6,9 +6,9 @@ import { RentalRulesContent } from './contents/RentalRules';
 import { TransportRulesContent } from './contents/TransportRules';
 import { SampleContractContent } from './contents/SampleContract';
 import { SampleProtocolContent } from './contents/SampleProtocolContent';
-import { COMPANY_DETAILS } from './companyDetails';
+import { COMPANY_DETAILS, RENTAL_OPERATOR } from './companyDetails';
 
-export { COMPANY_DETAILS };
+export { COMPANY_DETAILS, RENTAL_OPERATOR };
 
 export interface DocumentContent {
   title: string;

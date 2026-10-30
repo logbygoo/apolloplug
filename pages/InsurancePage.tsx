@@ -80,7 +80,7 @@ const InsurancePage: React.FC = () => {
             Skontaktuj się z nami, a my bezpłatnie przygotujemy dla Ciebie spersonalizowaną ofertę ubezpieczenia. Porównamy dziesiątki opcji i znajdziemy tę najlepszą.
           </p>
           <div className="mt-8">
-            <Link to="/kontakt">
+            <Link to="/kontakt" rel="nofollow">
               <Button size="lg">Zapytaj o ofertę</Button>
             </Link>
           </div>

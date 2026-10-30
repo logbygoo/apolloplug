@@ -52,6 +52,7 @@ const CookieBanner: React.FC = () => {
               wyłączyć. Pozostałe możesz zaakceptować lub ograniczyć do minimum. Więcej informacji znajdziesz w{' '}
               <Link
                 to="/dokumentacja?doc=polityka-prywatnosci"
+                rel="nofollow"
                 className="underline underline-offset-2 hover:text-foreground"
               >
                 Polityce prywatności i cookies

@@ -88,7 +88,7 @@ const DocumentationPage: React.FC = () => {
               <a
                 href={pdfUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="nofollow noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
               >
                 Otwórz w nowym oknie
@@ -97,6 +97,7 @@ const DocumentationPage: React.FC = () => {
               <a
                 href={pdfUrl}
                 download={`${activeDoc.slug}.pdf`}
+                rel="nofollow"
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
               >
                 Pobierz dokument

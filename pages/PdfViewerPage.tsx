@@ -168,6 +168,7 @@ const PdfViewerPage: React.FC = () => {
       <Seo
         title={buildSeoTitle(documentData.title)}
         description={SEO_CONFIG['/pdf'].description}
+        robots={SEO_CONFIG['/pdf'].robots}
       />
       {isGenerating && !pdfUrl && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-50">

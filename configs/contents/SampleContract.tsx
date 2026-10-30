@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { COMPANY_DETAILS } from '../companyDetails';
+import { COMPANY_DETAILS, RENTAL_OPERATOR } from '../companyDetails';
 
 export const SampleContractContent = (
   <div className="pdf-content">
@@ -141,6 +141,10 @@ export const SampleContractContent = (
           <td>
             <div className="cell-multiline">
               <strong>{COMPANY_DETAILS.name}</strong>, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip} &nbsp;|&nbsp; KRS: {COMPANY_DETAILS.krs}, REGON: {COMPANY_DETAILS.regon}, Tel.: {COMPANY_DETAILS.phone}, E-mail: {COMPANY_DETAILS.email}
+              <br />
+              Leasingobiorca pojazdów.
+              <br />
+              Operator obsługi wynajmu i wystawca dokumentu sprzedaży: <strong>{RENTAL_OPERATOR.name}</strong>, {RENTAL_OPERATOR.address}, NIP: {RENTAL_OPERATOR.nip}. Operator stosuje {RENTAL_OPERATOR.vatStatus}.
             </div>
           </td>
           <td>
@@ -336,7 +340,7 @@ export const SampleContractContent = (
         <tr>
           <td>
             <div className="cell-center">
-              250 zł / doba (brutto)
+              250 zł / doba (zwolnienie z VAT)
             </div>
           </td>
           <td>
@@ -381,7 +385,7 @@ export const SampleContractContent = (
           </td>
           <td>
             <div className="cell-center">
-              950 zł (brutto)
+              950 zł (zwolnienie z VAT)
             </div>
           </td>
         </tr>

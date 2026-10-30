@@ -1,4 +1,5 @@
 import React from 'react';
+import { COMPANY_DETAILS, RENTAL_OPERATOR } from '../companyDetails';
 
 export const RentalRulesContent = (
   <div className="rental-rules">
@@ -112,7 +113,8 @@ export const RentalRulesContent = (
       <section className="section">
         <h2 className="section__title">1. Postanowienia ogólne</h2>
         <ol className="legal">
-          <li>Niniejszy Regulamin określa zasady świadczenia usług najmu pojazdów (dalej: „Usługa” lub „Najem”) przez <strong>forfinance sp. z o.o.</strong> z siedzibą w Warszawie (00-844), ul. Grzybowska 87, NIP 527-283-91-27, REGON 369507931, KRS 0000719398, e-mail: office@apolloidea.com, tel.: +48 500 308 400 (dalej: „Wynajmujący”).</li>
+          <li>Niniejszy Regulamin określa zasady świadczenia usług najmu pojazdów (dalej: „Usługa” lub „Najem”) przez <strong>{COMPANY_DETAILS.name}</strong> z siedzibą w Warszawie, {COMPANY_DETAILS.address}, NIP {COMPANY_DETAILS.nip}, REGON {COMPANY_DETAILS.regon}, KRS {COMPANY_DETAILS.krs}, e-mail: {COMPANY_DETAILS.email}, tel.: {COMPANY_DETAILS.phone} (dalej: „Wynajmujący”). Wynajmujący jest leasingobiorcą pojazdów.</li>
+          <li>Operatorem obsługi wynajmu i wystawcą dokumentów sprzedaży jest <strong>{RENTAL_OPERATOR.name}</strong>, {RENTAL_OPERATOR.address}, NIP: {RENTAL_OPERATOR.nip} (dalej: „Operator”). Operator stosuje {RENTAL_OPERATOR.vatStatus}. Do ceny najmu nie dolicza się podatku VAT.</li>
           <li>Regulamin jest dostępny na stronie internetowej <strong>apolloidea.com</strong> i może być utrwalony przez Najemcę w dowolny sposób (np. pobranie, wydruk).</li>
           <li>Regulamin stanowi integralną część umowy najmu pojazdu zawieranej pomiędzy Wynajmującym a Najemcą (dalej: „Umowa”). W razie rozbieżności pierwszeństwo mają postanowienia Umowy.</li>
           <li>Najem może być zawierany zarówno z konsumentami, jak i przedsiębiorcami (w tym osobami fizycznymi prowadzącymi działalność gospodarczą).</li>
@@ -334,7 +336,7 @@ export const RentalRulesContent = (
       <section className="section">
         <h2 className="section__title">20. Dane osobowe</h2>
         <ol className="legal">
-          <li>Administratorem danych jest forfinance sp. z o.o. Szczegóły przetwarzania danych, w tym GPS, opisuje Polityka Prywatności dostępna na apolloidea.com.</li>
+          <li>Administratorem danych osobowych w zakresie serwisu jest {COMPANY_DETAILS.name}. Dane związane z obsługą najmu może przetwarzać również Operator ({RENTAL_OPERATOR.name}, {RENTAL_OPERATOR.address}, NIP: {RENTAL_OPERATOR.nip}). Szczegóły przetwarzania danych, w tym GPS, opisuje Polityka Prywatności dostępna na apolloidea.com.</li>
         </ol>
       </section>
 

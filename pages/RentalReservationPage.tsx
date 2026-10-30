@@ -952,7 +952,7 @@ const RentalReservationPage: React.FC = () => {
                         <Link
                           to="/dokumentacja"
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="nofollow noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
                           className="underline hover:text-foreground"
                         >
@@ -962,7 +962,7 @@ const RentalReservationPage: React.FC = () => {
                         <Link
                           to="/dokumentacja"
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="nofollow noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
                           className="underline hover:text-foreground"
                         >

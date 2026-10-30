@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { COMPANY_DETAILS } from '../companyDetails';
+import { COMPANY_DETAILS, RENTAL_OPERATOR } from '../companyDetails';
 
 export const SampleProtocolContent = (
   <div className="pdf-content">
@@ -139,6 +139,8 @@ export const SampleProtocolContent = (
             <div className="cell-left">
               <div>
                 <strong>{COMPANY_DETAILS.name}</strong>, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip} | KRS: {COMPANY_DETAILS.krs}, REGON: {COMPANY_DETAILS.regon}
+                <br />
+                Operator obsługi wynajmu: <strong>{RENTAL_OPERATOR.name}</strong>, {RENTAL_OPERATOR.address}, NIP: {RENTAL_OPERATOR.nip}
               </div>
             </div>
           </td>

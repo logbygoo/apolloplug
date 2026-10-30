@@ -1,4 +1,5 @@
 import React from 'react';
+import { COMPANY_DETAILS, RENTAL_OPERATOR } from '../companyDetails';
 
 export const TermsOfServiceContent = (
   <div className="tos-content">
@@ -68,13 +69,18 @@ export const TermsOfServiceContent = (
       1.1. Niniejszy regulamin (dalej: „Regulamin”) określa zasady korzystania z serwisu internetowego
       dostępnego pod adresem <strong>apolloidea.com</strong> (dalej: „Serwis”), w szczególności zasady przeglądania
       treści Serwisu, wysyłania zapytań oraz formularzy rezerwacyjnych dotyczących usług oferowanych przez
-      Forfinance sp. z o.o.
+      {COMPANY_DETAILS.name}. Obsługę wynajmu pojazdów i dokumenty sprzedaży za te usługi realizuje {RENTAL_OPERATOR.name}.
     </p>
     <p>
-      1.2. Właścicielem i administratorem Serwisu jest <strong>forfinance sp. z o.o.</strong> z siedzibą w Warszawie,
-      ul. Grzybowska 87, 00-844 Warszawa, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego
-      pod numerem KRS: 0000719398, NIP: 527-283-91-27, REGON: 369507931, kapitał zakładowy: 5 000,00 PLN
-      (dalej: „Usługodawca”).
+      1.2. Właścicielem i administratorem Serwisu jest <strong>{COMPANY_DETAILS.name}</strong> z siedzibą w Warszawie,
+      {COMPANY_DETAILS.address}, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego
+      pod numerem KRS: {COMPANY_DETAILS.krs}, NIP: {COMPANY_DETAILS.nip}, REGON: {COMPANY_DETAILS.regon}, kapitał zakładowy: {COMPANY_DETAILS.capital}
+      (dalej: „Usługodawca”). Usługodawca jest leasingobiorcą pojazdów udostępnianych w ofercie najmu.
+    </p>
+    <p>
+      1.2a. Operatorem obsługi wynajmu pojazdów oraz wystawcą dokumentów sprzedaży za te usługi jest <strong>{RENTAL_OPERATOR.name}</strong>,
+      {RENTAL_OPERATOR.address}, NIP: {RENTAL_OPERATOR.nip} (dalej: „Operator”). Operator stosuje {RENTAL_OPERATOR.vatStatus}.
+      Do ceny najmu nie dolicza się podatku VAT.
     </p>
     <p>
       1.3. Kontakt z Usługodawcą jest możliwy w szczególności pod następującymi danymi kontaktowymi:
@@ -102,7 +108,7 @@ export const TermsOfServiceContent = (
     <h2>2. Definicje</h2>
     <p>2.1. Użyte w Regulaminie pojęcia oznaczają:</p>
     <p>
-      2.1.1. „Usługodawca” – forfinance sp. z o.o. z siedzibą w Warszawie, wskazana w pkt 1.2 Regulaminu.
+      2.1.1. „Usługodawca” – {COMPANY_DETAILS.name} z siedzibą w Warszawie, wskazana w pkt 1.2 Regulaminu.
     </p>
     <p>
       2.1.2. „Serwis” – serwis internetowy apolloidea.com, w ramach którego Usługodawca udostępnia Użytkownikom
@@ -129,6 +135,10 @@ export const TermsOfServiceContent = (
       w szczególności rezerwacji pojazdu elektrycznego lub zamówienia usługi przewozu taxi, stanowiące
       zaproszenie do zawarcia umowy z Usługodawcą na warunkach określonych w regulaminach szczególnych
       lub indywidualnie ustalonych.
+    </p>
+    <p>
+      2.1.8. „Operator” – {RENTAL_OPERATOR.name}, {RENTAL_OPERATOR.address}, NIP: {RENTAL_OPERATOR.nip}, wskazana w pkt 1.2a Regulaminu,
+      obsługująca wynajem pojazdów i wystawiająca dokumenty sprzedaży za te usługi.
     </p>
 
     <h2>3. Zakres i charakter usług świadczonych za pośrednictwem Serwisu</h2>
@@ -318,8 +328,9 @@ export const TermsOfServiceContent = (
 
     <h2>10. Dane osobowe i pliki cookies</h2>
     <p>
-      10.1. Administratorem danych osobowych Użytkowników jest Usługodawca, tj. forfinance sp. z o.o. z siedzibą
-      w Warszawie. Zasady przetwarzania danych osobowych Użytkowników, w tym prawa przysługujące osobom, których
+      10.1. Administratorem danych osobowych Użytkowników w zakresie Serwisu jest Usługodawca, tj. {COMPANY_DETAILS.name} z siedzibą
+      w Warszawie. Dane związane z obsługą najmu może przetwarzać również Operator, tj. {RENTAL_OPERATOR.name}.
+      Zasady przetwarzania danych osobowych Użytkowników, w tym prawa przysługujące osobom, których
       dane dotyczą, zostały szczegółowo określone w Polityce prywatności i polityce plików cookies opublikowanych
       w Serwisie.
     </p>

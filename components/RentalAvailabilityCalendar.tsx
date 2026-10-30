@@ -149,6 +149,7 @@ export const RentalAvailabilityCalendar: React.FC<RentalAvailabilityCalendarProp
           potwierdzić i wspólnie znaleźć rozwiązanie. Daj znać poprzez zakładkę{' '}
           <Link
             to="/kontakt"
+            rel="nofollow"
             className="font-medium text-foreground underline underline-offset-2 hover:no-underline"
           >
             /kontakt

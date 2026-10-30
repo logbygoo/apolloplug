@@ -8,9 +8,6 @@ import { CONFIG } from './config';
 import ScrollToTop from './components/ScrollToTop';
 import { SITE_DOMAIN } from './configs/site';
 
-const ELEVENLABS_AGENT_ID = 'agent_9501krzzhy08fz4bekqg06dsh1wr';
-const ELEVENLABS_WIDGET_SRC = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
-
 const HomePage = lazy(() => import('./pages/HomePage'));
 const TransfersPage = lazy(() => import('./pages/TransfersPage'));
 const RentalV2Page = lazy(() => import('./pages/RentalV2Page'));
@@ -43,25 +40,6 @@ function RedirectWypozyczalniaToRezerwacja() {
   const { carId } = useParams<{ carId: string }>();
   return <Navigate to={`/rezerwacja/${carId}`} replace />;
 }
-
-const ElevenLabsWidget: React.FC = () => {
-  const { pathname } = useLocation();
-  const hideOnReservationFlow = pathname.startsWith('/rezerwacja');
-
-  useEffect(() => {
-    const existing = document.querySelector(`script[src="${ELEVENLABS_WIDGET_SRC}"]`);
-    if (existing) return;
-    const script = document.createElement('script');
-    script.src = ELEVENLABS_WIDGET_SRC;
-    script.async = true;
-    script.type = 'text/javascript';
-    document.body.appendChild(script);
-  }, []);
-
-  if (hideOnReservationFlow) return null;
-
-  return React.createElement('elevenlabs-convai', { 'agent-id': ELEVENLABS_AGENT_ID });
-};
 
 const NAV_CORE = [
   { path: '/flota', name: 'Pojazdy' },
@@ -177,6 +155,7 @@ const Header: React.FC = () => {
             </div>
             <NavLink
               to="/kontakt"
+              rel="nofollow"
               className="flex shrink-0 p-1.5 text-foreground/70 transition-colors hover:text-foreground"
               aria-label="Kontakt"
             >
@@ -259,6 +238,7 @@ const Header: React.FC = () => {
           </div>
           <NavLink
             to="/kontakt"
+            rel="nofollow"
             onClick={() => setIsOpen(false)}
             className={({ isActive }) =>
               `text-base w-full p-2 rounded-md ${isActive ? 'font-semibold bg-secondary' : 'hover:bg-secondary'}`
@@ -295,7 +275,7 @@ const Footer: React.FC = () => {
 
         <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-4">
           {footerLinks.map(link => (
-            <NavLink key={link.name} to={link.path} className="text-xs text-muted-foreground hover:text-foreground">
+            <NavLink key={link.name} to={link.path} rel="nofollow" className="text-xs text-muted-foreground hover:text-foreground">
               {link.name}
             </NavLink>
           ))}
@@ -389,7 +369,6 @@ const App: React.FC = () => {
             } />
           </Routes>
         </Suspense>
-        <ElevenLabsWidget />
       </div>
     </BrowserRouter>
   );

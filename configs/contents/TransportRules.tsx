@@ -1,9 +1,15 @@
 
 import React from 'react';
+import { COMPANY_DETAILS, RENTAL_OPERATOR } from '../companyDetails';
 
 export const TransportRulesContent = (
   <div style={{ padding: '40px', fontFamily: 'Arial, sans-serif' }}>
     <h1 className="text-2xl font-bold mb-4">Regulamin Przewozów (Transfery VIP)</h1>
+    <p>
+      Serwis apolloidea.com prowadzi {COMPANY_DETAILS.name}, {COMPANY_DETAILS.address}, NIP: {COMPANY_DETAILS.nip}, REGON: {COMPANY_DETAILS.regon}, KRS: {COMPANY_DETAILS.krs}.
+      Operatorem obsługi wynajmu pojazdów i wystawcą dokumentów sprzedaży za wynajem jest {RENTAL_OPERATOR.name}, {RENTAL_OPERATOR.address}, NIP: {RENTAL_OPERATOR.nip}.
+      Operator stosuje {RENTAL_OPERATOR.vatStatus}.
+    </p>
     
     <h2 className="text-xl font-bold mt-6 mb-2">§1. Definicje</h2>
     <p>Usługa Transferu – przewóz osób samochodem osobowym z kierowcą na trasie określonej przez Zamawiającego.</p>

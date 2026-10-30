@@ -108,6 +108,7 @@ const SocialBioLinksPage: React.FC<SocialBioLinksPageProps> = ({ source }) => {
               Inne formy kontaktu znajdziesz na{' '}
               <Link
                 to="/kontakt"
+                rel="nofollow"
                 className="font-medium text-foreground underline underline-offset-2 transition-colors hover:text-primary"
               >
                 /kontakt

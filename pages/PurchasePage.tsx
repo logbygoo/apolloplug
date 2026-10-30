@@ -139,7 +139,7 @@ const PurchasePage: React.FC = () => {
             Porozmawiajmy o Twoim nowym samochodzie. Jesteśmy tu, aby odpowiedzieć na wszystkie Twoje pytania i pomóc Ci rozpocząć niezwykłą przygodę z elektromobilnością.
           </p>
           <div className="mt-8">
-            <Link to="/kontakt">
+            <Link to="/kontakt" rel="nofollow">
               <Button size="lg">Skontaktuj się z nami</Button>
             </Link>
           </div>
